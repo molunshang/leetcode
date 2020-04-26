@@ -578,11 +578,659 @@ namespace leetcode
                         result.Append((char) (i + 'a'));
                         chars[i]--;
                     }
+
                     flag = true;
                 }
             }
 
             return result.ToString();
+        }
+
+        #endregion
+
+        #region 509. 斐波那契数
+
+        //509. 斐波那契数
+        //https://leetcode-cn.com/problems/fibonacci-number/
+        public static int Fib(int N)
+        {
+            if (N == 0)
+            {
+                return 0;
+            }
+
+            if (N == 1)
+            {
+                return 1;
+            }
+
+            var items = new int[N];
+            items[0] = 0;
+            items[1] = 1;
+            for (var i = 2; i < items.Length; i++)
+            {
+                items[i] = items[i - 1] + items[i - 2];
+            }
+
+            return items[N - 1] + items[N - 2];
+        }
+
+        #endregion
+
+        #region 面试题10- I. 斐波那契数列
+
+        //面试题10- I. 斐波那契数列
+        //https://leetcode-cn.com/problems/fei-bo-na-qi-shu-lie-lcof/
+
+        public static int Fib1(int n)
+        {
+            if (n == 0 || n == 1)
+            {
+                return n;
+            }
+
+            var items = new int[n + 1];
+            items[0] = 0;
+            items[1] = 1;
+            for (var i = 2; i < items.Length; i++)
+            {
+                items[i] = (items[i - 1] + items[i - 2]) % 1000000007;
+            }
+
+            return items[n];
+        }
+
+        #endregion
+
+        #region 面试题03. 数组中重复的数字
+
+        //面试题03. 数组中重复的数字
+        //https://leetcode-cn.com/problems/shu-zu-zhong-zhong-fu-de-shu-zi-lcof/
+        public static int FindRepeatNumber(int[] nums)
+        {
+            var bucket = new bool[nums.Length];
+            for (var i = 0; i < nums.Length; i++)
+            {
+                if (bucket[nums[i]])
+                {
+                    return nums[i];
+                }
+
+                bucket[nums[i]] = true;
+            }
+
+            return nums[0];
+        }
+
+        #endregion
+
+        #region 面试题04. 二维数组中的查找
+
+        //面试题04. 二维数组中的查找
+        //https://leetcode-cn.com/problems/er-wei-shu-zu-zhong-de-cha-zhao-lcof/
+
+        public static bool FindNumberIn2DArray(int[][] matrix, int target)
+        {
+            for (int x = 0; x < matrix.Length; x++)
+            {
+                var num = matrix[x];
+                for (int y = 0; y < num.Length; y++)
+                {
+                    if (num[y] == target)
+                    {
+                        return true;
+                    }
+
+                    if (num[y] > target)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        //https://leetcode-cn.com/problems/search-a-2d-matrix-ii/
+        public static bool FindNumberIn2DArray1(int[][] matrix, int target)
+        {
+            int x = 0, y = matrix.GetLength(1) - 0;
+            while (x < matrix.Length && y >= 0)
+            {
+                if (matrix[x][y] == target)
+                {
+                    return true;
+                }
+
+                if (matrix[x][y] > target)
+                {
+                    y--;
+                }
+                else
+                {
+                    x++;
+                }
+            }
+
+            return false;
+        }
+
+        #endregion
+
+        #region 面试题10- II. 青蛙跳台阶问题
+
+        //面试题10- II. 青蛙跳台阶问题
+        //https://leetcode-cn.com/problems/qing-wa-tiao-tai-jie-wen-ti-lcof/
+
+        public static int NumWays(int n)
+        {
+            if (n <= 0)
+            {
+                return 1;
+            }
+
+            var nums = new int[n + 1];
+            nums[0] = 1;
+            nums[1] = 1;
+            for (int i = 2; i < nums.Length; i++)
+            {
+                nums[i] = (nums[i - 1] + nums[i - 2]) % 1000000007;
+            }
+
+            return nums[n];
+        }
+
+        #endregion
+
+        #region 面试题11. 旋转数组的最小数字
+
+        //面试题11. 旋转数组的最小数字
+        //https://leetcode-cn.com/problems/xuan-zhuan-shu-zu-de-zui-xiao-shu-zi-lcof/
+        // 输入：[3,4,5,1,2]
+        //      [4,5,1,2,3]
+        //      [1,2,3]
+        // 输出：1
+        public static int MinArray(int[] numbers)
+        {
+            int start = 0, end = numbers.Length - 1;
+            while (numbers[start] >= numbers[end])
+            {
+                if (end - start == 1)
+                {
+                    start = end;
+                    break;
+                }
+
+                var mid = (start + end) / 2;
+                if (numbers[mid] == numbers[start] && numbers[start] == numbers[end])
+                {
+                    var result = numbers[start];
+                    for (var i = start + 1; i <= end; i++)
+                    {
+                        if (result > numbers[i])
+                        {
+                            result = numbers[i];
+                        }
+                    }
+
+                    return result;
+                }
+
+                if (numbers[mid] >= numbers[start])
+                {
+                    start = mid;
+                }
+                else if (numbers[mid] <= numbers[end])
+                {
+                    end = mid;
+                }
+            }
+
+            return numbers[start];
+        }
+
+        #endregion
+
+        #region 面试题06. 从尾到头打印链表
+
+        //面试题06. 从尾到头打印链表
+        //https://leetcode-cn.com/problems/cong-wei-dao-tou-da-yin-lian-biao-lcof/
+
+        public int[] ReversePrint(ListNode head)
+        {
+            var stack = new Stack<int>();
+            while (head != null)
+            {
+                stack.Push(head.val);
+                head = head.next;
+            }
+
+            var result = new int[stack.Count];
+            for (int i = 0; stack.Count > 0; i++)
+            {
+                result[i] = stack.Pop();
+            }
+
+            return result;
+        }
+
+        #endregion
+
+        #region 面试题05. 替换空格
+
+        //面试题05. 替换空格
+        //https://leetcode-cn.com/problems/ti-huan-kong-ge-lcof/
+        public static string ReplaceSpace(string s)
+        {
+            var res = new StringBuilder();
+            for (var i = 0; i < s.Length; i++)
+            {
+                if (s[i] == ' ')
+                {
+                    res.Append("%20");
+                }
+                else
+                {
+                    res.Append(s[i]);
+                }
+            }
+
+            return res.ToString();
+        }
+
+        #endregion
+
+        #region 面试题25. 合并两个排序的链表
+
+        //面试题25. 合并两个排序的链表
+        //https://leetcode-cn.com/problems/he-bing-liang-ge-pai-xu-de-lian-biao-lcof/
+
+        public static ListNode MergeTwoLists(ListNode l1, ListNode l2)
+        {
+            if (l1 == null)
+            {
+                return l2;
+            }
+
+            if (l2 == null)
+            {
+                return l1;
+            }
+
+            ListNode root, head;
+            if (l1.val > l2.val)
+            {
+                root = new ListNode(l2.val);
+                l2 = l2.next;
+            }
+            else
+            {
+                root = new ListNode(l1.val);
+                l1 = l1.next;
+            }
+
+            head = root;
+            while (l1 != null && l2 != null)
+            {
+                if (l1.val <= l2.val)
+                {
+                    root.next = new ListNode(l1.val);
+                    root = root.next;
+                    l1 = l1.next;
+                }
+                else
+                {
+                    root.next = new ListNode(l2.val);
+                    root = root.next;
+                    l2 = l2.next;
+                }
+            }
+
+            while (l1 != null)
+            {
+                root.next = new ListNode(l1.val);
+                root = root.next;
+                l1 = l1.next;
+            }
+
+            while (l2 != null)
+            {
+                root.next = new ListNode(l2.val);
+                root = root.next;
+                l2 = l2.next;
+            }
+
+            return head;
+        }
+
+        #endregion
+
+        #region 面试题27. 二叉树的镜像
+
+        //面试题27. 二叉树的镜像
+        //https://leetcode-cn.com/problems/er-cha-shu-de-jing-xiang-lcof/
+        public static TreeNode MirrorTree(TreeNode root)
+        {
+            if (root == null)
+            {
+                return null;
+            }
+
+            return new TreeNode(root.val) {left = MirrorTree(root.right), right = MirrorTree(root.left)};
+        }
+
+        #endregion
+
+        #region 面试题28. 对称的二叉树
+
+        //面试题28. 对称的二叉树
+        //https://leetcode-cn.com/problems/dui-cheng-de-er-cha-shu-lcof/
+
+        static bool IsSymmetric(TreeNode left, TreeNode right)
+        {
+            if (left == null && right == null)
+            {
+                return true;
+            }
+
+            if (left == null || right == null)
+            {
+                return false;
+            }
+
+            if (left.val != right.val)
+            {
+                return false;
+            }
+
+            return IsSymmetric(left.left, right.right) && IsSymmetric(left.right, right.left);
+        }
+
+        public static bool IsSymmetric(TreeNode root)
+        {
+            return IsSymmetric(root.left, root.right);
+        }
+
+        #endregion
+
+        #region 面试题21. 调整数组顺序使奇数位于偶数前面
+
+        //面试题21. 调整数组顺序使奇数位于偶数前面
+        //https://leetcode-cn.com/problems/diao-zheng-shu-zu-shun-xu-shi-qi-shu-wei-yu-ou-shu-qian-mian-lcof/
+
+        public int[] Exchange(int[] nums)
+        {
+            var result = new int[nums.Length];
+            var index = 0;
+            foreach (var n in nums)
+            {
+                if (n % 2 == 1)
+                {
+                    result[index++] = n;
+                }
+            }
+
+            foreach (var n in nums)
+            {
+                if (n % 2 == 0)
+                {
+                    result[index++] = n;
+                }
+            }
+
+            return result;
+        }
+
+        //首尾指针，快排思想
+        public int[] Exchange1(int[] nums)
+        {
+            int start = 0, end = nums.Length - 1;
+            while (start < end)
+            {
+                //从头直至一个偶数
+                while (start < end && (nums[start] & 1) == 1)
+                {
+                    start++;
+                }
+
+                //从尾直至一个基数
+                while (start < end && (nums[end] & 1) == 0)
+                {
+                    end--;
+                }
+
+                if (start >= end)
+                {
+                    break;
+                }
+
+                var tmp = nums[start];
+                nums[start] = nums[end];
+                nums[end] = tmp;
+                start++;
+                end--;
+            }
+
+            return nums;
+        }
+
+        //快慢指针
+        public int[] Exchange2(int[] nums)
+        {
+            int slow = 0, fast = 0;
+            while (fast < nums.Length)
+            {
+                if ((nums[fast] & 1) == 1)
+                {
+                    var cmp = nums[slow];
+                    nums[slow] = nums[fast];
+                    nums[fast] = cmp;
+                    slow++;
+                }
+
+                fast++;
+            }
+
+            return nums;
+        }
+
+        #endregion
+
+        #region 面试题15. 二进制中1的个数
+
+        //面试题15. 二进制中1的个数
+        //https://leetcode-cn.com/problems/er-jin-zhi-zhong-1de-ge-shu-lcof/
+        public int HammingWeight(uint n)
+        {
+            var size = 0;
+            while (n != 0)
+            {
+                if ((n & 1) == 1)
+                {
+                    size++;
+                }
+
+                n = n >> 1;
+            }
+
+            return size;
+        }
+
+        #endregion
+
+        #region 面试题29. 顺时针打印矩阵
+
+        //面试题29. 顺时针打印矩阵
+        //https://leetcode-cn.com/problems/shun-shi-zhen-da-yin-ju-zhen-lcof/
+        public int[] SpiralOrder(int[][] matrix)
+        {
+            int x = matrix.Length, y = matrix[0].Length, x1 = 0, y1 = 0;
+            var res = new int[x * y];
+            var index = 0;
+            var type = 0;
+            while (index < res.Length)
+            {
+                switch (type)
+                {
+                    case 0: //向右
+                        for (int i = y1; i < y; i++)
+                        {
+                            res[index++] = matrix[x1][i];
+                        }
+
+                        x1++;
+                        type = 1;
+                        break;
+                    case 1: //向下
+                        for (int i = x1; i < x; i++)
+                        {
+                            res[index++] = matrix[i][y - 1];
+                        }
+
+                        y--;
+                        type = 2;
+                        break;
+                    case 2: //向左
+                        for (int i = y - 1; i >= y1; i--)
+                        {
+                            res[index++] = matrix[x - 1][i];
+                        }
+
+                        x--;
+                        type = 3;
+                        break;
+                    case 3: //向上
+                        for (int i = x - 1; i >= x1; i--)
+                        {
+                            res[index++] = matrix[i][y1];
+                        }
+
+                        y1++;
+                        type = 0;
+                        break;
+                }
+            }
+
+            return res;
+        }
+
+        #endregion
+
+        #region 面试题22. 链表中倒数第k个节点
+
+        //面试题22. 链表中倒数第k个节点
+        //https://leetcode-cn.com/problems/lian-biao-zhong-dao-shu-di-kge-jie-dian-lcof/
+        public ListNode GetKthFromEnd(ListNode head, int k)
+        {
+            ListNode fast = head, slow = head;
+            while (fast != null)
+            {
+                k--;
+                if (k <= 0)
+                {
+                    break;
+                }
+
+                fast = fast.next;
+            }
+
+            if (fast == null)
+            {
+                return null;
+            }
+
+            while (fast != null)
+            {
+                fast = fast.next;
+                slow = slow.next;
+            }
+
+            return slow;
+        }
+
+        #endregion
+
+        #region 面试题17. 打印从1到最大的n位数
+
+        //面试题17. 打印从1到最大的n位数
+        //https://leetcode-cn.com/problems/da-yin-cong-1dao-zui-da-de-nwei-shu-lcof/
+        public int[] PrintNumbers(int n)
+        {
+            var num = 0;
+            while (n > 0)
+            {
+                num = num * 10 + 9;
+                n--;
+            }
+
+            var result = new List<int>();
+            for (int i = 1; i <= num; i++)
+            {
+                result.Add(i);
+            }
+
+            return result.ToArray();
+        }
+
+        #endregion
+
+        #region 面试题24. 反转链表
+
+        //面试题24. 反转链表
+        //https://leetcode-cn.com/problems/fan-zhuan-lian-biao-lcof/
+        public ListNode ReverseList(ListNode head)
+        {
+            if (head == null || head.next == null)
+            {
+                return head;
+            }
+
+            ListNode prev = null, current = head;
+            while (current != null)
+            {
+                var next = current.next;
+                current.next = prev;
+                prev = current;
+                current = next;
+            }
+
+            return prev;
+        }
+
+        #endregion
+
+        #region 面试题18. 删除链表的节点
+
+        //面试题18. 删除链表的节点
+        //https://leetcode-cn.com/problems/shan-chu-lian-biao-de-jie-dian-lcof/
+        public ListNode DeleteNode(ListNode head, int val)
+        {
+            if (head == null)
+            {
+                return null;
+            }
+
+            ListNode prev = null, current = head;
+            while (current != null)
+            {
+                if (current.val == val)
+                {
+                    if (prev == null)
+                    {
+                        //头节点
+                        return current.next;
+                    }
+
+                    prev.next = current.next;
+                    current.next = null;
+                    break;
+                }
+
+                prev = current;
+                current = current.next;
+            }
+
+            return head;
         }
 
         #endregion
