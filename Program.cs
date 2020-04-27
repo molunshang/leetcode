@@ -14,9 +14,11 @@ namespace leetcode
 
         static void Main(string[] args)
         {
-            // var array = new[] {4, 2, 5, 7, 1};
+            // var array = new[] {4, 2, 5, 7, 1};[0,0,1,2,4,2,2,3,1,4]
             // SubSeq(array, new List<int>(), 0);
-            SortString("aaaabbbbcccc");
+            //[0,1,1,1,4,5,3,7,7,8,10,2,7,8,0,5,2,16,12,1,19,15,5,18,2,2,22,15,8,22,17,6,22,6,22,26,32,8,10,11,2,26,9,12,9,7,28,33,20,7,2,17,44,3,52,27,2,23,19,56,56,58,36,31,1,19,19,6,65,49,27,63,29,1,69,47,56,61,40,43,10,71,60,66,42,44,10,12,83,69,73,2,65,93,92,47,35,39,13,75]
+
+            GetLeastNumbers(new int[] { 0, 1, 1, 1, 4, 5, 3, 7, 7, 8, 10, 2, 7, 8, 0, 5, 2, 16, 12, 1, 19, 15, 5, 18, 2, 2, 22, 15, 8, 22, 17, 6, 22, 6, 22, 26, 32, 8, 10, 11, 2, 26, 9, 12, 9, 7, 28, 33, 20, 7, 2, 17, 44, 3, 52, 27, 2, 23, 19, 56, 56, 58, 36, 31, 1, 19, 19, 6, 65, 49, 27, 63, 29, 1, 69, 47, 56, 61, 40, 43, 10, 71, 60, 66, 42, 44, 10, 12, 83, 69, 73, 2, 65, 93, 92, 47, 35, 39, 13, 75 }, 75);
         }
 
         static int MaxProfit(int[] prices)
@@ -58,13 +60,6 @@ namespace leetcode
             }
 
             return res;
-        }
-
-        static TreeNode BuildTree(int[] preorder, int[] inorder)
-        {
-            var root = new TreeNode(preorder[0]);
-
-            return root;
         }
 
         //13. 罗马数字转整数
@@ -434,7 +429,7 @@ namespace leetcode
             {
                 for (int c = 0; c < C; c++)
                 {
-                    result[i++] = new int[] {r, c};
+                    result[i++] = new int[] { r, c };
                 }
             }
 
@@ -560,7 +555,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char) (i + 'a'));
+                        result.Append((char)(i + 'a'));
                         chars[i]--;
                     }
 
@@ -575,7 +570,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char) (i + 'a'));
+                        result.Append((char)(i + 'a'));
                         chars[i]--;
                     }
 
@@ -916,7 +911,7 @@ namespace leetcode
                 return null;
             }
 
-            return new TreeNode(root.val) {left = MirrorTree(root.right), right = MirrorTree(root.left)};
+            return new TreeNode(root.val) { left = MirrorTree(root.right), right = MirrorTree(root.left) };
         }
 
         #endregion
@@ -1231,6 +1226,233 @@ namespace leetcode
             }
 
             return head;
+        }
+
+        #endregion
+
+        #region 面试题07. 重建二叉树
+        //面试题07. 重建二叉树
+        //https://leetcode-cn.com/problems/zhong-jian-er-cha-shu-lcof/
+        //原理：二叉树前序遍历 根节点->左节点->右节点 中序遍历 左节点->根节点->右节点 
+        // 根据前序遍历原理找出当前根节点，中序遍历中找出根节点左右子树，递归恢复
+
+        public static TreeNode BuildTree(int[] preorder, int pStart, int pEnd, int[] inorder, int iStart, int iEnd)
+        {
+            if (pStart > pEnd)
+            {
+                return null;
+            }
+            var root = new TreeNode(preorder[pStart]);
+            var index = 0;
+            for (int i = iStart; i <= iEnd; i++)
+            {
+                if (inorder[i] == root.val)
+                {
+                    break;
+                }
+                index++;
+            }
+            root.left = BuildTree(preorder, pStart + 1, pStart + index, inorder, iStart, iStart + index - 1);
+            root.right = BuildTree(preorder, pStart + index + 1, pEnd, inorder, iStart + index + 1, iEnd);
+            return root;
+        }
+
+        public TreeNode BuildTree(int[] preorder, int[] inorder)
+        {
+            return BuildTree(preorder, 0, preorder.Length - 1, inorder, 0, inorder.Length - 1);
+        }
+        #endregion
+
+        #region 面试题30. 包含min函数的栈
+        //面试题30. 包含min函数的栈
+        //https://leetcode-cn.com/problems/bao-han-minhan-shu-de-zhan-lcof/
+        //定义栈的数据结构，请在该类型中实现一个能够得到栈的最小元素的 min 函数在该栈中，调用 min、push 及 pop 的时间复杂度都是 O(1)。
+
+        public class MinStack
+        {
+            private Stack<int> stack = new Stack<int>();
+            private Stack<int> min = new Stack<int>();
+
+            public MinStack()
+            {
+
+            }
+
+            public void Push(int x)
+            {
+                stack.Push(x);
+                if (min.Count <= 0 || min.Peek() >= x)
+                {
+                    min.Push(x);
+                }
+            }
+
+            public void Pop()
+            {
+                var x = stack.Pop();
+                if (x <= min.Peek())
+                {
+                    min.Pop();
+                }
+            }
+
+            public int Top()
+            {
+                return stack.Peek();
+            }
+
+            public int Min()
+            {
+                return min.Peek();
+            }
+        }
+
+        #endregion
+
+        #region 面试题32 - II. 从上到下打印二叉树 II
+        //面试题32 - II. 从上到下打印二叉树 II
+        //https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-ii-lcof/
+        //从上到下按层打印二叉树，同一层的节点按从左到右的顺序打印，每一层打印到一行。
+        public IList<IList<int>> LevelOrder(TreeNode root)
+        {
+            if (root == null)
+            {
+                return new IList<int>[0];
+            }
+            var queue = new Queue<TreeNode>();
+            var result = new List<IList<int>>();
+            queue.Enqueue(root);
+            var size = queue.Count;
+            while (queue.Count > 0)
+            {
+                var items = new List<int>();
+                while (size > 0)
+                {
+                    root = queue.Dequeue();
+                    items.Add(root.val);
+                    if (root.left != null)
+                    {
+                        queue.Enqueue(root.left);
+                    }
+                    if (root.right != null)
+                    {
+                        queue.Enqueue(root.right);
+                    }
+                    size--;
+                }
+                result.Add(items);
+                size = queue.Count;
+            }
+            return result;
+        }
+        #endregion
+
+        #region 面试题39. 数组中出现次数超过一半的数字
+        //面试题39. 数组中出现次数超过一半的数字
+        //https://leetcode-cn.com/problems/shu-zu-zhong-chu-xian-ci-shu-chao-guo-yi-ban-de-shu-zi-lcof/
+        //数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。
+        //解法1：最直观先排序，取中间数
+        public int MajorityElement(int[] nums)
+        {
+            //如果超过1半，挨个比较size肯定会大于0
+            int num = nums[0], size = 1;
+            for (int i = 1; i < nums.Length; i++)
+            {
+                if (size <= 0)
+                {
+                    num = nums[i];
+                }
+                if (num == nums[i])
+                {
+                    size++;
+                }
+                else
+                {
+                    size--;
+                }
+            }
+            return num;
+        }
+
+        #endregion
+
+        #region 面试题40. 最小的k个数
+        //面试题40.最小的k个数
+        //https://leetcode-cn.com/problems/zui-xiao-de-kge-shu-lcof/
+        //输入整数数组 arr ，找出其中最小的 k 个数。例如，输入4、5、1、6、2、7、3、8这8个数字，则最小的4个数字是1、2、3、4
+        //top k，构建大顶堆，替换最大数，重新构建堆，全部完成后堆内即为最小的数（大数都被丢弃）
+        //  1
+        // 2 3
+        //4
+
+        static void BuildHeap(int[] arr, int index, int length)
+        {
+            while (true)
+            {
+                int left = index * 2 + 1, right = left + 1;
+                if (left > length)
+                {
+                    break;
+                }
+                if (right <= length && arr[left] < arr[right])
+                {
+                    left++;
+                }
+                if (arr[left] > arr[index])
+                {
+                    var tmp = arr[left];
+                    arr[left] = arr[index];
+                    arr[index] = tmp;
+                }
+                index = left;
+            }
+        }
+        static void MoveDown(int[] arr, int index, int lastIndex)
+        {
+            while (true)
+            {
+                int left = index * 2 + 1, right = left + 1;
+                if (left > lastIndex)
+                {
+                    break;
+                }
+                if (right <= lastIndex && arr[left] < arr[right])
+                {
+                    left++;
+                }
+                if (arr[left] > arr[index])
+                {
+                    var tmp = arr[left];
+                    arr[left] = arr[index];
+                    arr[index] = tmp;
+                }
+                else
+                {
+                    break;
+                }
+                index = left;
+            }
+        }
+        public static int[] GetLeastNumbers(int[] arr, int k)
+        {
+            for (int i = k / 2; i >= 0; i--)
+            {
+                BuildHeap(arr, i, k - 1);
+            }
+            for (int i = k; i < arr.Length; i++)
+            {
+                if (arr[i] < arr[0])
+                {
+                    arr[0] = arr[i];
+                    MoveDown(arr, 0, k - 1);
+                }
+            }
+            var res = new int[k];
+            for (int i = 0; i < res.Length; i++)
+            {
+                res[i] = arr[i];
+            }
+            return res;
         }
 
         #endregion
