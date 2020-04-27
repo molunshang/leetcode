@@ -1456,5 +1456,194 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 面试题42. 连续子数组的最大和
+
+        //面试题42. 连续子数组的最大和
+        //https://leetcode-cn.com/problems/lian-xu-zi-shu-zu-de-zui-da-he-lcof/
+        //输入一个整型数组，数组里有正数也有负数。数组中的一个或连续多个整数组成一个子数组。求所有子数组的和的最大值
+
+        public int MaxSubArray1(int[] nums)
+        {
+            int num = nums[0], sum = num;
+            for (int i = 1; i < nums.Length; i++)
+            {
+                if (sum > 0)
+                {
+                    sum += nums[i];
+                }
+                else
+                {
+                    sum = nums[i];
+                }
+
+                num = Math.Max(sum, num);
+            }
+
+            return num;
+        }
+
+        #endregion
+
+        #region 面试题50. 第一个只出现一次的字符
+
+        //面试题50. 第一个只出现一次的字符
+        //https://leetcode-cn.com/problems/di-yi-ge-zhi-chu-xian-yi-ci-de-zi-fu-lcof/
+        public char FirstUniqChar(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return ' ';
+            }
+
+            var dic = new Dictionary<char, bool>();
+            foreach (var c in s)
+            {
+                dic[c] = dic.ContainsKey(c);
+            }
+
+            foreach (var c in s)
+            {
+                if (!dic[c])
+                {
+                    return c;
+                }
+            }
+
+            return ' ';
+        }
+
+        #endregion
+
+        #region 面试题55 - I. 二叉树的深度
+
+        //面试题55 - I. 二叉树的深度
+        //https://leetcode-cn.com/problems/er-cha-shu-de-shen-du-lcof/
+        public int MaxDepth(TreeNode root)
+        {
+            if (root == null)
+            {
+                return 0;
+            }
+
+            return Math.Max(MaxDepth(root.left), MaxDepth(root.right)) + 1;
+        }
+
+        #endregion
+
+        #region 面试题57. 和为s的两个数字
+
+        //面试题57. 和为s的两个数字
+        //https://leetcode-cn.com/problems/he-wei-sde-liang-ge-shu-zi-lcof/
+        public static int Find(int[] nums, int target)
+        {
+            int start = 0, end = nums.Length;
+            while (start < end)
+            {
+                var mid = (start + end) / 2;
+                if (nums[mid] > target)
+                {
+                    start = mid + 1;
+                }
+                else if (nums[mid] < target)
+                {
+                    end = mid - 1;
+                }
+                else
+                {
+                    return mid;
+                }
+            }
+
+            return -1;
+        }
+
+        //二分查找数字
+        public int[] TwoSum(int[] nums, int target)
+        {
+            for (var i = 0; i < nums.Length; i++)
+            {
+                var num = target - nums[i];
+                var index = Find(nums, num);
+                if (index != -1)
+                {
+                    return new[] {nums[i], nums[index]};
+                }
+            }
+
+            return new int[0];
+        }
+
+        //基于set，记录出现过的数字，遍历找出之前是否出现过
+        public int[] TwoSum1(int[] nums, int target)
+        {
+            var set = new HashSet<int>();
+            for (var i = 0; i < nums.Length; i++)
+            {
+                set.Add(nums[i]);
+                var num = target - nums[i];
+                if (set.Contains(num))
+                {
+                    return new[] {nums[i], num};
+                }
+            }
+
+            return new int[0];
+        }
+
+        //双指针，分别头尾扫描，两两相加，和大于target说明尾部数大前移，小则头部前移
+        public int[] TwoSum2(int[] nums, int target)
+        {
+            int start = 0, end = nums.Length - 1;
+            while (start < end)
+            {
+                var num = nums[start] + nums[end];
+                if (num == target)
+                {
+                    return new[] {nums[start], nums[end]};
+                }
+
+                if (num > target)
+                {
+                    end--;
+                }
+                else
+                {
+                    start++;
+                }
+            }
+
+            return new int[0];
+        }
+
+        #endregion
+
+        #region 面试题54. 二叉搜索树的第k大节点
+
+        //面试题54. 二叉搜索树的第k大节点
+        //https://leetcode-cn.com/problems/er-cha-sou-suo-shu-de-di-kda-jie-dian-lcof/
+        static void Loop(TreeNode root, IList<int> items)
+        {
+            while (true)
+            {
+                if (root == null)
+                {
+                    return;
+                }
+
+                Loop(root.left, items);
+                items.Add(root.val);
+                root = root.right;
+            }
+        }
+
+        public int KthLargest(TreeNode root, int k)
+        {
+            var items = new List<int>();
+            Loop(root, items);
+            return items[items.Count - k];
+        }
+
+        #endregion
     }
 }
