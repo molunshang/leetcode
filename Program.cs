@@ -14,7 +14,7 @@ namespace leetcode
 
         static void Main(string[] args)
         {
-            new Program().LastRemaining(5, 3);
+            Console.WriteLine(new Program().LastRemaining(10, 17));
         }
 
         static int MaxProfit(int[] prices)
@@ -425,7 +425,7 @@ namespace leetcode
             {
                 for (int c = 0; c < C; c++)
                 {
-                    result[i++] = new int[] {r, c};
+                    result[i++] = new int[] { r, c };
                 }
             }
 
@@ -551,7 +551,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char) (i + 'a'));
+                        result.Append((char)(i + 'a'));
                         chars[i]--;
                     }
 
@@ -566,7 +566,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char) (i + 'a'));
+                        result.Append((char)(i + 'a'));
                         chars[i]--;
                     }
 
@@ -907,7 +907,7 @@ namespace leetcode
                 return null;
             }
 
-            return new TreeNode(root.val) {left = MirrorTree(root.right), right = MirrorTree(root.left)};
+            return new TreeNode(root.val) { left = MirrorTree(root.right), right = MirrorTree(root.left) };
         }
 
         #endregion
@@ -1590,7 +1590,7 @@ namespace leetcode
                 var index = Find(nums, num);
                 if (index != -1)
                 {
-                    return new[] {nums[i], nums[index]};
+                    return new[] { nums[i], nums[index] };
                 }
             }
 
@@ -1607,7 +1607,7 @@ namespace leetcode
                 var num = target - nums[i];
                 if (set.Contains(num))
                 {
-                    return new[] {nums[i], num};
+                    return new[] { nums[i], num };
                 }
             }
 
@@ -1623,7 +1623,7 @@ namespace leetcode
                 var num = nums[start] + nums[end];
                 if (num == target)
                 {
-                    return new[] {nums[start], nums[end]};
+                    return new[] { nums[start], nums[end] };
                 }
 
                 if (num > target)
@@ -1943,28 +1943,67 @@ namespace leetcode
             {
                 result.Add(i);
             }
-
-            var mod = result.Count;
-            var prev = mod % m;
+            var prev = (m - 1) % result.Count;
             while (result.Count > 1)
             {
                 Console.WriteLine(result[prev]);
                 result.RemoveAt(prev);
-                if (prev + m < result.Count)
-                {
-                    prev += m;
-                    prev--;
-                }
-                else
-                {
-                    mod = result.Count - prev;
-                    prev = (m % result.Count) - mod;
-                }
+                prev = (prev + m - 1) % result.Count;
             }
 
             return result[0];
         }
 
+        #endregion
+
+        #region 面试题68 - I. 二叉搜索树的最近公共祖先
+        //面试题68 - I. 二叉搜索树的最近公共祖先
+        //https://leetcode-cn.com/problems/er-cha-sou-suo-shu-de-zui-jin-gong-gong-zu-xian-lcof/
+        public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q)
+        {
+            if (root == null || (root.left == null && root.right == null))
+            {
+                return null;
+            }
+            if (root.val < p.val && root.val < q.val)
+            {
+                return lowestCommonAncestor(root.right, p, q);
+            }
+            else if (root.val > q.val && root.val > p.val)
+            {
+                return lowestCommonAncestor(root.left, p, q);
+            }
+            else
+            {
+                //p,q节点必存在tree中，此时节点分布符号搜索二叉树，直接返回root
+                return root;
+            }
+        }
+
+        #endregion
+
+        #region 面试题68 - II. 二叉树的最近公共祖先
+
+        //面试题68 - II. 二叉树的最近公共祖先
+        //https://leetcode-cn.com/problems/er-cha-shu-de-zui-jin-gong-gong-zu-xian-lcof/
+        public TreeNode lowestCommonAncestor1(TreeNode root, TreeNode p, TreeNode q)
+        {
+            if (root == null || (root.left == null && root.right == null))
+            {
+                return null;
+            }
+            TreeNode node = lowestCommonAncestor1(root.right, p, q);
+            if (node == null)
+            {
+                node = lowestCommonAncestor1(root.right, p, q);
+            }
+            if (node != null)
+            {
+                return node;
+            }
+            TreeNode node1 = findChild(root, p), node2 = findChild(root, q);
+            return node1 != null && node2 != null ? root : null;
+        }
         #endregion
     }
 }
