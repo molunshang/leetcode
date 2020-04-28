@@ -14,11 +14,7 @@ namespace leetcode
 
         static void Main(string[] args)
         {
-            // var array = new[] {4, 2, 5, 7, 1};[0,0,1,2,4,2,2,3,1,4]
-            // SubSeq(array, new List<int>(), 0);
-            //[0,1,1,1,4,5,3,7,7,8,10,2,7,8,0,5,2,16,12,1,19,15,5,18,2,2,22,15,8,22,17,6,22,6,22,26,32,8,10,11,2,26,9,12,9,7,28,33,20,7,2,17,44,3,52,27,2,23,19,56,56,58,36,31,1,19,19,6,65,49,27,63,29,1,69,47,56,61,40,43,10,71,60,66,42,44,10,12,83,69,73,2,65,93,92,47,35,39,13,75]
-
-            GetLeastNumbers(new int[] { 0, 1, 1, 1, 4, 5, 3, 7, 7, 8, 10, 2, 7, 8, 0, 5, 2, 16, 12, 1, 19, 15, 5, 18, 2, 2, 22, 15, 8, 22, 17, 6, 22, 6, 22, 26, 32, 8, 10, 11, 2, 26, 9, 12, 9, 7, 28, 33, 20, 7, 2, 17, 44, 3, 52, 27, 2, 23, 19, 56, 56, 58, 36, 31, 1, 19, 19, 6, 65, 49, 27, 63, 29, 1, 69, 47, 56, 61, 40, 43, 10, 71, 60, 66, 42, 44, 10, 12, 83, 69, 73, 2, 65, 93, 92, 47, 35, 39, 13, 75 }, 75);
+            new Program().LastRemaining(5, 3);
         }
 
         static int MaxProfit(int[] prices)
@@ -429,7 +425,7 @@ namespace leetcode
             {
                 for (int c = 0; c < C; c++)
                 {
-                    result[i++] = new int[] { r, c };
+                    result[i++] = new int[] {r, c};
                 }
             }
 
@@ -485,7 +481,7 @@ namespace leetcode
 
         static void SubSeq(IList<int> nums, IList<int> result, IList<IList<int>> list, int start)
         {
-            if (result.Count == 3)
+            if (result.Count == 2)
             {
                 list.Add(result.ToArray());
                 return;
@@ -555,7 +551,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char)(i + 'a'));
+                        result.Append((char) (i + 'a'));
                         chars[i]--;
                     }
 
@@ -570,7 +566,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char)(i + 'a'));
+                        result.Append((char) (i + 'a'));
                         chars[i]--;
                     }
 
@@ -911,7 +907,7 @@ namespace leetcode
                 return null;
             }
 
-            return new TreeNode(root.val) { left = MirrorTree(root.right), right = MirrorTree(root.left) };
+            return new TreeNode(root.val) {left = MirrorTree(root.right), right = MirrorTree(root.left)};
         }
 
         #endregion
@@ -1231,6 +1227,7 @@ namespace leetcode
         #endregion
 
         #region 面试题07. 重建二叉树
+
         //面试题07. 重建二叉树
         //https://leetcode-cn.com/problems/zhong-jian-er-cha-shu-lcof/
         //原理：二叉树前序遍历 根节点->左节点->右节点 中序遍历 左节点->根节点->右节点 
@@ -1242,6 +1239,7 @@ namespace leetcode
             {
                 return null;
             }
+
             var root = new TreeNode(preorder[pStart]);
             var index = 0;
             for (int i = iStart; i <= iEnd; i++)
@@ -1250,8 +1248,10 @@ namespace leetcode
                 {
                     break;
                 }
+
                 index++;
             }
+
             root.left = BuildTree(preorder, pStart + 1, pStart + index, inorder, iStart, iStart + index - 1);
             root.right = BuildTree(preorder, pStart + index + 1, pEnd, inorder, iStart + index + 1, iEnd);
             return root;
@@ -1261,9 +1261,11 @@ namespace leetcode
         {
             return BuildTree(preorder, 0, preorder.Length - 1, inorder, 0, inorder.Length - 1);
         }
+
         #endregion
 
         #region 面试题30. 包含min函数的栈
+
         //面试题30. 包含min函数的栈
         //https://leetcode-cn.com/problems/bao-han-minhan-shu-de-zhan-lcof/
         //定义栈的数据结构，请在该类型中实现一个能够得到栈的最小元素的 min 函数在该栈中，调用 min、push 及 pop 的时间复杂度都是 O(1)。
@@ -1275,7 +1277,6 @@ namespace leetcode
 
             public MinStack()
             {
-
             }
 
             public void Push(int x)
@@ -1310,6 +1311,7 @@ namespace leetcode
         #endregion
 
         #region 面试题32 - II. 从上到下打印二叉树 II
+
         //面试题32 - II. 从上到下打印二叉树 II
         //https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-ii-lcof/
         //从上到下按层打印二叉树，同一层的节点按从左到右的顺序打印，每一层打印到一行。
@@ -1319,6 +1321,7 @@ namespace leetcode
             {
                 return new IList<int>[0];
             }
+
             var queue = new Queue<TreeNode>();
             var result = new List<IList<int>>();
             queue.Enqueue(root);
@@ -1334,20 +1337,26 @@ namespace leetcode
                     {
                         queue.Enqueue(root.left);
                     }
+
                     if (root.right != null)
                     {
                         queue.Enqueue(root.right);
                     }
+
                     size--;
                 }
+
                 result.Add(items);
                 size = queue.Count;
             }
+
             return result;
         }
+
         #endregion
 
         #region 面试题39. 数组中出现次数超过一半的数字
+
         //面试题39. 数组中出现次数超过一半的数字
         //https://leetcode-cn.com/problems/shu-zu-zhong-chu-xian-ci-shu-chao-guo-yi-ban-de-shu-zi-lcof/
         //数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。
@@ -1362,6 +1371,7 @@ namespace leetcode
                 {
                     num = nums[i];
                 }
+
                 if (num == nums[i])
                 {
                     size++;
@@ -1371,12 +1381,14 @@ namespace leetcode
                     size--;
                 }
             }
+
             return num;
         }
 
         #endregion
 
         #region 面试题40. 最小的k个数
+
         //面试题40.最小的k个数
         //https://leetcode-cn.com/problems/zui-xiao-de-kge-shu-lcof/
         //输入整数数组 arr ，找出其中最小的 k 个数。例如，输入4、5、1、6、2、7、3、8这8个数字，则最小的4个数字是1、2、3、4
@@ -1394,19 +1406,23 @@ namespace leetcode
                 {
                     break;
                 }
+
                 if (right <= length && arr[left] < arr[right])
                 {
                     left++;
                 }
+
                 if (arr[left] > arr[index])
                 {
                     var tmp = arr[left];
                     arr[left] = arr[index];
                     arr[index] = tmp;
                 }
+
                 index = left;
             }
         }
+
         static void MoveDown(int[] arr, int index, int lastIndex)
         {
             while (true)
@@ -1416,10 +1432,12 @@ namespace leetcode
                 {
                     break;
                 }
+
                 if (right <= lastIndex && arr[left] < arr[right])
                 {
                     left++;
                 }
+
                 if (arr[left] > arr[index])
                 {
                     var tmp = arr[left];
@@ -1430,15 +1448,18 @@ namespace leetcode
                 {
                     break;
                 }
+
                 index = left;
             }
         }
+
         public static int[] GetLeastNumbers(int[] arr, int k)
         {
             for (int i = k / 2; i >= 0; i--)
             {
                 BuildHeap(arr, i, k - 1);
             }
+
             for (int i = k; i < arr.Length; i++)
             {
                 if (arr[i] < arr[0])
@@ -1447,11 +1468,13 @@ namespace leetcode
                     MoveDown(arr, 0, k - 1);
                 }
             }
+
             var res = new int[k];
             for (int i = 0; i < res.Length; i++)
             {
                 res[i] = arr[i];
             }
+
             return res;
         }
 
@@ -1642,6 +1665,304 @@ namespace leetcode
             var items = new List<int>();
             Loop(root, items);
             return items[items.Count - k];
+        }
+
+        #endregion
+
+        #region 面试题53 - I. 在排序数组中查找数字 I
+
+        //面试题53 - I. 在排序数组中查找数字 I
+        //https://leetcode-cn.com/problems/zai-pai-xu-shu-zu-zhong-cha-zhao-shu-zi-lcof/
+        public int Search(int[] nums, int target)
+        {
+            if (nums == null || nums.Length == 0)
+            {
+                return 0;
+            }
+
+            int start = 0, end = nums.Length - 1, mid = (start + end) / 2;
+            while (start <= end)
+            {
+                if (nums[mid] == target)
+                {
+                    var size = 1;
+                    for (int i = mid + 1; i <= end; i++)
+                    {
+                        if (nums[i] != target)
+                        {
+                            break;
+                        }
+
+                        size++;
+                    }
+
+                    for (int i = mid - 1; i >= start; i--)
+                    {
+                        if (nums[i] != target)
+                        {
+                            break;
+                        }
+
+                        size++;
+                    }
+
+                    return size;
+                }
+
+                if (nums[mid] > target)
+                {
+                    end = mid - 1;
+                }
+                else
+                {
+                    start = mid + 1;
+                }
+
+                mid = (start + end) / 2;
+            }
+
+            return 0;
+        }
+
+        #endregion
+
+        #region 面试题58 - I. 翻转单词顺序
+
+        //面试题58 - I. 翻转单词顺序
+        //https://leetcode-cn.com/problems/fan-zhuan-dan-ci-shun-xu-lcof/
+        public string ReverseWords(string s)
+        {
+            var res = new StringBuilder();
+            var length = 0;
+            for (int i = s.Length - 1; i >= 0; i--)
+            {
+                var ch = s[i];
+                if (ch == ' ')
+                {
+                    if (length > 0)
+                    {
+                        if (res.Length > 0)
+                        {
+                            res.Append(' ');
+                        }
+
+                        res.Append(s, i + 1, length);
+                        length = 0;
+                    }
+
+                    continue;
+                }
+
+                length++;
+            }
+
+            if (length > 0)
+            {
+                if (res.Length > 0)
+                {
+                    res.Append(' ');
+                }
+
+                res.Append(s, 0, length);
+            }
+
+            return res.ToString();
+        }
+
+        #endregion
+
+        #region 面试题58 - II. 左旋转字符串
+
+        //面试题58 - II. 左旋转字符串/
+        //https://leetcode-cn.com/problems/zuo-xuan-zhuan-zi-fu-chuan-lcof/
+        public string ReverseLeftWords(string s, int n)
+        {
+            n = n % s.Length;
+            var result = new StringBuilder();
+            result.Append(s.Substring(n));
+            result.Append(s.Substring(s.Length - n - 1, n));
+            return result.ToString();
+        }
+
+        #endregion
+
+        #region 面试题66. 构建乘积数组
+
+        //面试题66. 构建乘积数组
+        //https://leetcode-cn.com/problems/gou-jian-cheng-ji-shu-zu-lcof/
+        public int[] ConstructArr(int[] a)
+        {
+            int[] prev = new int[a.Length], next = new int[a.Length], res = new int[a.Length];
+            for (int i = 0, j = a.Length - 1; i < a.Length; i++, j--)
+            {
+                if (i == 0)
+                {
+                    prev[i] = a[i];
+                    next[j] = a[j];
+                }
+                else
+                {
+                    prev[i] = prev[i - 1] * a[i];
+                    next[j] = next[j + 1] * a[j];
+                }
+            }
+
+            for (int i = 0, j = a.Length - 1; i < a.Length; i++)
+            {
+                res[i] = (i == 0 ? 1 : prev[i - 1]) * (i == j ? 1 : next[i + 1]);
+            }
+
+            return res;
+        }
+
+        #endregion
+
+        #region 面试题55 - II. 平衡二叉树
+
+        //面试题55 - II. 平衡二叉树
+        //https://leetcode-cn.com/problems/ping-heng-er-cha-shu-lcof/
+        public bool IsBalanced(TreeNode root)
+        {
+            if (root == null)
+            {
+                return true;
+            }
+
+            if (Math.Abs(MaxDepth(root.left) - MaxDepth(root.right)) > 1)
+            {
+                return false;
+            }
+
+            return IsBalanced(root.left) && IsBalanced(root.right);
+        }
+
+        #endregion
+
+        //todo 待完成
+
+        #region 面试题60. n个骰子的点数
+
+        //面试题60. n个骰子的点数
+        //https://leetcode-cn.com/problems/nge-tou-zi-de-dian-shu-lcof/
+
+        public static void Sequence(IList<int> nums, IList<int> sequence, IDictionary<int, int> countDic, int index,
+            int n)
+        {
+            if (sequence.Count == n)
+            {
+                Console.WriteLine(string.Join(',', sequence));
+                var sum = sequence.Sum();
+                if (countDic.ContainsKey(sum))
+                {
+                    countDic[sum]++;
+                }
+                else
+                {
+                    countDic[sum] = 1;
+                }
+
+                return;
+            }
+
+            if (index >= nums.Count)
+            {
+                return;
+            }
+
+            for (int i = index; i < nums.Count; i++)
+            {
+                sequence.Add(nums[i]);
+                Sequence(nums, sequence, countDic, i + 6, n);
+                sequence.RemoveAt(sequence.Count - 1);
+            }
+        }
+
+        public double[] TwoSum(int n)
+        {
+            var items = new int[n, 6];
+            return null;
+        }
+
+        #endregion
+
+        #region 面试题61. 扑克牌中的顺子
+
+        //面试题61. 扑克牌中的顺子
+        //https://leetcode-cn.com/problems/bu-ke-pai-zhong-de-shun-zi-lcof/
+        public bool IsStraight(int[] nums)
+        {
+            Array.Sort(nums);
+            int start = 0, end = nums.Length - 1;
+            while (start < end)
+            {
+                if (nums[end] == nums[end - 1] && nums[end] != 0)
+                {
+                    return false;
+                }
+
+                var diff = nums[end] - nums[end - 1] - 1;
+                if (diff != 0)
+                {
+                    while (diff != 0 && start < end)
+                    {
+                        if (nums[start++] != 0)
+                        {
+                            return false;
+                        }
+
+                        if (start == end)
+                        {
+                            return true;
+                        }
+
+                        diff--;
+                    }
+
+                    if (diff != 0)
+                    {
+                        return false;
+                    }
+                }
+
+                end--;
+            }
+
+            return true;
+        }
+
+        #endregion
+
+        #region 面试题62. 圆圈中最后剩下的数字
+
+        //面试题62. 圆圈中最后剩下的数字
+        //https://leetcode-cn.com/problems/yuan-quan-zhong-zui-hou-sheng-xia-de-shu-zi-lcof/
+        public int LastRemaining(int n, int m)
+        {
+            var result = new List<int>(n);
+            for (int i = 0; i < n; i++)
+            {
+                result.Add(i);
+            }
+
+            var mod = result.Count;
+            var prev = mod % m;
+            while (result.Count > 1)
+            {
+                Console.WriteLine(result[prev]);
+                result.RemoveAt(prev);
+                if (prev + m < result.Count)
+                {
+                    prev += m;
+                    prev--;
+                }
+                else
+                {
+                    mod = result.Count - prev;
+                    prev = (m % result.Count) - mod;
+                }
+            }
+
+            return result[0];
         }
 
         #endregion
