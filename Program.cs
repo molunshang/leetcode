@@ -14,7 +14,7 @@ namespace leetcode
 
         static void Main(string[] args)
         {
-            Console.WriteLine(new Program().LastRemaining(10, 17));
+            Console.WriteLine(new Program().Permutation("abc"));
         }
 
         static int MaxProfit(int[] prices)
@@ -425,7 +425,7 @@ namespace leetcode
             {
                 for (int c = 0; c < C; c++)
                 {
-                    result[i++] = new int[] { r, c };
+                    result[i++] = new int[] {r, c};
                 }
             }
 
@@ -551,7 +551,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char)(i + 'a'));
+                        result.Append((char) (i + 'a'));
                         chars[i]--;
                     }
 
@@ -566,7 +566,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char)(i + 'a'));
+                        result.Append((char) (i + 'a'));
                         chars[i]--;
                     }
 
@@ -907,7 +907,7 @@ namespace leetcode
                 return null;
             }
 
-            return new TreeNode(root.val) { left = MirrorTree(root.right), right = MirrorTree(root.left) };
+            return new TreeNode(root.val) {left = MirrorTree(root.right), right = MirrorTree(root.left)};
         }
 
         #endregion
@@ -1590,7 +1590,7 @@ namespace leetcode
                 var index = Find(nums, num);
                 if (index != -1)
                 {
-                    return new[] { nums[i], nums[index] };
+                    return new[] {nums[i], nums[index]};
                 }
             }
 
@@ -1607,7 +1607,7 @@ namespace leetcode
                 var num = target - nums[i];
                 if (set.Contains(num))
                 {
-                    return new[] { nums[i], num };
+                    return new[] {nums[i], num};
                 }
             }
 
@@ -1623,7 +1623,7 @@ namespace leetcode
                 var num = nums[start] + nums[end];
                 if (num == target)
                 {
-                    return new[] { nums[start], nums[end] };
+                    return new[] {nums[start], nums[end]};
                 }
 
                 if (num > target)
@@ -1943,6 +1943,7 @@ namespace leetcode
             {
                 result.Add(i);
             }
+
             var prev = (m - 1) % result.Count;
             while (result.Count > 1)
             {
@@ -1957,6 +1958,7 @@ namespace leetcode
         #endregion
 
         #region 面试题68 - I. 二叉搜索树的最近公共祖先
+
         //面试题68 - I. 二叉搜索树的最近公共祖先
         //https://leetcode-cn.com/problems/er-cha-sou-suo-shu-de-zui-jin-gong-gong-zu-xian-lcof/
         public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q)
@@ -1965,6 +1967,7 @@ namespace leetcode
             {
                 return null;
             }
+
             if (root.val < p.val && root.val < q.val)
             {
                 return lowestCommonAncestor(root.right, p, q);
@@ -1984,26 +1987,338 @@ namespace leetcode
 
         #region 面试题68 - II. 二叉树的最近公共祖先
 
+        public TreeNode FindChild(TreeNode root, TreeNode child)
+        {
+            while (true)
+            {
+                if (root == null)
+                {
+                    return null;
+                }
+
+                if (child == null || root.val == child.val)
+                {
+                    return root;
+                }
+
+                TreeNode node = FindChild(root.left, child);
+                if (node != null) return node;
+                root = root.right;
+            }
+        }
+
         //面试题68 - II. 二叉树的最近公共祖先
         //https://leetcode-cn.com/problems/er-cha-shu-de-zui-jin-gong-gong-zu-xian-lcof/
-        public TreeNode lowestCommonAncestor1(TreeNode root, TreeNode p, TreeNode q)
+        public TreeNode LowestCommonAncestor1(TreeNode root, TreeNode p, TreeNode q)
         {
             if (root == null || (root.left == null && root.right == null))
             {
                 return null;
             }
-            TreeNode node = lowestCommonAncestor1(root.right, p, q);
+
+            TreeNode node = LowestCommonAncestor1(root.right, p, q);
             if (node == null)
             {
-                node = lowestCommonAncestor1(root.right, p, q);
+                node = LowestCommonAncestor1(root.right, p, q);
             }
+
             if (node != null)
             {
                 return node;
             }
-            TreeNode node1 = findChild(root, p), node2 = findChild(root, q);
+
+            TreeNode node1 = FindChild(root, p), node2 = FindChild(root, q);
             return node1 != null && node2 != null ? root : null;
         }
+
+        #endregion
+
+        #region 面试题52. 两个链表的第一个公共节点
+
+        //面试题52. 两个链表的第一个公共节点
+        //https://leetcode-cn.com/problems/liang-ge-lian-biao-de-di-yi-ge-gong-gong-jie-dian-lcof/
+        public ListNode GetIntersectionNode(ListNode headA, ListNode headB)
+        {
+            int lenA = 0, lenB = 0;
+            ListNode nodeA = headA, nodeB = headB;
+            while (nodeA != null && nodeB != null)
+            {
+                lenA++;
+                lenB++;
+                nodeA = nodeA.next;
+                nodeB = nodeB.next;
+            }
+
+            while (nodeA != null)
+            {
+                lenA++;
+                nodeA = nodeA.next;
+            }
+
+            while (nodeB != null)
+            {
+                lenB++;
+                nodeB = nodeB.next;
+            }
+
+            while (headA != null && headB != null)
+            {
+                if (lenA > lenB)
+                {
+                    lenA--;
+                    headA = headA.next;
+                }
+                else if (lenA < lenB)
+                {
+                    lenB--;
+                    headB = headB.next;
+                }
+                else
+                {
+                    if (headA == headB)
+                    {
+                        return headA;
+                    }
+
+                    headA = headA.next;
+                    headB = headB.next;
+                }
+            }
+
+            return null;
+        }
+
+        #endregion
+
+        #region 面试题53 - II. 0～n-1中缺失的数字
+
+        //面试题53 - II. 0～n-1中缺失的数字
+        //https://leetcode-cn.com/problems/que-shi-de-shu-zi-lcof/
+        public int MissingNumber(int[] nums)
+        {
+            int start = 0, end = nums.Length - 1;
+            while (start <= end)
+            {
+                //[0,1,3,4,5]
+                var mid = (start + end) / 2;
+                if (nums[mid] == mid)
+                {
+                    start = mid + 1;
+                }
+                else if (nums[mid] > mid)
+                {
+                    end = mid - 1;
+                }
+            }
+
+            return start;
+        }
+
+        #endregion
+
+        #region 面试题57 - II. 和为s的连续正数序列
+
+        //面试题57 - II. 和为s的连续正数序列
+        //https://leetcode-cn.com/problems/he-wei-sde-lian-xu-zheng-shu-xu-lie-lcof/
+        public int[][] FindContinuousSequence(int target)
+        {
+            var end = target / 2 + 1;
+            var result = new List<int[]>();
+            var list = new List<int>();
+            var sum = 0;
+            for (int i = 0; i < end; i++)
+            {
+                var num = i + 1;
+                list.Add(num);
+                sum += num;
+                while (sum > target && list.Count > 0)
+                {
+                    sum -= list[0];
+                    list.RemoveAt(0);
+                }
+
+                if (sum == target)
+                {
+                    result.Add(list.ToArray());
+                }
+            }
+
+            return result.ToArray();
+        }
+
+        #endregion
+
+        #region 面试题32 - I. 从上到下打印二叉树
+
+        //面试题32 - I. 从上到下打印二叉树
+        //https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-lcof/
+        public int[] LevelOrder1(TreeNode root)
+        {
+            if (root == null)
+            {
+                return new int[0];
+            }
+
+            var queue = new Queue<TreeNode>();
+            var result = new List<int>();
+            queue.Enqueue(root);
+            while (queue.Count > 0)
+            {
+                root = queue.Dequeue();
+                if (root == null)
+                {
+                    continue;
+                }
+
+                result.Add(root.val);
+                queue.Enqueue(root.left);
+                queue.Enqueue(root.right);
+            }
+
+            return result.ToArray();
+        }
+
+        #endregion
+
+        #region 面试题12. 矩阵中的路径
+
+        //面试题12. 矩阵中的路径
+        //https://leetcode-cn.com/problems/ju-zhen-zhong-de-lu-jing-lcof/
+
+        bool Move(char[][] board, bool[,] flag, int x, int y, int index, string word)
+        {
+            if (x < 0 || x >= board.Length || y < 0 || y >= board[0].Length || flag[x, y])
+            {
+                return false;
+            }
+
+            if (board[x][y] == word[index])
+            {
+                Console.WriteLine(word[index]);
+                flag[x, y] = true;
+                if (index == word.Length - 1)
+                {
+                    return true;
+                }
+
+                var res = Move(board, flag, x, y - 1, index + 1, word) ||
+                          Move(board, flag, x, y + 1, index + 1, word) ||
+                          Move(board, flag, x - 1, y, index + 1, word) ||
+                          Move(board, flag, x + 1, y, index + 1, word);
+                if (res)
+                {
+                    return true;
+                }
+            }
+
+            flag[x, y] = false;
+            return false;
+        }
+
+        public bool Exist(char[][] board, string word)
+        {
+            var flag = new bool[board.Length, board[0].Length];
+            for (int i = 0; i < board.Length; i++)
+            {
+                for (int j = 0; j < board[i].Length; j++)
+                {
+                    if (Move(board, flag, i, j, 0, word))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        #endregion
+
+        #region 面试题26. 树的子结构
+
+        //面试题26. 树的子结构
+        //https://leetcode-cn.com/problems/shu-de-zi-jie-gou-lcof/
+        bool IsSame(TreeNode a, TreeNode b)
+        {
+            if (b == null)
+            {
+                return true;
+            }
+
+            if (a == null)
+            {
+                return false;
+            }
+
+            return a.val == b.val && IsSame(a.left, b.left) && IsSame(a.right, b.right);
+        }
+
+        public bool IsSubStructure(TreeNode A, TreeNode B)
+        {
+            if (B == null)
+            {
+                return false;
+            }
+
+            if (A == null)
+            {
+                return false;
+            }
+
+            if (A.val == B.val)
+            {
+                var res = IsSame(A.left, B.left) && IsSame(A.right, B.right);
+                if (res)
+                {
+                    return true;
+                }
+            }
+
+            return IsSubStructure(A.left, B) || IsSubStructure(A.right, B);
+        }
+
+        #endregion
+
+        #region 面试题38. 字符串的排列
+
+        //面试题38. 字符串的排列
+        //https://leetcode-cn.com/problems/zi-fu-chuan-de-pai-lie-lcof/
+
+        void Swap(char[] chars, int i, int j)
+        {
+            var tmp = chars[j];
+            chars[j] = chars[i];
+            chars[i] = tmp;
+        }
+
+        // void dfs(int x) {
+        //     res.add(String.valueOf(c));
+        //     HashSet<Character> set = new HashSet<>();
+        //     for(int i = x; i < c.length; i++) {
+        //         swap(i, x); // 交换，将 c[i] 固定在第 x 位 
+        //         dfs(x + 1); // 开启固定第 x + 1 位字符
+        //         swap(i, x); // 恢复交换
+        //     }
+        // }
+        void Permutation(char[] chars, int index, ISet<string> strs)
+        {
+            strs.Add(new string(chars));
+            for (int i = index; i < chars.Length; i++)
+            {
+                Swap(chars, index, i);
+                Permutation(chars, index + 1, strs);
+                Swap(chars, index, i);
+            }
+        }
+
+        public string[] Permutation(string s)
+        {
+            var result = new HashSet<string>();
+            var chars = s.ToCharArray();
+            Permutation(chars, 0, result);
+            return result.ToArray();
+        }
+
         #endregion
     }
 }
