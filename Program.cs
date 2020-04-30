@@ -14,7 +14,7 @@ namespace leetcode
 
         static void Main(string[] args)
         {
-            Console.WriteLine(new Program().Permutation("abc"));
+            Console.WriteLine(new Program().IsHappy(7));
         }
 
         static int MaxProfit(int[] prices)
@@ -2317,6 +2317,54 @@ namespace leetcode
             var chars = s.ToCharArray();
             Permutation(chars, 0, result);
             return result.ToArray();
+        }
+
+        #endregion
+
+        #region 202. 快乐数
+
+        //202. 快乐数
+        //https://leetcode-cn.com/problems/happy-number/
+        public bool IsHappy(int n)
+        {
+            var num = 0;
+            var set = new HashSet<int>();
+            while (n != 1 && !set.Contains(n))
+            {
+                set.Add(n);
+                while (n > 0)
+                {
+                    num += (int) Math.Pow(n % 10, 2);
+                    n /= 10;
+                }
+
+                n = num;
+                num = 0;
+            }
+
+            return n == 1;
+        }
+
+        #endregion
+
+        #region 面试题14- I. 剪绳子
+
+        //面试题14- I. 剪绳子
+        //https://leetcode-cn.com/problems/jian-sheng-zi-lcof/
+        public int CuttingRope(int n)
+        {
+            if (n <= 2)
+            {
+                return 1;
+            }
+
+            var max = 0;
+            for (int i = 1; i < n; i++)
+            {
+                max = Math.Max(Math.Max(i * CuttingRope(n - i), i * (n - i)), max);
+            }
+
+            return max;
         }
 
         #endregion
