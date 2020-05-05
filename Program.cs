@@ -14,7 +14,12 @@ namespace leetcode
 
         static void Main(string[] args)
         {
-            Console.WriteLine(new Program().IsHappy(7));
+            var tree = new TreeNode(3);
+            tree.left = new TreeNode(1);
+            var node = tree.left;
+            node.right = new TreeNode(2);
+            node.right = new TreeNode(3);
+            Console.WriteLine(new Program().IsValidBST(tree));
         }
 
         static int MaxProfit(int[] prices)
@@ -425,7 +430,7 @@ namespace leetcode
             {
                 for (int c = 0; c < C; c++)
                 {
-                    result[i++] = new int[] {r, c};
+                    result[i++] = new int[] { r, c };
                 }
             }
 
@@ -551,7 +556,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char) (i + 'a'));
+                        result.Append((char)(i + 'a'));
                         chars[i]--;
                     }
 
@@ -566,7 +571,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char) (i + 'a'));
+                        result.Append((char)(i + 'a'));
                         chars[i]--;
                     }
 
@@ -907,7 +912,7 @@ namespace leetcode
                 return null;
             }
 
-            return new TreeNode(root.val) {left = MirrorTree(root.right), right = MirrorTree(root.left)};
+            return new TreeNode(root.val) { left = MirrorTree(root.right), right = MirrorTree(root.left) };
         }
 
         #endregion
@@ -1590,7 +1595,7 @@ namespace leetcode
                 var index = Find(nums, num);
                 if (index != -1)
                 {
-                    return new[] {nums[i], nums[index]};
+                    return new[] { nums[i], nums[index] };
                 }
             }
 
@@ -1607,7 +1612,7 @@ namespace leetcode
                 var num = target - nums[i];
                 if (set.Contains(num))
                 {
-                    return new[] {nums[i], num};
+                    return new[] { nums[i], num };
                 }
             }
 
@@ -1623,7 +1628,7 @@ namespace leetcode
                 var num = nums[start] + nums[end];
                 if (num == target)
                 {
-                    return new[] {nums[start], nums[end]};
+                    return new[] { nums[start], nums[end] };
                 }
 
                 if (num > target)
@@ -2334,7 +2339,7 @@ namespace leetcode
                 set.Add(n);
                 while (n > 0)
                 {
-                    num += (int) Math.Pow(n % 10, 2);
+                    num += (int)Math.Pow(n % 10, 2);
                     n /= 10;
                 }
 
@@ -2368,5 +2373,176 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 3. 无重复字符的最长子串
+        //3. 无重复字符的最长子串
+        //https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/
+        public int LengthOfLongestSubstring(string s)
+        {
+            var set = new HashSet<char>();
+            var max = -1;
+            for (int i = 0, j = 0; i < s.Length; i++)
+            {
+                while (set.Contains(s[i]) && j <= i)
+                {
+                    set.Remove(s[j]);
+                    j++;
+                }
+                set.Add(s[i]);
+                max = Math.Max(max, set.Count);
+            }
+            return max;
+        }
+        #endregion
+
+        #region 面试题32 - III. 从上到下打印二叉树 III
+        //面试题32 - III. 从上到下打印二叉树 III
+        //https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-iii-lcof/
+        public IList<IList<int>> LevelOrder3(TreeNode root)
+        {
+            var result = new List<IList<int>>();
+            var queue = new Queue<TreeNode>();
+            queue.Enqueue(root);
+            var size = queue.Count;
+            while (queue.Count > 0)
+            {
+                var items = new List<int>();
+                while (size > 0)
+                {
+                    root = queue.Dequeue();
+                    size--;
+                    if (root == null)
+                    {
+                        continue;
+                    }
+                    if (result.Count % 2 == 0)
+                    {
+                        items.Add(root.val);
+                    }
+                    else
+                    {
+                        items.Insert(0, root.val);
+                    }
+                    queue.Enqueue(root.left);
+                    queue.Enqueue(root.right);
+
+                }
+                size = queue.Count;
+                if (items.Count > 0)
+                {
+                    result.Add(items);
+                }
+            }
+            return result;
+        }
+
+        #endregion
+
+        #region 面试题33. 二叉搜索树的后序遍历序列
+        //面试题33. 二叉搜索树的后序遍历序列
+        //https://leetcode-cn.com/problems/er-cha-sou-suo-shu-de-hou-xu-bian-li-xu-lie-lcof/
+
+        bool CheckTree(int[] postorder, int start, int end)
+        {
+            if (start >= end)
+            {
+                return true;
+            }
+
+            var root = postorder[end];
+            var index = end - 1;
+            while (start < index && postorder[index] >= root)
+            {
+                index--;
+            }
+            for (int i = start; i < index; i++)
+            {
+                if (postorder[i] > root)
+                {
+                    return false;
+                }
+            }
+            return CheckTree(postorder, start, index) && CheckTree(postorder, index + 1, end - 1);
+        }
+        public bool VerifyPostorder(int[] postorder)
+        {
+            return CheckTree(postorder, 0, postorder.Length - 1);
+        }
+        #endregion
+
+        #region 面试题34. 二叉树中和为某一值的路径
+        //面试题34. 二叉树中和为某一值的路径
+        //https://leetcode-cn.com/problems/er-cha-shu-zhong-he-wei-mou-yi-zhi-de-lu-jing-lcof/
+        void PathSum(TreeNode node, IList<IList<int>> result, List<int> path, int sum, int target)
+        {
+            path.Add(node.val);
+            sum += node.val;
+
+            if (node.left == null && node.right == null)
+            {
+                if (sum == target)
+                {
+                    result.Add(path.ToArray());
+                }
+            }
+            if (sum < target)
+            {
+                if (node.left != null)
+                {
+                    PathSum(node.left, result, path, sum, target);
+                }
+                if (node.right != null)
+                {
+                    PathSum(node.right, result, path, sum, target);
+                }
+            }
+            path.RemoveAt(path.Count - 1);
+
+        }
+        public IList<IList<int>> PathSum(TreeNode root, int sum)
+        {
+            var result = new List<IList<int>>();
+            PathSum(root, result, new List<int>(), 0, sum);
+            return result;
+        }
+        #endregion
+
+        #region 98. 验证二叉搜索树
+        //98. 验证二叉搜索树
+        //https://leetcode-cn.com/problems/validate-binary-search-tree/
+        public bool IsValidBST(TreeNode node, int rootVal, bool isLeft)
+        {
+            if (node == null)
+            {
+                return true;
+            }
+            if (isLeft && (node.val >= rootVal))
+            {
+                return false;
+            }
+            else if (!isLeft && (node.val <= rootVal))
+            {
+                return false;
+            }
+            return IsValidBST(node.left, rootVal, isLeft) && IsValidBST(node.right, rootVal, isLeft);
+        }
+
+        public bool IsValidBST(TreeNode root)
+        {
+            if (root == null)
+            {
+                return true;
+            }
+            var flag = IsValidBST(root.left, root.val, true) && IsValidBST(root.right, root.val, false);
+            if (!flag)
+            {
+                return false;
+            }
+            return IsValidBST(root.left) && IsValidBST(root.right);
+        }
+
+
+        #endregion
+
     }
 }
