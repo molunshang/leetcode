@@ -2544,5 +2544,38 @@ namespace leetcode
 
         #endregion
 
+        #region 572. 另一个树的子树
+        //572. 另一个树的子树
+        //https://leetcode-cn.com/problems/subtree-of-another-tree/
+        bool CheckSubtree(TreeNode s, TreeNode t)
+        {
+            if (s == null)
+            {
+                return t == null;
+            }
+            if (t == null)
+            {
+                return false;
+            }
+            if (s.val == t.val)
+            {
+                return CheckSubtree(s.left, t.left) && CheckSubtree(s.right, t.right);
+            }
+            return false;
+        }
+        public bool IsSubtree(TreeNode s, TreeNode t)
+        {
+            if (s == null)
+            {
+                return false;
+            }
+            if (CheckSubtree(s, t))
+            {
+                return true;
+            }
+            return IsSubtree(s.left, t) || IsSubtree(s.right, t);
+        }
+
+        #endregion
     }
 }
