@@ -430,7 +430,7 @@ namespace leetcode
             {
                 for (int c = 0; c < C; c++)
                 {
-                    result[i++] = new int[] { r, c };
+                    result[i++] = new int[] {r, c};
                 }
             }
 
@@ -556,7 +556,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char)(i + 'a'));
+                        result.Append((char) (i + 'a'));
                         chars[i]--;
                     }
 
@@ -571,7 +571,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char)(i + 'a'));
+                        result.Append((char) (i + 'a'));
                         chars[i]--;
                     }
 
@@ -912,7 +912,7 @@ namespace leetcode
                 return null;
             }
 
-            return new TreeNode(root.val) { left = MirrorTree(root.right), right = MirrorTree(root.left) };
+            return new TreeNode(root.val) {left = MirrorTree(root.right), right = MirrorTree(root.left)};
         }
 
         #endregion
@@ -1595,7 +1595,7 @@ namespace leetcode
                 var index = Find(nums, num);
                 if (index != -1)
                 {
-                    return new[] { nums[i], nums[index] };
+                    return new[] {nums[i], nums[index]};
                 }
             }
 
@@ -1612,7 +1612,7 @@ namespace leetcode
                 var num = target - nums[i];
                 if (set.Contains(num))
                 {
-                    return new[] { nums[i], num };
+                    return new[] {nums[i], num};
                 }
             }
 
@@ -1628,7 +1628,7 @@ namespace leetcode
                 var num = nums[start] + nums[end];
                 if (num == target)
                 {
-                    return new[] { nums[start], nums[end] };
+                    return new[] {nums[start], nums[end]};
                 }
 
                 if (num > target)
@@ -2339,7 +2339,7 @@ namespace leetcode
                 set.Add(n);
                 while (n > 0)
                 {
-                    num += (int)Math.Pow(n % 10, 2);
+                    num += (int) Math.Pow(n % 10, 2);
                     n /= 10;
                 }
 
@@ -2375,6 +2375,7 @@ namespace leetcode
         #endregion
 
         #region 3. 无重复字符的最长子串
+
         //3. 无重复字符的最长子串
         //https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/
         public int LengthOfLongestSubstring(string s)
@@ -2388,14 +2389,18 @@ namespace leetcode
                     set.Remove(s[j]);
                     j++;
                 }
+
                 set.Add(s[i]);
                 max = Math.Max(max, set.Count);
             }
+
             return max;
         }
+
         #endregion
 
         #region 面试题32 - III. 从上到下打印二叉树 III
+
         //面试题32 - III. 从上到下打印二叉树 III
         //https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-iii-lcof/
         public IList<IList<int>> LevelOrder3(TreeNode root)
@@ -2415,6 +2420,7 @@ namespace leetcode
                     {
                         continue;
                     }
+
                     if (result.Count % 2 == 0)
                     {
                         items.Add(root.val);
@@ -2423,22 +2429,25 @@ namespace leetcode
                     {
                         items.Insert(0, root.val);
                     }
+
                     queue.Enqueue(root.left);
                     queue.Enqueue(root.right);
-
                 }
+
                 size = queue.Count;
                 if (items.Count > 0)
                 {
                     result.Add(items);
                 }
             }
+
             return result;
         }
 
         #endregion
 
         #region 面试题33. 二叉搜索树的后序遍历序列
+
         //面试题33. 二叉搜索树的后序遍历序列
         //https://leetcode-cn.com/problems/er-cha-sou-suo-shu-de-hou-xu-bian-li-xu-lie-lcof/
 
@@ -2455,6 +2464,7 @@ namespace leetcode
             {
                 index--;
             }
+
             for (int i = start; i < index; i++)
             {
                 if (postorder[i] > root)
@@ -2462,15 +2472,19 @@ namespace leetcode
                     return false;
                 }
             }
+
             return CheckTree(postorder, start, index) && CheckTree(postorder, index + 1, end - 1);
         }
+
         public bool VerifyPostorder(int[] postorder)
         {
             return CheckTree(postorder, 0, postorder.Length - 1);
         }
+
         #endregion
 
         #region 面试题34. 二叉树中和为某一值的路径
+
         //面试题34. 二叉树中和为某一值的路径
         //https://leetcode-cn.com/problems/er-cha-shu-zhong-he-wei-mou-yi-zhi-de-lu-jing-lcof/
         void PathSum(TreeNode node, IList<IList<int>> result, List<int> path, int sum, int target)
@@ -2485,29 +2499,34 @@ namespace leetcode
                     result.Add(path.ToArray());
                 }
             }
+
             if (sum < target)
             {
                 if (node.left != null)
                 {
                     PathSum(node.left, result, path, sum, target);
                 }
+
                 if (node.right != null)
                 {
                     PathSum(node.right, result, path, sum, target);
                 }
             }
-            path.RemoveAt(path.Count - 1);
 
+            path.RemoveAt(path.Count - 1);
         }
+
         public IList<IList<int>> PathSum(TreeNode root, int sum)
         {
             var result = new List<IList<int>>();
             PathSum(root, result, new List<int>(), 0, sum);
             return result;
         }
+
         #endregion
 
         #region 98. 验证二叉搜索树
+
         //98. 验证二叉搜索树
         //https://leetcode-cn.com/problems/validate-binary-search-tree/
         public bool IsValidBST(TreeNode node, int rootVal, bool isLeft)
@@ -2516,6 +2535,7 @@ namespace leetcode
             {
                 return true;
             }
+
             if (isLeft && (node.val >= rootVal))
             {
                 return false;
@@ -2524,6 +2544,7 @@ namespace leetcode
             {
                 return false;
             }
+
             return IsValidBST(node.left, rootVal, isLeft) && IsValidBST(node.right, rootVal, isLeft);
         }
 
@@ -2533,18 +2554,20 @@ namespace leetcode
             {
                 return true;
             }
+
             var flag = IsValidBST(root.left, root.val, true) && IsValidBST(root.right, root.val, false);
             if (!flag)
             {
                 return false;
             }
+
             return IsValidBST(root.left) && IsValidBST(root.right);
         }
-
 
         #endregion
 
         #region 572. 另一个树的子树
+
         //572. 另一个树的子树
         //https://leetcode-cn.com/problems/subtree-of-another-tree/
         bool CheckSubtree(TreeNode s, TreeNode t)
@@ -2553,27 +2576,66 @@ namespace leetcode
             {
                 return t == null;
             }
+
             if (t == null)
             {
                 return false;
             }
+
             if (s.val == t.val)
             {
                 return CheckSubtree(s.left, t.left) && CheckSubtree(s.right, t.right);
             }
+
             return false;
         }
+
         public bool IsSubtree(TreeNode s, TreeNode t)
         {
             if (s == null)
             {
                 return false;
             }
+
             if (CheckSubtree(s, t))
             {
                 return true;
             }
+
             return IsSubtree(s.left, t) || IsSubtree(s.right, t);
+        }
+
+        #endregion
+
+        #region 69. x 的平方根
+
+        //69. x 的平方根
+        //https://leetcode-cn.com/problems/sqrtx/
+
+        public int MySqrt(int x)
+        {
+            double low = 0, high = x, num;
+            while (true)
+            {
+                num = (low + high) / 2;
+                var pow = num * num;
+                var diff = Math.Abs(pow - x);
+                if (diff <= 0.0001)
+                {
+                    break;
+                }
+
+                if (pow > x)
+                {
+                    high = num;
+                }
+                else
+                {
+                    low = num;
+                }
+            }
+
+            return (int) num;
         }
 
         #endregion
