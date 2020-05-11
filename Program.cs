@@ -14,12 +14,13 @@ namespace leetcode
 
         static void Main(string[] args)
         {
-            var tree = new TreeNode(3);
-            tree.left = new TreeNode(1);
-            var node = tree.left;
-            node.right = new TreeNode(2);
-            node.right = new TreeNode(3);
-            Console.WriteLine(new Program().StrToInt("2147483646"));
+            //4,2,5,1,3
+            var tree = new TreeNode(4);
+            tree.left = new TreeNode(2);
+            tree.right = new TreeNode(5);
+            tree.left.left = new TreeNode(1);
+            tree.left.right = new TreeNode(3);
+            Console.WriteLine(new Program().TreeToDoublyList(tree));
         }
 
         static int MaxProfit(int[] prices)
@@ -430,7 +431,7 @@ namespace leetcode
             {
                 for (int c = 0; c < C; c++)
                 {
-                    result[i++] = new int[] {r, c};
+                    result[i++] = new int[] { r, c };
                 }
             }
 
@@ -556,7 +557,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char) (i + 'a'));
+                        result.Append((char)(i + 'a'));
                         chars[i]--;
                     }
 
@@ -571,7 +572,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char) (i + 'a'));
+                        result.Append((char)(i + 'a'));
                         chars[i]--;
                     }
 
@@ -912,7 +913,7 @@ namespace leetcode
                 return null;
             }
 
-            return new TreeNode(root.val) {left = MirrorTree(root.right), right = MirrorTree(root.left)};
+            return new TreeNode(root.val) { left = MirrorTree(root.right), right = MirrorTree(root.left) };
         }
 
         #endregion
@@ -1595,7 +1596,7 @@ namespace leetcode
                 var index = Find(nums, num);
                 if (index != -1)
                 {
-                    return new[] {nums[i], nums[index]};
+                    return new[] { nums[i], nums[index] };
                 }
             }
 
@@ -1612,7 +1613,7 @@ namespace leetcode
                 var num = target - nums[i];
                 if (set.Contains(num))
                 {
-                    return new[] {nums[i], num};
+                    return new[] { nums[i], num };
                 }
             }
 
@@ -1628,7 +1629,7 @@ namespace leetcode
                 var num = nums[start] + nums[end];
                 if (num == target)
                 {
-                    return new[] {nums[start], nums[end]};
+                    return new[] { nums[start], nums[end] };
                 }
 
                 if (num > target)
@@ -2339,7 +2340,7 @@ namespace leetcode
                 set.Add(n);
                 while (n > 0)
                 {
-                    num += (int) Math.Pow(n % 10, 2);
+                    num += (int)Math.Pow(n % 10, 2);
                     n /= 10;
                 }
 
@@ -2635,7 +2636,7 @@ namespace leetcode
                 }
             }
 
-            return (int) num;
+            return (int)num;
         }
 
         #endregion
@@ -2722,6 +2723,69 @@ namespace leetcode
             return flag ? result : -result;
         }
 
+        #endregion
+
+        #region 面试题35. 复杂链表的复制
+        //面试题35. 复杂链表的复制
+        //https://leetcode-cn.com/problems/fu-za-lian-biao-de-fu-zhi-lcof/
+        Node CopyNode(Node node, Dictionary<Node, Node> nodeDic)
+        {
+            if (node == null)
+            {
+                return null;
+            }
+            if (nodeDic.TryGetValue(node, out var cpNode))
+            {
+                return cpNode;
+            }
+            cpNode = new Node(node.val);
+            nodeDic.Add(node, cpNode);
+            cpNode.next = CopyNode(node.next, nodeDic);
+            cpNode.random = CopyNode(node.random, nodeDic);
+            return cpNode;
+        }
+        public Node CopyRandomList(Node head)
+        {
+            return CopyNode(head, new Dictionary<Node, Node>());
+        }
+
+        #endregion
+
+        #region 面试题36. 二叉搜索树与双向链表
+        //面试题36. 二叉搜索树与双向链表
+        //https://leetcode-cn.com/problems/er-cha-sou-suo-shu-yu-shuang-xiang-lian-biao-lcof/
+        public TreeNode TreeToDoublyList(TreeNode root)
+        {
+            if (root == null)
+            {
+                return root;
+            }
+            var list = new List<TreeNode>();
+            var stack = new Stack<TreeNode>();
+            while (root != null || stack.Count > 0)
+            {
+                while (root != null)
+                {
+                    stack.Push(root);
+                    root = root.left;
+                }
+                if (stack.Count > 0)
+                {
+                    root = stack.Pop();
+                    list.Add(root);
+                    root = root.right;
+                }
+            }
+            root = list[0];
+            list[0].left = list[list.Count - 1];
+            list[list.Count - 1].right = list[0];
+            for (int i = 1; i < list.Count; i++)
+            {
+                list[i - 1].right = list[i];
+                list[i].left = list[i - 1];
+            }
+            return root;
+        }
         #endregion
     }
 }
