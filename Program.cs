@@ -19,7 +19,7 @@ namespace leetcode
             var node = tree.left;
             node.right = new TreeNode(2);
             node.right = new TreeNode(3);
-            Console.WriteLine(new Program().IsValidBST(tree));
+            Console.WriteLine(new Program().StrToInt("2147483646"));
         }
 
         static int MaxProfit(int[] prices)
@@ -2636,6 +2636,90 @@ namespace leetcode
             }
 
             return (int) num;
+        }
+
+        #endregion
+
+        #region 50. Pow(x, n)
+
+        //50. Pow(x, n)
+        //https://leetcode-cn.com/problems/powx-n/
+        double Pow(double x, int n)
+        {
+            if (n == 0)
+            {
+                return 1.0;
+            }
+
+            var y = Pow(x, n / 2);
+            return n % 2 == 0 ? y * y : y * y * x;
+        }
+
+        public double MyPow(double x, int n)
+        {
+            if (n >= 0)
+            {
+                return Pow(x, n);
+            }
+
+            return 1.0 / Pow(x, -n);
+        }
+
+        #endregion
+
+        #region 面试题67. 把字符串转换成整数
+
+        //面试题67. 把字符串转换成整数
+        //https://leetcode-cn.com/problems/ba-zi-fu-chuan-zhuan-huan-cheng-zheng-shu-lcof/
+        public int StrToInt(string str)
+        {
+            bool flag = true, check = true;
+            int result = 0, limit = int.MaxValue / 10;
+            foreach (var ch in str)
+            {
+                if (char.IsDigit(ch))
+                {
+                    if (limit < result)
+                    {
+                        return flag ? int.MaxValue : int.MinValue;
+                    }
+
+                    var newVal = result * 10 + (ch - '0');
+                    if (newVal < result)
+                    {
+                        return flag ? int.MaxValue : int.MinValue;
+                    }
+
+                    result = newVal;
+                }
+                else if (result == 0 && check)
+                {
+                    if (ch == ' ')
+                    {
+                        continue;
+                    }
+
+                    if (ch == '-')
+                    {
+                        check = false;
+                        flag = false;
+                    }
+                    else if (ch == '+')
+                    {
+                        check = false;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return flag ? result : -result;
         }
 
         #endregion
