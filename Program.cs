@@ -20,7 +20,8 @@ namespace leetcode
             tree.right = new TreeNode(5);
             tree.left.left = new TreeNode(1);
             tree.left.right = new TreeNode(3);
-            Console.WriteLine(new Program().TreeToDoublyList(tree));
+            Console.WriteLine(
+                new Program().TwoSum(2));
         }
 
         static int MaxProfit(int[] prices)
@@ -431,7 +432,7 @@ namespace leetcode
             {
                 for (int c = 0; c < C; c++)
                 {
-                    result[i++] = new int[] { r, c };
+                    result[i++] = new int[] {r, c};
                 }
             }
 
@@ -557,7 +558,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char)(i + 'a'));
+                        result.Append((char) (i + 'a'));
                         chars[i]--;
                     }
 
@@ -572,7 +573,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char)(i + 'a'));
+                        result.Append((char) (i + 'a'));
                         chars[i]--;
                     }
 
@@ -913,7 +914,7 @@ namespace leetcode
                 return null;
             }
 
-            return new TreeNode(root.val) { left = MirrorTree(root.right), right = MirrorTree(root.left) };
+            return new TreeNode(root.val) {left = MirrorTree(root.right), right = MirrorTree(root.left)};
         }
 
         #endregion
@@ -1596,7 +1597,7 @@ namespace leetcode
                 var index = Find(nums, num);
                 if (index != -1)
                 {
-                    return new[] { nums[i], nums[index] };
+                    return new[] {nums[i], nums[index]};
                 }
             }
 
@@ -1613,7 +1614,7 @@ namespace leetcode
                 var num = target - nums[i];
                 if (set.Contains(num))
                 {
-                    return new[] { nums[i], num };
+                    return new[] {nums[i], num};
                 }
             }
 
@@ -1629,7 +1630,7 @@ namespace leetcode
                 var num = nums[start] + nums[end];
                 if (num == target)
                 {
-                    return new[] { nums[start], nums[end] };
+                    return new[] {nums[start], nums[end]};
                 }
 
                 if (num > target)
@@ -1844,49 +1845,51 @@ namespace leetcode
 
         #endregion
 
-        //todo 待完成
-
         #region 面试题60. n个骰子的点数
 
         //面试题60. n个骰子的点数
         //https://leetcode-cn.com/problems/nge-tou-zi-de-dian-shu-lcof/
 
-        public static void Sequence(IList<int> nums, IList<int> sequence, IDictionary<int, int> countDic, int index,
-            int n)
+        void Make(int[] nums, int current, int sum)
         {
-            if (sequence.Count == n)
+            if (current == 1)
             {
-                Console.WriteLine(string.Join(',', sequence));
-                var sum = sequence.Sum();
-                if (countDic.ContainsKey(sum))
+                for (int i = 1; i <= 6; i++)
                 {
-                    countDic[sum]++;
+                    nums[i + sum]++;
                 }
-                else
+            }
+            else
+            {
+                for (int i = 1; i <= 6; i++)
                 {
-                    countDic[sum] = 1;
+                    Make(nums, current - 1, sum + i);
                 }
-
-                return;
-            }
-
-            if (index >= nums.Count)
-            {
-                return;
-            }
-
-            for (int i = index; i < nums.Count; i++)
-            {
-                sequence.Add(nums[i]);
-                Sequence(nums, sequence, countDic, i + 6, n);
-                sequence.RemoveAt(sequence.Count - 1);
             }
         }
 
         public double[] TwoSum(int n)
         {
-            var items = new int[n, 6];
-            return null;
+            if (n < 1)
+            {
+                return new double[0];
+            }
+
+            var nums = new int[n * 6 + 1];
+            Make(nums, n, 0);
+            var total = Math.Pow(6, n);
+            var result = new List<double>();
+            foreach (var num in nums)
+            {
+                if (num == 0)
+                {
+                    continue;
+                }
+
+                result.Add(num / total);
+            }
+
+            return result.ToArray();
         }
 
         #endregion
@@ -2340,7 +2343,7 @@ namespace leetcode
                 set.Add(n);
                 while (n > 0)
                 {
-                    num += (int)Math.Pow(n % 10, 2);
+                    num += (int) Math.Pow(n % 10, 2);
                     n /= 10;
                 }
 
@@ -2636,7 +2639,7 @@ namespace leetcode
                 }
             }
 
-            return (int)num;
+            return (int) num;
         }
 
         #endregion
@@ -2726,6 +2729,7 @@ namespace leetcode
         #endregion
 
         #region 面试题35. 复杂链表的复制
+
         //面试题35. 复杂链表的复制
         //https://leetcode-cn.com/problems/fu-za-lian-biao-de-fu-zhi-lcof/
         Node CopyNode(Node node, Dictionary<Node, Node> nodeDic)
@@ -2734,16 +2738,19 @@ namespace leetcode
             {
                 return null;
             }
+
             if (nodeDic.TryGetValue(node, out var cpNode))
             {
                 return cpNode;
             }
+
             cpNode = new Node(node.val);
             nodeDic.Add(node, cpNode);
             cpNode.next = CopyNode(node.next, nodeDic);
             cpNode.random = CopyNode(node.random, nodeDic);
             return cpNode;
         }
+
         public Node CopyRandomList(Node head)
         {
             return CopyNode(head, new Dictionary<Node, Node>());
@@ -2752,6 +2759,7 @@ namespace leetcode
         #endregion
 
         #region 面试题36. 二叉搜索树与双向链表
+
         //面试题36. 二叉搜索树与双向链表
         //https://leetcode-cn.com/problems/er-cha-sou-suo-shu-yu-shuang-xiang-lian-biao-lcof/
         public TreeNode TreeToDoublyList(TreeNode root)
@@ -2760,6 +2768,7 @@ namespace leetcode
             {
                 return root;
             }
+
             var list = new List<TreeNode>();
             var stack = new Stack<TreeNode>();
             while (root != null || stack.Count > 0)
@@ -2769,6 +2778,7 @@ namespace leetcode
                     stack.Push(root);
                     root = root.left;
                 }
+
                 if (stack.Count > 0)
                 {
                     root = stack.Pop();
@@ -2776,6 +2786,7 @@ namespace leetcode
                     root = root.right;
                 }
             }
+
             root = list[0];
             list[0].left = list[list.Count - 1];
             list[list.Count - 1].right = list[0];
@@ -2784,8 +2795,71 @@ namespace leetcode
                 list[i - 1].right = list[i];
                 list[i].left = list[i - 1];
             }
+
             return root;
         }
+
+        #endregion
+
+        #region 面试题31. 栈的压入、弹出序列
+
+        //面试题31. 栈的压入、弹出序列
+        //https://leetcode-cn.com/problems/zhan-de-ya-ru-dan-chu-xu-lie-lcof/
+        public bool ValidateStackSequences(int[] pushed, int[] popped)
+        {
+            var stack = new Stack<int>();
+            int i = 0, j = 0;
+            while (i < pushed.Length && j < popped.Length)
+            {
+                if (pushed[i] == popped[j])
+                {
+                    i++;
+                    j++;
+                    continue;
+                }
+
+                if (stack.TryPeek(out var num) && num == popped[j])
+                {
+                    stack.Pop();
+                    j++;
+                    continue;
+                }
+
+                stack.Push(pushed[i]);
+                i++;
+            }
+
+            while (stack.Count > 0 && j < popped.Length)
+            {
+                if (stack.Peek() == popped[j])
+                {
+                    stack.Pop();
+                }
+
+                j++;
+            }
+
+            return stack.Count <= 0;
+        }
+
+        #endregion
+
+        #region 面试题64. 求1+2+…+n
+
+        //面试题64. 求1+2+…+n
+        //https://leetcode-cn.com/problems/qiu-12n-lcof/
+        public int SumNums(int n)
+        {
+            if (n <= 1)
+            {
+                return n;
+            }
+
+            var num = 1;
+            var flag = n > 1 && (num = SumNums(n - 1)) > 0;
+            return num + n;
+        }
+
         #endregion
     }
 }
