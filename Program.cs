@@ -2861,5 +2861,146 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 137. 只出现一次的数字 II
+
+        //137. 只出现一次的数字 II
+        //https://leetcode-cn.com/problems/single-number-ii/
+        public int SingleNumber(int[] nums)
+        {
+            return -1;
+        }
+
+        #endregion
+
+        #region 560. 和为K的子数组
+
+        //560. 和为K的子数组
+        //https://leetcode-cn.com/problems/subarray-sum-equals-k/
+        public int SubarraySum(int[] nums, int k)
+        {
+            int sum = 0, count = 0;
+            var dic = new Dictionary<int, int> {{0, 1}};
+            foreach (var n in nums)
+            {
+                sum += n;
+                if (dic.TryGetValue(sum - k, out var num))
+                {
+                    count += num;
+                }
+
+                if (dic.ContainsKey(sum))
+                {
+                    dic[sum] += 1;
+                }
+                else
+                {
+                    dic[sum] = 1;
+                }
+            }
+
+            return count;
+        }
+
+        #endregion
+
+        #region 2. 两数相加
+
+        //https://leetcode-cn.com/problems/add-two-numbers/
+        public ListNode AddTwoNumbers(ListNode l1, ListNode l2)
+        {
+            var head = new ListNode(0);
+            var root = head;
+            while (l1 != null && l2 != null)
+            {
+                if (head.next == null)
+                {
+                    head.next = new ListNode(0);
+                }
+
+                head = head.next;
+                head.val = head.val + l1.val + l2.val;
+                if (head.val > 9)
+                {
+                    head.val = head.val - 10;
+                    head.next = new ListNode(1);
+                }
+
+                l1 = l1.next;
+                l2 = l2.next;
+            }
+
+            while (l1 != null)
+            {
+                if (head.next == null)
+                {
+                    head.next = new ListNode(0);
+                }
+
+                head = head.next;
+                head.val += l1.val;
+                if (head.val > 9)
+                {
+                    head.val = head.val - 10;
+                    head.next = new ListNode(1);
+                }
+
+                l1 = l1.next;
+            }
+
+            while (l2 != null)
+            {
+                if (head.next == null)
+                {
+                    head.next = new ListNode(0);
+                }
+
+                head = head.next;
+                head.val += l2.val;
+                if (head.val > 9)
+                {
+                    head.val = head.val - 10;
+                    head.next = new ListNode(1);
+                }
+
+                l2 = l2.next;
+            }
+
+            return root.next;
+        }
+
+        #endregion
+
+        #region 19. 删除链表的倒数第N个节点
+
+        //https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/
+        public ListNode RemoveNthFromEnd(ListNode head, int n)
+        {
+            ListNode node1 = head, node2 = head;
+            while (node1 != null)
+            {
+                n--;
+                if (n < -1)
+                {
+                    node2 = node2.next;
+                }
+
+                node1 = node1.next;
+            }
+
+            if (0 == n)
+            {
+                return head.next;
+            }
+
+            if (node2 != null && node2.next != null)
+            {
+                node2.next = node2.next.next;
+            }
+
+            return head;
+        }
+
+        #endregion
     }
 }
