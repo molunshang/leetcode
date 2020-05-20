@@ -20,8 +20,7 @@ namespace leetcode
             tree.right = new TreeNode(5);
             tree.left.left = new TreeNode(1);
             tree.left.right = new TreeNode(3);
-            Console.WriteLine(
-                new Program().TwoSum(2));
+            Console.WriteLine(new Program().FindTheLongestSubstring("eleetminicoworoep"));
         }
 
         static int MaxProfit(int[] prices)
@@ -42,6 +41,10 @@ namespace leetcode
             return n > 0 ? 0 : -n;
         }
 
+        #region 80. 删除排序数组中的重复项 II
+
+        //80. 删除排序数组中的重复项 II
+        //https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array-ii/
         static int RemoveDuplicates(int[] nums)
         {
             var res = nums.Length;
@@ -64,6 +67,34 @@ namespace leetcode
 
             return res;
         }
+
+
+        public int RemoveDuplicates1(int[] nums)
+        {
+            var index = 1;
+            var flag = false;
+            for (int i = 1; i < nums.Length; i++)
+            {
+                if (nums[i] == nums[i - 1])
+                {
+                    if (flag)
+                        continue;
+                    nums[index] = nums[i];
+                    flag = true;
+                }
+                else
+                {
+                    nums[index] = nums[i];
+                    flag = false;
+                }
+
+                index++;
+            }
+
+            return index;
+        }
+
+        #endregion
 
         //13. 罗马数字转整数
         //https://leetcode-cn.com/problems/roman-to-integer/
@@ -2999,6 +3030,103 @@ namespace leetcode
             }
 
             return head;
+        }
+
+        #endregion
+
+        #region 680. 验证回文字符串 Ⅱ
+
+        //680. 验证回文字符串 Ⅱ
+        //https://leetcode-cn.com/problems/valid-palindrome-ii/
+        public bool ValidPalindrome(string s, int start, int end, bool flag)
+        {
+            if (start >= end)
+            {
+                return true;
+            }
+
+            while (start < end)
+            {
+                if (s[start] == s[end])
+                {
+                    start++;
+                    end--;
+                    continue;
+                }
+
+
+                if (flag)
+                {
+                    return false;
+                }
+
+                if (s[end - 1] == s[start])
+                {
+                    end--;
+                    if (ValidPalindrome(s, start, end, true))
+                    {
+                        return true;
+                    }
+                }
+
+                if (s[start + 1] == s[end])
+                {
+                    start++;
+                    if (ValidPalindrome(s, start, end, true))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool ValidPalindrome(string s)
+        {
+            return ValidPalindrome(s, 0, s.Length - 1, false);
+        }
+
+        #endregion
+
+        #region 1371. 每个元音包含偶数次的最长子字符串
+
+        //1371. 每个元音包含偶数次的最长子字符串
+        //https://leetcode-cn.com/problems/find-the-longest-substring-containing-vowels-in-even-counts/
+        
+        //暴力解
+        public int FindTheLongestSubstring(string s)
+        {
+            var max = 0;
+            for (int i = 0; i < s.Length; i++)
+            {
+                var set = new Dictionary<char, int>() {{'a', 0}, {'e', 0}, {'i', 0}, {'o', 0}, {'u', 0}};
+                for (int j = i; j < s.Length; j++)
+                {
+                    if (set.TryGetValue(s[j], out var size))
+                    {
+                        set[s[j]] = size + 1;;
+                    }
+                    var flag = true;
+                    foreach (var value in set.Values)
+                    {
+                        if ((value & 1) == 1)
+                        {
+                            flag = false;
+                            break;
+                        }
+                    }
+
+                    if (flag)
+                    {
+                        max = Math.Max(max, j - i + 1);
+                    }
+                }
+            }
+
+            return max;
         }
 
         #endregion
