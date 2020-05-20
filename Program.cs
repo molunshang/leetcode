@@ -463,7 +463,7 @@ namespace leetcode
             {
                 for (int c = 0; c < C; c++)
                 {
-                    result[i++] = new int[] {r, c};
+                    result[i++] = new int[] { r, c };
                 }
             }
 
@@ -589,7 +589,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char) (i + 'a'));
+                        result.Append((char)(i + 'a'));
                         chars[i]--;
                     }
 
@@ -604,7 +604,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char) (i + 'a'));
+                        result.Append((char)(i + 'a'));
                         chars[i]--;
                     }
 
@@ -689,6 +689,20 @@ namespace leetcode
             }
 
             return nums[0];
+        }
+
+        public static int FindRepeatNumber1(int[] nums)
+        {
+            var set = new HashSet<int>();
+            for (var i = 0; i < nums.Length; i++)
+            {
+                if (set.Add(nums[i]))
+                {
+                    return nums[i];
+                }
+            }
+
+            return -1;
         }
 
         #endregion
@@ -945,7 +959,7 @@ namespace leetcode
                 return null;
             }
 
-            return new TreeNode(root.val) {left = MirrorTree(root.right), right = MirrorTree(root.left)};
+            return new TreeNode(root.val) { left = MirrorTree(root.right), right = MirrorTree(root.left) };
         }
 
         #endregion
@@ -1628,7 +1642,7 @@ namespace leetcode
                 var index = Find(nums, num);
                 if (index != -1)
                 {
-                    return new[] {nums[i], nums[index]};
+                    return new[] { nums[i], nums[index] };
                 }
             }
 
@@ -1645,7 +1659,7 @@ namespace leetcode
                 var num = target - nums[i];
                 if (set.Contains(num))
                 {
-                    return new[] {nums[i], num};
+                    return new[] { nums[i], num };
                 }
             }
 
@@ -1661,7 +1675,7 @@ namespace leetcode
                 var num = nums[start] + nums[end];
                 if (num == target)
                 {
-                    return new[] {nums[start], nums[end]};
+                    return new[] { nums[start], nums[end] };
                 }
 
                 if (num > target)
@@ -2374,7 +2388,7 @@ namespace leetcode
                 set.Add(n);
                 while (n > 0)
                 {
-                    num += (int) Math.Pow(n % 10, 2);
+                    num += (int)Math.Pow(n % 10, 2);
                     n /= 10;
                 }
 
@@ -2670,7 +2684,7 @@ namespace leetcode
                 }
             }
 
-            return (int) num;
+            return (int)num;
         }
 
         #endregion
@@ -2911,7 +2925,7 @@ namespace leetcode
         public int SubarraySum(int[] nums, int k)
         {
             int sum = 0, count = 0;
-            var dic = new Dictionary<int, int> {{0, 1}};
+            var dic = new Dictionary<int, int> { { 0, 1 } };
             foreach (var n in nums)
             {
                 sum += n;
@@ -3095,19 +3109,19 @@ namespace leetcode
 
         //1371. 每个元音包含偶数次的最长子字符串
         //https://leetcode-cn.com/problems/find-the-longest-substring-containing-vowels-in-even-counts/
-        
+
         //暴力解
         public int FindTheLongestSubstring(string s)
         {
             var max = 0;
             for (int i = 0; i < s.Length; i++)
             {
-                var set = new Dictionary<char, int>() {{'a', 0}, {'e', 0}, {'i', 0}, {'o', 0}, {'u', 0}};
+                var set = new Dictionary<char, int>() { { 'a', 0 }, { 'e', 0 }, { 'i', 0 }, { 'o', 0 }, { 'u', 0 } };
                 for (int j = i; j < s.Length; j++)
                 {
                     if (set.TryGetValue(s[j], out var size))
                     {
-                        set[s[j]] = size + 1;;
+                        set[s[j]] = size + 1; ;
                     }
                     var flag = true;
                     foreach (var value in set.Values)
@@ -3123,6 +3137,51 @@ namespace leetcode
                     {
                         max = Math.Max(max, j - i + 1);
                     }
+                }
+            }
+
+            return max;
+        }
+        //数组前缀和解法
+        public int FindTheLongestSubstring1(string s)
+        {
+            int max = 0, mask = 0;
+            //前缀和可能出现的情况共32种，1个字符只用奇数和偶数2种情况，共5个字符，共Math.Pow(2,5)种情况 声明数据记录每种情况最先出现的数组索引
+            //前缀和只区分奇偶，奇数-奇数和偶数-偶数都是偶数，此种情况下同一种情况前缀和差的数组肯定符号条件
+            //求最长数组，记录第一次的情况，每次符合条件求最大
+            var states = new int[1<<5];
+            states[0] = -1;
+            for (int i = 1; i < states.Length; i++)
+            {
+                states[i] = int.MaxValue;//
+            }
+            for (int i = 0; i < s.Length; i++)
+            {
+                switch (s[i])
+                {
+                    case 'a':
+                        mask = mask ^ (1 << 0);
+                        break;
+                    case 'e':
+                        mask = mask ^ (1 << 1);
+                        break;
+                    case 'i':
+                        mask = mask ^ (1 << 2);
+                        break;
+                    case 'o':
+                        mask = mask ^ (1 << 3);
+                        break;
+                    case 'u':
+                        mask = mask ^ (1 << 4);
+                        break;
+                }
+                if (states[mask] == int.MaxValue)
+                {
+                    states[mask] = i;
+                }
+                else
+                {
+                    max = Math.Max(max, i - states[mask] + 1);
                 }
             }
 
