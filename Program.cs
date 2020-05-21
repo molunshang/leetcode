@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 
@@ -463,7 +464,7 @@ namespace leetcode
             {
                 for (int c = 0; c < C; c++)
                 {
-                    result[i++] = new int[] {r, c};
+                    result[i++] = new int[] { r, c };
                 }
             }
 
@@ -589,7 +590,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char) (i + 'a'));
+                        result.Append((char)(i + 'a'));
                         chars[i]--;
                     }
 
@@ -604,7 +605,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char) (i + 'a'));
+                        result.Append((char)(i + 'a'));
                         chars[i]--;
                     }
 
@@ -953,7 +954,7 @@ namespace leetcode
                 return null;
             }
 
-            return new TreeNode(root.val) {left = MirrorTree(root.right), right = MirrorTree(root.left)};
+            return new TreeNode(root.val) { left = MirrorTree(root.right), right = MirrorTree(root.left) };
         }
 
         #endregion
@@ -1636,7 +1637,7 @@ namespace leetcode
                 var index = Find(nums, num);
                 if (index != -1)
                 {
-                    return new[] {nums[i], nums[index]};
+                    return new[] { nums[i], nums[index] };
                 }
             }
 
@@ -1653,7 +1654,7 @@ namespace leetcode
                 var num = target - nums[i];
                 if (set.Contains(num))
                 {
-                    return new[] {nums[i], num};
+                    return new[] { nums[i], num };
                 }
             }
 
@@ -1669,7 +1670,7 @@ namespace leetcode
                 var num = nums[start] + nums[end];
                 if (num == target)
                 {
-                    return new[] {nums[start], nums[end]};
+                    return new[] { nums[start], nums[end] };
                 }
 
                 if (num > target)
@@ -2382,7 +2383,7 @@ namespace leetcode
                 set.Add(n);
                 while (n > 0)
                 {
-                    num += (int) Math.Pow(n % 10, 2);
+                    num += (int)Math.Pow(n % 10, 2);
                     n /= 10;
                 }
 
@@ -2697,7 +2698,7 @@ namespace leetcode
                 }
             }
 
-            return (int) num;
+            return (int)num;
         }
 
         #endregion
@@ -2938,7 +2939,7 @@ namespace leetcode
         public int SubarraySum(int[] nums, int k)
         {
             int sum = 0, count = 0;
-            var dic = new Dictionary<int, int> {{0, 1}};
+            var dic = new Dictionary<int, int> { { 0, 1 } };
             foreach (var n in nums)
             {
                 sum += n;
@@ -3129,7 +3130,7 @@ namespace leetcode
             var max = 0;
             for (int i = 0; i < s.Length; i++)
             {
-                var set = new Dictionary<char, int>() {{'a', 0}, {'e', 0}, {'i', 0}, {'o', 0}, {'u', 0}};
+                var set = new Dictionary<char, int>() { { 'a', 0 }, { 'e', 0 }, { 'i', 0 }, { 'o', 0 }, { 'u', 0 } };
                 for (int j = i; j < s.Length; j++)
                 {
                     if (set.TryGetValue(s[j], out var size))
@@ -3303,6 +3304,54 @@ namespace leetcode
             return size;
         }
 
+        #endregion
+
+        #region 面试题20. 表示数值的字符串
+        //todo 继续
+        public bool IsNumber(string s)
+        {
+            //"+100"、"5e2"、"-123"、"3.1416"、"0123"
+            if (string.IsNullOrWhiteSpace(s))
+            {
+                return false;
+            }
+            s = s.Trim();
+            var allowSet = new HashSet<char>() { 'e', '.', '+', '-' };
+            for (int i = 0; i < 10; i++)
+            {
+                allowSet.Add((char)('0' + i));
+            }
+
+            for (int i = 0; i < s.Length; i++)
+            {
+                var ch = s[i];
+                switch (ch)
+                {
+                    case '+':
+                    case '-':
+                        if (!allowSet.Contains(ch))
+                        {
+                            return false;
+                        }
+                        allowSet.Remove('+');
+                        allowSet.Remove('-');
+                        break;
+                    case 'e':
+                        break;
+                    case '.':
+                        break;
+                    default:
+                        if (!allowSet.Contains(ch))
+                        {
+                            return false;
+                        }
+                        allowSet.Remove('+');
+                        allowSet.Remove('-');
+                        break;
+                }
+            }
+            return true;
+        }
         #endregion
     }
 }

@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public class Solution
 {
@@ -139,5 +141,121 @@ public class Solution
         }
 
         return false;
+    }
+
+    //1.位移法
+    public int HammingWeight(uint n)
+    {
+        var res = 0;
+        while (n != 0)
+        {
+            if ((n & 1) == 1)
+            {
+                res++;
+            }
+            n >>= 1;
+        }
+        return res;
+    }
+    //2.n&(n-1)消除最低位的1
+    public int HammingWeight1(uint n)
+    {
+        var res = 0;
+        while (n != 0)
+        {
+            res++;
+            n &= n - 1;
+        }
+        return res;
+    }
+
+    public double MyPow(double x, int n)
+    {
+        double PowFunc(double y, int k)
+        {
+            if (k == 0)
+            {
+                return 1.0;
+            }
+            var num = PowFunc(y, k / 2);
+            return (k & 1) == 1 ? num * num * y : num * num;
+        }
+        var res = PowFunc(x, n);
+        return n > 0 ? res : 1.0 / res;
+    }
+
+    public int[] PrintNumbers(int n)
+    {
+        var num = 0;
+        while (n > 0)
+        {
+            num = num * 10 + 9;
+            n--;
+        }
+        var res = new int[num];
+        for (int i = 0; i < res.Length; i++)
+        {
+            res[i] = i + 1;
+        }
+        return res;
+    }
+
+    public int[] PrintNumbers1(int n)
+    {
+        var chars = new char[n];
+        for (int i = 0; i < chars.Length; i++)
+        {
+            chars[i] = '0';
+        }
+        var result = new List<string>();
+        int start = chars.Length - 1, count = 1;
+        while (true)
+        {
+            for (int i = chars.Length - 1; i >= 0; i--)
+            {
+                //i位数字为9，此时+1满10，i==0，说明已经遍历到最高位，直接返回，否则当前位=0，该位的前1位+1
+                if (chars[i] == '9')
+                {
+                    if (i == 0)
+                    {
+                        return result.Select(int.Parse).ToArray();
+                    }
+                    chars[i] = '0';
+                    start = Math.Min(start, i - 1);//此前位数-1，所以start=Math.Min(start,i-1)
+                    count = chars.Length - start;
+                }
+                else
+                {
+                    chars[i]++;
+                    result.Add(new string(chars, start, count));
+                    //+1从最低位开始，所以每次+1操作后跳出，重新从最低位开始
+                    break;
+                }
+            }
+        }
+    }
+
+    public ListNode DeleteNode(ListNode head, int val)
+    {
+        if (head == null)
+        {
+            return null;
+        }
+        if (head.val == val)
+        {
+            return head.next;
+        }
+        ListNode node = head.next, prev = head;
+        while (node != null)
+        {
+            if (node.val == val)
+            {
+                prev.next = node.next;
+                break;
+            }
+            prev = node;
+            node = node.next;
+        }
+        return head;
     }
 }
