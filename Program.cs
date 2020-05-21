@@ -20,7 +20,7 @@ namespace leetcode
             tree.right = new TreeNode(5);
             tree.left.left = new TreeNode(1);
             tree.left.right = new TreeNode(3);
-            Console.WriteLine(new Program().FindTheLongestSubstring("eleetminicoworoep"));
+            Console.WriteLine(new Program().MovingCount(3, 2, 17));
         }
 
         static int MaxProfit(int[] prices)
@@ -463,7 +463,7 @@ namespace leetcode
             {
                 for (int c = 0; c < C; c++)
                 {
-                    result[i++] = new int[] { r, c };
+                    result[i++] = new int[] {r, c};
                 }
             }
 
@@ -589,7 +589,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char)(i + 'a'));
+                        result.Append((char) (i + 'a'));
                         chars[i]--;
                     }
 
@@ -604,7 +604,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char)(i + 'a'));
+                        result.Append((char) (i + 'a'));
                         chars[i]--;
                     }
 
@@ -793,39 +793,33 @@ namespace leetcode
         //      [4,5,1,2,3]
         //      [1,2,3]
         // 输出：1
-        public static int MinArray(int[] numbers)
+        //1.暴力解 直接遍历数组直至找到第一个后者小于前者的数字
+        //2.二分法思想 取数组中位数 和开始节点和结束节点比较 如果小于开始节点 说明最小的节点在前半段，如果大于结束节点，说明最小节点在后半段,如果两种情况都不存在，说明该段有序，循环处理，直到找到最小节点
+        public int MinArray(int[] numbers)
         {
             int start = 0, end = numbers.Length - 1;
-            while (numbers[start] >= numbers[end])
+            while (start < end)
             {
-                if (end - start == 1)
-                {
-                    start = end;
-                    break;
-                }
-
                 var mid = (start + end) / 2;
-                if (numbers[mid] == numbers[start] && numbers[start] == numbers[end])
+                if (numbers[mid] < numbers[start])
                 {
-                    var result = numbers[start];
-                    for (var i = start + 1; i <= end; i++)
-                    {
-                        if (result > numbers[i])
-                        {
-                            result = numbers[i];
-                        }
-                    }
-
-                    return result;
-                }
-
-                if (numbers[mid] >= numbers[start])
-                {
-                    start = mid;
-                }
-                else if (numbers[mid] <= numbers[end])
-                {
+                    //此时存在左区间，同时mid可能是最小值，需要保留
                     end = mid;
+                }
+                else if (numbers[mid] > numbers[end])
+                {
+                    //此时存在右区间，同时mid不可能是最小值，排除
+                    start = mid + 1;
+                }
+                else if (numbers[mid] == numbers[start] && numbers[start] == numbers[end])
+                {
+                    //此时无法判断最小节点位于哪个区间，调整区间
+                    end--;
+                }
+                else
+                {
+                    //此时可以判断start，end整体有序，直接返回最开始位置数
+                    return numbers[start];
                 }
             }
 
@@ -959,7 +953,7 @@ namespace leetcode
                 return null;
             }
 
-            return new TreeNode(root.val) { left = MirrorTree(root.right), right = MirrorTree(root.left) };
+            return new TreeNode(root.val) {left = MirrorTree(root.right), right = MirrorTree(root.left)};
         }
 
         #endregion
@@ -1642,7 +1636,7 @@ namespace leetcode
                 var index = Find(nums, num);
                 if (index != -1)
                 {
-                    return new[] { nums[i], nums[index] };
+                    return new[] {nums[i], nums[index]};
                 }
             }
 
@@ -1659,7 +1653,7 @@ namespace leetcode
                 var num = target - nums[i];
                 if (set.Contains(num))
                 {
-                    return new[] { nums[i], num };
+                    return new[] {nums[i], num};
                 }
             }
 
@@ -1675,7 +1669,7 @@ namespace leetcode
                 var num = nums[start] + nums[end];
                 if (num == target)
                 {
-                    return new[] { nums[start], nums[end] };
+                    return new[] {nums[start], nums[end]};
                 }
 
                 if (num > target)
@@ -2388,7 +2382,7 @@ namespace leetcode
                 set.Add(n);
                 while (n > 0)
                 {
-                    num += (int)Math.Pow(n % 10, 2);
+                    num += (int) Math.Pow(n % 10, 2);
                     n /= 10;
                 }
 
@@ -2405,6 +2399,27 @@ namespace leetcode
 
         //面试题14- I. 剪绳子
         //https://leetcode-cn.com/problems/jian-sheng-zi-lcof/
+        //思路：
+        //CuttingRope(n)可以看作是Max(CuttingRope(n-1)*1,CuttingRope(n-2)*2,…………,CuttingRope(1)*(n-1))，可以进行递归
+        //另外每次将一段绳子剪成两段时，剩下的部分可以继续剪，也可以不剪
+        //所以最终公式 F(n)=Max(F(n-i)*i,(n-i)*i)
+        int CuttingRope(int n, int[] prevs)
+        {
+            if (prevs[n] != 0)
+            {
+                return prevs[n];
+            }
+
+            var max = -1;
+            for (int i = 2; i <= n; i++)
+            {
+                max = Math.Max(max, Math.Max(i * CuttingRope(n - i), i * (n - i)));
+            }
+
+            prevs[n] = max;
+            return max;
+        }
+
         public int CuttingRope(int n)
         {
             if (n <= 2)
@@ -2412,13 +2427,11 @@ namespace leetcode
                 return 1;
             }
 
-            var max = 0;
-            for (int i = 1; i < n; i++)
-            {
-                max = Math.Max(Math.Max(i * CuttingRope(n - i), i * (n - i)), max);
-            }
-
-            return max;
+            var prevs = new int[n + 1];
+            prevs[0] = 0;
+            prevs[1] = 1;
+            prevs[2] = 1;
+            return CuttingRope(n, prevs);
         }
 
         #endregion
@@ -2684,7 +2697,7 @@ namespace leetcode
                 }
             }
 
-            return (int)num;
+            return (int) num;
         }
 
         #endregion
@@ -2925,7 +2938,7 @@ namespace leetcode
         public int SubarraySum(int[] nums, int k)
         {
             int sum = 0, count = 0;
-            var dic = new Dictionary<int, int> { { 0, 1 } };
+            var dic = new Dictionary<int, int> {{0, 1}};
             foreach (var n in nums)
             {
                 sum += n;
@@ -3116,13 +3129,15 @@ namespace leetcode
             var max = 0;
             for (int i = 0; i < s.Length; i++)
             {
-                var set = new Dictionary<char, int>() { { 'a', 0 }, { 'e', 0 }, { 'i', 0 }, { 'o', 0 }, { 'u', 0 } };
+                var set = new Dictionary<char, int>() {{'a', 0}, {'e', 0}, {'i', 0}, {'o', 0}, {'u', 0}};
                 for (int j = i; j < s.Length; j++)
                 {
                     if (set.TryGetValue(s[j], out var size))
                     {
-                        set[s[j]] = size + 1; ;
+                        set[s[j]] = size + 1;
+                        ;
                     }
+
                     var flag = true;
                     foreach (var value in set.Values)
                     {
@@ -3142,6 +3157,7 @@ namespace leetcode
 
             return max;
         }
+
         //数组前缀和解法
         public int FindTheLongestSubstring1(string s)
         {
@@ -3149,12 +3165,13 @@ namespace leetcode
             //前缀和可能出现的情况共32种，1个字符只用奇数和偶数2种情况，共5个字符，共Math.Pow(2,5)种情况 声明数据记录每种情况最先出现的数组索引
             //前缀和只区分奇偶，奇数-奇数和偶数-偶数都是偶数，此种情况下同一种情况前缀和差的数组肯定符号条件
             //求最长数组，记录第一次的情况，每次符合条件求最大
-            var states = new int[1<<5];
+            var states = new int[1 << 5];
             states[0] = -1;
             for (int i = 1; i < states.Length; i++)
             {
-                states[i] = int.MaxValue;//
+                states[i] = int.MaxValue; //
             }
+
             for (int i = 0; i < s.Length; i++)
             {
                 switch (s[i])
@@ -3175,6 +3192,7 @@ namespace leetcode
                         mask = mask ^ (1 << 4);
                         break;
                 }
+
                 if (states[mask] == int.MaxValue)
                 {
                     states[mask] = i;
@@ -3186,6 +3204,103 @@ namespace leetcode
             }
 
             return max;
+        }
+
+        #endregion
+
+        #region 5. 最长回文子串
+
+        //5. 最长回文子串
+        //https://leetcode-cn.com/problems/longest-palindromic-substring/
+        bool Check(string s, int start, int end)
+        {
+            while (start < end)
+            {
+                if (s[start] != s[end])
+                {
+                    return false;
+                }
+
+                start++;
+                end--;
+            }
+
+            return true;
+        }
+
+
+        public string LongestPalindrome(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return string.Empty;
+            }
+
+            int start = 0, len = 0;
+            for (var i = 0; i < s.Length; i++)
+            {
+                for (var j = i; j < s.Length; j++)
+                {
+                    if (len >= (j - i) + 1)
+                    {
+                        continue;
+                    }
+
+                    if (Check(s, i, j))
+                    {
+                        start = i;
+                        len = j - i + 1;
+                    }
+                }
+            }
+
+            return s.Substring(start, len);
+        }
+
+        #endregion
+
+        #region 面试题13. 机器人的运动范围
+
+        public int MovingCount(int m, int n, int k)
+        {
+            int Compute(int num)
+            {
+                var res = 0;
+                while (num != 0)
+                {
+                    res += (num % 10);
+                    num /= 10;
+                }
+
+                return res;
+            }
+
+            var martix = new int[m, n];
+            martix[0, 0] = -1;
+            var size = 1;
+            //不需要考虑回溯，坐标只需要向下或向右查找
+            for (int i = 0; i < m; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if ((i == 0 && j == 0) || Compute(i) + Compute(j) > k)
+                    {
+                        continue;
+                    }
+
+                    if (Compute(i) + Compute(j) <= k)
+                    {
+                        //计算上一步节点是否可达
+                        if (i > 0 && martix[i - 1, j] == -1 || j > 0 && martix[i, j - 1] == -1)
+                        {
+                            martix[i, j] = -1;
+                            size++;
+                        }
+                    }
+                }
+            }
+
+            return size;
         }
 
         #endregion
