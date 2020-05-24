@@ -21,7 +21,7 @@ namespace leetcode
             tree.right = new TreeNode(5);
             tree.left.left = new TreeNode(1);
             tree.left.right = new TreeNode(3);
-            Console.WriteLine(new Program().MovingCount(3, 2, 17));
+            Console.WriteLine(new Program().MinWindow("a", "a"));
         }
 
         static int MaxProfit(int[] prices)
@@ -3352,6 +3352,117 @@ namespace leetcode
             }
             return true;
         }
+        #endregion
+
+        #region 76. 最小覆盖子串
+        //76. 最小覆盖子串
+        //https://leetcode-cn.com/problems/minimum-window-substring/
+        public string MinWindow(string s, string t)
+        {
+            if (string.IsNullOrEmpty(s) || s.Length < t.Length)
+            {
+                return string.Empty;
+            }
+
+            Dictionary<char, int> dic = new Dictionary<char, int>(), subStr = new Dictionary<char, int>();
+            foreach (var ch in t)
+            {
+                if (dic.ContainsKey(ch))
+                {
+                    dic[ch]++;
+                }
+                else
+                {
+                    dic[ch] = 1;
+                }
+            }
+            int start = 0, end = 0, minStart = 0, minLen = int.MaxValue;
+            while (end < s.Length)
+            {
+                var ch = s[end];
+                if (dic.ContainsKey(ch))
+                {
+                    dic[ch]--;
+                }
+                while (start <= end && dic.All(kv => kv.Value <= 0))
+                {
+                    if (start == end)
+                    {
+                        return s.Substring(start, 1);
+                    }
+                    var len = end - start + 1;
+                    if (len < minLen)
+                    {
+                        minStart = start;
+                        minLen = len;
+                    }
+                    ch = s[start];
+                    if (dic.ContainsKey(ch))
+                    {
+                        dic[ch]++;
+                    }
+                    start++;
+                }
+                end++;
+            }
+            return minLen <= s.Length ? s.Substring(minStart, minLen) : string.Empty;
+            //return subStr.Count < set.Count ? string.Empty : s.Substring(start, len);
+        }
+        #endregion
+
+        #region 4. 寻找两个正序数组的中位数
+        //4. 寻找两个正序数组的中位数
+        //https://leetcode-cn.com/problems/median-of-two-sorted-arrays/
+
+        int FindTopK(int[] nums1, int[] nums2, int k)
+        {
+            int length1 = nums1.Length, length2 = nums2.Length;
+            int index1 = 0, index2 = 0;
+            while (true)
+            {
+                // 边界情况
+                if (index1 == length1)
+                {
+                    return nums2[index2 + k - 1];
+                }
+                if (index2 == length2)
+                {
+                    return nums1[index1 + k - 1];
+                }
+                if (k == 1)
+                {
+                    return Math.Min(nums1[index1], nums2[index2]);
+                }
+
+                // 正常情况
+                int half = k / 2;
+                int newIndex1 = Math.Min(index1 + half, length1) - 1;
+                int newIndex2 = Math.Min(index2 + half, length2) - 1;
+                int pivot1 = nums1[newIndex1], pivot2 = nums2[newIndex2];
+                if (pivot1 <= pivot2)
+                {
+                    k -= (newIndex1 - index1 + 1);
+                    index1 = newIndex1 + 1;
+                }
+                else
+                {
+                    k -= (newIndex2 - index2 + 1);
+                    index2 = newIndex2 + 1;
+                }
+            }
+
+        }
+
+        public double FindMedianSortedArrays(int[] nums1, int[] nums2)
+        {
+            var length = nums1.Length + nums2.Length;
+            if ((length & 1) == 1)
+            {
+                return FindTopK(nums1, nums2, length / 2 + 1);
+            }
+            return (FindTopK(nums1, nums2, length / 2 + 1) + FindTopK(nums1, nums2, length / 2)) / 2.0d;
+        }
+
         #endregion
     }
 }
