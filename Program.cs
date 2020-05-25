@@ -16,12 +16,25 @@ namespace leetcode
         static void Main(string[] args)
         {
             //4,2,5,1,3
-            var tree = new TreeNode(4);
-            tree.left = new TreeNode(2);
-            tree.right = new TreeNode(5);
-            tree.left.left = new TreeNode(1);
-            tree.left.right = new TreeNode(3);
-            Console.WriteLine(new Program().MinWindow("a", "a"));
+            var root = new TreeNode(4);
+            root.left = new TreeNode(2);
+            root.right = new TreeNode(5);
+            root.left.left = new TreeNode(1);
+            root.left.right = new TreeNode(3);
+            //[null,null,null,2,1,null,-1,2,3]
+
+
+            var cache = new LRUCache(2);
+            cache.Put(2, 1);
+            cache.Put(3, 2);
+            Console.WriteLine(cache.Get(3));
+            Console.WriteLine(cache.Get(2));
+            cache.Put(4, 3);
+            Console.WriteLine(cache.Get(2));
+            Console.WriteLine(cache.Get(3));
+            Console.WriteLine(cache.Get(4));
+            Console.WriteLine(
+                new Solution().ValidateStackSequences(new int[] {1, 2, 3, 4, 5}, new int[] {4, 3, 5, 1, 2}));
         }
 
         static int MaxProfit(int[] prices)
@@ -464,7 +477,7 @@ namespace leetcode
             {
                 for (int c = 0; c < C; c++)
                 {
-                    result[i++] = new int[] { r, c };
+                    result[i++] = new int[] {r, c};
                 }
             }
 
@@ -590,7 +603,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char)(i + 'a'));
+                        result.Append((char) (i + 'a'));
                         chars[i]--;
                     }
 
@@ -605,7 +618,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char)(i + 'a'));
+                        result.Append((char) (i + 'a'));
                         chars[i]--;
                     }
 
@@ -954,7 +967,7 @@ namespace leetcode
                 return null;
             }
 
-            return new TreeNode(root.val) { left = MirrorTree(root.right), right = MirrorTree(root.left) };
+            return new TreeNode(root.val) {left = MirrorTree(root.right), right = MirrorTree(root.left)};
         }
 
         #endregion
@@ -1637,7 +1650,7 @@ namespace leetcode
                 var index = Find(nums, num);
                 if (index != -1)
                 {
-                    return new[] { nums[i], nums[index] };
+                    return new[] {nums[i], nums[index]};
                 }
             }
 
@@ -1654,7 +1667,7 @@ namespace leetcode
                 var num = target - nums[i];
                 if (set.Contains(num))
                 {
-                    return new[] { nums[i], num };
+                    return new[] {nums[i], num};
                 }
             }
 
@@ -1670,7 +1683,7 @@ namespace leetcode
                 var num = nums[start] + nums[end];
                 if (num == target)
                 {
-                    return new[] { nums[start], nums[end] };
+                    return new[] {nums[start], nums[end]};
                 }
 
                 if (num > target)
@@ -2383,7 +2396,7 @@ namespace leetcode
                 set.Add(n);
                 while (n > 0)
                 {
-                    num += (int)Math.Pow(n % 10, 2);
+                    num += (int) Math.Pow(n % 10, 2);
                     n /= 10;
                 }
 
@@ -2698,7 +2711,7 @@ namespace leetcode
                 }
             }
 
-            return (int)num;
+            return (int) num;
         }
 
         #endregion
@@ -2939,7 +2952,7 @@ namespace leetcode
         public int SubarraySum(int[] nums, int k)
         {
             int sum = 0, count = 0;
-            var dic = new Dictionary<int, int> { { 0, 1 } };
+            var dic = new Dictionary<int, int> {{0, 1}};
             foreach (var n in nums)
             {
                 sum += n;
@@ -3130,7 +3143,7 @@ namespace leetcode
             var max = 0;
             for (int i = 0; i < s.Length; i++)
             {
-                var set = new Dictionary<char, int>() { { 'a', 0 }, { 'e', 0 }, { 'i', 0 }, { 'o', 0 }, { 'u', 0 } };
+                var set = new Dictionary<char, int>() {{'a', 0}, {'e', 0}, {'i', 0}, {'o', 0}, {'u', 0}};
                 for (int j = i; j < s.Length; j++)
                 {
                     if (set.TryGetValue(s[j], out var size))
@@ -3307,6 +3320,7 @@ namespace leetcode
         #endregion
 
         #region 面试题20. 表示数值的字符串
+
         //todo 继续
         public bool IsNumber(string s)
         {
@@ -3315,11 +3329,12 @@ namespace leetcode
             {
                 return false;
             }
+
             s = s.Trim();
-            var allowSet = new HashSet<char>() { 'e', '.', '+', '-' };
+            var allowSet = new HashSet<char>() {'e', '.', '+', '-'};
             for (int i = 0; i < 10; i++)
             {
-                allowSet.Add((char)('0' + i));
+                allowSet.Add((char) ('0' + i));
             }
 
             for (int i = 0; i < s.Length; i++)
@@ -3333,6 +3348,7 @@ namespace leetcode
                         {
                             return false;
                         }
+
                         allowSet.Remove('+');
                         allowSet.Remove('-');
                         break;
@@ -3345,16 +3361,20 @@ namespace leetcode
                         {
                             return false;
                         }
+
                         allowSet.Remove('+');
                         allowSet.Remove('-');
                         break;
                 }
             }
+
             return true;
         }
+
         #endregion
 
         #region 76. 最小覆盖子串
+
         //76. 最小覆盖子串
         //https://leetcode-cn.com/problems/minimum-window-substring/
         public string MinWindow(string s, string t)
@@ -3376,6 +3396,7 @@ namespace leetcode
                     dic[ch] = 1;
                 }
             }
+
             int start = 0, end = 0, minStart = 0, minLen = int.MaxValue;
             while (end < s.Length)
             {
@@ -3384,33 +3405,41 @@ namespace leetcode
                 {
                     dic[ch]--;
                 }
+
                 while (start <= end && dic.All(kv => kv.Value <= 0))
                 {
                     if (start == end)
                     {
                         return s.Substring(start, 1);
                     }
+
                     var len = end - start + 1;
                     if (len < minLen)
                     {
                         minStart = start;
                         minLen = len;
                     }
+
                     ch = s[start];
                     if (dic.ContainsKey(ch))
                     {
                         dic[ch]++;
                     }
+
                     start++;
                 }
+
                 end++;
             }
+
             return minLen <= s.Length ? s.Substring(minStart, minLen) : string.Empty;
             //return subStr.Count < set.Count ? string.Empty : s.Substring(start, len);
         }
+
         #endregion
 
         #region 4. 寻找两个正序数组的中位数
+
         //4. 寻找两个正序数组的中位数
         //https://leetcode-cn.com/problems/median-of-two-sorted-arrays/
 
@@ -3425,10 +3454,12 @@ namespace leetcode
                 {
                     return nums2[index2 + k - 1];
                 }
+
                 if (index2 == length2)
                 {
                     return nums1[index1 + k - 1];
                 }
+
                 if (k == 1)
                 {
                     return Math.Min(nums1[index1], nums2[index2]);
@@ -3450,7 +3481,6 @@ namespace leetcode
                     index2 = newIndex2 + 1;
                 }
             }
-
         }
 
         public double FindMedianSortedArrays(int[] nums1, int[] nums2)
@@ -3460,7 +3490,110 @@ namespace leetcode
             {
                 return FindTopK(nums1, nums2, length / 2 + 1);
             }
+
             return (FindTopK(nums1, nums2, length / 2 + 1) + FindTopK(nums1, nums2, length / 2)) / 2.0d;
+        }
+
+        #endregion
+
+        #region 146. LRU缓存机制
+
+        //146. LRU缓存机制
+        //https://leetcode-cn.com/problems/lru-cache/
+        class LRUCache
+        {
+            class CacheNode
+            {
+                public int val;
+                public int key;
+                public CacheNode prev;
+                public CacheNode next;
+            }
+
+            private int capacity;
+            private Dictionary<int, CacheNode> dic = new Dictionary<int, CacheNode>();
+            private CacheNode head;
+            private CacheNode tail;
+
+            public LRUCache(int capacity)
+            {
+                this.capacity = capacity;
+            }
+
+            private void MoveToTail(CacheNode node)
+            {
+                if (node == tail)
+                {
+                    //尾节点
+                    return;
+                }
+
+                if (node == head)
+                {
+                    //头节点
+                    head = node.next;
+                    head.prev = null;
+                }
+                else
+                {
+                    //非头尾节点，连接前后节点
+                    CacheNode prev = node.prev, next = node.next;
+                    prev.next = next;
+                    next.prev = prev;
+                }
+
+                //将节点移动到尾节点
+                node.prev = tail;
+                tail.next = node;
+                tail = node;
+                tail.next = null;
+            }
+
+            public int Get(int key)
+            {
+                if (!dic.TryGetValue(key, out var node))
+                {
+                    return -1;
+                }
+
+                MoveToTail(node);
+                return node.val;
+            }
+
+            public void Put(int key, int value)
+            {
+                if (dic.TryGetValue(key, out var node))
+                {
+                    node.val = value;
+                    MoveToTail(node);
+                }
+                else
+                {
+                    dic[key] = node = new CacheNode() {key = key, val = value};
+                    if (tail == null)
+                    {
+                        head = tail = node;
+                    }
+                    else
+                    {
+                        tail.next = node;
+                        node.prev = tail;
+                        tail = node;
+                    }
+                }
+
+                while (dic.Count > capacity)
+                {
+                    dic.Remove(head.key);
+                    head = head.next;
+                    if (head == null)
+                    {
+                        break;
+                    }
+
+                    head.prev = null;
+                }
+            }
         }
 
         #endregion
