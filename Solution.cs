@@ -654,7 +654,6 @@ public class Solution
 
         var result = new List<IList<int>>();
         var dequeue = new LinkedList<TreeNode>();
-        ;
         var items = new List<int>();
         dequeue.AddLast(root);
         int size = dequeue.Count, level = 0;
@@ -820,6 +819,7 @@ public class Solution
             PathSum(root.left, result, path, sum);
             PathSum(root.right, result, path, sum);
         }
+
         path.RemoveAt(path.Count - 1);
     }
 
@@ -834,5 +834,142 @@ public class Solution
         var path = new List<int>();
         PathSum(root, result, path, sum);
         return result;
+    }
+
+    Node CopyNode(Node node, Dictionary<Node, Node> dic)
+    {
+        if (node == null)
+        {
+            return null;
+        }
+
+        if (dic.TryGetValue(node, out var cpNode))
+        {
+            return cpNode;
+        }
+
+        dic[node] = cpNode = new Node(node.val);
+        cpNode.next = CopyNode(node.next, dic);
+        cpNode.random = CopyNode(node.random, dic);
+        return cpNode;
+    }
+
+    public Node CopyRandomList(Node head)
+    {
+        return CopyNode(head, new Dictionary<Node, Node>());
+    }
+
+    public int MajorityElement(int[] nums)
+    {
+        int size = 1, num = nums[0];
+        for (var i = 1; i < nums.Length; i++)
+        {
+            if (size == 0)
+            {
+                num = nums[i];
+                size++;
+                continue;
+            }
+
+            if (nums[i] == num)
+            {
+                size++;
+            }
+            else
+            {
+                size--;
+            }
+        }
+
+        return num;
+    }
+
+    void BuildHeap(int[] arr, int parentId)
+    {
+        while (true)
+        {
+            int left = (parentId << 1) + 1, right = left + 1;
+            if (left >= arr.Length)
+            {
+                break;
+            }
+
+            if (right < arr.Length && arr[left] < arr[right])
+            {
+                left = right;
+            }
+
+            if (arr[left] > arr[parentId])
+            {
+                var tmp = arr[parentId];
+                arr[parentId] = arr[left];
+                arr[left] = tmp;
+            }
+
+            parentId = left;
+        }
+    }
+
+    void MoveDown(int[] arr, int index)
+    {
+        var target = arr[index];
+        while (true)
+        {
+            int left = (index << 1) + 1, right = left + 1;
+            if (left >= arr.Length)
+            {
+                break;
+            }
+
+            if (right < arr.Length && arr[left] < arr[right])
+            {
+                left = right;
+            }
+
+            if (arr[left] > target)
+            {
+                arr[index] = arr[left];
+                index = left;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        arr[index] = target;
+    }
+
+    public int[] GetLeastNumbers(int[] arr, int k)
+    {
+        if (arr == null || arr.Length <= k)
+        {
+            return arr;
+        }
+
+        if (k <= 0)
+        {
+            return new int[0];
+        }
+
+        var heap = new int[k];
+        Array.Copy(arr, heap, k);
+        //1.构建大顶堆
+        for (int i = k / 2; i >= 0; i--)
+        {
+            BuildHeap(heap, i);
+        }
+
+        for (int i = k; i < arr.Length; i++)
+        {
+            if (arr[i] < heap[0])
+            {
+                //2.小于堆顶元素，替换，重新调整为大顶堆
+                heap[0] = arr[i];
+                MoveDown(heap, 0);
+            }
+        }
+
+        return heap;
     }
 }

@@ -16,12 +16,15 @@ namespace leetcode
         static void Main(string[] args)
         {
             //4,2,5,1,3
-            var root = new TreeNode(4);
+
+            var root = new TreeNode(1);
             root.left = new TreeNode(2);
-            root.right = new TreeNode(5);
-            root.left.left = new TreeNode(1);
-            root.left.right = new TreeNode(3);
-            //[null,null,null,2,1,null,-1,2,3]
+            root.right = new TreeNode(3);
+            root.right.left = new TreeNode(4);
+            root.right.right = new TreeNode(5);
+            var codec = new Codec();
+            var str = codec.Serialize(root);
+            Console.WriteLine(codec.Deserialize(str));
 
 
             var cache = new LRUCache(2);
@@ -3594,6 +3597,164 @@ namespace leetcode
                     head.prev = null;
                 }
             }
+        }
+
+        #endregion
+
+        #region 287. 寻找重复数
+
+        //287. 寻找重复数
+        //https://leetcode-cn.com/problems/find-the-duplicate-number/
+        public int FindDuplicate(int[] nums)
+        {
+            //数组取值范围为1-（nums.Length-1），所以中位数可以计算出来，统计nums中大于小于中位数的数量，即可判断数字的范围，逐步缩小范围直至找到结果
+            var size = 0;
+            int left = 1, right = nums.Length - 1;
+            while (left < right)
+            {
+                var mid = (left + right) / 2; //数组一半大小，同时也是数组中位数
+                foreach (var num in nums)
+                {
+                    if (num <= mid)
+                    {
+                        size++;
+                    }
+                }
+
+                if (size > mid) //小于中位数的数字个数超出数组一半大小，说明该数在数组左区间
+                {
+                    right = mid;
+                }
+                else
+                {
+                    left = mid + 1;
+                }
+
+                size = 0;
+            }
+
+            return left;
+        }
+
+        #endregion
+
+        #region 面试题37. 序列化二叉树
+
+        //面试题37. 序列化二叉树
+        //https://leetcode-cn.com/problems/xu-lie-hua-er-cha-shu-lcof/
+
+        public class Codec
+        {
+            // Encodes a tree to a single string.
+            public string Serialize(TreeNode root)
+            {
+                if (root == null)
+                {
+                    return string.Empty;
+                }
+
+                var res = new StringBuilder();
+                var queue = new Queue<TreeNode>();
+                queue.Enqueue(root);
+                while (queue.Count > 0)
+                {
+                    root = queue.Dequeue();
+                    if (root == null)
+                    {
+                        res.Append("null");
+                    }
+                    else
+                    {
+                        res.Append(root.val.ToString());
+                        queue.Enqueue(root.left);
+                        queue.Enqueue(root.right);
+                    }
+
+                    res.Append(",");
+                }
+
+                return res.Remove(res.Length - 1, 1).ToString();
+            }
+
+            // Decodes your encoded data to tree.
+            public TreeNode Deserialize(string data)
+            {
+                if (string.IsNullOrEmpty(data))
+                {
+                    return null;
+                }
+
+                var strs = data.Split(",");
+                var strIndex = 0;
+                var queue = new Queue<TreeNode>();
+                var root = new TreeNode(int.Parse(strs[strIndex++]));
+                queue.Enqueue(root);
+                while (queue.TryDequeue(out var node))
+                {
+                    if (strs[strIndex] != "null")
+                    {
+                        node.left = new TreeNode(int.Parse(strs[strIndex]));
+                        queue.Enqueue(node.left);
+                    }
+
+                    strIndex++;
+                    if (strs[strIndex] != "null")
+                    {
+                        node.right = new TreeNode(int.Parse(strs[strIndex]));
+                        queue.Enqueue(node.right);
+                    }
+
+                    strIndex++;
+                }
+
+                return root;
+            }
+        }
+
+        #endregion
+
+        #region 面试题43. 1～n整数中1出现的次数
+
+        public int CountDigitOne(int n)
+        {
+            int high = n / 10, low = 0, cur = n % 10, digit = 1, res = 0;
+            while (high != 0 || cur != 0)
+            {
+                if (cur == 0)
+                {
+                    res += high * digit;
+                }
+                else if (cur == 1)
+                {
+                    res += high * digit + low + 1;
+                }
+                else
+                {
+                    res += (high + 1) * digit;
+                }
+
+                low += cur * digit;
+                digit *= 10;
+                cur = high % 10;
+                high /= 10;
+            }
+
+
+            return res;
+        }
+
+        #endregion
+
+        #region 面试题44. 数字序列中某一位的数字
+
+        //面试题44. 数字序列中某一位的数字
+        //https://leetcode-cn.com/problems/shu-zi-xu-lie-zhong-mou-yi-wei-de-shu-zi-lcof/
+        public int FindNthDigit(int n)
+        {
+            //range 0-9 0-9
+            //range 10-99 10-180
+            //range 100-999 181-2700
+            throw new NotImplementedException();
         }
 
         #endregion
