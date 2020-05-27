@@ -16,7 +16,6 @@ namespace leetcode
         static void Main(string[] args)
         {
             //4,2,5,1,3
-
             var root = new TreeNode(1);
             root.left = new TreeNode(2);
             root.right = new TreeNode(3);
@@ -25,7 +24,6 @@ namespace leetcode
             var codec = new Codec();
             var str = codec.Serialize(root);
             Console.WriteLine(codec.Deserialize(str));
-
 
             var cache = new LRUCache(2);
             cache.Put(2, 1);
@@ -37,7 +35,7 @@ namespace leetcode
             Console.WriteLine(cache.Get(3));
             Console.WriteLine(cache.Get(4));
             Console.WriteLine(
-                new Solution().ValidateStackSequences(new int[] {1, 2, 3, 4, 5}, new int[] {4, 3, 5, 1, 2}));
+                new Program().TranslateNum(1225));
         }
 
         static int MaxProfit(int[] prices)
@@ -3755,6 +3753,167 @@ namespace leetcode
             //range 10-99 10-180
             //range 100-999 181-2700
             throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region 974. 和可被 K 整除的子数组
+
+        //974. 和可被 K 整除的子数组
+        //https://leetcode-cn.com/problems/subarray-sums-divisible-by-k/
+        //1.暴力解
+        public int SubarraysDivByK(int[] nums, int k)
+        {
+            var res = 0;
+            for (int i = 0; i < nums.Length; i++)
+            {
+                var sum = 0;
+                for (int j = i; j < nums.Length; j++)
+                {
+                    sum += nums[i];
+                    if (sum % k == 0)
+                    {
+                        res++;
+                    }
+                }
+            }
+
+            return res;
+        }
+
+        //2.前缀和+余弦定理
+        public int SubarraysDivByK1(int[] nums, int k)
+        {
+            int res = 0, sum = 0;
+            var dic = new Dictionary<int, int>();
+            for (int i = 0; i < nums.Length; i++)
+            {
+                sum += nums[i];
+                var m = sum % k;
+                dic.TryGetValue(m, out var count);
+                res += count;
+                dic[m] = count + 1;
+            }
+
+            return res;
+        }
+
+        #endregion
+
+        #region 面试题46. 把数字翻译成字符串
+
+        void TranslateNum(IList<int> bits, Dictionary<string, char> dic, int start, List<char> chars,
+            HashSet<string> strs)
+        {
+            if (start >= bits.Count)
+            {
+                strs.Add(new string(chars.ToArray()));
+                return;
+            }
+
+            var key = string.Empty;
+            for (int i = start, end = Math.Min(start + 1, bits.Count - 1); i <= end; i++)
+            {
+                key += bits[i].ToString();
+                if (dic.TryGetValue(key, out var ch))
+                {
+                    chars.Add(ch);
+                    TranslateNum(bits, dic, i + 1, chars, strs);
+                    chars.RemoveAt(chars.Count - 1);
+                }
+            }
+        }
+
+        public int TranslateNum(int num)
+        {
+            var sets = new HashSet<string>();
+            var bits = new List<int>();
+            var dic = new Dictionary<string, char>();
+            for (int i = 0; i < 26; i++)
+            {
+                dic[i.ToString()] = (char) ('a' + i);
+            }
+
+            while (num != 0 || bits.Count == 0)
+            {
+                bits.Insert(0, num % 10);
+                num /= 10;
+            }
+
+            TranslateNum(bits, dic, 0, new List<char>(), sets);
+            return sets.Count;
+        }
+
+        #endregion
+
+        #region 面试题47. 礼物的最大价值
+
+        //面试题47. 礼物的最大价值
+        //https://leetcode-cn.com/problems/li-wu-de-zui-da-jie-zhi-lcof/
+        int MaxValue(int[][] grid, int x, int y, int path)
+        {
+            if (x >= grid.Length)
+            {
+                y++;
+                while (y < grid[0].Length)
+                {
+                    path += grid[grid.Length - 1][y];
+                    y++;
+                }
+
+                return path;
+            }
+
+            if (y >= grid[0].Length)
+            {
+                x++;
+                while (x < grid.Length)
+                {
+                    path += grid[x][grid[0].Length - 1];
+                    x++;
+                }
+
+                return path;
+            }
+
+            path += grid[x][y];
+            return Math.Max(MaxValue(grid, x + 1, y, path), MaxValue(grid, x, y + 1, path));
+        }
+
+        public int MaxValue(int[][] grid)
+        {
+            return MaxValue(grid, 0, 1, 0);
+        }
+
+        //动态规划，m[i,j]的最大值为max(m[i-1,j],m[i,j-1])+m
+        public int MaxValue1(int[][] grid)
+        {
+            var max = new int[grid.Length, grid[0].Length];
+            max[0, 0] = grid[0][0];
+            for (int i = 0; i < grid.Length; i++)
+            {
+                for (int j = 0; j < grid[i].Length; j++)
+                {
+                    if (i == 0 && j == 0)
+                    {
+                        max[i, j] = grid[i][j];
+                    }
+                    else if (i == 0)
+                    {
+                        max[i, j] = max[i, j - 1] + grid[i][j];
+                    }
+                    else if (j == 0)
+                    {
+                        max[i, j] = max[i - 1, j] + grid[i][j];
+                    }
+                    else
+                    {
+                        max[i, j] = Math.Max(max[i - 1, j], max[i, j - 1]) + grid[i][j];
+                    }
+                }
+            }
+
+            return max[grid.Length - 1, grid[0].Length - 1];
         }
 
         #endregion
