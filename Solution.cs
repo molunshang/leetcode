@@ -972,4 +972,122 @@ public class Solution
 
         return heap;
     }
+
+    public ListNode GetIntersectionNode(ListNode headA, ListNode headB)
+    {
+        int lenA = 0, lenB = 0;
+        ListNode node1 = headA, node2 = headB;
+        while (node1 != null && node2 != null)
+        {
+            lenA++;
+            lenB++;
+            node1 = node1.next;
+            node2 = node2.next;
+        }
+
+        while (node1 != null)
+        {
+            lenA++;
+            node1 = node1.next;
+        }
+
+        while (node2 != null)
+        {
+            lenB++;
+            node2 = node2.next;
+        }
+
+        while (headA != null && headB != null)
+        {
+            if (lenA > lenB)
+            {
+                lenA--;
+                headA = headA.next;
+            }
+            else if (lenA < lenB)
+            {
+                lenB--;
+                headB = headB.next;
+            }
+            else
+            {
+                if (headA == headB)
+                {
+                    return headA;
+                }
+
+                headA = headA.next;
+                headB = headB.next;
+            }
+        }
+
+        return null;
+    }
+
+    public int Search(int[] nums, int target)
+    {
+        if (nums == null || nums.Length <= 0)
+        {
+            return 0;
+        }
+
+        int start = 0, end = nums.Length - 1, left, right;
+        while (start <= end)
+        {
+            var mid = (start + end) / 2;
+            if (nums[mid] <= target)
+            {
+                start = mid + 1;
+            }
+            else
+            {
+                end = mid - 1;
+            }
+        }
+
+        if (end >= 0 && nums[end] != target)
+        {
+            return 0;
+        }
+
+        right = end;
+        start = 0;
+        while (start <= end)
+        {
+            var mid = (start + end) / 2;
+            if (nums[mid] >= target)
+            {
+                end = mid - 1;
+            }
+            else
+            {
+                start = mid + 1;
+            }
+        }
+
+        left = start;
+        return right - left + 1;
+    }
+
+    public int MissingNumber(int[] nums)
+    {
+        //由数组特点可知，nums[i]==i,如果nums[i]!=i，说明数组缺失
+        //如果是后半段丢失，此时 nums[mid]==mid
+        //如果是前半段丢失，此时 nums[mid]>mid(前段丢失，则后段向前替换，此时下标不变，数组内数字变大)
+        int start = 0, end = nums.Length - 1;
+        while (start <= end)
+        {
+            var mid = (start + end) / 2;
+            if (nums[mid] == mid)
+            {
+                start = mid + 1;
+            }
+            else if (nums[mid] > mid)
+            {
+                end = mid - 1;
+            }
+        }
+
+        return start;
+    }
 }

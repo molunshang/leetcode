@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 
@@ -10,7 +9,7 @@ namespace leetcode
     {
         static void PrintArray(int[] array)
         {
-            System.Console.WriteLine(string.Join(",", array));
+            Console.WriteLine(string.Join(",", array));
         }
 
         static void Main(string[] args)
@@ -35,7 +34,7 @@ namespace leetcode
             Console.WriteLine(cache.Get(3));
             Console.WriteLine(cache.Get(4));
             Console.WriteLine(
-                new Program().TranslateNum(1225));
+                new Program().DecodeString("100[leetcode]"));
         }
 
         static int MaxProfit(int[] prices)
@@ -478,7 +477,7 @@ namespace leetcode
             {
                 for (int c = 0; c < C; c++)
                 {
-                    result[i++] = new int[] {r, c};
+                    result[i++] = new[] {r, c};
                 }
             }
 
@@ -1336,10 +1335,6 @@ namespace leetcode
             private Stack<int> stack = new Stack<int>();
             private Stack<int> min = new Stack<int>();
 
-            public MinStack()
-            {
-            }
-
             public void Push(int x)
             {
                 stack.Push(x);
@@ -2035,15 +2030,14 @@ namespace leetcode
             {
                 return lowestCommonAncestor(root.right, p, q);
             }
-            else if (root.val > q.val && root.val > p.val)
+
+            if (root.val > q.val && root.val > p.val)
             {
                 return lowestCommonAncestor(root.left, p, q);
             }
-            else
-            {
-                //p,q节点必存在tree中，此时节点分布符号搜索二叉树，直接返回root
-                return root;
-            }
+
+            //p,q节点必存在tree中，此时节点分布符号搜索二叉树，直接返回root
+            return root;
         }
 
         #endregion
@@ -2617,7 +2611,8 @@ namespace leetcode
             {
                 return false;
             }
-            else if (!isLeft && (node.val <= rootVal))
+
+            if (!isLeft && (node.val <= rootVal))
             {
                 return false;
             }
@@ -3144,7 +3139,7 @@ namespace leetcode
             var max = 0;
             for (int i = 0; i < s.Length; i++)
             {
-                var set = new Dictionary<char, int>() {{'a', 0}, {'e', 0}, {'i', 0}, {'o', 0}, {'u', 0}};
+                var set = new Dictionary<char, int> {{'a', 0}, {'e', 0}, {'i', 0}, {'o', 0}, {'u', 0}};
                 for (int j = i; j < s.Length; j++)
                 {
                     if (set.TryGetValue(s[j], out var size))
@@ -3332,7 +3327,7 @@ namespace leetcode
             }
 
             s = s.Trim();
-            var allowSet = new HashSet<char>() {'e', '.', '+', '-'};
+            var allowSet = new HashSet<char> {'e', '.', '+', '-'};
             for (int i = 0; i < 10; i++)
             {
                 allowSet.Add((char) ('0' + i));
@@ -3570,7 +3565,7 @@ namespace leetcode
                 }
                 else
                 {
-                    dic[key] = node = new CacheNode() {key = key, val = value};
+                    dic[key] = node = new CacheNode {key = key, val = value};
                     if (tail == null)
                     {
                         head = tail = node;
@@ -3914,6 +3909,149 @@ namespace leetcode
             }
 
             return max[grid.Length - 1, grid[0].Length - 1];
+        }
+
+        #endregion
+
+        #region 394. 字符串解码
+
+        //https://leetcode-cn.com/problems/decode-string/
+        public string DecodeString(string s)
+        {
+            var stack = new Stack<string>();
+            StringBuilder stb = new StringBuilder(), size = new StringBuilder();
+            for (int i = 0; i < s.Length; i++)
+            {
+                var ch = s[i].ToString();
+                if (ch == "]")
+                {
+                    while (stack.TryPop(out ch))
+                    {
+                        if (ch == "[") //[]内字符串拼接完成，将字符串压入栈中
+                        {
+                            while (stack.TryPeek(out ch) && ch.Length == 1 && ch[0] >= '0' && ch[0] <= '9')
+                            {
+                                size.Insert(0, stack.Pop());
+                            }
+
+                            var subStr = stb.ToString();
+                            for (int j = 1; j < int.Parse(size.ToString()); j++)
+                            {
+                                stb.Append(subStr);
+                            }
+
+                            stack.Push(stb.ToString());
+                            stb.Clear();
+                            size.Clear();
+                            break;
+                        }
+
+                        stb.Insert(0, ch);
+                    }
+                }
+                else
+                {
+                    stack.Push(ch);
+                }
+            }
+
+            while (stack.TryPop(out var ch))
+            {
+                stb.Insert(0, ch);
+            }
+
+            return stb.ToString();
+        }
+
+        public string DecodeString1(string s)
+        {
+            var strs = new Stack<string>();
+            var numbers = new Stack<int>();
+            var size = 0;
+            StringBuilder stb = new StringBuilder(), res = new StringBuilder();
+            for (int i = 0; i < s.Length; i++)
+            {
+                var ch = s[i];
+                if (char.IsDigit(ch))
+                {
+                    size = size * 10 + (ch - '0');
+                }
+                else if (ch == '[')
+                {
+                    numbers.Push(size);
+                    strs.Push(stb.ToString());
+                    stb.Clear();
+                    size = 0;
+                }
+                else if (ch == ']')
+                {
+                    var num = numbers.Pop();
+                    res.Append(strs.Pop());
+                    for (int j = 0; j < num; j++)
+                    {
+                        res.Append(stb);
+                    }
+
+                    stb.Clear();
+                    stb.Append(res);
+                    res.Clear();
+                }
+                else
+                {
+                    stb.Append(ch);
+                }
+            }
+
+            return stb.ToString();
+        }
+
+        #endregion
+
+        #region 34. 在排序数组中查找元素的第一个和最后一个位置
+
+        public int[] SearchRange(int[] nums, int target)
+        {
+            if (nums == null || nums.Length <= 0)
+            {
+                return new[] {-1, -1};
+            }
+
+            int start = 0, end = nums.Length - 1;
+            while (start <= end)
+            {
+                var mid = (start + end) / 2;
+                if (nums[mid] <= target)
+                {
+                    start = mid + 1;
+                }
+                else
+                {
+                    end = mid - 1;
+                }
+            }
+
+            //如果target存在，start==end时一定是target，此时满足条件start+1,end不变，故只需要判断nums[end]即可知target是否存在
+            if (end < 0 || nums[end] != target)
+            {
+                return new[] {-1, -1};
+            }
+
+            var rIndex = end;
+            start = 0;
+            while (start <= end)
+            {
+                var mid = (start + end) / 2;
+                if (nums[mid] >= target)
+                {
+                    end = mid - 1;
+                }
+                else
+                {
+                    start = mid + 1;
+                }
+            }
+
+            return new[] {start, rIndex};
         }
 
         #endregion
