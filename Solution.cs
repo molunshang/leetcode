@@ -436,7 +436,7 @@ public class Solution
     {
         return root == null
             ? null
-            : new TreeNode(root.val) {left = MirrorTree(root.right), right = MirrorTree(root.left)};
+            : new TreeNode(root.val) { left = MirrorTree(root.right), right = MirrorTree(root.left) };
     }
 
     bool IsSymmetric(TreeNode left, TreeNode right)
@@ -1089,5 +1089,72 @@ public class Solution
         }
 
         return start;
+    }
+
+    public char FirstUniqChar(string s)
+    {
+        var flags = new int[26];
+        foreach (var ch in s)
+        {
+            flags[ch - 'a']++;
+        }
+        foreach (var ch in s)
+        {
+            if (flags[ch - 'a'] == 1)
+            {
+                return ch;
+            }
+        }
+        return ' ';
+    }
+
+    void KthLargest(TreeNode root, ref int k, ref int result)
+    {
+        if (root == null)
+        {
+            return;
+        }
+        KthLargest(root.right, ref k, ref result);
+        if (k == 0)
+        {
+            return;
+        }
+        k--;
+        if (k == 0)
+        {
+            result = root.val;
+            return;
+        }
+        KthLargest(root.left, ref k, ref result);
+    }
+
+    public int KthLargest(TreeNode root, int k)
+    {
+        var res = 0;
+        KthLargest(root, ref k, ref res);
+        return res;
+    }
+
+    public int MaxDepth(TreeNode root)
+    {
+        if (root == null)
+        {
+            return 0;
+        }
+        return Math.Max(MaxDepth(root.left), MaxDepth(root.right)) + 1;
+    }
+
+    public bool IsBalanced(TreeNode root)
+    {
+        if (root == null)
+        {
+            return true;
+        }
+        if (!IsBalanced(root.left) || !IsBalanced(root.right))
+        {
+            return false;
+        }
+        int left = MaxDepth(root.left), right = MaxDepth(root.right);
+        return Math.Abs(left - right) <= 1;
     }
 }
