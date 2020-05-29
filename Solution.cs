@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 public class Solution
 {
@@ -436,7 +437,7 @@ public class Solution
     {
         return root == null
             ? null
-            : new TreeNode(root.val) { left = MirrorTree(root.right), right = MirrorTree(root.left) };
+            : new TreeNode(root.val) {left = MirrorTree(root.right), right = MirrorTree(root.left)};
     }
 
     bool IsSymmetric(TreeNode left, TreeNode right)
@@ -904,9 +905,12 @@ public class Solution
                 var tmp = arr[parentId];
                 arr[parentId] = arr[left];
                 arr[left] = tmp;
+                parentId = left;
             }
-
-            parentId = left;
+            else
+            {
+                break;
+            }
         }
     }
 
@@ -1098,6 +1102,7 @@ public class Solution
         {
             flags[ch - 'a']++;
         }
+
         foreach (var ch in s)
         {
             if (flags[ch - 'a'] == 1)
@@ -1105,6 +1110,7 @@ public class Solution
                 return ch;
             }
         }
+
         return ' ';
     }
 
@@ -1114,17 +1120,20 @@ public class Solution
         {
             return;
         }
+
         KthLargest(root.right, ref k, ref result);
         if (k == 0)
         {
             return;
         }
+
         k--;
         if (k == 0)
         {
             result = root.val;
             return;
         }
+
         KthLargest(root.left, ref k, ref result);
     }
 
@@ -1141,6 +1150,7 @@ public class Solution
         {
             return 0;
         }
+
         return Math.Max(MaxDepth(root.left), MaxDepth(root.right)) + 1;
     }
 
@@ -1150,11 +1160,214 @@ public class Solution
         {
             return true;
         }
+
         if (!IsBalanced(root.left) || !IsBalanced(root.right))
         {
             return false;
         }
+
         int left = MaxDepth(root.left), right = MaxDepth(root.right);
         return Math.Abs(left - right) <= 1;
+    }
+
+    public int[] TwoSum(int[] nums, int target)
+    {
+        int start = 0, end = nums.Length - 1;
+        while (start < end)
+        {
+            var num = nums[start] + nums[end];
+            if (num == target)
+            {
+                return new[] {nums[start], nums[end]};
+            }
+
+            if (num < target)
+            {
+                start++;
+            }
+            else
+            {
+                end--;
+            }
+        }
+
+        return new int[0];
+    }
+
+    public int[][] FindContinuousSequence(int target)
+    {
+        var result = new List<int[]>();
+        var seqs = new Queue<int>();
+        for (int i = 1, j = (target + 1) / 2; i <= j; i++)
+        {
+            seqs.Enqueue(i);
+            target -= i;
+            while (seqs.Count > 0 && target < 0)
+            {
+                target += seqs.Dequeue();
+            }
+
+            if (target == 0)
+            {
+                result.Add(seqs.ToArray());
+            }
+        }
+
+        return result.ToArray();
+    }
+
+    public string ReverseWords(string s)
+    {
+        if (string.IsNullOrEmpty(s))
+        {
+            return string.Empty;
+        }
+
+        var result = new StringBuilder();
+        var len = 0;
+        for (int i = s.Length - 1; i >= 0; i--)
+        {
+            var ch = s[i];
+            if (ch != ' ')
+            {
+                len++;
+            }
+            else
+            {
+                if (len <= 0)
+                {
+                    continue;
+                }
+
+                result.Append(s, i + 1, len).Append(' ');
+                len = 0;
+            }
+        }
+
+        if (len > 0)
+        {
+            return result.Append(s, 0, len).ToString();
+        }
+
+        return result.Length <= 0 ? string.Empty : result.ToString(0, result.Length - 1);
+    }
+
+    public int[] MaxSlidingWindow(int[] nums, int k)
+    {
+        if (nums == null || nums.Length <= 1)
+        {
+            return nums;
+        }
+
+        var result = new List<int>();
+        var slice = new LinkedList<int>();
+        foreach (var num in nums)
+        {
+            var count = slice.Count;
+            while (slice.Count > 0 && slice.Last.Value < num)
+            {
+                slice.RemoveLast();
+            }
+
+            while (slice.Count < count)
+            {
+                slice.AddLast(num);
+            }
+
+            slice.AddLast(num);
+            if (slice.Count == k)
+            {
+                result.Add(slice.First.Value);
+                slice.RemoveFirst();
+            }
+        }
+
+        return result.ToArray();
+    }
+
+    public bool IsStraight(int[] nums)
+    {
+        Array.Sort(nums);
+        int start = 0, end = nums.Length - 1;
+        while (start < end)
+        {
+            if (nums[end] == nums[end - 1] && nums[end] != 0)
+            {
+                return false;
+            }
+
+            var diff = nums[end] - nums[end - 1];
+            while (diff > 1 && start < end)
+            {
+                if (nums[start] != 0)
+                {
+                    return false;
+                }
+
+                start++;
+                diff--;
+            }
+
+            end--;
+        }
+
+        return true;
+    }
+
+    public int LastRemaining(int n, int m)
+    {
+        var list = new List<int>();
+        for (int i = 0; i < n; i++)
+        {
+            list.Add(i);
+        }
+
+        var rmIndex = (m - 1) % list.Count;
+        while (list.Count > 1)
+        {
+            list.RemoveAt(rmIndex);
+            rmIndex = (rmIndex + m - 1) % list.Count;
+        }
+
+        return list[0];
+    }
+
+    public int MaxProfit(int[] prices)
+    {
+        var max = 0;
+        for (int i = prices.Length - 1; i >= 1; i--)
+        {
+            for (int j = i - 1; j >= 0; j--)
+            {
+                max = Math.Max(prices[i] - prices[j], max);
+            }
+        }
+
+        return max;
+    }
+
+    public int[] ConstructArr(int[] a)
+    {
+        if (a.Length <= 0)
+        {
+            return new int[0];
+        }
+
+        var result = new int[a.Length];
+        int[] prev = new int[a.Length], next = new int[a.Length];
+        prev[0] = 1;
+        next[a.Length - 1] = 1;
+        for (int i = 1, j = a.Length - 2; i < a.Length; i++, j--)
+        {
+            prev[i] = prev[i - 1] * a[i - 1];
+            next[j] = next[j + 1] * a[j + 1];
+        }
+
+        for (int i = 0; i < a.Length; i++)
+        {
+            result[i] = prev[i] * next[i];
+        }
+
+        return result;
     }
 }

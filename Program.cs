@@ -14,51 +14,66 @@ namespace leetcode
 
         static void Main(string[] args)
         {
-            var root = new TreeNode(3);
-            root.left = new TreeNode(1);
-            root.right = new TreeNode(4);
-            root.left.right = new TreeNode(2);
-            Console.WriteLine(new Solution().KthLargest(root, 2));
+            Console.WriteLine(new Solution().ConstructArr(new[] {1, 2, 3, 4, 5}));
             //4,2,5,1,3
-            //var root = new TreeNode(1);
-            //root.left = new TreeNode(2);
-            //root.right = new TreeNode(3);
-            //root.right.left = new TreeNode(4);
-            //root.right.right = new TreeNode(5);
-            //var codec = new Codec();
-            //var str = codec.Serialize(root);
-            //Console.WriteLine(codec.Deserialize(str));
+            var root = new TreeNode(1);
+            root.left = new TreeNode(2);
+            root.right = new TreeNode(3);
+            root.right.left = new TreeNode(4);
+            root.right.right = new TreeNode(5);
+            var codec = new Codec();
+            var str = codec.Serialize(root);
+            Console.WriteLine(codec.Deserialize(str));
 
-            //var cache = new LRUCache(2);
-            //cache.Put(2, 1);
-            //cache.Put(3, 2);
-            //Console.WriteLine(cache.Get(3));
-            //Console.WriteLine(cache.Get(2));
-            //cache.Put(4, 3);
-            //Console.WriteLine(cache.Get(2));
-            //Console.WriteLine(cache.Get(3));
-            //Console.WriteLine(cache.Get(4));
-            //Console.WriteLine(
-            //    new Program().DecodeString("100[leetcode]"));
+            var cache = new LRUCache(2);
+            cache.Put(2, 1);
+            cache.Put(3, 2);
+            Console.WriteLine(cache.Get(3));
+            Console.WriteLine(cache.Get(2));
+            cache.Put(4, 3);
+            Console.WriteLine(cache.Get(2));
+            Console.WriteLine(cache.Get(3));
+            Console.WriteLine(cache.Get(4));
+            Console.WriteLine(
+                new Program().DecodeString("100[leetcode]"));
         }
+
+        #region 面试题63. 股票的最大利润
 
         static int MaxProfit(int[] prices)
         {
-            var n = int.MaxValue;
-            for (int i = 0; i < prices.Length; i++)
+            var max = 0;
+            for (int i = prices.Length - 1; i >= 1; i--)
             {
-                for (int j = i + 1; j < prices.Length; j++)
+                for (int j = i - 1; j >= 0; j--)
                 {
-                    var m = prices[i] - prices[j];
-                    if (m < n)
-                    {
-                        n = m;
-                    }
+                    max = Math.Max(prices[i] - prices[j], max);
                 }
             }
 
-            return n > 0 ? 0 : -n;
+            return max;
         }
+
+        //动态规划
+        public int MaxProfit1(int[] prices)
+        {
+            if (prices.Length <= 1)
+            {
+                return 0;
+            }
+
+            var minPrice = prices[0];
+            var max = 0;
+            for (int i = 1; i < prices.Length; i++)
+            {
+                minPrice = Math.Min(minPrice, prices[i]);
+                max = Math.Max(max, prices[i] - minPrice);
+            }
+
+            return max;
+        }
+
+        #endregion
 
         #region 80. 删除排序数组中的重复项 II
 
@@ -115,6 +130,8 @@ namespace leetcode
 
         #endregion
 
+        #region 罗马数字转整数
+
         //13. 罗马数字转整数
         //https://leetcode-cn.com/problems/roman-to-integer/
         public static int RomanToInt(string s)
@@ -161,6 +178,10 @@ namespace leetcode
             return result;
         }
 
+        #endregion
+
+        #region 搜索插入位置
+
         //35. 搜索插入位置
         //https://leetcode-cn.com/problems/search-insert-position/
         public static int SearchInsert(int[] nums, int target)
@@ -187,6 +208,10 @@ namespace leetcode
 
             return nums[middle] > target ? middle : middle + 1;
         }
+
+        #endregion
+
+        #region 38. 外观数列
 
         //38. 外观数列
         //https://leetcode-cn.com/problems/count-and-say/
@@ -223,6 +248,10 @@ namespace leetcode
             return result.ToString();
         }
 
+        #endregion
+
+        #region 53. 最大子序和
+
         //53. 最大子序和
         //https://leetcode-cn.com/problems/maximum-subarray/
         public static int MaxSubArray(int[] nums)
@@ -246,6 +275,11 @@ namespace leetcode
             return ans;
         }
 
+        #endregion
+
+        #region 面试题59 - I. 滑动窗口的最大值
+
+        //https://leetcode-cn.com/problems/hua-dong-chuang-kou-de-zui-da-zhi-lcof/
         public static int[] MaxSlidingWindow(int[] nums, int k)
         {
             if (nums.Length <= 0)
@@ -265,6 +299,9 @@ namespace leetcode
 
             return list;
         }
+
+        #endregion
+
 
         static void Swap<T>(T[] items, int c1, int c2)
         {
@@ -334,6 +371,10 @@ namespace leetcode
             return true;
         }
 
+        #region 1356. 根据数字二进制下 1 的数目排序
+
+        //https://leetcode-cn.com/problems/sort-integers-by-the-number-of-1-bits/
+        //1356. 根据数字二进制下 1 的数目排序
         static int CountOne(int num)
         {
             var size = 0;
@@ -350,8 +391,6 @@ namespace leetcode
             return size;
         }
 
-        //https://leetcode-cn.com/problems/sort-integers-by-the-number-of-1-bits/
-        //1356. 根据数字二进制下 1 的数目排序
         public static int[] SortByBits(int[] arr)
         {
             var indexs = new int[arr.Length];
@@ -389,6 +428,8 @@ namespace leetcode
 
             return arr;
         }
+
+        #endregion
 
         //https://leetcode-cn.com/problems/relative-sort-array/
         //1122. 数组的相对排序
@@ -482,7 +523,7 @@ namespace leetcode
             {
                 for (int c = 0; c < C; c++)
                 {
-                    result[i++] = new int[] { r, c };
+                    result[i++] = new[] {r, c};
                 }
             }
 
@@ -608,7 +649,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char)(i + 'a'));
+                        result.Append((char) (i + 'a'));
                         chars[i]--;
                     }
 
@@ -623,7 +664,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char)(i + 'a'));
+                        result.Append((char) (i + 'a'));
                         chars[i]--;
                     }
 
@@ -972,7 +1013,7 @@ namespace leetcode
                 return null;
             }
 
-            return new TreeNode(root.val) { left = MirrorTree(root.right), right = MirrorTree(root.left) };
+            return new TreeNode(root.val) {left = MirrorTree(root.right), right = MirrorTree(root.left)};
         }
 
         #endregion
@@ -1651,7 +1692,7 @@ namespace leetcode
                 var index = Find(nums, num);
                 if (index != -1)
                 {
-                    return new[] { nums[i], nums[index] };
+                    return new[] {nums[i], nums[index]};
                 }
             }
 
@@ -1668,7 +1709,7 @@ namespace leetcode
                 var num = target - nums[i];
                 if (set.Contains(num))
                 {
-                    return new[] { nums[i], num };
+                    return new[] {nums[i], num};
                 }
             }
 
@@ -1684,7 +1725,7 @@ namespace leetcode
                 var num = nums[start] + nums[end];
                 if (num == target)
                 {
-                    return new[] { nums[start], nums[end] };
+                    return new[] {nums[start], nums[end]};
                 }
 
                 if (num > target)
@@ -2396,7 +2437,7 @@ namespace leetcode
                 set.Add(n);
                 while (n > 0)
                 {
-                    num += (int)Math.Pow(n % 10, 2);
+                    num += (int) Math.Pow(n % 10, 2);
                     n /= 10;
                 }
 
@@ -2712,7 +2753,7 @@ namespace leetcode
                 }
             }
 
-            return (int)num;
+            return (int) num;
         }
 
         #endregion
@@ -2953,7 +2994,7 @@ namespace leetcode
         public int SubarraySum(int[] nums, int k)
         {
             int sum = 0, count = 0;
-            var dic = new Dictionary<int, int> { { 0, 1 } };
+            var dic = new Dictionary<int, int> {{0, 1}};
             foreach (var n in nums)
             {
                 sum += n;
@@ -3144,7 +3185,7 @@ namespace leetcode
             var max = 0;
             for (int i = 0; i < s.Length; i++)
             {
-                var set = new Dictionary<char, int>() { { 'a', 0 }, { 'e', 0 }, { 'i', 0 }, { 'o', 0 }, { 'u', 0 } };
+                var set = new Dictionary<char, int> {{'a', 0}, {'e', 0}, {'i', 0}, {'o', 0}, {'u', 0}};
                 for (int j = i; j < s.Length; j++)
                 {
                     if (set.TryGetValue(s[j], out var size))
@@ -3332,10 +3373,10 @@ namespace leetcode
             }
 
             s = s.Trim();
-            var allowSet = new HashSet<char>() { 'e', '.', '+', '-' };
+            var allowSet = new HashSet<char> {'e', '.', '+', '-'};
             for (int i = 0; i < 10; i++)
             {
-                allowSet.Add((char)('0' + i));
+                allowSet.Add((char) ('0' + i));
             }
 
             for (int i = 0; i < s.Length; i++)
@@ -3570,7 +3611,7 @@ namespace leetcode
                 }
                 else
                 {
-                    dic[key] = node = new CacheNode() { key = key, val = value };
+                    dic[key] = node = new CacheNode {key = key, val = value};
                     if (tail == null)
                     {
                         head = tail = node;
@@ -3831,7 +3872,7 @@ namespace leetcode
             var dic = new Dictionary<string, char>();
             for (int i = 0; i < 26; i++)
             {
-                dic[i.ToString()] = (char)('a' + i);
+                dic[i.ToString()] = (char) ('a' + i);
             }
 
             while (num != 0 || bits.Count == 0)
@@ -4018,7 +4059,7 @@ namespace leetcode
         {
             if (nums == null || nums.Length <= 0)
             {
-                return new[] { -1, -1 };
+                return new[] {-1, -1};
             }
 
             int start = 0, end = nums.Length - 1;
@@ -4038,7 +4079,7 @@ namespace leetcode
             //如果target存在，start==end时一定是target，此时满足条件start+1,end不变，故只需要判断nums[end]即可知target是否存在
             if (end < 0 || nums[end] != target)
             {
-                return new[] { -1, -1 };
+                return new[] {-1, -1};
             }
 
             var rIndex = end;
@@ -4056,49 +4097,37 @@ namespace leetcode
                 }
             }
 
-            return new[] { start, rIndex };
+            return new[] {start, rIndex};
         }
 
         #endregion
 
-        #region 面试题56 - I. 数组中数字出现的次数
-        //https://leetcode-cn.com/problems/shu-zu-zhong-shu-zi-chu-xian-de-ci-shu-lcof/
+        #region 198. 打家劫舍
 
-        public int[] SingleNumbers(int[] nums)
+        //https://leetcode-cn.com/problems/house-robber/
+        public int Rob(int[] nums)
         {
-            var res = new[] { 0, 0 };
-            var xor = nums[0];
-            for (int i = 1; i < nums.Length; i++)
+            if (nums == null || nums.Length == 0)
             {
-                xor ^= nums[i];//数组中只有两个数字不同，此时xor的值一定为数字a与b的异或结果
+                return 0;
             }
-            xor &= (-xor);//获得二进制位=1，由于a与b不同，异或值二进制位肯定有是1，按是1的二进制位进行分组，取反与&操作后，xor中只有1个二进制位
-            for (int i = 0; i < nums.Length; i++)
+
+            if (nums.Length == 1)
             {
-                res[(nums[i] & xor) > 0 ? 0 : 1] ^= nums[i];//不会出现无法分组，a和b在=1的二进制位上必然是1个=1，1个=0，不然xor结果不可能=1
+                return nums[0];
             }
-            return res;
+
+            var dp = new int[nums.Length];
+            dp[0] = nums[0];
+            dp[1] = Math.Max(dp[0], nums[1]);
+            for (int i = 2; i < dp.Length; i++)
+            {
+                dp[i] = Math.Max(dp[i - 1], dp[i - 2] + nums[i]);
+            }
+
+            return dp[dp.Length - 1];
         }
-        #endregion
-        #region 面试题56 - II. 数组中数字出现的次数 II
-        //https://leetcode-cn.com/problems/shu-zu-zhong-shu-zi-chu-xian-de-ci-shu-ii-lcof/
-        public int SingleNumber1(int[] nums)
-        {
-            var dic = new Dictionary<int, int>();
-            foreach (var num in nums)
-            {
-                dic.TryGetValue(num, out var size);
-                dic[num] = size + 1;
-            }
-            foreach (var num in nums)
-            {
-                if(dic.TryGetValue(num,out var size) && size == 1)
-                {
-                    return num;
-                }
-            }
-            return -1;
-        }
+
         #endregion
     }
 }
