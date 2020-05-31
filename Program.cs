@@ -14,7 +14,7 @@ namespace leetcode
 
         static void Main(string[] args)
         {
-            Console.WriteLine(new Solution().ConstructArr(new[] {1, 2, 3, 4, 5}));
+            Console.WriteLine(new Solution().ConstructArr(new[] { 1, 2, 3, 4, 5 }));
             //4,2,5,1,3
             var root = new TreeNode(1);
             root.left = new TreeNode(2);
@@ -35,7 +35,7 @@ namespace leetcode
             Console.WriteLine(cache.Get(3));
             Console.WriteLine(cache.Get(4));
             Console.WriteLine(
-                new Program().DecodeString("100[leetcode]"));
+                new Program().FindNthDigit(1000000000));
         }
 
         #region 面试题63. 股票的最大利润
@@ -523,7 +523,7 @@ namespace leetcode
             {
                 for (int c = 0; c < C; c++)
                 {
-                    result[i++] = new[] {r, c};
+                    result[i++] = new[] { r, c };
                 }
             }
 
@@ -649,7 +649,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char) (i + 'a'));
+                        result.Append((char)(i + 'a'));
                         chars[i]--;
                     }
 
@@ -664,7 +664,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char) (i + 'a'));
+                        result.Append((char)(i + 'a'));
                         chars[i]--;
                     }
 
@@ -1013,7 +1013,7 @@ namespace leetcode
                 return null;
             }
 
-            return new TreeNode(root.val) {left = MirrorTree(root.right), right = MirrorTree(root.left)};
+            return new TreeNode(root.val) { left = MirrorTree(root.right), right = MirrorTree(root.left) };
         }
 
         #endregion
@@ -1692,7 +1692,7 @@ namespace leetcode
                 var index = Find(nums, num);
                 if (index != -1)
                 {
-                    return new[] {nums[i], nums[index]};
+                    return new[] { nums[i], nums[index] };
                 }
             }
 
@@ -1709,7 +1709,7 @@ namespace leetcode
                 var num = target - nums[i];
                 if (set.Contains(num))
                 {
-                    return new[] {nums[i], num};
+                    return new[] { nums[i], num };
                 }
             }
 
@@ -1725,7 +1725,7 @@ namespace leetcode
                 var num = nums[start] + nums[end];
                 if (num == target)
                 {
-                    return new[] {nums[start], nums[end]};
+                    return new[] { nums[start], nums[end] };
                 }
 
                 if (num > target)
@@ -2065,24 +2065,27 @@ namespace leetcode
 
         //面试题68 - I. 二叉搜索树的最近公共祖先
         //https://leetcode-cn.com/problems/er-cha-sou-suo-shu-de-zui-jin-gong-gong-zu-xian-lcof/
-        public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q)
+        public TreeNode LowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q)
         {
             if (root == null || (root.left == null && root.right == null))
             {
                 return null;
             }
-
-            if (root.val < p.val && root.val < q.val)
+            if (p.val > q.val)//1.排序结点，保证p<q
             {
-                return lowestCommonAncestor(root.right, p, q);
+                var tmp = q;
+                p = q;
+                q = tmp;
             }
-
-            if (root.val > q.val && root.val > p.val)
+            if (q.val < root.val)//2.与根节点比较，如果q<root，说明两个节点都在左子树
             {
-                return lowestCommonAncestor(root.left, p, q);
+                return LowestCommonAncestor(root.left, p, q);
             }
-
-            //p,q节点必存在tree中，此时节点分布符号搜索二叉树，直接返回root
+            if (p.val > root.val)//3.p>root，说明两个节点在右节点
+            {
+                return LowestCommonAncestor(root.right, p, q);
+            }
+            //此时节点分布在左右子树或1个在根节点，1个在左子树或右子树，此时root是根节点
             return root;
         }
 
@@ -2090,22 +2093,24 @@ namespace leetcode
 
         #region 面试题68 - II. 二叉树的最近公共祖先
 
-        public TreeNode FindChild(TreeNode root, TreeNode child)
+        public bool FindChild(TreeNode root, TreeNode child)
         {
             while (true)
             {
                 if (root == null)
                 {
-                    return null;
+                    return false;
                 }
 
                 if (child == null || root.val == child.val)
                 {
-                    return root;
+                    return true;
                 }
 
-                TreeNode node = FindChild(root.left, child);
-                if (node != null) return node;
+                if (FindChild(root.left, child))
+                {
+                    return true;
+                }
                 root = root.right;
             }
         }
@@ -2129,9 +2134,9 @@ namespace leetcode
             {
                 return node;
             }
-
-            TreeNode node1 = FindChild(root, p), node2 = FindChild(root, q);
-            return node1 != null && node2 != null ? root : null;
+            //该二叉树非二叉搜索树，无法判断节点分布在哪个子树，需要分别在左右子树进行搜索
+            //如果左右子树分布搜索都没有，说明分布在左右子树，此时由该根节点搜索两个节点            
+            return FindChild(root, p) && FindChild(root, q) ? root : null;
         }
 
         #endregion
@@ -2437,7 +2442,7 @@ namespace leetcode
                 set.Add(n);
                 while (n > 0)
                 {
-                    num += (int) Math.Pow(n % 10, 2);
+                    num += (int)Math.Pow(n % 10, 2);
                     n /= 10;
                 }
 
@@ -2753,7 +2758,7 @@ namespace leetcode
                 }
             }
 
-            return (int) num;
+            return (int)num;
         }
 
         #endregion
@@ -2994,7 +2999,7 @@ namespace leetcode
         public int SubarraySum(int[] nums, int k)
         {
             int sum = 0, count = 0;
-            var dic = new Dictionary<int, int> {{0, 1}};
+            var dic = new Dictionary<int, int> { { 0, 1 } };
             foreach (var n in nums)
             {
                 sum += n;
@@ -3185,7 +3190,7 @@ namespace leetcode
             var max = 0;
             for (int i = 0; i < s.Length; i++)
             {
-                var set = new Dictionary<char, int> {{'a', 0}, {'e', 0}, {'i', 0}, {'o', 0}, {'u', 0}};
+                var set = new Dictionary<char, int> { { 'a', 0 }, { 'e', 0 }, { 'i', 0 }, { 'o', 0 }, { 'u', 0 } };
                 for (int j = i; j < s.Length; j++)
                 {
                     if (set.TryGetValue(s[j], out var size))
@@ -3373,10 +3378,10 @@ namespace leetcode
             }
 
             s = s.Trim();
-            var allowSet = new HashSet<char> {'e', '.', '+', '-'};
+            var allowSet = new HashSet<char> { 'e', '.', '+', '-' };
             for (int i = 0; i < 10; i++)
             {
-                allowSet.Add((char) ('0' + i));
+                allowSet.Add((char)('0' + i));
             }
 
             for (int i = 0; i < s.Length; i++)
@@ -3611,7 +3616,7 @@ namespace leetcode
                 }
                 else
                 {
-                    dic[key] = node = new CacheNode {key = key, val = value};
+                    dic[key] = node = new CacheNode { key = key, val = value };
                     if (tail == null)
                     {
                         head = tail = node;
@@ -3784,19 +3789,7 @@ namespace leetcode
 
         #endregion
 
-        #region 面试题44. 数字序列中某一位的数字
 
-        //面试题44. 数字序列中某一位的数字
-        //https://leetcode-cn.com/problems/shu-zi-xu-lie-zhong-mou-yi-wei-de-shu-zi-lcof/
-        public int FindNthDigit(int n)
-        {
-            //range 0-9 0-9
-            //range 10-99 10-180
-            //range 100-999 181-2700
-            throw new NotImplementedException();
-        }
-
-        #endregion
 
         #region 974. 和可被 K 整除的子数组
 
@@ -3872,7 +3865,7 @@ namespace leetcode
             var dic = new Dictionary<string, char>();
             for (int i = 0; i < 26; i++)
             {
-                dic[i.ToString()] = (char) ('a' + i);
+                dic[i.ToString()] = (char)('a' + i);
             }
 
             while (num != 0 || bits.Count == 0)
@@ -4059,7 +4052,7 @@ namespace leetcode
         {
             if (nums == null || nums.Length <= 0)
             {
-                return new[] {-1, -1};
+                return new[] { -1, -1 };
             }
 
             int start = 0, end = nums.Length - 1;
@@ -4079,7 +4072,7 @@ namespace leetcode
             //如果target存在，start==end时一定是target，此时满足条件start+1,end不变，故只需要判断nums[end]即可知target是否存在
             if (end < 0 || nums[end] != target)
             {
-                return new[] {-1, -1};
+                return new[] { -1, -1 };
             }
 
             var rIndex = end;
@@ -4097,7 +4090,7 @@ namespace leetcode
                 }
             }
 
-            return new[] {start, rIndex};
+            return new[] { start, rIndex };
         }
 
         #endregion
@@ -4124,10 +4117,136 @@ namespace leetcode
             {
                 dp[i] = Math.Max(dp[i - 1], dp[i - 2] + nums[i]);
             }
-
+            new List<string>().Sort((s1, s2) =>
+            {
+                return 0;
+            });
             return dp[dp.Length - 1];
         }
 
+        #endregion
+
+        #region 84. 柱状图中最大的矩形
+        //https://leetcode-cn.com/problems/largest-rectangle-in-histogram/
+        //暴力解
+        public int LargestRectangleArea(int[] heights)
+        {
+            var max = 0;
+            Dictionary<int, int> startDic = new Dictionary<int, int>(), endDic = new Dictionary<int, int>();
+            for (int i = 0; i < heights.Length; i++)
+            {
+                int start = i - 1, end = i + 1;
+                while (start >= 0 && heights[start] >= heights[i])
+                {
+                    if (startDic.TryGetValue(start, out var index))
+                    {
+                        start = index;
+                    }
+                    else
+                    {
+                        start--;
+                    }
+                }
+                startDic[i] = start;
+                while (end < heights.Length && heights[end] >= heights[i])
+                {
+                    if (startDic.TryGetValue(end, out var index))
+                    {
+                        end = index;
+                    }
+                    else
+                    {
+                        end++;
+                    }
+                }
+                endDic[i] = end;
+                max = Math.Max(max, (end - start - 1) * heights[i]);
+            }
+            return max;
+        }
+
+        public int LargestRectangleArea1(int[] heights)
+        {
+            var max = 0;
+            int[] startDic = new int[heights.Length], endDic = new int[heights.Length];
+            var stack = new Stack<int>();
+            for (int i = 0; i < heights.Length; i++)
+            {
+                while (stack.Count > 0 && heights[stack.Peek()] >= heights[i])
+                {
+                    stack.Pop();
+                }
+                startDic[i] = stack.Count > 0 ? stack.Peek() : -1;
+                stack.Push(i);
+            }
+            stack.Clear();
+            for (int i = heights.Length - 1; i >= 0; i--)
+            {
+                while (stack.Count > 0 && heights[stack.Peek()] >= heights[i])
+                {
+                    stack.Pop();
+                }
+                endDic[i] = stack.Count > 0 ? stack.Peek() : heights.Length;
+                stack.Push(i);
+            }
+            for (int i = 0; i < heights.Length; i++)
+            {
+                max = Math.Max((endDic[i] - startDic[i] - 1) * heights[i], max);
+            }
+            return max;
+        }
+        #endregion
+
+        #region 面试题45. 把数组排成最小的数
+        //https://leetcode-cn.com/problems/ba-shu-zu-pai-cheng-zui-xiao-de-shu-lcof/
+        public string MinNumber(int[] nums)
+        {
+            var strs = new string[nums.Length];
+            for (int i = 0; i < nums.Length; i++)
+            {
+                strs[i] = nums[i].ToString();
+            }
+            Array.Sort<string>(strs, (s1, s2) =>
+            {
+                string c1 = s1 + s2, c2 = s2 + s1;
+                return c1.CompareTo(c2);
+            });
+            var result = new StringBuilder();
+            foreach (var str in strs)
+            {
+                result.Append(str);
+            }
+            return result.ToString();
+        }
+        #endregion
+
+        #region 面试题44. 数字序列中某一位的数字
+        //https://leetcode-cn.com/problems/shu-zi-xu-lie-zhong-mou-yi-wei-de-shu-zi-lcof/
+        //range 0-9     9
+        //range 10-99   189
+        //range 100-999 191+2700=2891
+        public int FindNthDigit(int n)
+        {
+            if (n < 10)
+            {
+                return n;
+            }
+            long start = 10, end = 189;
+            int number = 10, len = 2;
+            while (true)
+            {
+                if (n >= start && n <= end)
+                {
+                    int count = (int)(n - start), index = count % len;
+                    var num = (number + (count / len)).ToString();
+                    return num[index] - '0';
+                }
+                len++;
+                start = end + 1;
+                end = 9 * (long)Math.Pow(10, len - 1) * len + end;
+                number *= 10;
+            }
+        }
         #endregion
     }
 }
