@@ -9,20 +9,23 @@ using leetcode.thread;
 
 namespace leetcode
 {
-    class Program
+    static class Arrays
     {
-        static void PrintArray(int[] array)
+        public static void PrintArray<T>(this T[] array)
         {
             Console.WriteLine(string.Join(",", array));
         }
-
+    }
+    class Program
+    {
         static void Main(string[] args)
         {
-            var test = new FooBar(3);
-            Task.Run(() => { test.Foo(() => Console.WriteLine("foor")); });
-            Task.Run(() => { test.Bar(() => Console.WriteLine("bar")); });
+            var test = new ZeroEvenOdd(11);
+            Task.Run(() => { test.Zero(i => Console.WriteLine(i)); });
+            Task.Run(() => { test.Even(i => Console.WriteLine(i)); });
+            Task.Run(() => { test.Odd(i => Console.WriteLine(i)); });
             Console.Read();
-            Console.WriteLine(new Solution().ConstructArr(new[] {1, 2, 3, 4, 5, 10}));
+            new Solution().ConstructArr(new[] { 1, 2, 3, 4, 5, 10 }).PrintArray();
             //4,2,5,1,3
             var root = new TreeNode(1);
             root.left = new TreeNode(2);

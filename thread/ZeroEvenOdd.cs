@@ -35,30 +35,23 @@ namespace leetcode.thread
 
         public void Even(Action<int> printNumber)
         {
-            for (int i = 2; i <= n; i++)
+            for (int i = 2; i <= n; i+=2)
             {
                 even.WaitOne();
-                if ((i & 1) == 0)
-                {
-                    printNumber(i);
-                }
-
+                printNumber(i);
                 zero.Set();
-            }
+            }            
         }
 
         public void Odd(Action<int> printNumber)
-        {
-            for (int i = 1; i <= n; i++)
+        {            
+            for (int i = 1; i <= n; i += 2)
             {
                 odd.WaitOne();
-                if ((i & 1) == 1)
-                {
-                    printNumber(i);
-                }
-
+                printNumber(i);
                 zero.Set();
             }
         }
     }
+
 }

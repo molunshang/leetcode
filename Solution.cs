@@ -1414,4 +1414,19 @@ public class Solution
         }
         return flag ? res : -res;
     }
+
+    public int CuttingRope(int n)
+    {
+        if (n <= 2)
+        {
+            return 1;
+        }
+        var max = 0;
+        for (int i = 1; i < n; i++)
+        {
+            var num = Math.Max(CuttingRope(n - i) * i, (n - i) * i);
+            max = Math.Max(num, max);
+        }
+        return max;
+    }
 }
