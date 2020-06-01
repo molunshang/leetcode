@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using leetcode.thread;
 
 namespace leetcode
 {
@@ -14,7 +18,11 @@ namespace leetcode
 
         static void Main(string[] args)
         {
-            Console.WriteLine(new Solution().ConstructArr(new[] { 1, 2, 3, 4, 5 }));
+            var test = new FooBar(3);
+            Task.Run(() => { test.Foo(() => Console.WriteLine("foor")); });
+            Task.Run(() => { test.Bar(() => Console.WriteLine("bar")); });
+            Console.Read();
+            Console.WriteLine(new Solution().ConstructArr(new[] {1, 2, 3, 4, 5, 10}));
             //4,2,5,1,3
             var root = new TreeNode(1);
             root.left = new TreeNode(2);
@@ -35,7 +43,7 @@ namespace leetcode
             Console.WriteLine(cache.Get(3));
             Console.WriteLine(cache.Get(4));
             Console.WriteLine(
-                new Program().FindNthDigit(1000000000));
+                new Program().ReversePairs1(new[] {7, 5, 6, 4, 1, 10}));
         }
 
         #region 面试题63. 股票的最大利润
@@ -523,7 +531,7 @@ namespace leetcode
             {
                 for (int c = 0; c < C; c++)
                 {
-                    result[i++] = new[] { r, c };
+                    result[i++] = new[] {r, c};
                 }
             }
 
@@ -649,7 +657,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char)(i + 'a'));
+                        result.Append((char) (i + 'a'));
                         chars[i]--;
                     }
 
@@ -664,7 +672,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char)(i + 'a'));
+                        result.Append((char) (i + 'a'));
                         chars[i]--;
                     }
 
@@ -1013,7 +1021,7 @@ namespace leetcode
                 return null;
             }
 
-            return new TreeNode(root.val) { left = MirrorTree(root.right), right = MirrorTree(root.left) };
+            return new TreeNode(root.val) {left = MirrorTree(root.right), right = MirrorTree(root.left)};
         }
 
         #endregion
@@ -1692,7 +1700,7 @@ namespace leetcode
                 var index = Find(nums, num);
                 if (index != -1)
                 {
-                    return new[] { nums[i], nums[index] };
+                    return new[] {nums[i], nums[index]};
                 }
             }
 
@@ -1709,7 +1717,7 @@ namespace leetcode
                 var num = target - nums[i];
                 if (set.Contains(num))
                 {
-                    return new[] { nums[i], num };
+                    return new[] {nums[i], num};
                 }
             }
 
@@ -1725,7 +1733,7 @@ namespace leetcode
                 var num = nums[start] + nums[end];
                 if (num == target)
                 {
-                    return new[] { nums[start], nums[end] };
+                    return new[] {nums[start], nums[end]};
                 }
 
                 if (num > target)
@@ -2071,20 +2079,24 @@ namespace leetcode
             {
                 return null;
             }
-            if (p.val > q.val)//1.排序结点，保证p<q
+
+            if (p.val > q.val) //1.排序结点，保证p<q
             {
                 var tmp = q;
                 p = q;
                 q = tmp;
             }
-            if (q.val < root.val)//2.与根节点比较，如果q<root，说明两个节点都在左子树
+
+            if (q.val < root.val) //2.与根节点比较，如果q<root，说明两个节点都在左子树
             {
                 return LowestCommonAncestor(root.left, p, q);
             }
-            if (p.val > root.val)//3.p>root，说明两个节点在右节点
+
+            if (p.val > root.val) //3.p>root，说明两个节点在右节点
             {
                 return LowestCommonAncestor(root.right, p, q);
             }
+
             //此时节点分布在左右子树或1个在根节点，1个在左子树或右子树，此时root是根节点
             return root;
         }
@@ -2111,6 +2123,7 @@ namespace leetcode
                 {
                     return true;
                 }
+
                 root = root.right;
             }
         }
@@ -2134,6 +2147,7 @@ namespace leetcode
             {
                 return node;
             }
+
             //该二叉树非二叉搜索树，无法判断节点分布在哪个子树，需要分别在左右子树进行搜索
             //如果左右子树分布搜索都没有，说明分布在左右子树，此时由该根节点搜索两个节点            
             return FindChild(root, p) && FindChild(root, q) ? root : null;
@@ -2442,7 +2456,7 @@ namespace leetcode
                 set.Add(n);
                 while (n > 0)
                 {
-                    num += (int)Math.Pow(n % 10, 2);
+                    num += (int) Math.Pow(n % 10, 2);
                     n /= 10;
                 }
 
@@ -2758,7 +2772,7 @@ namespace leetcode
                 }
             }
 
-            return (int)num;
+            return (int) num;
         }
 
         #endregion
@@ -2888,7 +2902,7 @@ namespace leetcode
                 return root;
             }
 
-            var list = new List<TreeNode>();
+            TreeNode head = null, prev = null;
             var stack = new Stack<TreeNode>();
             while (root != null || stack.Count > 0)
             {
@@ -2901,19 +2915,23 @@ namespace leetcode
                 if (stack.Count > 0)
                 {
                     root = stack.Pop();
-                    list.Add(root);
+                    if (head == null)
+                    {
+                        head = prev = root;
+                    }
+                    else
+                    {
+                        prev.right = root;
+                        root.left = prev;
+                        prev = root;
+                    }
+
                     root = root.right;
                 }
             }
 
-            root = list[0];
-            list[0].left = list[list.Count - 1];
-            list[list.Count - 1].right = list[0];
-            for (int i = 1; i < list.Count; i++)
-            {
-                list[i - 1].right = list[i];
-                list[i].left = list[i - 1];
-            }
+            head.left = prev;
+            prev.right = head;
 
             return root;
         }
@@ -2999,7 +3017,7 @@ namespace leetcode
         public int SubarraySum(int[] nums, int k)
         {
             int sum = 0, count = 0;
-            var dic = new Dictionary<int, int> { { 0, 1 } };
+            var dic = new Dictionary<int, int> {{0, 1}};
             foreach (var n in nums)
             {
                 sum += n;
@@ -3190,7 +3208,7 @@ namespace leetcode
             var max = 0;
             for (int i = 0; i < s.Length; i++)
             {
-                var set = new Dictionary<char, int> { { 'a', 0 }, { 'e', 0 }, { 'i', 0 }, { 'o', 0 }, { 'u', 0 } };
+                var set = new Dictionary<char, int> {{'a', 0}, {'e', 0}, {'i', 0}, {'o', 0}, {'u', 0}};
                 for (int j = i; j < s.Length; j++)
                 {
                     if (set.TryGetValue(s[j], out var size))
@@ -3378,10 +3396,10 @@ namespace leetcode
             }
 
             s = s.Trim();
-            var allowSet = new HashSet<char> { 'e', '.', '+', '-' };
+            var allowSet = new HashSet<char> {'e', '.', '+', '-'};
             for (int i = 0; i < 10; i++)
             {
-                allowSet.Add((char)('0' + i));
+                allowSet.Add((char) ('0' + i));
             }
 
             for (int i = 0; i < s.Length; i++)
@@ -3616,7 +3634,7 @@ namespace leetcode
                 }
                 else
                 {
-                    dic[key] = node = new CacheNode { key = key, val = value };
+                    dic[key] = node = new CacheNode {key = key, val = value};
                     if (tail == null)
                     {
                         head = tail = node;
@@ -3790,7 +3808,6 @@ namespace leetcode
         #endregion
 
 
-
         #region 974. 和可被 K 整除的子数组
 
         //974. 和可被 K 整除的子数组
@@ -3865,7 +3882,7 @@ namespace leetcode
             var dic = new Dictionary<string, char>();
             for (int i = 0; i < 26; i++)
             {
-                dic[i.ToString()] = (char)('a' + i);
+                dic[i.ToString()] = (char) ('a' + i);
             }
 
             while (num != 0 || bits.Count == 0)
@@ -4052,7 +4069,7 @@ namespace leetcode
         {
             if (nums == null || nums.Length <= 0)
             {
-                return new[] { -1, -1 };
+                return new[] {-1, -1};
             }
 
             int start = 0, end = nums.Length - 1;
@@ -4072,7 +4089,7 @@ namespace leetcode
             //如果target存在，start==end时一定是target，此时满足条件start+1,end不变，故只需要判断nums[end]即可知target是否存在
             if (end < 0 || nums[end] != target)
             {
-                return new[] { -1, -1 };
+                return new[] {-1, -1};
             }
 
             var rIndex = end;
@@ -4090,7 +4107,7 @@ namespace leetcode
                 }
             }
 
-            return new[] { start, rIndex };
+            return new[] {start, rIndex};
         }
 
         #endregion
@@ -4117,16 +4134,15 @@ namespace leetcode
             {
                 dp[i] = Math.Max(dp[i - 1], dp[i - 2] + nums[i]);
             }
-            new List<string>().Sort((s1, s2) =>
-            {
-                return 0;
-            });
+
+            new List<string>().Sort((s1, s2) => { return 0; });
             return dp[dp.Length - 1];
         }
 
         #endregion
 
         #region 84. 柱状图中最大的矩形
+
         //https://leetcode-cn.com/problems/largest-rectangle-in-histogram/
         //暴力解
         public int LargestRectangleArea(int[] heights)
@@ -4147,6 +4163,7 @@ namespace leetcode
                         start--;
                     }
                 }
+
                 startDic[i] = start;
                 while (end < heights.Length && heights[end] >= heights[i])
                 {
@@ -4159,9 +4176,11 @@ namespace leetcode
                         end++;
                     }
                 }
+
                 endDic[i] = end;
                 max = Math.Max(max, (end - start - 1) * heights[i]);
             }
+
             return max;
         }
 
@@ -4176,9 +4195,11 @@ namespace leetcode
                 {
                     stack.Pop();
                 }
+
                 startDic[i] = stack.Count > 0 ? stack.Peek() : -1;
                 stack.Push(i);
             }
+
             stack.Clear();
             for (int i = heights.Length - 1; i >= 0; i--)
             {
@@ -4186,18 +4207,23 @@ namespace leetcode
                 {
                     stack.Pop();
                 }
+
                 endDic[i] = stack.Count > 0 ? stack.Peek() : heights.Length;
                 stack.Push(i);
             }
+
             for (int i = 0; i < heights.Length; i++)
             {
                 max = Math.Max((endDic[i] - startDic[i] - 1) * heights[i], max);
             }
+
             return max;
         }
+
         #endregion
 
         #region 面试题45. 把数组排成最小的数
+
         //https://leetcode-cn.com/problems/ba-shu-zu-pai-cheng-zui-xiao-de-shu-lcof/
         public string MinNumber(int[] nums)
         {
@@ -4206,6 +4232,7 @@ namespace leetcode
             {
                 strs[i] = nums[i].ToString();
             }
+
             Array.Sort<string>(strs, (s1, s2) =>
             {
                 string c1 = s1 + s2, c2 = s2 + s1;
@@ -4216,11 +4243,14 @@ namespace leetcode
             {
                 result.Append(str);
             }
+
             return result.ToString();
         }
+
         #endregion
 
         #region 面试题44. 数字序列中某一位的数字
+
         //https://leetcode-cn.com/problems/shu-zi-xu-lie-zhong-mou-yi-wei-de-shu-zi-lcof/
         //range 0-9     9
         //range 10-99   189
@@ -4231,22 +4261,209 @@ namespace leetcode
             {
                 return n;
             }
+
             long start = 10, end = 189;
             int number = 10, len = 2;
             while (true)
             {
                 if (n >= start && n <= end)
                 {
-                    int count = (int)(n - start), index = count % len;
+                    int count = (int) (n - start), index = count % len;
                     var num = (number + (count / len)).ToString();
                     return num[index] - '0';
                 }
+
                 len++;
                 start = end + 1;
-                end = 9 * (long)Math.Pow(10, len - 1) * len + end;
+                end = 9 * (long) Math.Pow(10, len - 1) * len + end;
                 number *= 10;
             }
         }
+
+        #endregion
+
+        #region 1431. 拥有最多糖果的孩子
+
+        //https://leetcode-cn.com/problems/kids-with-the-greatest-number-of-candies/
+        public IList<bool> KidsWithCandies(int[] candies, int extraCandies)
+        {
+            var result = new bool[candies.Length];
+            var max = candies.Max();
+            for (int i = 0; i < candies.Length; i++)
+            {
+                result[i] = candies[i] + extraCandies >= max;
+            }
+
+            return result;
+        }
+
+        #endregion
+
+        #region 面试题49. 丑数
+
+        //https://leetcode-cn.com/problems/chou-shu-lcof/
+        public int NthUglyNumber1(int n)
+        {
+            if (n <= 5)
+            {
+                return n;
+            }
+
+            bool IsUgly(int num)
+            {
+                while (num % 2 == 0)
+                {
+                    num /= 2;
+                }
+
+                while (num % 3 == 0)
+                {
+                    num /= 3;
+                }
+
+                while (num % 5 == 0)
+                {
+                    num /= 5;
+                }
+
+                return num == 1;
+            }
+
+            var res = 0;
+            while (n > 0)
+            {
+                res++;
+                if (IsUgly(res))
+                {
+                    n--;
+                }
+            }
+
+            return res;
+        }
+
+        public int NthUglyNumber(int n)
+        {
+            if (n <= 5)
+            {
+                return n;
+            }
+
+            var dp = new int[n];
+            dp[0] = 1;
+            int num2 = 0, num3 = 0, num5 = 0;
+            for (int i = 1; i < n; i++)
+            {
+                dp[i] = Math.Min(Math.Min(dp[num2] * 2, dp[num3] * 3), dp[num5] * 5);
+                while (dp[num2] * 2 <= dp[i])
+                {
+                    num2++;
+                }
+
+                while (dp[num3] * 3 <= dp[i])
+                {
+                    num3++;
+                }
+
+                while (dp[num5] * 5 <= dp[i])
+                {
+                    num5++;
+                }
+            }
+
+            return dp[n - 1];
+        }
+
+        #endregion
+
+        #region 面试题51. 数组中的逆序对
+
+        //https://leetcode-cn.com/problems/shu-zu-zhong-de-ni-xu-dui-lcof/
+        //暴力解
+        public int ReversePairs(int[] nums)
+        {
+            var res = 0;
+            for (int i = 0; i < nums.Length - 1; i++)
+            {
+                for (int j = i + 1; j < nums.Length; j++)
+                {
+                    if (nums[i] > nums[j])
+                    {
+                        res++;
+                    }
+                }
+            }
+
+            return res;
+        }
+
+        int Merge(int[] nums, int[] temp, int start, int mid, int end)
+        {
+            int i1 = start, i2 = mid + 1, i = 0, size = 0, total = 0;
+            while (i1 <= mid && i2 <= end)
+            {
+                if (nums[i1] <= nums[i2])
+                {
+                    temp[i++] = nums[i1];
+                    i1++;
+                    total += size;
+                }
+                else
+                {
+                    size++;
+                    temp[i++] = nums[i2];
+                    i2++;
+                }
+            }
+
+            while (i1 <= mid)
+            {
+                //此时说明前半段数组剩余数值大于后半段所有数值，应该进行计数
+                temp[i++] = nums[i1++];
+                total += (end - mid);
+            }
+
+            while (i2 <= end)
+            {
+                temp[i++] = nums[i2++];
+            }
+
+            for (int j = 0; j < i; j++)
+            {
+                nums[start++] = temp[j];
+            }
+
+            return total;
+        }
+
+        int MergeSort(int[] nums, int[] temp, int start, int end)
+        {
+            if (start >= end)
+            {
+                return 0;
+            }
+
+            var mid = (start + end) / 2;
+            var left = MergeSort(nums, temp, start, mid);
+            var right = MergeSort(nums, temp, mid + 1, end);
+            if (nums[mid] <= nums[mid + 1])
+            {
+                return left + right;
+            }
+
+            var current = Merge(nums, temp, start, mid, end);
+            return left + right + current;
+        }
+
+        //归并排序
+        public int ReversePairs1(int[] nums)
+        {
+            var temp = new int[nums.Length];
+            return MergeSort(nums, temp, 0, nums.Length - 1);
+        }
+
         #endregion
     }
+
+    
 }
