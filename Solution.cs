@@ -437,7 +437,7 @@ public class Solution
     {
         return root == null
             ? null
-            : new TreeNode(root.val) { left = MirrorTree(root.right), right = MirrorTree(root.left) };
+            : new TreeNode(root.val) {left = MirrorTree(root.right), right = MirrorTree(root.left)};
     }
 
     bool IsSymmetric(TreeNode left, TreeNode right)
@@ -1178,7 +1178,7 @@ public class Solution
             var num = nums[start] + nums[end];
             if (num == target)
             {
-                return new[] { nums[start], nums[end] };
+                return new[] {nums[start], nums[end]};
             }
 
             if (num < target)
@@ -1374,7 +1374,8 @@ public class Solution
     public int StrToInt(string str)
     {
         int res = 0, max = int.MaxValue / 10;
-        bool flag = true, ackFlag = false; ;
+        bool flag = true, ackFlag = false;
+        ;
         foreach (var ch in str)
         {
             if (char.IsDigit(ch))
@@ -1383,11 +1384,13 @@ public class Solution
                 {
                     return flag ? int.MaxValue : int.MinValue;
                 }
+
                 var newVal = res * 10 + ch - '0';
                 if (newVal < res)
                 {
                     return flag ? int.MaxValue : int.MinValue;
                 }
+
                 res = newVal;
                 ackFlag = true;
             }
@@ -1412,6 +1415,7 @@ public class Solution
                 break;
             }
         }
+
         return flag ? res : -res;
     }
 
@@ -1421,12 +1425,16 @@ public class Solution
         {
             return 1;
         }
+
         var max = 0;
         for (int i = 1; i < n; i++)
         {
             var num = Math.Max(CuttingRope(n - i) * i, (n - i) * i);
             max = Math.Max(num, max);
         }
+
         return max;
     }
+
+
 }

@@ -16,6 +16,7 @@ namespace leetcode
             Console.WriteLine(string.Join(",", array));
         }
     }
+
     class Program
     {
         static void Main(string[] args)
@@ -25,7 +26,7 @@ namespace leetcode
             Task.Run(() => { test.Even(i => Console.WriteLine(i)); });
             Task.Run(() => { test.Odd(i => Console.WriteLine(i)); });
             Console.Read();
-            new Solution().ConstructArr(new[] { 1, 2, 3, 4, 5, 10 }).PrintArray();
+            new Solution().ConstructArr(new[] {1, 2, 3, 4, 5, 10}).PrintArray();
             //4,2,5,1,3
             var root = new TreeNode(1);
             root.left = new TreeNode(2);
@@ -505,6 +506,8 @@ namespace leetcode
             return set1.ToArray();
         }
 
+        #region 1403. 非递增顺序的最小子序列
+
         //https://leetcode-cn.com/problems/minimum-subsequence-in-non-increasing-order/
         //1403. 非递增顺序的最小子序列
         public static IList<int> MinSubsequence(int[] nums)
@@ -525,6 +528,8 @@ namespace leetcode
             return result;
         }
 
+        #endregion
+
         //|r1 - r2| + |c1 - c2|
         public int[][] AllCellsDistOrder(int R, int C, int r0, int c0)
         {
@@ -540,6 +545,8 @@ namespace leetcode
 
             return result.OrderBy(it => Math.Abs(it[0] - r0) + Math.Abs(it[1] - c0)).ToArray();
         }
+
+        #region 两个数组的交集 II
 
         //https://leetcode-cn.com/problems/intersection-of-two-arrays-ii/
         //350. 两个数组的交集 II
@@ -572,6 +579,8 @@ namespace leetcode
 
             return result.ToArray();
         }
+
+        #endregion
 
         #region 976. 三角形的最大周长
 
@@ -1472,6 +1481,7 @@ namespace leetcode
 
         //面试题39. 数组中出现次数超过一半的数字
         //https://leetcode-cn.com/problems/shu-zu-zhong-chu-xian-ci-shu-chao-guo-yi-ban-de-shu-zi-lcof/
+        //https://leetcode-cn.com/problems/majority-element/
         //数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。
         //解法1：最直观先排序，取中间数
         public int MajorityElement(int[] nums)
@@ -2990,12 +3000,7 @@ namespace leetcode
         //https://leetcode-cn.com/problems/qiu-12n-lcof/
         public int SumNums(int n)
         {
-            if (n <= 1)
-            {
-                return n;
-            }
-
-            var num = 1;
+            var num = 0;
             var flag = n > 1 && (num = SumNums(n - 1)) > 0;
             return num + n;
         }
@@ -4170,7 +4175,7 @@ namespace leetcode
                 startDic[i] = start;
                 while (end < heights.Length && heights[end] >= heights[i])
                 {
-                    if (startDic.TryGetValue(end, out var index))
+                    if (endDic.TryGetValue(end, out var index))
                     {
                         end = index;
                     }
@@ -4466,7 +4471,64 @@ namespace leetcode
         }
 
         #endregion
-    }
 
-    
+        #region 240. 搜索二维矩阵 II
+
+        //https://leetcode-cn.com/problems/search-a-2d-matrix-ii/
+        public bool SearchMatrix(int[,] matrix, int target)
+        {
+            int x = 0, y = matrix.GetLength(1) - 1, xlen = matrix.GetLength(0);
+            while (x < xlen && y >= 0)
+            {
+                if (matrix[x, y] == target)
+                {
+                    return true;
+                }
+
+                if (matrix[x, y] < target)
+                {
+                    x++;
+                }
+                else
+                {
+                    y--;
+                }
+            }
+
+            return false;
+        }
+
+        #endregion
+
+        #region 88. 合并两个有序数组
+
+        //https://leetcode-cn.com/problems/merge-sorted-array/
+        public void Merge(int[] nums1, int m, int[] nums2, int n)
+        {
+            int index = 0, i1 = 0, i2 = 0, empty = m;
+            while (i1 < m && i2 < n)
+            {
+                if (nums1[i1] <= nums2[i2])
+                {
+                    i1++;
+                    index++;
+                }
+                else
+                {
+                    Array.Copy(nums1, i1, nums1, i1 + 1, m - i1);
+                    nums1[index++] = nums2[i2++];
+                    i1++;
+                    m++;
+                }
+            }
+
+            while (i2 < n)
+            {
+                nums1[index++] = nums1[i2++];
+            }
+            throw new NotImplementedException();
+        }
+
+        #endregion
+    }
 }
