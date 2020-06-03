@@ -1436,5 +1436,68 @@ public class Solution
         return max;
     }
 
+    // int FindTopK(int[] nums1, int[] nums2, int k)
+    // {
+    //     var index = (k + 1) / 2;
+    //     int i1Start = 0,
+    //         i1End = Math.Min(nums1.Length - 1, (k + 1) / 2),
+    //         i2Start = 0,
+    //         i2End = Math.Min(nums2.Length - 1, (k + 1) / 2);
+    //     while (true)
+    //     {
+    //         if (nums1[index] > nums2[index])
+    //         {
+    //             //nums1的范围在0-index
+    //         }
+    //         else
+    //         {
+    //             //nums2的范围在
+    //         }
+    //     }
+    // }
+    public void QuickSort(int[] nums, int start, int end)
+    {
+        while (true)
+        {
+            if (start >= end)
+            {
+                return;
+            }
 
+            int left = start, right = end;
+            var target = nums[start];
+            while (start < end)
+            {
+                while (start < end && target <= nums[end])
+                {
+                    end--;
+                }
+
+                if (start < end)
+                {
+                    nums[start++] = nums[end];
+                }
+
+                while (start < end && target >= nums[start])
+                {
+                    start++;
+                }
+
+                if (start < end)
+                {
+                    nums[end--] = nums[start];
+                }
+            }
+
+            nums[start] = target;
+            QuickSort(nums, left, start - 1);
+            start = start + 1;
+            end = right;
+        }
+    }
+
+    public void QuickSort(int[] nums)
+    {
+        QuickSort(nums, 0, nums.Length - 1);
+    }
 }
