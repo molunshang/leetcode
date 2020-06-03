@@ -24,8 +24,9 @@ namespace leetcode
 
         static void Main(string[] args)
         {
-            Console.WriteLine(program.FindUnsortedSubarray(new[] {1, 3, 3, 3, 2, 2, 2, 5, 8}));
-            solution.ConstructArr(new[] {1, 2, 3, 4, 5, 10}).PrintArray();
+            Console.WriteLine(program.GenerateParenthesis(3));
+            Console.WriteLine(program.FindUnsortedSubarray(new[] { 1, 3, 3, 3, 2, 2, 2, 5, 8 }));
+            solution.ConstructArr(new[] { 1, 2, 3, 4, 5, 10 }).PrintArray();
             //4,2,5,1,3
             var root = new TreeNode(1);
             root.left = new TreeNode(2);
@@ -46,7 +47,7 @@ namespace leetcode
             Console.WriteLine(cache.Get(3));
             Console.WriteLine(cache.Get(4));
             Console.WriteLine(
-                new Program().ReversePairs1(new[] {7, 5, 6, 4, 1, 10}));
+                new Program().ReversePairs1(new[] { 7, 5, 6, 4, 1, 10 }));
         }
 
         #region 面试题63. 股票的最大利润
@@ -538,7 +539,7 @@ namespace leetcode
             {
                 for (int c = 0; c < C; c++)
                 {
-                    result[i++] = new[] {r, c};
+                    result[i++] = new[] { r, c };
                 }
             }
 
@@ -668,7 +669,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char) (i + 'a'));
+                        result.Append((char)(i + 'a'));
                         chars[i]--;
                     }
 
@@ -683,7 +684,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char) (i + 'a'));
+                        result.Append((char)(i + 'a'));
                         chars[i]--;
                     }
 
@@ -1032,7 +1033,7 @@ namespace leetcode
                 return null;
             }
 
-            return new TreeNode(root.val) {left = MirrorTree(root.right), right = MirrorTree(root.left)};
+            return new TreeNode(root.val) { left = MirrorTree(root.right), right = MirrorTree(root.left) };
         }
 
         #endregion
@@ -1712,7 +1713,7 @@ namespace leetcode
                 var index = Find(nums, num);
                 if (index != -1)
                 {
-                    return new[] {nums[i], nums[index]};
+                    return new[] { nums[i], nums[index] };
                 }
             }
 
@@ -1729,7 +1730,7 @@ namespace leetcode
                 var num = target - nums[i];
                 if (set.Contains(num))
                 {
-                    return new[] {nums[i], num};
+                    return new[] { nums[i], num };
                 }
             }
 
@@ -1745,7 +1746,7 @@ namespace leetcode
                 var num = nums[start] + nums[end];
                 if (num == target)
                 {
-                    return new[] {nums[start], nums[end]};
+                    return new[] { nums[start], nums[end] };
                 }
 
                 if (num > target)
@@ -2468,7 +2469,7 @@ namespace leetcode
                 set.Add(n);
                 while (n > 0)
                 {
-                    num += (int) Math.Pow(n % 10, 2);
+                    num += (int)Math.Pow(n % 10, 2);
                     n /= 10;
                 }
 
@@ -2784,7 +2785,7 @@ namespace leetcode
                 }
             }
 
-            return (int) num;
+            return (int)num;
         }
 
         #endregion
@@ -3024,7 +3025,7 @@ namespace leetcode
         public int SubarraySum(int[] nums, int k)
         {
             int sum = 0, count = 0;
-            var dic = new Dictionary<int, int> {{0, 1}};
+            var dic = new Dictionary<int, int> { { 0, 1 } };
             foreach (var n in nums)
             {
                 sum += n;
@@ -3215,7 +3216,7 @@ namespace leetcode
             var max = 0;
             for (int i = 0; i < s.Length; i++)
             {
-                var set = new Dictionary<char, int> {{'a', 0}, {'e', 0}, {'i', 0}, {'o', 0}, {'u', 0}};
+                var set = new Dictionary<char, int> { { 'a', 0 }, { 'e', 0 }, { 'i', 0 }, { 'o', 0 }, { 'u', 0 } };
                 for (int j = i; j < s.Length; j++)
                 {
                     if (set.TryGetValue(s[j], out var size))
@@ -3656,7 +3657,7 @@ namespace leetcode
                 }
                 else
                 {
-                    dic[key] = node = new CacheNode {key = key, val = value};
+                    dic[key] = node = new CacheNode { key = key, val = value };
                     if (tail == null)
                     {
                         head = tail = node;
@@ -3904,7 +3905,7 @@ namespace leetcode
             var dic = new Dictionary<string, char>();
             for (int i = 0; i < 26; i++)
             {
-                dic[i.ToString()] = (char) ('a' + i);
+                dic[i.ToString()] = (char)('a' + i);
             }
 
             while (num != 0 || bits.Count == 0)
@@ -4091,7 +4092,7 @@ namespace leetcode
         {
             if (nums == null || nums.Length <= 0)
             {
-                return new[] {-1, -1};
+                return new[] { -1, -1 };
             }
 
             int start = 0, end = nums.Length - 1;
@@ -4111,7 +4112,7 @@ namespace leetcode
             //如果target存在，start==end时一定是target，此时满足条件start+1,end不变，故只需要判断nums[end]即可知target是否存在
             if (end < 0 || nums[end] != target)
             {
-                return new[] {-1, -1};
+                return new[] { -1, -1 };
             }
 
             var rIndex = end;
@@ -4129,7 +4130,7 @@ namespace leetcode
                 }
             }
 
-            return new[] {start, rIndex};
+            return new[] { start, rIndex };
         }
 
         #endregion
@@ -4290,14 +4291,14 @@ namespace leetcode
             {
                 if (n >= start && n <= end)
                 {
-                    int count = (int) (n - start), index = count % len;
+                    int count = (int)(n - start), index = count % len;
                     var num = (number + (count / len)).ToString();
                     return num[index] - '0';
                 }
 
                 len++;
                 start = end + 1;
-                end = 9 * (long) Math.Pow(10, len - 1) * len + end;
+                end = 9 * (long)Math.Pow(10, len - 1) * len + end;
                 number *= 10;
             }
         }
@@ -4775,6 +4776,140 @@ namespace leetcode
             return head;
         }
 
+        #endregion
+
+        #region 11. 盛最多水的容器
+        //https://leetcode-cn.com/problems/container-with-most-water/
+        //暴力解
+        public int MaxArea(int[] height)
+        {
+            var max = 0;
+            for (int i = 0; i < height.Length - 1; i++)
+            {
+                for (int j = i + 1; j < height.Length; j++)
+                {
+                    var h = Math.Min(height[i], height[j]);
+                    max = Math.Max(max, (j - i) * h);
+                }
+            }
+            return max;
+        }
+        //双指针
+        public int MaxArea1(int[] height)
+        {
+            int max = 0, start = 0, end = height.Length - 1;
+            while (start < end)
+            {
+                var h = Math.Min(height[start], height[end]);
+                max = Math.Max(max, (end - start) * h);
+                if (height[start] <= height[end])
+                {
+                    start++;
+                }
+                else
+                {
+                    end--;
+                }
+            }
+            return max;
+        }
+        #endregion
+
+        #region 22. 括号生成
+        //https://leetcode-cn.com/problems/generate-parentheses/
+        bool IsValid(string str)
+        {
+            var l = 0;
+            foreach (var ch in str)
+            {
+                if (ch == '(')
+                {
+                    l++;
+                }
+                else
+                {
+                    l--;
+                }
+                if (l < 0)
+                {
+                    return false;
+                }
+            }
+            return l == 0;
+        }
+        void GenerateParenthesis(int left, int right, IList<string> result, StringBuilder str)
+        {
+            if (left <= 0 && right <= 0)
+            {
+                var it = str.ToString();
+                result.Add(it);
+                return;
+            }
+            if (left > 0)
+            {
+                str.Append("(");
+                GenerateParenthesis(left - 1, right, result, str);
+                str.Remove(str.Length - 1, 1);
+            }
+            if (right > 0 && left < right)
+            {
+                str.Append(")");
+                GenerateParenthesis(left, right - 1, result, str);
+                str.Remove(str.Length - 1, 1);
+            }
+        }
+        public IList<string> GenerateParenthesis(int n)
+        {
+            var result = new List<string>();
+            GenerateParenthesis(n, n, result, new StringBuilder());
+            return result;
+        }
+        #endregion
+
+        #region 23. 合并K个排序链表
+        //https://leetcode-cn.com/problems/merge-k-sorted-lists/
+        ListNode MergeKLists(ListNode[] lists, int start, int end)
+        {
+            if (start >= end)
+            {
+                return lists[start];
+            }
+            var mid = (start + end) / 2;
+            var node1 = MergeKLists(lists, start, mid);
+            var node2 = MergeKLists(lists, mid + 1, end);
+            ListNode head = new ListNode(0), node = head;
+            while (node1 != null && node2 != null)
+            {
+                if (node1.val <= node2.val)
+                {
+                    node.next = new ListNode(node1.val);
+                    node1 = node1.next;
+                }
+                else
+                {
+                    node.next = new ListNode(node2.val);
+                    node2 = node2.next;
+                }
+                node = node.next;
+            }
+            if (node1 != null)
+            {
+                node.next = node1;
+            }
+            if (node2 != null)
+            {
+                node.next = node2;
+            }
+            return head.next;
+        }
+        public ListNode MergeKLists(ListNode[] lists)
+        {
+            if (lists.Length <= 0)
+            {
+                return null;
+            }
+            return MergeKLists(lists, 0, lists.Length - 1);
+        }
         #endregion
     }
 }
