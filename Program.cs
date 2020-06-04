@@ -24,9 +24,14 @@ namespace leetcode
 
         static void Main(string[] args)
         {
-            program.Rotate(new[] {1, 2, 3, 4, 5, 6, 7}, 3);
-            Console.WriteLine(program.FindUnsortedSubarray(new[] {1, 3, 3, 3, 2, 2, 2, 5, 8}));
-            solution.ConstructArr(new[] {1, 2, 3, 4, 5, 10}).PrintArray();
+
+            program.LetterCombinations("234");
+            for (int i = 0; i < 10; i++)
+            {
+                Console.WriteLine(i + "," + program.SearchRotate(new[] { 3, 1 }, i));
+            }
+            Console.WriteLine(program.FindUnsortedSubarray(new[] { 1, 3, 3, 3, 2, 2, 2, 5, 8 }));
+            solution.ConstructArr(new[] { 1, 2, 3, 4, 5, 10 }).PrintArray();
             //4,2,5,1,3
             var root = new TreeNode(1);
             root.left = new TreeNode(2);
@@ -47,7 +52,7 @@ namespace leetcode
             Console.WriteLine(cache.Get(3));
             Console.WriteLine(cache.Get(4));
             Console.WriteLine(
-                new Program().ReversePairs1(new[] {7, 5, 6, 4, 1, 10}));
+                new Program().ReversePairs1(new[] { 7, 5, 6, 4, 1, 10 }));
         }
 
         #region 面试题63. 股票的最大利润
@@ -539,7 +544,7 @@ namespace leetcode
             {
                 for (int c = 0; c < C; c++)
                 {
-                    result[i++] = new[] {r, c};
+                    result[i++] = new[] { r, c };
                 }
             }
 
@@ -669,7 +674,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char) (i + 'a'));
+                        result.Append((char)(i + 'a'));
                         chars[i]--;
                     }
 
@@ -684,7 +689,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char) (i + 'a'));
+                        result.Append((char)(i + 'a'));
                         chars[i]--;
                     }
 
@@ -1033,7 +1038,7 @@ namespace leetcode
                 return null;
             }
 
-            return new TreeNode(root.val) {left = MirrorTree(root.right), right = MirrorTree(root.left)};
+            return new TreeNode(root.val) { left = MirrorTree(root.right), right = MirrorTree(root.left) };
         }
 
         #endregion
@@ -1713,7 +1718,7 @@ namespace leetcode
                 var index = Find(nums, num);
                 if (index != -1)
                 {
-                    return new[] {nums[i], nums[index]};
+                    return new[] { nums[i], nums[index] };
                 }
             }
 
@@ -1730,7 +1735,7 @@ namespace leetcode
                 var num = target - nums[i];
                 if (set.Contains(num))
                 {
-                    return new[] {nums[i], num};
+                    return new[] { nums[i], num };
                 }
             }
 
@@ -1746,7 +1751,7 @@ namespace leetcode
                 var num = nums[start] + nums[end];
                 if (num == target)
                 {
-                    return new[] {nums[start], nums[end]};
+                    return new[] { nums[start], nums[end] };
                 }
 
                 if (num > target)
@@ -2469,7 +2474,7 @@ namespace leetcode
                 set.Add(n);
                 while (n > 0)
                 {
-                    num += (int) Math.Pow(n % 10, 2);
+                    num += (int)Math.Pow(n % 10, 2);
                     n /= 10;
                 }
 
@@ -2785,7 +2790,7 @@ namespace leetcode
                 }
             }
 
-            return (int) num;
+            return (int)num;
         }
 
         #endregion
@@ -3025,7 +3030,7 @@ namespace leetcode
         public int SubarraySum(int[] nums, int k)
         {
             int sum = 0, count = 0;
-            var dic = new Dictionary<int, int> {{0, 1}};
+            var dic = new Dictionary<int, int> { { 0, 1 } };
             foreach (var n in nums)
             {
                 sum += n;
@@ -3216,7 +3221,7 @@ namespace leetcode
             var max = 0;
             for (int i = 0; i < s.Length; i++)
             {
-                var set = new Dictionary<char, int> {{'a', 0}, {'e', 0}, {'i', 0}, {'o', 0}, {'u', 0}};
+                var set = new Dictionary<char, int> { { 'a', 0 }, { 'e', 0 }, { 'i', 0 }, { 'o', 0 }, { 'u', 0 } };
                 for (int j = i; j < s.Length; j++)
                 {
                     if (set.TryGetValue(s[j], out var size))
@@ -3657,7 +3662,7 @@ namespace leetcode
                 }
                 else
                 {
-                    dic[key] = node = new CacheNode {key = key, val = value};
+                    dic[key] = node = new CacheNode { key = key, val = value };
                     if (tail == null)
                     {
                         head = tail = node;
@@ -3905,7 +3910,7 @@ namespace leetcode
             var dic = new Dictionary<string, char>();
             for (int i = 0; i < 26; i++)
             {
-                dic[i.ToString()] = (char) ('a' + i);
+                dic[i.ToString()] = (char)('a' + i);
             }
 
             while (num != 0 || bits.Count == 0)
@@ -4092,7 +4097,7 @@ namespace leetcode
         {
             if (nums == null || nums.Length <= 0)
             {
-                return new[] {-1, -1};
+                return new[] { -1, -1 };
             }
 
             int start = 0, end = nums.Length - 1;
@@ -4112,7 +4117,7 @@ namespace leetcode
             //如果target存在，start==end时一定是target，此时满足条件start+1,end不变，故只需要判断nums[end]即可知target是否存在
             if (end < 0 || nums[end] != target)
             {
-                return new[] {-1, -1};
+                return new[] { -1, -1 };
             }
 
             var rIndex = end;
@@ -4130,7 +4135,7 @@ namespace leetcode
                 }
             }
 
-            return new[] {start, rIndex};
+            return new[] { start, rIndex };
         }
 
         #endregion
@@ -4291,14 +4296,14 @@ namespace leetcode
             {
                 if (n >= start && n <= end)
                 {
-                    int count = (int) (n - start), index = count % len;
+                    int count = (int)(n - start), index = count % len;
                     var num = (number + (count / len)).ToString();
                     return num[index] - '0';
                 }
 
                 len++;
                 start = end + 1;
-                end = 9 * (long) Math.Pow(10, len - 1) * len + end;
+                end = 9 * (long)Math.Pow(10, len - 1) * len + end;
                 number *= 10;
             }
         }
@@ -5034,11 +5039,226 @@ namespace leetcode
         {
             k = k % nums.Length;
             var temp = new int[k];
-            Array.Copy(nums, nums.Length - 1, temp, 0, k);
+            Array.Copy(nums, nums.Length - k, temp, 0, k);
             Array.Copy(nums, 0, nums, k, nums.Length - k);
             Array.Copy(temp, 0, nums, 0, k);
         }
 
+        #endregion
+
+        #region 15. 三数之和
+        //https://leetcode-cn.com/problems/3sum/
+        void ThreeSum(int index, int[] nums, IList<IList<int>> result, IList<int> sub)
+        {
+            if (sub.Count == 3 && sub.Sum() == 0)
+            {
+                result.Add(sub.OrderBy(n => n).ToArray());
+                return;
+            }
+            if (index >= nums.Length)
+            {
+                return;
+            }
+            for (int i = index; i < nums.Length - 1; i++)
+            {
+                sub.Add(nums[i]);
+                ThreeSum(i + 1, nums, result, sub);
+                sub.RemoveAt(sub.Count - 1);
+            }
+        }
+        public IList<IList<int>> ThreeSum(int[] nums)
+        {
+            var result = new List<IList<int>>();
+            ThreeSum(0, nums, result, new List<int>());
+            return result;
+        }
+
+        public IList<IList<int>> ThreeSum1(int[] nums)
+        {
+            var result = new List<IList<int>>();
+            Array.Sort(nums);
+            for (int i = 0; i < nums.Length; i++)
+            {
+                if (nums[i] > 0 || nums[nums.Length - i - 1] < 0)
+                {
+                    break;
+                }
+                if (i > 0 && nums[i] == nums[i - 1])
+                {
+                    continue;
+                }
+                int start = i + 1, end = nums.Length - 1;
+                while (start < end)
+                {
+                    var num = nums[i] + nums[start] + nums[end];
+                    if (num == 0)
+                    {
+                        result.Add(new int[] { nums[i], nums[start], nums[end] });
+                        while (start < end && nums[start] == nums[start + 1])
+                        {
+                            start++;
+                        }
+                        while (start < end && nums[end] == nums[end - 1])
+                        {
+                            end--;
+                        }
+                        start++;
+                        end--;
+                    }
+                    else if (num < 0)
+                    {
+                        start++;
+                    }
+                    else
+                    {
+                        end--;
+                    }
+                }
+
+            }
+            return result;
+        }
+        #endregion
+
+        #region 17. 电话号码的字母组合
+        //https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/
+        void LetterCombinations(Dictionary<char, char[]> dic, string digits, int dIndex, List<char> subs, List<string> result)
+        {
+            if (dIndex >= digits.Length)
+            {
+                result.Add(new string(subs.ToArray()));
+                return;
+            }
+            if (!dic.TryGetValue(digits[dIndex], out var chars))
+            {
+                return;
+            }
+            for (int i = 0; i < chars.Length; i++)
+            {
+                subs.Add(chars[i]);
+                LetterCombinations(dic, digits, dIndex + 1, subs, result);
+                subs.RemoveAt(subs.Count - 1);
+            }
+
+        }
+        public IList<string> LetterCombinations(string digits)
+        {
+            if (string.IsNullOrWhiteSpace(digits))
+            {
+                return new string[0];
+            }
+            var dic = new Dictionary<char, char[]>();
+            var subs = new List<char>();
+            var startChar = 'a';
+            for (int i = 1; i <= 8; i++)
+            {
+                if (i == 6 || i == 8)
+                {
+                    for (int j = 0; j < 4; j++)
+                    {
+                        subs.Add(startChar++);
+                    }
+                }
+                else
+                {
+                    for (int j = 0; j < 3; j++)
+                    {
+                        subs.Add(startChar++);
+                    }
+                }
+                dic[(char)('1' + i)] = subs.ToArray();
+                subs.Clear();
+            }
+            var result = new List<string>();
+            LetterCombinations(dic, digits, 0, subs, result);
+            return result;
+        }
+        #endregion
+
+        #region 33. 搜索旋转排序数组
+        public int SearchRotate(int[] nums, int target)
+        {
+            if (nums.Length <= 0)
+            {
+                return -1;
+            }
+            int left = 0, right = nums.Length - 1;
+            while (left < right)
+            {
+                if (target == nums[left])
+                {
+                    return left;
+                }
+                if (target == nums[right])
+                {
+                    return right;
+                }
+                var mid = (left + right) / 2;
+                if (nums[mid] == target)
+                {
+                    return mid;
+                }
+
+                if (nums[mid] > nums[left])//左边数组有序 在左边 
+                {
+
+                    if (target < nums[left] || target > nums[mid])
+                    {
+                        left = mid + 1;
+                    }
+                    else
+                    {
+                        right = mid - 1;
+                    }
+                }
+                else if (nums[mid] < nums[right])//右边数组有序 在右边
+                {
+                    if (target >= nums[right] || target < nums[mid])
+                    {
+                        right = mid - 1;
+                    }
+                    else
+                    {
+                        left = mid + 1;
+                    }
+                }
+                else if (nums[mid] < nums[left])//左边数组非有序，旋转数在左边
+                {
+                    if (target >= nums[left] || target < nums[mid])//m<left,left<t => m <t     // && nums[mid] < target
+                    {
+                        right = mid - 1;
+                    }
+                    else//m<left,t<left
+                    {
+                        left = mid + 1;
+                    }
+                }
+                else if (nums[mid] > nums[right])//右边数组非有序，旋转数在右边
+                {
+                    if (target <= nums[right] || target > nums[mid])//m<left,left<t => m <t     // && nums[mid] < target
+                    {
+                        left = mid + 1;
+                    }
+                    else//m<left,t<left
+                    {
+                        right = mid - 1;
+                    }
+                }
+                else if (nums[mid] == nums[right] && nums[mid] == nums[left])
+                {
+                    right--;
+                }
+                else if (nums[mid] == nums[left])
+                {
+                    left++;
+                }
+                else if (nums[mid] == nums[right])
+                {
+                    right--;
+                }
+            }
+            return nums[left] == target ? left : -1;
+        }
         #endregion
     }
 }
