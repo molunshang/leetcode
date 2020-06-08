@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http.Headers;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using leetcode.thread;
 
 namespace leetcode
 {
@@ -24,21 +20,30 @@ namespace leetcode
 
         static void Main(string[] args)
         {
-            program.FindLadders("red", "tax", new[] { "ted", "tex", "red", "tax", "tad", "den", "rex", "pee" });
+            //[]
+            var t = new TreeNode(2);
+            t.left = new TreeNode(1);
+            t.right = new TreeNode(3);
+            program.IsValidBST1(t);
+            Console.WriteLine(program.EquationsPossible(new[]
+                {"a!=i", "g==k", "k==j", "k!=i", "c!=e", "a!=e", "k!=a", "a!=g", "g!=c"}));
+            Console.WriteLine(program.EquationsPossible(new[] {"b==b", "b==e", "e==c", "d!=e"}));
+            Console.WriteLine(program.EquationsPossible(new[] {"a==b", "b!=c", "c==a"}));
+            Console.WriteLine(program.EquationsPossible(new[] {"c==c", "b==d", "x!=z"}));
 
-            program.FindLadders("a", "c", new[] { "a", "b", "c" });
-            program.FindLadders("hit", "cog", new[] { "hot", "dot", "dog", "lot", "log", "cog" });
-            program.WordBreak("pineapplepenapple", new[] { "apple", "pen", "applepen", "pine", "pineapple" });
-            program.Subsets(new[] { 1, 2, 3 });
-            program.Permute(new[] { 1, 2, 3 });
+            program.FindLadders("a", "c", new[] {"a", "b", "c"});
+            program.FindLadders("hit", "cog", new[] {"hot", "dot", "dog", "lot", "log", "cog"});
+            program.WordBreak("pineapplepenapple", new[] {"apple", "pen", "applepen", "pine", "pineapple"});
+            program.Subsets(new[] {1, 2, 3});
+            program.Permute(new[] {1, 2, 3});
             program.LetterCombinations("234");
             for (int i = 0; i < 10; i++)
             {
-                Console.WriteLine(i + "," + program.SearchRotate(new[] { 3, 1 }, i));
+                Console.WriteLine(i + "," + program.SearchRotate(new[] {3, 1}, i));
             }
 
-            Console.WriteLine(program.FindUnsortedSubarray(new[] { 1, 3, 3, 3, 2, 2, 2, 5, 8 }));
-            solution.ConstructArr(new[] { 1, 2, 3, 4, 5, 10 }).PrintArray();
+            Console.WriteLine(program.FindUnsortedSubarray(new[] {1, 3, 3, 3, 2, 2, 2, 5, 8}));
+            solution.ConstructArr(new[] {1, 2, 3, 4, 5, 10}).PrintArray();
             //4,2,5,1,3
             var root = new TreeNode(1);
             root.left = new TreeNode(2);
@@ -59,7 +64,7 @@ namespace leetcode
             Console.WriteLine(cache.Get(3));
             Console.WriteLine(cache.Get(4));
             Console.WriteLine(
-                new Program().ReversePairs1(new[] { 7, 5, 6, 4, 1, 10 }));
+                new Program().ReversePairs1(new[] {7, 5, 6, 4, 1, 10}));
         }
 
         #region 面试题63. 股票的最大利润
@@ -551,7 +556,7 @@ namespace leetcode
             {
                 for (int c = 0; c < C; c++)
                 {
-                    result[i++] = new[] { r, c };
+                    result[i++] = new[] {r, c};
                 }
             }
 
@@ -681,7 +686,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char)(i + 'a'));
+                        result.Append((char) (i + 'a'));
                         chars[i]--;
                     }
 
@@ -696,7 +701,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char)(i + 'a'));
+                        result.Append((char) (i + 'a'));
                         chars[i]--;
                     }
 
@@ -1045,7 +1050,7 @@ namespace leetcode
                 return null;
             }
 
-            return new TreeNode(root.val) { left = MirrorTree(root.right), right = MirrorTree(root.left) };
+            return new TreeNode(root.val) {left = MirrorTree(root.right), right = MirrorTree(root.left)};
         }
 
         #endregion
@@ -1725,7 +1730,7 @@ namespace leetcode
                 var index = Find(nums, num);
                 if (index != -1)
                 {
-                    return new[] { nums[i], nums[index] };
+                    return new[] {nums[i], nums[index]};
                 }
             }
 
@@ -1742,7 +1747,7 @@ namespace leetcode
                 var num = target - nums[i];
                 if (set.Contains(num))
                 {
-                    return new[] { nums[i], num };
+                    return new[] {nums[i], num};
                 }
             }
 
@@ -1758,7 +1763,7 @@ namespace leetcode
                 var num = nums[start] + nums[end];
                 if (num == target)
                 {
-                    return new[] { nums[start], nums[end] };
+                    return new[] {nums[start], nums[end]};
                 }
 
                 if (num > target)
@@ -2356,6 +2361,7 @@ namespace leetcode
                 {
                     return true;
                 }
+
                 flag[x, y] = false;
             }
 
@@ -2481,7 +2487,7 @@ namespace leetcode
                 set.Add(n);
                 while (n > 0)
                 {
-                    num += (int)Math.Pow(n % 10, 2);
+                    num += (int) Math.Pow(n % 10, 2);
                     n /= 10;
                 }
 
@@ -2726,6 +2732,46 @@ namespace leetcode
             return IsValidBST(root.left) && IsValidBST(root.right);
         }
 
+        public bool IsValidBST1(TreeNode root)
+        {
+            if (root == null)
+            {
+                return true;
+            }
+
+            var stack = new Stack<TreeNode>();
+            TreeNode prev = null;
+            while (root != null || stack.Count > 0)
+            {
+                while (root != null)
+                {
+                    stack.Push(root);
+                    root = root.left;
+                }
+
+                if (stack.Count > 0)
+                {
+                    root = stack.Pop();
+                    if (prev == null)
+                    {
+                        prev = root;
+                    }
+                    else if (prev.val >= root.val)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        prev = root;
+                    }
+
+                    root = root.right;
+                }
+            }
+
+            return true;
+        }
+
         #endregion
 
         #region 572. 另一个树的子树
@@ -2797,7 +2843,7 @@ namespace leetcode
                 }
             }
 
-            return (int)num;
+            return (int) num;
         }
 
         #endregion
@@ -3037,7 +3083,7 @@ namespace leetcode
         public int SubarraySum(int[] nums, int k)
         {
             int sum = 0, count = 0;
-            var dic = new Dictionary<int, int> { { 0, 1 } };
+            var dic = new Dictionary<int, int> {{0, 1}};
             foreach (var n in nums)
             {
                 sum += n;
@@ -3228,7 +3274,7 @@ namespace leetcode
             var max = 0;
             for (int i = 0; i < s.Length; i++)
             {
-                var set = new Dictionary<char, int> { { 'a', 0 }, { 'e', 0 }, { 'i', 0 }, { 'o', 0 }, { 'u', 0 } };
+                var set = new Dictionary<char, int> {{'a', 0}, {'e', 0}, {'i', 0}, {'o', 0}, {'u', 0}};
                 for (int j = i; j < s.Length; j++)
                 {
                     if (set.TryGetValue(s[j], out var size))
@@ -3669,7 +3715,7 @@ namespace leetcode
                 }
                 else
                 {
-                    dic[key] = node = new CacheNode { key = key, val = value };
+                    dic[key] = node = new CacheNode {key = key, val = value};
                     if (tail == null)
                     {
                         head = tail = node;
@@ -3917,7 +3963,7 @@ namespace leetcode
             var dic = new Dictionary<string, char>();
             for (int i = 0; i < 26; i++)
             {
-                dic[i.ToString()] = (char)('a' + i);
+                dic[i.ToString()] = (char) ('a' + i);
             }
 
             while (num != 0 || bits.Count == 0)
@@ -4104,7 +4150,7 @@ namespace leetcode
         {
             if (nums == null || nums.Length <= 0)
             {
-                return new[] { -1, -1 };
+                return new[] {-1, -1};
             }
 
             int start = 0, end = nums.Length - 1;
@@ -4124,7 +4170,7 @@ namespace leetcode
             //如果target存在，start==end时一定是target，此时满足条件start+1,end不变，故只需要判断nums[end]即可知target是否存在
             if (end < 0 || nums[end] != target)
             {
-                return new[] { -1, -1 };
+                return new[] {-1, -1};
             }
 
             var rIndex = end;
@@ -4142,7 +4188,7 @@ namespace leetcode
                 }
             }
 
-            return new[] { start, rIndex };
+            return new[] {start, rIndex};
         }
 
         #endregion
@@ -4268,7 +4314,7 @@ namespace leetcode
                 strs[i] = nums[i].ToString();
             }
 
-            Array.Sort<string>(strs, (s1, s2) =>
+            Array.Sort(strs, (s1, s2) =>
             {
                 string c1 = s1 + s2, c2 = s2 + s1;
                 return c1.CompareTo(c2);
@@ -4303,14 +4349,14 @@ namespace leetcode
             {
                 if (n >= start && n <= end)
                 {
-                    int count = (int)(n - start), index = count % len;
+                    int count = (int) (n - start), index = count % len;
                     var num = (number + (count / len)).ToString();
                     return num[index] - '0';
                 }
 
                 len++;
                 start = end + 1;
-                end = 9 * (long)Math.Pow(10, len - 1) * len + end;
+                end = 9 * (long) Math.Pow(10, len - 1) * len + end;
                 number *= 10;
             }
         }
@@ -5107,7 +5153,7 @@ namespace leetcode
                     var num = nums[i] + nums[start] + nums[end];
                     if (num == 0)
                     {
-                        result.Add(new int[] { nums[i], nums[start], nums[end] });
+                        result.Add(new[] {nums[i], nums[start], nums[end]});
                         while (start < end && nums[start] == nums[start + 1])
                         {
                             start++;
@@ -5189,7 +5235,7 @@ namespace leetcode
                     }
                 }
 
-                dic[(char)('1' + i)] = subs.ToArray();
+                dic[(char) ('1' + i)] = subs.ToArray();
                 subs.Clear();
             }
 
@@ -5382,6 +5428,7 @@ namespace leetcode
             {
                 return;
             }
+
             var tmp = nums[i];
             nums[i] = nums[j];
             nums[j] = tmp;
@@ -5706,6 +5753,7 @@ namespace leetcode
         #endregion
 
         #region 131. 分割回文串
+
         //https://leetcode-cn.com/problems/palindrome-partitioning/
         bool IsLoop(IList<char> str)
         {
@@ -5713,6 +5761,7 @@ namespace leetcode
             {
                 return true;
             }
+
             int start = 0, end = str.Count - 1;
             while (start < end)
             {
@@ -5720,9 +5769,11 @@ namespace leetcode
                 {
                     return false;
                 }
+
                 start++;
                 end--;
             }
+
             return true;
         }
 
@@ -5733,6 +5784,7 @@ namespace leetcode
                 result.Add(items.ToArray());
                 return;
             }
+
             var sub = new List<char>();
             for (int i = index; i < s.Length; i++)
             {
@@ -5741,11 +5793,13 @@ namespace leetcode
                 {
                     continue;
                 }
+
                 items.Add(new string(sub.ToArray()));
                 Partition(s, i + 1, result, items);
                 items.RemoveAt(items.Count - 1);
             }
         }
+
         public IList<IList<string>> Partition(string s)
         {
             var result = new List<IList<string>>();
@@ -5753,23 +5807,28 @@ namespace leetcode
             Partition(chars, 0, result, new List<string>());
             return result;
         }
+
         #endregion
 
         #region 140. 单词拆分 II
+
         //https://leetcode-cn.com/problems/word-break-ii/
-        void WordBreak(string s, int index, int min, int max, HashSet<string> wordDict, IList<string> result, IList<string> stb)
+        void WordBreak(string s, int index, int min, int max, HashSet<string> wordDict, IList<string> result,
+            IList<string> stb)
         {
             if (index >= s.Length)
             {
                 result.Add(string.Join(' ', stb));
                 return;
             }
+
             for (int len = min; len <= max; len++)
             {
                 if (index + len > s.Length)
                 {
                     return;
                 }
+
                 var key = s.Substring(index, len);
                 if (wordDict.Contains(key))
                 {
@@ -5779,6 +5838,7 @@ namespace leetcode
                 }
             }
         }
+
         public IList<string> WordBreak(string s, IList<string> wordDict)
         {
             var dict = new HashSet<string>();
@@ -5789,18 +5849,20 @@ namespace leetcode
                 min = Math.Min(word.Length, min);
                 max = Math.Max(word.Length, max);
             }
+
             var result = new List<string>();
             WordBreak(s, 0, min, max, dict, result, new List<string>());
             return result;
-
         }
 
-        IList<string> WordBreak1(string s, int index, int min, int max, HashSet<string> wordDict, Dictionary<int, IList<string>> nexts)
+        IList<string> WordBreak1(string s, int index, int min, int max, HashSet<string> wordDict,
+            Dictionary<int, IList<string>> nexts)
         {
             if (nexts.TryGetValue(index, out var list))
             {
                 return list;
             }
+
             list = new List<string>();
             if (index >= s.Length)
             {
@@ -5814,6 +5876,7 @@ namespace leetcode
                     {
                         break;
                     }
+
                     var key = s.Substring(index, len);
                     if (wordDict.Contains(key))
                     {
@@ -5825,9 +5888,11 @@ namespace leetcode
                     }
                 }
             }
+
             nexts[index] = list;
             return list;
         }
+
         public IList<string> WordBreak1(string s, IList<string> wordDict)
         {
             var dict = new HashSet<string>();
@@ -5838,11 +5903,14 @@ namespace leetcode
                 min = Math.Min(word.Length, min);
                 max = Math.Max(word.Length, max);
             }
+
             return WordBreak1(s, 0, min, max, dict, new Dictionary<int, IList<string>>());
         }
+
         #endregion
 
         #region 91. 解码方法
+
         //https://leetcode-cn.com/problems/decode-ways/
         void NumDecodings(string s, int index, ISet<string> result, Dictionary<string, char> dict, List<char> seqs)
         {
@@ -5851,12 +5919,14 @@ namespace leetcode
                 result.Add(new string(seqs.ToArray()));
                 return;
             }
+
             for (int i = 1; i <= 2; i++)
             {
                 if (index + i > s.Length)
                 {
                     return;
                 }
+
                 var key = s.Substring(index, i);
                 if (dict.TryGetValue(key, out var seq))
                 {
@@ -5866,24 +5936,29 @@ namespace leetcode
                 }
             }
         }
+
         public int NumDecodings(string s)
         {
             if (s.Length <= 0 || s[0] == '0')
             {
                 return 0;
             }
+
             var dict = new Dictionary<string, char>();
             for (int i = 1; i <= 26; i++)
             {
-                dict.Add(i.ToString(), (char)('A' + i - 1));
+                dict.Add(i.ToString(), (char) ('A' + i - 1));
             }
+
             var strs = new HashSet<string>();
             NumDecodings(s, 0, strs, dict, new List<char>());
             return strs.Count;
         }
+
         #endregion
 
         #region 128. 最长连续序列
+
         //https://leetcode-cn.com/problems/longest-consecutive-sequence/
         public int LongestConsecutive(int[] nums)
         {
@@ -5904,14 +5979,18 @@ namespace leetcode
                         len++;
                         cur++;
                     }
+
                     mostLen = Math.Max(len, mostLen);
                 }
             }
+
             return mostLen;
         }
+
         #endregion
 
         #region 47. 全排列 II
+
         //https://leetcode-cn.com/problems/permutations-ii/
         void PermuteUnique(int[] nums, int index, IList<IList<int>> result)
         {
@@ -5920,6 +5999,7 @@ namespace leetcode
                 result.Add(new List<int>(nums));
                 return;
             }
+
             var visited = new HashSet<int>();
             for (int i = index; i < nums.Length; i++)
             {
@@ -5927,21 +6007,25 @@ namespace leetcode
                 {
                     continue;
                 }
+
                 visited.Add(nums[i]);
                 Swap(nums, index, i);
                 PermuteUnique(nums, index + 1, result);
                 Swap(nums, index, i);
             }
         }
+
         public IList<IList<int>> PermuteUnique(int[] nums)
         {
             var result = new List<IList<int>>();
             PermuteUnique(nums, 0, result);
             return result;
         }
+
         #endregion
 
         #region 118. 杨辉三角
+
         //https://leetcode-cn.com/problems/pascals-triangle/
         public IList<IList<int>> Generate(int numRows)
         {
@@ -5954,7 +6038,8 @@ namespace leetcode
             {
                 return result;
             }
-            result.Add(new[] { 1 });
+
+            result.Add(new[] {1});
             for (int i = 1; i < numRows; i++)
             {
                 var prev = result[i - 1];
@@ -5964,14 +6049,18 @@ namespace leetcode
                 {
                     row.Add(prev[j - 1] + prev[j]);
                 }
+
                 row.Add(1);
                 result.Add(row);
             }
+
             return result;
         }
+
         #endregion
 
         #region 119. 杨辉三角 II
+
         //https://leetcode-cn.com/problems/pascals-triangle-ii/
         public IList<int> GetRow(int rowIndex)
         {
@@ -5979,6 +6068,7 @@ namespace leetcode
             {
                 return new int[0];
             }
+
             List<int> prev = new List<int>(), current = new List<int>();
             current.Add(1);
             for (int i = 1; i < rowIndex; i++)
@@ -5992,13 +6082,17 @@ namespace leetcode
                 {
                     current.Add(prev[j - 1] + prev[j]);
                 }
+
                 current.Add(1);
             }
+
             return current;
         }
+
         #endregion
 
         #region 126. 单词接龙 II
+
         //https://leetcode-cn.com/problems/word-ladder-ii/
         public IList<IList<string>> FindLadders(string beginWord, string endWord, IList<string> wordList)
         {
@@ -6008,6 +6102,7 @@ namespace leetcode
                 {
                     return false;
                 }
+
                 var diff = 0;
                 for (int i = 0; i < str1.Length; i++)
                 {
@@ -6016,8 +6111,10 @@ namespace leetcode
                         diff++;
                     }
                 }
+
                 return diff == 1;
             }
+
             var dict = new HashSet<string>();
             var words = new List<string>();
             var wordDict = new Dictionary<string, ISet<string>>();
@@ -6030,14 +6127,17 @@ namespace leetcode
                     wordDict[word] = new HashSet<string>();
                 }
             }
+
             if (!dict.Contains(endWord))
             {
                 return new IList<string>[0];
             }
+
             if (!wordDict.ContainsKey(beginWord))
             {
                 wordDict[beginWord] = new HashSet<string>();
             }
+
             for (int i = 0; i < words.Count - 1; i++)
             {
                 var word = words[i];
@@ -6050,8 +6150,10 @@ namespace leetcode
                         wordDict[words[j]].Add(word);
                     }
                 }
+
                 wordDict[word] = next;
             }
+
             var result = new List<IList<string>>();
             IList<string> path = new List<string>();
             var queue = new Queue<Tuple<string, IList<string>>>();
@@ -6065,6 +6167,7 @@ namespace leetcode
                 {
                     continue;
                 }
+
                 depths[beginWord] = path.Count;
                 path.Add(beginWord);
                 if (beginWord == endWord)
@@ -6081,8 +6184,334 @@ namespace leetcode
                     }
                 }
             }
+
             return result;
         }
+
+        #endregion
+
+        #region 990. 等式方程的可满足性
+
+        //https://leetcode-cn.com/problems/satisfiability-of-equality-equations/
+        public bool EquationsPossible(string[] equations)
+        {
+            Dictionary<char, ISet<char>> equals = new Dictionary<char, ISet<char>>(),
+                not = new Dictionary<char, ISet<char>>();
+            for (int i = 0; i < 26; i++)
+            {
+                equals[(char) ('a' + i)] = new HashSet<char>();
+                not[(char) ('a' + i)] = new HashSet<char>();
+            }
+
+            foreach (var equation in equations)
+            {
+                char start = equation[0], end = equation[3];
+                if (equation[1] == '=')
+                {
+                    equals[start].Add(end);
+                    equals[end].Add(start);
+                }
+                else if (start != end)
+                {
+                    not[start].Add(end);
+                    not[end].Add(start);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            var queue = new Queue<char>();
+            foreach (var equation in equations)
+            {
+                ISet<char> set1 = new HashSet<char>(), set2 = new HashSet<char>();
+                var start = equation[0];
+                queue.Enqueue(start);
+                while (queue.TryDequeue(out var ch))
+                {
+                    var set = equals[ch];
+                    foreach (var c in set)
+                    {
+                        if (start != c && set1.Add(c))
+                        {
+                            queue.Enqueue(c);
+                        }
+                    }
+
+                    set = not[ch];
+                    foreach (var c in set)
+                    {
+                        set2.Add(c);
+                    }
+                }
+
+                if (set1.Overlaps(set2))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        #endregion
+
+        #region 94. 二叉树的中序遍历(非递归)
+
+        //https://leetcode-cn.com/problems/binary-tree-inorder-traversal/
+        public IList<int> InorderTraversal(TreeNode root)
+        {
+            var stack = new Stack<TreeNode>();
+            var result = new List<int>();
+            while (root != null || stack.Count > 0)
+            {
+                while (root != null)
+                {
+                    stack.Push(root);
+                    root = root.left;
+                }
+
+                if (stack.Count > 0)
+                {
+                    root = stack.Pop();
+                    result.Add(root.val);
+                    root = root.right;
+                }
+            }
+
+            return result;
+        }
+
+        #endregion
+
+        #region 108. 将有序数组转换为二叉搜索树
+
+        //https://leetcode-cn.com/problems/convert-sorted-array-to-binary-search-tree/
+        TreeNode SortedArrayToBST(IList<int> nums, int start, int end)
+        {
+            if (start > end)
+            {
+                return null;
+            }
+
+            var index = (start + end) / 2;
+            var root = new TreeNode(nums[index])
+            {
+                left = SortedArrayToBST(nums, start, index - 1), right = SortedArrayToBST(nums, index + 1, end)
+            };
+            return root;
+        }
+
+        public TreeNode SortedArrayToBST(int[] nums)
+        {
+            if (nums.Length <= 0)
+            {
+                return null;
+            }
+
+            return SortedArrayToBST(nums, 0, nums.Length - 1);
+        }
+
+        #endregion
+
+        #region 109. 有序链表转换二叉搜索树
+
+        //https://leetcode-cn.com/problems/convert-sorted-list-to-binary-search-tree/
+        public TreeNode SortedListToBST(ListNode head)
+        {
+            var eles = new List<int>();
+            while (head != null)
+            {
+                eles.Add(head.val);
+                head = head.next;
+            }
+
+            return SortedArrayToBST(eles, 0, eles.Count - 1);
+        }
+
+        #endregion
+
+        #region 面试题 02.04. 分割链表
+
+        //https://leetcode-cn.com/problems/partition-list-lcci/
+        public ListNode Partition(ListNode head, int x)
+        {
+            ListNode prev = null, next = null, prevRoot = null, nextRoot = null;
+            while (head != null)
+            {
+                if (head.val >= x)
+                {
+                    if (nextRoot == null)
+                    {
+                        next = nextRoot = new ListNode(head.val);
+                    }
+                    else
+                    {
+                        next.next = new ListNode(head.val);
+                        next = next.next;
+                    }
+                }
+                else
+                {
+                    if (prevRoot == null)
+                    {
+                        prevRoot = prev = new ListNode(head.val);
+                    }
+                    else
+                    {
+                        prev.next = new ListNode(head.val);
+                        prev = prev.next;
+                    }
+                }
+
+                head = head.next;
+            }
+
+            if (prev != null)
+            {
+                prev.next = nextRoot;
+            }
+            else
+            {
+                return nextRoot;
+            }
+
+            return prevRoot;
+        }
+
+        #endregion
+
+        #region 219. 存在重复元素 II
+
+        //https://leetcode-cn.com/problems/contains-duplicate-ii/
+        public bool ContainsNearbyDuplicate(int[] nums, int k)
+        {
+            var dict = new Dictionary<int, int>();
+            for (int i = 0; i < nums.Length; i++)
+            {
+                if (dict.TryGetValue(nums[i], out var index))
+                {
+                    if (i - index <= k)
+                    {
+                        return true;
+                    }
+
+                    dict[nums[i]] = i;
+                }
+                else
+                {
+                    dict[nums[i]] = i;
+                }
+            }
+
+            return false;
+        }
+
+        #endregion
+
+        #region 220. 存在重复元素 III
+
+        //https://leetcode-cn.com/problems/contains-duplicate-iii/
+        public bool ContainsNearbyAlmostDuplicate(int[] nums, int k, int t)
+        {
+            var dict = new SortedDictionary<int, IList<int>>();
+            for (int i = 0; i < nums.Length; i++)
+            {
+                if (!dict.TryGetValue(nums[i], out var indexs))
+                {
+                    indexs = new List<int>();
+                    dict[nums[i]] = indexs;
+                }
+
+                indexs.Add(i);
+            }
+
+            foreach (var kv in dict)
+            {
+                var target = kv.Key + k;
+            }
+
+            return false;
+        }
+
+        #endregion
+
+        #region 116. 填充每个节点的下一个右侧节点指针
+
+        //https://leetcode-cn.com/problems/populating-next-right-pointers-in-each-node/
+        public Node Connect(Node root)
+        {
+            if (root == null)
+            {
+                return root;
+            }
+
+            var queue = new Queue<Node>();
+            queue.Enqueue(root);
+            while (queue.Count > 0)
+            {
+                var size = queue.Count;
+                Node prev = null;
+                while (size > 0)
+                {
+                    var node = queue.Dequeue();
+                    if (prev != null)
+                    {
+                        prev.next = node;
+                        prev = prev.next;
+                    }
+                    else
+                    {
+                        prev = node;
+                    }
+
+                    if (node.left != null)
+                    {
+                        queue.Enqueue(node.left);
+                    }
+
+                    if (node.right != null)
+                    {
+                        queue.Enqueue(node.right);
+                    }
+
+                    size--;
+                }
+            }
+
+            return root;
+        }
+
+        void Next(Node current, Node next)
+        {
+            if (current == null)
+            {
+                return;
+            }
+
+            current.next = next;
+            Next(current.left, current.right);
+            if (next != null)
+            {
+                Next(next.left, next.right);
+            }
+        }
+
+        public Node Connect1(Node root)
+        {
+            if (root == null) return null;
+            if (root.left == null) return root;
+
+            root.left.next = root.right;
+            root.right.next = root.next?.left;
+        
+            Connect(root.left);
+            Connect(root.right);
+
+            return root;
+        }
+
         #endregion
     }
 }
