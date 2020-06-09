@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,8 @@ namespace leetcode
 
         static void Main(string[] args)
         {
+            Console.WriteLine(program.Compress(new[]
+                {'a', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b'}));
             //[]
             var t = new TreeNode(2);
             t.left = new TreeNode(1);
@@ -3935,46 +3938,45 @@ namespace leetcode
 
         #region 面试题46. 把数字翻译成字符串
 
-        void TranslateNum(IList<int> bits, Dictionary<string, char> dic, int start, List<char> chars,
-            HashSet<string> strs)
+        void TranslateNum(string num, int index, Dictionary<string, char> dict, ISet<string> result, IList<char> seqs)
         {
-            if (start >= bits.Count)
+            if (index >= num.Length)
             {
-                strs.Add(new string(chars.ToArray()));
+                result.Add(new string(seqs.ToArray()));
                 return;
             }
 
-            var key = string.Empty;
-            for (int i = start, end = Math.Min(start + 1, bits.Count - 1); i <= end; i++)
+            for (int i = 1; i <= 2; i++)
             {
-                key += bits[i].ToString();
-                if (dic.TryGetValue(key, out var ch))
+                if (index + i > num.Length)
                 {
-                    chars.Add(ch);
-                    TranslateNum(bits, dic, i + 1, chars, strs);
-                    chars.RemoveAt(chars.Count - 1);
+                    return;
                 }
+
+                var key = num.Substring(index, i);
+                if (!dict.TryGetValue(key, out var ch))
+                {
+                    continue;
+                }
+
+                seqs.Add(ch);
+                TranslateNum(num, index + i, dict, result, seqs);
+                seqs.RemoveAt(seqs.Count - 1);
             }
         }
 
         public int TranslateNum(int num)
         {
-            var sets = new HashSet<string>();
-            var bits = new List<int>();
-            var dic = new Dictionary<string, char>();
+            var dict = new Dictionary<string, char>();
             for (int i = 0; i < 26; i++)
             {
-                dic[i.ToString()] = (char)('a' + i);
+                dict[i.ToString()] = (char) ('a' + i);
             }
 
-            while (num != 0 || bits.Count == 0)
-            {
-                bits.Insert(0, num % 10);
-                num /= 10;
-            }
-
-            TranslateNum(bits, dic, 0, new List<char>(), sets);
-            return sets.Count;
+            var strNum = num.ToString();
+            var result = new HashSet<string>();
+            TranslateNum(strNum, 0, dict, result, new List<char>());
+            return result.Count;
         }
 
         #endregion
@@ -6512,6 +6514,447 @@ namespace leetcode
             Connect(root.right);
 
             return root;
+        }
+
+        #endregion
+
+
+        #region 415. 字符串相加
+
+        //https://leetcode-cn.com/problems/add-strings/
+        public string AddStrings(string num1, string num2)
+        {
+            var result = new char[Math.Max(num1.Length, num2.Length) + 1];
+            int i1 = num1.Length - 1, i2 = num2.Length - 1, index = result.Length - 1;
+            bool plus = false;
+            while (i1 >= 0 || i2 >= 0)
+            {
+                var one = plus ? 1 : 0;
+                if (i1 >= 0)
+                {
+                    one += (num1[i1] - '0');
+                    i1--;
+                }
+
+                if (i2 >= 0)
+                {
+                    one += (num2[i2] - '0');
+                    i2--;
+                }
+
+                if (one > 9)
+                {
+                    plus = true;
+                    one -= 10;
+                }
+                else
+                {
+                    plus = false;
+                }
+
+                result[index--] = (char) (one + '0');
+            }
+
+            if (plus)
+            {
+                result[index--] = '1';
+            }
+
+            return new string(result, index + 1, result.Length - index - 1);
+        }
+
+        #endregion
+
+        #region 767. 重构字符串
+
+        //https://leetcode-cn.com/problems/reorganize-string/
+
+        bool ReorganizeString(IList<char> chars, StringBuilder result)
+        {
+            if (chars.Count <= 0)
+            {
+                return true;
+            }
+
+            for (int i = 0; i < chars.Count; i++)
+            {
+                if (result.Length <= 0)
+                {
+                    result.Append(chars[0]);
+                    chars.RemoveAt(0);
+                    if (ReorganizeString(chars, result))
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    var last = result[result.Length - 1];
+                    if (last != chars[i])
+                    {
+                        result.Append(chars[i]);
+                        chars.RemoveAt(i);
+                        return ReorganizeString(chars, result);
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        class Item : IComparer<Item>, IComparable
+        {
+            public char Char;
+            public int Count;
+
+
+            public int Compare(Item x, Item y)
+            {
+                return y.Count - x.Count;
+            }
+
+            public int CompareTo(object obj)
+            {
+                return ((Item) obj).Count - Count;
+            }
+        }
+
+        public string ReorganizeString(string s)
+        {
+            var dict = new Dictionary<char, Item>();
+            foreach (var ch in s)
+            {
+                if (!dict.ContainsKey(ch))
+                {
+                    dict[ch] = new Item() {Char = ch, Count = 1};
+                }
+                else
+                {
+                    dict[ch].Count++;
+                }
+            }
+
+            var items = dict.Values.ToArray();
+            Array.Sort(items);
+            var result = new StringBuilder();
+            while (result.Length < s.Length)
+            {
+                var flag = true;
+                foreach (var item in items)
+                {
+                    if (item.Count <= 0 || (result.Length > 0 && result[result.Length - 1] == item.Char))
+                    {
+                        continue;
+                    }
+
+                    result.Append(item.Char);
+                    item.Count--;
+                    flag = false;
+                    break;
+                }
+
+                if (flag)
+                {
+                    return string.Empty;
+                }
+
+                Array.Sort(items);
+            }
+
+            return result.ToString();
+        }
+
+        #endregion
+
+        #region 面试题 01.06. 字符串压缩
+
+        //https://leetcode-cn.com/problems/compress-string-lcci/
+        public string CompressString(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return s;
+            }
+
+            var result = new StringBuilder();
+            var last = s[0];
+            int size = 1;
+            for (int i = 1; i < s.Length; i++)
+            {
+                if (last == s[i])
+                {
+                    size++;
+                }
+                else
+                {
+                    result.Append(size).Append(last);
+                    last = s[i];
+                    size = 1;
+                }
+            }
+
+            if (size > 0)
+            {
+                result.Append(size).Append(last);
+            }
+
+            return result.Length < s.Length ? result.ToString() : s;
+        }
+
+        #endregion
+
+        #region 443. 压缩字符串
+
+        //https://leetcode-cn.com/problems/string-compression/
+        public int Compress(char[] chars)
+        {
+            if (chars.Length <= 0)
+            {
+                return 0;
+            }
+
+            var last = chars[0];
+            int size = 1, len = 1, j = 1;
+            for (int i = 1; i < chars.Length; i++)
+            {
+                if (last == chars[i])
+                {
+                    size++;
+                }
+                else
+                {
+                    len++;
+                    if (size > 1)
+                    {
+                        var str = size.ToString();
+                        for (int k = 0; k < str.Length; k++)
+                        {
+                            chars[j++] = str[k];
+                        }
+
+                        size = 1;
+                        len += str.Length;
+                    }
+
+                    last = chars[i];
+                    chars[j++] = last;
+                }
+            }
+
+            if (size > 0)
+            {
+                var str = size.ToString();
+                for (int k = 0; k < str.Length; k++)
+                {
+                    chars[j++] = str[k];
+                }
+
+                len += str.Length;
+            }
+
+            return len;
+        }
+
+        #endregion
+
+        #region 1408. 数组中的字符串匹配
+
+        //https://leetcode-cn.com/problems/string-matching-in-an-array/
+        public IList<string> StringMatching(string[] words)
+        {
+            var not = new HashSet<int>();
+            var result = new List<string>();
+            for (int i = 0; i < words.Length - 1; i++)
+            {
+                if (not.Contains(i))
+                {
+                    continue;
+                }
+
+                for (int j = i + 1; j < words.Length; j++)
+                {
+                    if (not.Contains(j))
+                    {
+                        continue;
+                    }
+
+                    if (words[i].Length > words[j].Length && words[i].Contains(words[j]))
+                    {
+                        not.Add(j);
+                        result.Add(words[j]);
+                    }
+                    else if (words[j].Length > words[i].Length && words[j].Contains(words[i]))
+                    {
+                        not.Add(i);
+                        result.Add(words[i]);
+                        break;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        #endregion
+
+        #region 142. 环形链表 II
+
+        //https://leetcode-cn.com/problems/linked-list-cycle-ii/
+        public ListNode DetectCycle(ListNode head)
+        {
+            if (head == null)
+            {
+                return null;
+            }
+
+            ListNode slow = head, fast = head;
+            while (fast != null && fast.next != null)
+            {
+                fast = fast.next.next;
+                slow = slow.next;
+                if (fast == slow)
+                {
+                    fast = head;
+                    while (fast != slow)
+                    {
+                        fast = fast.next;
+                        slow = slow.next;
+                    }
+
+                    return fast;
+                }
+            }
+
+            return null;
+        }
+
+        #endregion
+
+        #region 678. 有效的括号字符串
+
+        //https://leetcode-cn.com/problems/valid-parenthesis-string/
+        public bool CheckValidString(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return true;
+            }
+
+            int min = 0, max = 0;
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (s[i] == '(')
+                {
+                    min++;
+                    max++;
+                }
+                else if (s[i] == ')')
+                {
+                    if (min > 0)
+                    {
+                        min--;
+                    }
+
+                    max--;
+                    if (max < 0)
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (min > 0)
+                    {
+                        min--;
+                    }
+
+                    max++;
+                }
+            }
+
+            return min == 0;
+        }
+
+        #endregion
+
+        #region 467. 环绕字符串中唯一的子字符串
+
+        //https://leetcode-cn.com/problems/unique-substrings-in-wraparound-string/
+        //暴力
+        //z    1    0
+        //za    3   2
+        //zab    6  5
+        //zabc   10 9 
+        //zabcd  15 14
+        //zabcde 21 20
+        //zbcde  11
+        //zadabcde    4
+        //dp[i]=dp[i-1]+len?
+        public int FindSubstringInWraproundString(string p)
+        {
+            bool IsLoop(string str)
+            {
+                if (str.Length <= 1)
+                {
+                    return true;
+                }
+
+                //xyzab
+                for (int i = 1; i < str.Length; i++)
+                {
+                    if (str[i - 1] == 'z' && str[i] == 'a')
+                    {
+                        continue;
+                    }
+
+                    if (str[i - 1] + 1 != str[i])
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            int start = 0, count = 0;
+            var flags = new int[26];
+            var num = 0;
+            for (int len = 1, end = p.Length - start; len <= end; len++)
+            {
+                var first = p[start] - 'a';
+                var key = p.Substring(start, len);
+                if (IsLoop(key))
+                {
+                    if (key.Length <= 26)
+                    {
+                        num += key.Length;
+                        for (int i = 0; i < key.Length; i++)
+                        {
+                            flags[key[i] - 'a'] = Math.Max(flags[key[i] - 'a'], key.Length - i);
+                        }
+                    }
+                    else
+                    {
+                        num += 26;
+                    }
+                }
+                else
+                {
+                    if (num > flags[first])
+                    {
+                        count -= flags[first];
+                        flags[first] = num;
+                        count += num;
+                    }
+                    start += len - 1;
+                    len = 0;
+                    end = p.Length - start;
+                    num = 0;
+                }
+                
+            }
+
+            return count+num;
         }
 
         #endregion
