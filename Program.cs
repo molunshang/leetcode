@@ -21,6 +21,12 @@ namespace leetcode
 
         static void Main(string[] args)
         {
+            var node = new ListNode(4);
+            node.next = new ListNode(2);
+            node.next.next = new ListNode(1);
+            node.next.next.next = new ListNode(3);
+            program.SortList(node);
+            program.GenerateMatrix(3);
             Console.WriteLine(program.Compress(new[]
                 {'a', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b'}));
             //[]
@@ -1873,7 +1879,7 @@ namespace leetcode
         #region 面试题58 - I. 翻转单词顺序
 
         //面试题58 - I. 翻转单词顺序
-        //https://leetcode-cn.com/problems/fan-zhuan-dan-ci-shun-xu-lcof/
+        //https://leetcode-cn.com/problems/fan-zhuan-dan-ci-shun-xu-lcof/        
         public string ReverseWords(string s)
         {
             var res = new StringBuilder();
@@ -1914,6 +1920,31 @@ namespace leetcode
         }
 
         #endregion
+
+
+        #region 557. 反转字符串中的单词 III
+        //https://leetcode-cn.com/problems/reverse-words-in-a-string-iii/
+        public string ReverseWordsIII(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return s;
+            }
+            var result = new StringBuilder();
+            for (int i = 0, j = 0; i < s.Length; i++)
+            {
+                if (s[i] != ' ' && i != s.Length - 1)
+                {
+                    continue;
+                }
+                var str = s.Substring(j, i == s.Length - 1 ? i - j + 1 : i - j);
+                result.Append(new string(str.Reverse().ToArray())).Append(' ');
+                j = i + 1;
+            }
+            return result.ToString(0, result.Length - 1);
+        }
+        #endregion
+
 
         #region 面试题58 - II. 左旋转字符串
 
@@ -3970,7 +4001,7 @@ namespace leetcode
             var dict = new Dictionary<string, char>();
             for (int i = 0; i < 26; i++)
             {
-                dict[i.ToString()] = (char) ('a' + i);
+                dict[i.ToString()] = (char)('a' + i);
             }
 
             var strNum = num.ToString();
@@ -6552,7 +6583,7 @@ namespace leetcode
                     plus = false;
                 }
 
-                result[index--] = (char) (one + '0');
+                result[index--] = (char)(one + '0');
             }
 
             if (plus)
@@ -6615,7 +6646,7 @@ namespace leetcode
 
             public int CompareTo(object obj)
             {
-                return ((Item) obj).Count - Count;
+                return ((Item)obj).Count - Count;
             }
         }
 
@@ -6626,7 +6657,7 @@ namespace leetcode
             {
                 if (!dict.ContainsKey(ch))
                 {
-                    dict[ch] = new Item() {Char = ch, Count = 1};
+                    dict[ch] = new Item() { Char = ch, Count = 1 };
                 }
                 else
                 {
@@ -6877,88 +6908,6 @@ namespace leetcode
 
         #endregion
 
-        #region 467. 环绕字符串中唯一的子字符串
-
-        //https://leetcode-cn.com/problems/unique-substrings-in-wraparound-string/
-        //暴力
-        //z    1    0
-        //za    3   2
-        //zab    6  5
-        //zabc   10 9 
-        //zabcd  15 14
-        //zabcde 21 20
-        //zbcde  11
-        //zadabcde    4
-        //dp[i]=dp[i-1]+len?
-        public int FindSubstringInWraproundString(string p)
-        {
-            bool IsLoop(string str)
-            {
-                if (str.Length <= 1)
-                {
-                    return true;
-                }
-
-                //xyzab
-                for (int i = 1; i < str.Length; i++)
-                {
-                    if (str[i - 1] == 'z' && str[i] == 'a')
-                    {
-                        continue;
-                    }
-
-                    if (str[i - 1] + 1 != str[i])
-                    {
-                        return false;
-                    }
-                }
-
-                return true;
-            }
-
-            int start = 0, count = 0;
-            var flags = new int[26];
-            var num = 0;
-            for (int len = 1, end = p.Length - start; len <= end; len++)
-            {
-                var first = p[start] - 'a';
-                var key = p.Substring(start, len);
-                if (IsLoop(key))
-                {
-                    if (key.Length <= 26)
-                    {
-                        num += key.Length;
-                        for (int i = 0; i < key.Length; i++)
-                        {
-                            flags[key[i] - 'a'] = Math.Max(flags[key[i] - 'a'], key.Length - i);
-                        }
-                    }
-                    else
-                    {
-                        num += 26;
-                    }
-                }
-                else
-                {
-                    if (num > flags[first])
-                    {
-                        count -= flags[first];
-                        flags[first] = num;
-                        count += num;
-                    }
-                    start += len - 1;
-                    len = 0;
-                    end = p.Length - start;
-                    num = 0;
-                }
-                
-            }
-
-            return count+num;
-        }
-
-        #endregion
-
         #region 125. 验证回文串
         //https://leetcode-cn.com/problems/valid-palindrome/
         public bool IsPalindrome(string s)
@@ -7131,6 +7080,303 @@ namespace leetcode
         }
         #endregion
 
-   
+        #region 467. 环绕字符串中唯一的子字符串
+
+        //https://leetcode-cn.com/problems/unique-substrings-in-wraparound-string/
+        //暴力
+        //z    1    0
+        //za    3   2
+        //zab    6  5
+        //zabc   10 9 
+        //zabcd  15 14
+        //zabcde 21 20
+        //zbcde  11
+        //zadabcde    4
+        //dp[i]=dp[i-1]+len?
+        public int FindSubstringInWraproundString(string p)
+        {
+            bool IsLoop(string str)
+            {
+                if (str.Length <= 1)
+                {
+                    return true;
+                }
+                for (int i = 1; i < str.Length; i++)
+                {
+                    if (str[i - 1] == 'z' && str[i] == 'a')
+                    {
+                        continue;
+                    }
+
+                    if (str[i - 1] + 1 != str[i])
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+            //todo 未完成，需要完善
+            int start = 0, count = 0;
+            var flags = new int[26];
+            var num = 0;
+            for (int len = 1, end = p.Length - start; len <= end; len++)
+            {
+                var first = p[start] - 'a';
+                var key = p.Substring(start, len);
+                if (IsLoop(key))
+                {
+                    if (key.Length <= 26)
+                    {
+                        num += key.Length;
+                        for (int i = 0; i < key.Length; i++)
+                        {
+                            flags[key[i] - 'a'] = Math.Max(flags[key[i] - 'a'], key.Length - i);
+                        }
+                    }
+                    else
+                    {
+                        num += 26;
+                    }
+                }
+                else
+                {
+                    if (num > flags[first])
+                    {
+                        count -= flags[first];
+                        flags[first] = num;
+                        count += num;
+                    }
+                    start += len - 1;
+                    len = 0;
+                    end = p.Length - start;
+                    num = 0;
+                }
+
+            }
+
+            return count + num;
+        }
+
+        #endregion
+
+        #region 230. 二叉搜索树中第K小的元素
+        //https://leetcode-cn.com/problems/kth-smallest-element-in-a-bst/
+        public int KthSmallest(TreeNode root, int k)
+        {
+            var stack = new Stack<TreeNode>();
+            while (root != null || stack.Count > 0)
+            {
+                while (root != null)
+                {
+                    stack.Push(root);
+                    root = root.left;
+                }
+                if (stack.Count > 0)
+                {
+                    root = stack.Pop();
+                    k--;
+                    if (k == 0)
+                    {
+                        return root.val;
+                    }
+                    root = root.right;
+                }
+            }
+            return -1;
+        }
+        #endregion
+
+        #region 16. 最接近的三数之和
+        //https://leetcode-cn.com/problems/3sum-closest/
+        public int ThreeSumClosest(int[] nums, int target)
+        {
+            Array.Sort(nums);
+            int result = target, min = int.MaxValue;
+            for (int i = 0; i < nums.Length; i++)
+            {
+                if (i > 0 && nums[i - 1] == nums[i])
+                {
+                    continue;
+                }
+                int start = i + 1, end = nums.Length - 1;
+                while (start < end)
+                {
+                    var sum = nums[i] + nums[start] + nums[end];
+                    if (sum == target)
+                    {
+                        return target;
+                    }
+                    int diff;
+                    if (sum < target)
+                    {
+                        diff = target - sum;
+                        start++;
+                    }
+                    else
+                    {
+                        diff = sum - target;
+                        end--;
+                    }
+                    if (diff < min)
+                    {
+                        min = diff;
+                        result = sum;
+                    }
+                }
+            }
+            return result;
+        }
+        #endregion
+
+        #region 59. 螺旋矩阵 II
+        //https://leetcode-cn.com/problems/spiral-matrix-ii/
+        public int[][] GenerateMatrix(int n)
+        {
+            var result = new int[n][];
+            for (int i = 0; i < n; i++)
+            {
+                result[i] = new int[n];
+            }
+            int size = 0, total = n * n;
+            int x0 = 0, x1 = n - 1, y0 = 0, y1 = n - 1;
+            while (total > size)
+            {
+                for (int i = x0; i <= x1; i++)
+                {
+                    result[y0][i] = ++size;
+                }
+                y0++;
+                for (int i = y0; i <= y1; i++)
+                {
+                    result[i][x1] = ++size;
+                }
+                x1--;
+                for (int i = x1; i >= x0; i--)
+                {
+                    result[y1][i] = ++size;
+                }
+                y1--;
+                for (int i = y1; i >= y0; i--)
+                {
+                    result[i][x0] = ++size;
+                }
+                x0++;
+            }
+            return result;
+        }
+        #endregion
+
+        #region 61. 旋转链表
+        //https://leetcode-cn.com/problems/rotate-list/
+        //获取倒数k+1的节点进行链接
+        public ListNode RotateRight(ListNode head, int k)
+        {
+            if (head == null || k == 0)
+            {
+                return head;
+            }
+            var stack = new Stack<ListNode>();
+            var node = head;
+            while (node != null)
+            {
+                stack.Push(node);
+                node = node.next;
+            }
+            k %= stack.Count;
+            if (k == 0)
+            {
+                return head;
+            }
+            var last = stack.Peek();
+            while (k > 0)
+            {
+                node = stack.Pop();
+                k--;
+            }
+            if (stack.Count > 0)
+            {
+                stack.Peek().next = null;
+            }
+            last.next = head;
+            return node;
+        }
+        #endregion
+
+        #region 89. 格雷编码
+        //https://leetcode-cn.com/problems/gray-code/
+        public IList<int> GrayCode(int n)
+        {
+            var result = new List<int>();
+            result.Add(0);
+            var mask = 1;
+            while (n != 0)
+            {
+                for (int i = result.Count - 1; i >= 0; i--)
+                {
+                    result.Add(mask + result[i]);
+                }
+                mask <<= 1;
+                n--;
+            }
+            return result;
+        }
+        #endregion
+
+        #region 148. 排序链表
+        //https://leetcode-cn.com/problems/sort-list/
+        ListNode FindHalf(ListNode node)
+        {
+            if (node == null || node.next == null)
+            {
+                return node;
+            }
+            ListNode fast = node.next.next, slow = node.next, prev = node;
+            while (fast != null && fast.next != null)
+            {
+                fast = fast.next.next;
+                prev = slow;
+                slow = slow.next;
+            }
+            prev.next = null;
+            return slow;
+        }
+
+        public ListNode SortList(ListNode head)
+        {
+            if (head == null || head.next == null)
+            {
+                return head;
+            }
+            var half = FindHalf(head);
+            var node1 = SortList(head);
+            var node2 = SortList(half);
+            var newNode = new ListNode(-1);
+            var node = newNode;
+            while (node1 != null && node2 != null)
+            {
+                if (node1.val <= node2.val)
+                {
+                    node.next = node1;
+                    node1 = node1.next;
+                }
+                else
+                {
+                    node.next = node2;
+                    node2 = node2.next;
+                }
+                node = node.next;
+            }
+            if (node1 != null)
+            {
+                node.next = node1;
+            }
+            if (node2 != null)
+            {
+                node.next = node2;
+            }
+            return newNode.next;
+        }
+        #endregion
     }
 }
