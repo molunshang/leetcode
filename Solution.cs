@@ -1500,4 +1500,27 @@ public class Solution
     {
         QuickSort(nums, 0, nums.Length - 1);
     }
+
+    public int LengthOfLongestSubstring(string s)
+    {
+        var result = 0;
+        var set = new HashSet<char>();
+        for (int i = 0, j = 0; i < s.Length; i++)
+        {
+            if (set.Add(s[i]))
+            {
+                continue;
+            }
+
+            result = Math.Max(result, set.Count);
+            while (set.Contains(s[i]))
+            {
+                set.Remove(s[j++]);
+            }
+
+            set.Add(s[i]);
+        }
+
+        return Math.Max(result, set.Count);
+    }
 }
