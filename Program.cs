@@ -9081,5 +9081,156 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 58. 最后一个单词的长度
+        //https://leetcode-cn.com/problems/length-of-last-word/
+        public int LengthOfLastWord(string s)
+        {
+            s = s.Trim();
+            for (int i = s.Length - 1; i >= 0; i--)
+            {
+                if (s[i] == ' ')
+                {
+                    return s.Length - i - 1;
+                }
+            }
+            return s.Length;
+        }
+        #endregion
+
+        #region 67. 二进制求和
+        //https://leetcode-cn.com/problems/add-binary/
+        public string AddBinary(string a, string b)
+        {
+            int s1 = a.Length - 1, s2 = b.Length - 1;
+            var chars = new char[Math.Max(a.Length, b.Length) + 1];
+            int pre = 0, index = chars.Length - 1;
+            while (s1 >= 0 || s2 >= 0)
+            {
+                int sum;
+                if (s1 >= 0 && s2 >= 0)
+                {
+                    int c1 = a[s1--] - '0', c2 = b[s2--] - '0';
+                    sum = c1 + c2 + pre;
+                }
+                else if (s1 >= 0)
+                {
+                    sum = (a[s1--] - '0') + pre;
+                }
+                else
+                {
+                    sum = (b[s2--] - '0') + pre;
+                }
+
+                if (sum < 2)
+                {
+                    pre = 0;
+                }
+                else
+                {
+                    pre = 1;
+                    sum -= 2;
+                }
+                chars[index--] = sum == 0 ? '0' : '1';
+            }
+            if (pre > 0)
+            {
+                chars[index--] = '1';
+                return new string(chars);
+            }
+            return new string(chars, 1, chars.Length - 1);
+        }
+        #endregion
+
+        #region 100. 相同的树
+        //https://leetcode-cn.com/problems/same-tree/
+        public bool IsSameTree(TreeNode p, TreeNode q)
+        {
+            if (p == null)
+            {
+                return q == null;
+            }
+            if (q == null || p.val != q.val)
+            {
+                return false;
+            }
+            return IsSameTree(p.left, q.left) && IsSameTree(p.right, q.right);
+        }
+        #endregion
+
+        #region 107. 二叉树的层次遍历 II
+        //https://leetcode-cn.com/problems/binary-tree-level-order-traversal-ii/
+        public IList<IList<int>> LevelOrderBottom(TreeNode root)
+        {
+            if (root == null)
+            {
+                return new IList<int>[0];
+            }
+            var queue = new Queue<TreeNode>();
+            var result = new List<IList<int>>();
+            queue.Enqueue(root);
+            int size = queue.Count;
+            var items = new List<int>();
+            while (queue.Count > 0)
+            {
+                while (size > 0)
+                {
+                    size--;
+                    root = queue.Dequeue();
+                    items.Add(root.val);
+                    if (root.left != null)
+                    {
+                        queue.Enqueue(root.left);
+                    }
+                    if (root.right != null)
+                    {
+                        queue.Enqueue(root.right);
+                    }
+                }
+                size = queue.Count;
+                if (result.Count <= 0)
+                {
+                    result.Add(items.ToArray());
+                }
+                else
+                {
+                    result.Insert(0, items.ToArray());
+                }
+                items.Clear();
+            }
+            return result;
+        }
+        #endregion
+
+        #region 1014. 最佳观光组合
+        //https://leetcode-cn.com/problems/best-sightseeing-pair/
+        //暴力法
+        public int MaxScoreSightseeingPair(int[] A)
+        {
+            var max = 0;
+            for (int i = 0; i < A.Length - 1; i++)
+            {
+                for (int j = i + 1; j < A.Length; j++)
+                {
+                    max = Math.Max(A[j] + A[i] + i - j, max);
+                }
+            }
+            return max;
+        }
+
+        public int MaxScoreSightseeingPairFast(int[] A)
+        {
+            //1.求出i+1之前的max(A[i]+i);
+            //2.计算max(ans,max(A[i]+i)+A[i+1]-i-1)
+            int preMax = 0, ans = 0;
+            for (int i = 0; i < A.Length - 1; i++)
+            {
+                preMax = Math.Max(preMax, A[i] + i);
+                ans = Math.Max(ans, preMax + A[i + 1] - i - 1);
+            }
+            return ans;
+        }
+
+        #endregion
     }
 }
