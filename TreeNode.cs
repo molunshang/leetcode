@@ -1,10 +1,13 @@
-public class TreeNode
+namespace leetcode
 {
-    public int val;
-    public TreeNode left;
-    public TreeNode right;
-    public TreeNode(int val)
+    public class TreeNode
     {
-        this.val = val;
+        public int val;
+        public TreeNode left;
+        public TreeNode right;
+        public TreeNode(int val)
+        {
+            this.val = val;
+        }
     }
 }

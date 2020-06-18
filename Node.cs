@@ -1,15 +1,18 @@
-public class Node
+namespace leetcode
 {
-    public int val;
-    public Node next;
-    public Node random;
-    public Node left;
-    public Node right;
-
-    public Node(int _val)
+    public class Node
     {
-        val = _val;
-        next = null;
-        random = null;
+        public int val;
+        public Node next;
+        public Node random;
+        public Node left;
+        public Node right;
+
+        public Node(int _val)
+        {
+            val = _val;
+            next = null;
+            random = null;
+        }
     }
 }

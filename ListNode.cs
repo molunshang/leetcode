@@ -1,10 +1,13 @@
-public class ListNode
+namespace leetcode
 {
-    public int val;
-    public ListNode next;
-
-    public ListNode(int x)
+    public class ListNode
     {
-        val = x;
+        public int val;
+        public ListNode next;
+
+        public ListNode(int x)
+        {
+            val = x;
+        }
     }
 }
