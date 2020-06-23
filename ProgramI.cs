@@ -53,5 +53,50 @@ namespace leetcode
             return 0;
         }
         #endregion
+
+        #region 42. 接雨水
+        //https://leetcode-cn.com/problems/trapping-rain-water/
+        public int Trap(int[] height)
+        {
+            //暴力解
+            var res = 0;
+            for (int i = 1; i < height.Length - 1; i++)
+            {
+                var h = height[i];
+                int left = h, right = h;
+                for (int l = i - 1; l >= 0; l--)
+                {
+                    left = Math.Max(left, height[l]);
+                }
+                for (int r = i + 1; r < height.Length; r++)
+                {
+                    right = Math.Max(right, height[r]);
+                }
+                res += Math.Min(left, right) - h;
+            }
+            return res;
+        }
+
+        public int TrapI(int[] height)
+        {
+            //todo 待完成
+            int res = 0, sum = 0;
+            for (int i = 1, j = 0; i < height.Length; i++)
+            {
+                if (height[j] < height[i])
+                {
+                    res += height[j] * (i - j + 1);
+                    res -= sum;
+                    sum = 0;
+                    j = i;
+                }
+                else
+                {
+                    sum += height[i];
+                }
+            }
+            return res - sum;
+        }
+        #endregion
     }
 }
