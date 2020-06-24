@@ -8,7 +8,7 @@ namespace leetcode
 {
     static class Arrays
     {
-        public static void PrintArray<T>(this T[] array)
+        public static void PrintArray<T>(this IEnumerable<T> array)
         {
             Console.WriteLine(string.Join(",", array));
         }
@@ -21,7 +21,8 @@ namespace leetcode
 
         static void Main(string[] args)
         {
-
+            program.FindTargetSumWays(new[] {1, 1, 1, 1, 1}, 3);
+            program.LengthOfLIS(new[] {10, 9, 2, 5, 3, 4});
             program.LongestValidParentheses("(()()");
             program.FindBestValue(new[] { 4, 9, 3 }, 10);
             var node = new ListNode(1);
@@ -29,7 +30,7 @@ namespace leetcode
             node.next.next = new ListNode(3);
             node.next.next.next = new ListNode(4);
             node.next.next.next.next = new ListNode(5);
-            program.ReverseKGroup(node, 2);
+            program.ReverseBetween(node, 2,4);
 
             program.LongestCommonSubsequence("hofubmnylkra", "pqhgxgdofcvmr");
             program.Rotate(new[]
@@ -484,8 +485,9 @@ namespace leetcode
 
         #endregion
 
+        #region 1122. 数组的相对排序
         //https://leetcode-cn.com/problems/relative-sort-array/
-        //1122. 数组的相对排序
+        //
         public static int[] RelativeSortArray(int[] arr1, int[] arr2)
         {
             var tmp = new int[1001];
@@ -515,9 +517,11 @@ namespace leetcode
 
             return arr1;
         }
+        #endregion
 
+        #region 922. 按奇偶排序数组 II
         //https://leetcode-cn.com/problems/sort-array-by-parity-ii/
-        //922. 按奇偶排序数组 II
+        //
         public static int[] SortArrayByParityII(int[] num)
         {
             var newArray = new int[num.Length];
@@ -537,15 +541,18 @@ namespace leetcode
 
             return newArray;
         }
+        #endregion
 
+        #region 349. 两个数组的交集
         //https://leetcode-cn.com/problems/intersection-of-two-arrays/
-        //349. 两个数组的交集
+        //
         public static int[] Intersection(int[] nums1, int[] nums2)
         {
             HashSet<int> set1 = new HashSet<int>(nums1), set2 = new HashSet<int>(nums2);
             set1.IntersectWith(set2);
             return set1.ToArray();
         }
+        #endregion
 
         #region 1403. 非递增顺序的最小子序列
 

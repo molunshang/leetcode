@@ -299,6 +299,7 @@ namespace leetcode
         #endregion
 
         #region 42. 接雨水
+
         //https://leetcode-cn.com/problems/trapping-rain-water/
         public int Trap(int[] height)
         {
@@ -312,35 +313,381 @@ namespace leetcode
                 {
                     left = Math.Max(left, height[l]);
                 }
+
                 for (int r = i + 1; r < height.Length; r++)
                 {
                     right = Math.Max(right, height[r]);
                 }
+
                 res += Math.Min(left, right) - h;
             }
+
             return res;
         }
 
         public int TrapI(int[] height)
         {
-            //todo 待完成
-            int res = 0, sum = 0;
-            for (int i = 1, j = 0; i < height.Length; i++)
+            if (height.Length <= 2)
             {
-                if (height[j] < height[i])
+                return 0;
+            }
+
+            var res = 0;
+            int[] leftMax = new int[height.Length], rightMax = new int[height.Length];
+            leftMax[0] = height[0];
+            rightMax[rightMax.Length - 1] = height[height.Length - 1];
+            for (int i = 1; i < height.Length; i++)
+            {
+                leftMax[i] = Math.Max(leftMax[i - 1], height[i]);
+            }
+
+            for (int i = height.Length - 2; i >= 0; i--)
+            {
+                rightMax[i] = Math.Max(rightMax[i + 1], height[i]);
+            }
+
+            for (int i = 1; i < height.Length - 1; i++)
+            {
+                res += Math.Min(leftMax[i], rightMax[i]) - height[i];
+            }
+
+            return res;
+        }
+
+        #endregion
+
+        #region 1464. 数组中两元素的最大乘积
+
+        //https://leetcode-cn.com/problems/maximum-product-of-two-elements-in-an-array/
+        public int MaxProductI(int[] nums)
+        {
+            Array.Sort(nums);
+            return (nums[nums.Length - 1] - 1) * (nums[nums.Length - 2] - 1);
+        }
+
+        #endregion
+
+        #region 1480. 一维数组的动态和
+
+        //https://leetcode-cn.com/problems/running-sum-of-1d-array/
+        public int[] RunningSum(int[] nums)
+        {
+            if (nums.Length <= 1)
+            {
+                return nums;
+            }
+
+            var res = new int[nums.Length];
+            res[0] = nums[0];
+            for (int i = 1; i < nums.Length; i++)
+            {
+                res[i] = res[i - 1] + nums[i];
+            }
+
+            return res;
+        }
+
+        #endregion
+
+        #region 300. 最长上升子序列
+
+        //https://leetcode-cn.com/problems/longest-increasing-subsequence/
+        public int LengthOfLIS(int[] nums)
+        {
+            if (nums.Length <= 0)
+            {
+                return 0;
+            }
+
+            //求出数组【0-i】之间小于的数
+            //当有数大于num[i]时，此时dp[j]=dp[i]+1
+            var dp = new int[nums.Length];
+            dp[0] = 1;
+            var res = 0;
+            for (int i = 1; i < nums.Length; i++)
+            {
+                var max = 0;
+                for (int j = 0; j < i; j++)
                 {
-                    res += height[j] * (i - j + 1);
-                    res -= sum;
-                    sum = 0;
-                    j = i;
+                    if (nums[i] > nums[j])
+                    {
+                        max = Math.Max(max, dp[j]);
+                    }
                 }
-                else
+
+                dp[i] = max + 1;
+                res = Math.Max(dp[i], res);
+            }
+
+            return res;
+        }
+
+        #endregion
+
+        #region 60. 第k个排列
+
+        //https://leetcode-cn.com/problems/permutation-sequence/
+
+        public string GetPermutation(int n, int k)
+        {
+            var nums = new int[n];
+            for (int i = 0; i < nums.Length; i++)
+            {
+                nums[i] = i + 1;
+            }
+
+            for (int i = 1; i < k; i++)
+            {
+                NextPermutation(nums);
+            }
+
+            return string.Join(string.Empty, nums);
+        }
+
+        #endregion
+
+        #region 207. 课程表
+
+        //https://leetcode-cn.com/problems/course-schedule/
+        public bool CanFinish(int numCourses, int[][] prerequisites)
+        {
+            if (prerequisites.Length <= 0)
+            {
+                return true;
+            }
+
+            var depend = new Dictionary<int, ISet<int>>();
+            foreach (var num in prerequisites)
+            {
+                if (!depend.TryGetValue(num[0], out var set))
                 {
-                    sum += height[i];
+                    set = new HashSet<int>();
+                    depend[num[0]] = set;
+                }
+
+                set.Add(num[1]);
+            }
+
+            var visited = new HashSet<int>();
+            var queue = new Queue<Tuple<int, ISet<int>>>();
+            foreach (var kv in depend)
+            {
+                var key = kv.Key;
+                if (visited.Contains(key))
+                {
+                    continue;
+                }
+
+                queue.Enqueue(new Tuple<int, ISet<int>>(key, new HashSet<int>()));
+                while (queue.Count > 0)
+                {
+                    var item = queue.Dequeue();
+                    key = item.Item1;
+                    var path = item.Item2;
+                    if (!path.Add(key))
+                    {
+                        return false;
+                    }
+
+                    if (depend.TryGetValue(key, out var next))
+                    {
+                        foreach (var k in next)
+                        {
+                            if (visited.Contains(key))
+                            {
+                                continue;
+                            }
+
+                            queue.Enqueue(new Tuple<int, ISet<int>>(k, new HashSet<int>(path)));
+                        }
+                    }
+                    else
+                    {
+                        foreach (var k in path)
+                        {
+                            visited.Add(k);
+                        }
+                    }
                 }
             }
-            return res - sum;
+
+            return visited.Count <= numCourses;
         }
+
+        public bool CanFinishDfs(int numCourses, int[][] prerequisites)
+        {
+            bool Dfs(Dictionary<int, ISet<int>> dict, int key, ISet<int> paths)
+            {
+                if (!paths.Add(key))
+                {
+                    return false;
+                }
+
+                if (dict.TryGetValue(key, out var next))
+                {
+                    if (next.Any(k => !Dfs(dict, k, paths)))
+                    {
+                        return false;
+                    }
+                }
+
+                paths.Remove(key);
+                return true;
+            }
+
+            if (prerequisites.Length <= 0)
+            {
+                return true;
+            }
+
+            var depend = new Dictionary<int, ISet<int>>();
+            foreach (var num in prerequisites)
+            {
+                if (!depend.TryGetValue(num[0], out var set))
+                {
+                    set = new HashSet<int>();
+                    depend[num[0]] = set;
+                }
+
+                set.Add(num[1]);
+            }
+
+            var path = new HashSet<int>();
+            return depend.All(kv => Dfs(depend, kv.Key, path));
+        }
+
+        #endregion
+
+        #region 494. 目标和
+
+        //https://leetcode-cn.com/problems/target-sum/
+        void FindTargetSumWays(int index, int[] nums, int s, int sum, ref int res)
+        {
+            if (index >= nums.Length)
+            {
+                if (s == sum)
+                {
+                    res++;
+                }
+
+                return;
+            }
+
+            FindTargetSumWays(index + 1, nums, s, sum + nums[index], ref res);
+            FindTargetSumWays(index + 1, nums, s, sum - nums[index], ref res);
+        }
+
+        public int FindTargetSumWays(int[] nums, int s)
+        {
+            var res = 0;
+            FindTargetSumWays(0, nums, s, 0, ref res);
+            return res;
+        }
+
+        #endregion
+
+        #region 92. 反转链表 II
+
+        //https://leetcode-cn.com/problems/reverse-linked-list-ii/
+        public ListNode ReverseBetween(ListNode head, int m, int n)
+        {
+            ListNode Reverse(ListNode listNode)
+            {
+                ListNode prevNode = null;
+                while (listNode != null)
+                {
+                    var next = listNode.next;
+                    listNode.next = prevNode;
+                    prevNode = listNode;
+                    listNode = next;
+                }
+
+                return prevNode;
+            }
+
+            if (head == null)
+            {
+                return null;
+            }
+
+            ListNode prev = null, node = head;
+            while (m > 1)
+            {
+                prev = node;
+                node = node.next;
+                m--;
+                n--;
+            }
+
+            while (n > 1)
+            {
+                node = node.next;
+                n--;
+            }
+
+            ListNode newNode, nextHead = node.next;
+            node.next = null;
+            if (prev == null)
+            {
+                newNode = Reverse(head);
+                head.next = nextHead;
+                return newNode;
+            }
+
+            var tail = prev.next;
+            newNode = Reverse(tail);
+            prev.next = newNode;
+            tail.next = nextHead;
+            return head;
+        }
+
+        #endregion
+
+        #region 24. 两两交换链表中的节点
+
+        //https://leetcode-cn.com/problems/swap-nodes-in-pairs/
+        //1.递归版
+        public ListNode SwapPairs(ListNode head)
+        {
+            if (head == null || head.next == null)
+            {
+                return head;
+            }
+
+            ListNode first = head, second = head.next;
+            first.next = SwapPairs(second.next);
+            second.next = first;
+            return second;
+        }
+
+        //2.迭代版
+        public ListNode SwapPairsI(ListNode head)
+        {
+            if (head == null || head.next == null)
+            {
+                return head;
+            }
+
+            ListNode swapNode = head.next, prev = head;
+            head = swapNode;
+            while (true)
+            {
+                var next = swapNode.next;
+                swapNode.next = prev;
+                if (next == null || next.next == null)
+                {
+                    prev.next = next;
+                    break;
+                }
+
+                swapNode = next.next;
+                prev.next = swapNode;
+                prev = next;
+            }
+
+            return head;
+        }
+
         #endregion
     }
 }
