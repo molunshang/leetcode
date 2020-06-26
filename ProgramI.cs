@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization.Json;
 using System.Text;
 
 namespace leetcode
@@ -688,6 +689,69 @@ namespace leetcode
             return head;
         }
 
+        #endregion
+
+        #region 37. 解数独
+        //https://leetcode-cn.com/problems/sudoku-solver/
+        public void SolveSudoku(char[][] board)
+        {
+            bool[,] rows = new bool[9, 9], cols = new bool[9, 9];
+            var martix = new bool[3, 3][];
+            bool Set(int i, int j, int index)
+            {
+                if (index >= 81)
+                {
+                    return true;
+                }
+                if (j >= 9)
+                {
+                    j = 0;
+                    i++;
+                }
+                var row = board[i];
+                if (row[j] == '.')
+                {
+                    int rIndex = i / 3, cIndex = j / 3;
+                    for (int num = 0; num < 9; num++)
+                    {
+                        if (rows[i, num] || cols[j, num] || martix[rIndex, cIndex][num])
+                        {
+                            continue;
+                        }
+                        row[j] = (char)('1' + num);
+                        rows[i, num] = cols[j, num] = martix[rIndex, cIndex][num] = true;
+                        if (Set(i, j + 1, index + 1))
+                        {
+                            return true;
+                        }
+                        rows[i, num] = cols[j, num] = martix[rIndex, cIndex][num] = false;
+                        row[j] = '.';
+                    }
+                    return false;
+                }
+                return Set(i, j + 1, index + 1);
+            }
+
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    var row = board[i];
+                    int rIndex = i / 3, cIndex = j / 3;
+                    if (martix[rIndex, cIndex] == null)
+                    {
+                        martix[rIndex, cIndex] = new bool[9];
+                    }
+                    if (row[j] == '.')
+                    {
+                        continue;
+                    }
+                    var n = row[j] - '1';
+                    rows[i, n] = cols[j, n] = martix[rIndex, cIndex][n] = true;
+                }
+            }
+            Set(0, 0, 0);
+        }
         #endregion
     }
 }
