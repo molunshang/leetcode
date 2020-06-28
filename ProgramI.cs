@@ -723,7 +723,7 @@ namespace leetcode
                             continue;
                         }
 
-                        row[j] = (char) ('1' + num);
+                        row[j] = (char)('1' + num);
                         rows[i, num] = cols[j, num] = martix[rIndex, cIndex][num] = true;
                         if (Set(i, j + 1, index + 1))
                         {
@@ -799,7 +799,7 @@ namespace leetcode
             {
                 if (start > end)
                 {
-                    return new TreeNode[] {null};
+                    return new TreeNode[] { null };
                 }
 
                 var items = new List<TreeNode>();
@@ -891,6 +891,72 @@ namespace leetcode
 
             return res;
         }
+        #endregion
+
+        #region 44. 通配符匹配
+        //https://leetcode-cn.com/problems/wildcard-matching/
+        public bool IsMatchI(string s, string p)
+        {
+            if (string.IsNullOrEmpty(p))
+            {
+                return string.IsNullOrEmpty(s);
+            }
+            bool?[,] flags = new bool?[s.Length, p.Length];
+            bool Match(int si, int pi)
+            {
+                if (si >= s.Length)
+                {
+                    while (pi < p.Length)
+                    {
+                        if (p[pi] != '*')
+                        {
+                            return false;
+                        }
+                        pi++;
+                    }
+                    return true;
+                }
+                if (pi >= p.Length)
+                {
+                    return false;
+                }
+                if (flags[si, pi].HasValue)
+                {
+                    return flags[si, pi].Value;
+                }
+                if (s[si] == p[pi] || p[pi] == '?')
+                {
+                    flags[si, pi] = Match(si + 1, pi + 1);
+                    return flags[si, pi].Value;
+                }
+                if (p[pi] == '*')
+                {
+                    //01234
+                    for (int l = si; l <= s.Length; l++)
+                    {
+                        if (Match(l, pi + 1))
+                        {
+                            flags[si, pi] = true;
+                            return true;
+                        }
+                    }
+                }
+                flags[si, pi] = false;
+                return false;
+            }
+
+            return Match(0, 0);
+        }
+        #endregion
+
+        #region 72. 编辑距离
+
+        //https://leetcode-cn.com/problems/edit-distance/
+        public int MinDistance(string word1, string word2)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

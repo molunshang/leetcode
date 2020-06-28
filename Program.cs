@@ -29,7 +29,7 @@ namespace leetcode
 
         static void Main(string[] args)
         {
-            program.GenerateTrees(4);
+            program.IsMatchI("aaabbbaabaaaaababaabaaabbabbbbbbbbaabababbabbbaaaaba", "a*******b");
             var chars = JsonConvert.DeserializeObject<char[][]>("[['1','1','1','1','0'],['1','1','0','1','0'],['1','1','0','0','0'],['0','0','0','0','0']]");
             program.NumIslands(chars);
             program.FindTargetSumWays(new[] { 1, 1, 1, 1, 1 }, 3);
@@ -7456,7 +7456,24 @@ namespace leetcode
         #endregion
 
         #region 231. 2的幂
+        public bool IsPowerOfTwoI(int n)
+        {
+            if (n <= 0)
+            {
+                return false;
+            }
+            while (n != 1)
+            {
+                if (n % 2 != 0)
+                {
+                    return false;
+                }
 
+                n >>= 1;
+            }
+
+            return true;
+        }
         public bool IsPowerOfTwo(int n)
         {
             if (n <= 0)
@@ -7471,18 +7488,6 @@ namespace leetcode
             //00100 -1 011
             //01000 -1 111
             return (n & (n - 1)) == 0;
-
-            while (n != 1)
-            {
-                if (n % 2 != 0)
-                {
-                    return false;
-                }
-
-                n >>= 1;
-            }
-
-            return true;
         }
 
         #endregion
