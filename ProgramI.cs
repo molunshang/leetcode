@@ -692,22 +692,26 @@ namespace leetcode
         #endregion
 
         #region 37. 解数独
+
         //https://leetcode-cn.com/problems/sudoku-solver/
         public void SolveSudoku(char[][] board)
         {
             bool[,] rows = new bool[9, 9], cols = new bool[9, 9];
             var martix = new bool[3, 3][];
+
             bool Set(int i, int j, int index)
             {
                 if (index >= 81)
                 {
                     return true;
                 }
+
                 if (j >= 9)
                 {
                     j = 0;
                     i++;
                 }
+
                 var row = board[i];
                 if (row[j] == '.')
                 {
@@ -718,17 +722,21 @@ namespace leetcode
                         {
                             continue;
                         }
-                        row[j] = (char)('1' + num);
+
+                        row[j] = (char) ('1' + num);
                         rows[i, num] = cols[j, num] = martix[rIndex, cIndex][num] = true;
                         if (Set(i, j + 1, index + 1))
                         {
                             return true;
                         }
+
                         rows[i, num] = cols[j, num] = martix[rIndex, cIndex][num] = false;
                         row[j] = '.';
                     }
+
                     return false;
                 }
+
                 return Set(i, j + 1, index + 1);
             }
 
@@ -742,15 +750,146 @@ namespace leetcode
                     {
                         martix[rIndex, cIndex] = new bool[9];
                     }
+
                     if (row[j] == '.')
                     {
                         continue;
                     }
+
                     var n = row[j] - '1';
                     rows[i, n] = cols[j, n] = martix[rIndex, cIndex][n] = true;
                 }
             }
+
             Set(0, 0, 0);
+        }
+
+        #endregion
+
+        #region 209. 长度最小的子数组
+
+        //https://leetcode-cn.com/problems/minimum-size-subarray-sum/
+        public int MinSubArrayLen(int s, int[] nums)
+        {
+            int len = nums.Length, sum = 0;
+            var found = false;
+            for (int i = 0, j = 0; i < nums.Length; i++)
+            {
+                sum += nums[i];
+                while (sum >= s && j <= i)
+                {
+                    found = true;
+                    len = Math.Min(len, i - j + 1);
+                    sum -= nums[j];
+                    j++;
+                }
+            }
+
+            return found ? len : 0;
+        }
+
+        #endregion
+
+        #region 95. 不同的二叉搜索树 II
+
+        //https://leetcode-cn.com/problems/unique-binary-search-trees-ii/
+        public IList<TreeNode> GenerateTrees(int n)
+        {
+            IList<TreeNode> Generate(int start, int end)
+            {
+                if (start > end)
+                {
+                    return new TreeNode[] {null};
+                }
+
+                var items = new List<TreeNode>();
+                for (int i = start; i <= end; i++)
+                {
+                    var lefts = Generate(start, i - 1);
+                    var rights = Generate(i + 1, end);
+                    for (int l = 0; l < lefts.Count; l++)
+                    {
+                        for (int r = 0; r < rights.Count; r++)
+                        {
+                            var node = new TreeNode(i);
+                            items.Add(node);
+                            node.left = lefts[l];
+                            node.right = rights[r];
+                        }
+                    }
+                }
+
+                return items;
+            }
+
+            return Generate(1, n);
+        }
+
+        #endregion
+
+        #region 1470. 重新排列数组
+        //https://leetcode-cn.com/problems/shuffle-the-array/
+        public int[] Shuffle(int[] nums, int n)
+        {
+            var res = new int[nums.Length];
+            int i1 = 0, i2 = n;
+            for (int i = 0; i < res.Length; i += 2)
+            {
+                res[i] = nums[i1++];
+            }
+
+            for (int i = 1; i < res.Length; i += 2)
+            {
+                res[i] = nums[i2++];
+            }
+
+            return res;
+        }
+        #endregion
+
+        #region 200. 岛屿数量
+
+        //https://leetcode-cn.com/problems/number-of-islands/
+        public int NumIslands(char[][] grid)
+        {
+            if (grid.Length <= 0)
+            {
+                return 0;
+            }
+
+            var flags = new bool[grid.Length, grid[0].Length];
+            var res = 0;
+
+            void CheckLand(int x, int y)
+            {
+                if (x < 0 || x >= grid.Length || y < 0 || y >= grid[0].Length || flags[x, y] || grid[x][y] != '1')
+                {
+                    return;
+                }
+
+
+                flags[x, y] = true;
+                CheckLand(x + 1, y);
+                CheckLand(x - 1, y);
+                CheckLand(x, y - 1);
+                CheckLand(x, y + 1);
+            }
+
+            for (int i = 0; i < grid.Length; i++)
+            {
+                for (int j = 0; j < grid[i].Length; j++)
+                {
+                    if (flags[i, j] || grid[i][j] != '1')
+                    {
+                        continue;
+                    }
+
+                    CheckLand(i, j);
+                    res++;
+                }
+            }
+
+            return res;
         }
         #endregion
     }
