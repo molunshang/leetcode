@@ -723,7 +723,7 @@ namespace leetcode
                             continue;
                         }
 
-                        row[j] = (char)('1' + num);
+                        row[j] = (char) ('1' + num);
                         rows[i, num] = cols[j, num] = martix[rIndex, cIndex][num] = true;
                         if (Set(i, j + 1, index + 1))
                         {
@@ -799,7 +799,7 @@ namespace leetcode
             {
                 if (start > end)
                 {
-                    return new TreeNode[] { null };
+                    return new TreeNode[] {null};
                 }
 
                 var items = new List<TreeNode>();
@@ -828,6 +828,7 @@ namespace leetcode
         #endregion
 
         #region 1470. 重新排列数组
+
         //https://leetcode-cn.com/problems/shuffle-the-array/
         public int[] Shuffle(int[] nums, int n)
         {
@@ -845,6 +846,7 @@ namespace leetcode
 
             return res;
         }
+
         #endregion
 
         #region 200. 岛屿数量
@@ -891,9 +893,11 @@ namespace leetcode
 
             return res;
         }
+
         #endregion
 
         #region 44. 通配符匹配
+
         //https://leetcode-cn.com/problems/wildcard-matching/
         public bool IsMatchI(string s, string p)
         {
@@ -901,7 +905,9 @@ namespace leetcode
             {
                 return string.IsNullOrEmpty(s);
             }
+
             bool?[,] flags = new bool?[s.Length, p.Length];
+
             bool Match(int si, int pi)
             {
                 if (si >= s.Length)
@@ -912,23 +918,29 @@ namespace leetcode
                         {
                             return false;
                         }
+
                         pi++;
                     }
+
                     return true;
                 }
+
                 if (pi >= p.Length)
                 {
                     return false;
                 }
+
                 if (flags[si, pi].HasValue)
                 {
                     return flags[si, pi].Value;
                 }
+
                 if (s[si] == p[pi] || p[pi] == '?')
                 {
                     flags[si, pi] = Match(si + 1, pi + 1);
                     return flags[si, pi].Value;
                 }
+
                 if (p[pi] == '*')
                 {
                     //01234
@@ -941,12 +953,182 @@ namespace leetcode
                         }
                     }
                 }
+
                 flags[si, pi] = false;
                 return false;
             }
 
             return Match(0, 0);
         }
+
+        #endregion
+
+        #region 63. 不同路径 II
+
+        //https://leetcode-cn.com/problems/unique-paths-ii/
+        public int UniquePathsWithObstacles(int[][] obstacleGrid)
+        {
+            if (obstacleGrid == null || obstacleGrid.Length <= 0)
+            {
+                return 0;
+            }
+
+            int m = obstacleGrid.Length, n = obstacleGrid[0].Length;
+            var dp = new int[m, n];
+            dp[0, 0] = obstacleGrid[0][0] == 1 ? 0 : 1;
+            for (int i = 1; i < m; i++)
+            {
+                dp[i, 0] = obstacleGrid[i][0] == 1 || dp[i - 1, 0] == 0 ? 0 : 1;
+            }
+
+            for (int i = 1; i < n; i++)
+            {
+                dp[0, i] = obstacleGrid[0][i] == 1 || dp[0, i - 1] == 0 ? 0 : 1;
+            }
+
+            for (int i = 1; i < m; i++)
+            {
+                for (int j = 1; j < n; j++)
+                {
+                    if (obstacleGrid[i][j] == 1)
+                    {
+                        continue;
+                    }
+
+                    dp[i, j] = dp[i - 1, j] + dp[i, j - 1];
+                }
+            }
+
+            return dp[m - 1, n - 1];
+        }
+
+        #endregion
+
+        #region 90. 子集 II
+
+        //https://leetcode-cn.com/problems/subsets-ii/
+        void SubsetsWithDup(int index, int[] nums, IList<IList<int>> result, IList<int> subSet)
+        {
+            result.Add(subSet.ToArray());
+            if (index >= nums.Length)
+            {
+                return;
+            }
+
+            for (int i = index; i < nums.Length; i++)
+            {
+                if (i > index && nums[i] == nums[i - 1])
+                {
+                    continue;
+                }
+
+                subSet.Add(nums[i]);
+                SubsetsWithDup(i + 1, nums, result, subSet);
+                subSet.RemoveAt(subSet.Count - 1);
+            }
+        }
+
+        public IList<IList<int>> SubsetsWithDup(int[] nums)
+        {
+            if (nums == null || nums.Length <= 0)
+            {
+                return new IList<int>[0];
+            }
+
+            var result = new List<IList<int>>();
+            Array.Sort(nums);
+            SubsetsWithDup(0, nums, result, new List<int>());
+            return result;
+        }
+
+        #endregion
+
+        #region 71. 简化路径
+
+        //https://leetcode-cn.com/problems/simplify-path/
+        public string SimplifyPath(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                return path;
+            }
+
+            var stack = new Stack<string>();
+            string part;
+            for (int i = 0, j = 0; i < path.Length; i++)
+            {
+                if (path[i] == '/')
+                {
+                    if (i == j)
+                    {
+                        j = i + 1;
+                        continue;
+                    }
+
+                    part = path.Substring(j, i - j);
+                    j = i + 1;
+                }
+                else if (i == path.Length - 1)
+                {
+                    part = path.Substring(j, i - j + 1);
+                }
+                else
+                {
+                    continue;
+                }
+
+                if (part == "..")
+                {
+                    stack.TryPop(out _);
+                }
+                else if (part != ".")
+                {
+                    stack.Push(part);
+                }
+            }
+
+            var res = new StringBuilder();
+            while (stack.TryPop(out var p))
+            {
+                res.Insert(0, p);
+                res.Insert(0, '/');
+            }
+
+            return res.Length > 0 ? res.ToString() : "/";
+        }
+
+        #endregion
+
+        #region 77. 组合
+
+        //https://leetcode-cn.com/problems/combinations/
+        void Combine(int index, int n, int k, IList<IList<int>> result, IList<int> combine)
+        {
+            if (index >= n || combine.Count == k)
+            {
+                if (combine.Count == k)
+                {
+                    result.Add(combine.ToArray());
+                }
+
+                return;
+            }
+
+            for (int i = index; i <= n; i++)
+            {
+                combine.Add(i);
+                Combine(i + 1, n, k, result, combine);
+                combine.RemoveAt(combine.Count - 1);
+            }
+        }
+
+        public IList<IList<int>> Combine(int n, int k)
+        {
+            var result = new List<IList<int>>();
+            Combine(1, n, k, result, new List<int>());
+            return result;
+        }
+
         #endregion
 
         #region 72. 编辑距离
