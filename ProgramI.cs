@@ -723,7 +723,7 @@ namespace leetcode
                             continue;
                         }
 
-                        row[j] = (char) ('1' + num);
+                        row[j] = (char)('1' + num);
                         rows[i, num] = cols[j, num] = martix[rIndex, cIndex][num] = true;
                         if (Set(i, j + 1, index + 1))
                         {
@@ -799,7 +799,7 @@ namespace leetcode
             {
                 if (start > end)
                 {
-                    return new TreeNode[] {null};
+                    return new TreeNode[] { null };
                 }
 
                 var items = new List<TreeNode>();
@@ -1133,10 +1133,54 @@ namespace leetcode
 
         #region 72. 编辑距离
 
+        //todo 性能
         //https://leetcode-cn.com/problems/edit-distance/
+        void MinDistance(int i1, int i2, string word1, string word2, int step, ref int res)
+        {
+            if (i1 >= word1.Length && i2 >= word2.Length)
+            {
+                res = Math.Min(res, step);
+                return;
+            }
+            if (step >= res)
+            {
+                return;
+            }
+            if (i1 >= word1.Length)
+            {
+                MinDistance(i1, i2 + 1, word1, word2, step + 1, ref res);
+                return;
+            }
+            if (i2 >= word2.Length)
+            {
+                //删除一个字符
+                MinDistance(i1 + 1, i2, word1, word2, step + 1, ref res);
+                return;
+            }
+            if (word1[i1] == word2[i2])
+            {
+                MinDistance(i1 + 1, i2 + 1, word1, word2, step, ref res);
+            }
+            else
+            {
+                //插入一个字符
+                MinDistance(i1, i2 + 1, word1, word2, step + 1, ref res);
+                //删除一个字符
+                MinDistance(i1 + 1, i2, word1, word2, step + 1, ref res);
+                //替换一个字符
+                MinDistance(i1 + 1, i2 + 1, word1, word2, step + 1, ref res);
+            }
+        }
         public int MinDistance(string word1, string word2)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(word2))
+            {
+                return word1.Length;
+            }
+
+            var res = int.MaxValue;
+            MinDistance(0, 0, word1, word2, 0, ref res);
+            return res;
         }
 
         #endregion
