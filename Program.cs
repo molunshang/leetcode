@@ -29,6 +29,8 @@ namespace leetcode
 
         static void Main(string[] args)
         {
+            Console.WriteLine(program.NumSquares(12));
+            program.MaximalSquare(JsonConvert.DeserializeObject<char[][]>("[['1','0','1','0','0'],['1','0','1','1','1'],['1','1','1','1','1'],['1','0','1','1','1']]"));
             program.TotalNQueens(5);
             program.MinDistance("trinitrophenylmethylnitramine", "dinitrophenylhydrazine");
             program.IsMatchI("aaabbbaabaaaaababaabaaabbabbbbbbbbaabababbabbbaaaaba", "a*******b");

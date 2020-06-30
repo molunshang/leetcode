@@ -723,7 +723,7 @@ namespace leetcode
                             continue;
                         }
 
-                        row[j] = (char) ('1' + num);
+                        row[j] = (char)('1' + num);
                         rows[i, num] = cols[j, num] = martix[rIndex, cIndex][num] = true;
                         if (Set(i, j + 1, index + 1))
                         {
@@ -799,7 +799,7 @@ namespace leetcode
             {
                 if (start > end)
                 {
-                    return new TreeNode[] {null};
+                    return new TreeNode[] { null };
                 }
 
                 var items = new List<TreeNode>();
@@ -1132,7 +1132,7 @@ namespace leetcode
         #endregion
 
         #region 72. 编辑距离
-        
+
         //https://leetcode-cn.com/problems/edit-distance/
         void MinDistance(int i1, int i2, string word1, string word2, int step, ref int res)
         {
@@ -1392,6 +1392,72 @@ namespace leetcode
             return TotalNQueens(0, n, flags, 0);
         }
 
+        #endregion
+
+        #region 221. 最大正方形
+        //https://leetcode-cn.com/problems/maximal-square/
+        public int MaximalSquare(char[][] matrix)
+        {
+            if (matrix == null || matrix.Length <= 0)
+            {
+                return 0;
+            }
+            var dp = new int[matrix.Length, matrix[0].Length];
+            var res = 0;
+            for (int i = 0; i < matrix.Length; i++)
+            {
+                for (int j = 0; j < matrix[0].Length; j++)
+                {
+                    if (matrix[i][j] == '0')
+                    {
+                        continue;
+                    }
+                    if (i == 0 || j == 0)
+                    {
+                        dp[i, j] = 1;
+                    }
+                    else
+                    {
+                        dp[i, j] = Math.Min(Math.Min(dp[i - 1, j], dp[i, j - 1]), dp[i - 1, j - 1]) + 1;
+                    }
+                    res = Math.Max(res, dp[i, j] * dp[i, j]);
+                }
+            }
+            return res;
+        }
+        #endregion
+
+        #region 279. 完全平方数
+        //https://leetcode-cn.com/problems/perfect-squares/
+
+        private Dictionary<int, int> squaresCache = new Dictionary<int, int>();
+        public int NumSquares(int n)
+        {
+            if (n == 1)
+            {
+                return 1;
+            }
+            if (squaresCache.TryGetValue(n, out var res))
+            {
+                return res;
+            }
+            var num = (int)Math.Floor(Math.Sqrt(n));
+            if (num * num == n)
+            {
+                res = 1;
+            }
+            else
+            {
+                res = int.MaxValue;
+                for (int i = num; i > 0; i--)
+                {
+                    res = Math.Min(NumSquares(n - i * i), res);
+                }
+                res++;
+            }
+            squaresCache[n] = res;
+            return res;
+        }
         #endregion
     }
 }
