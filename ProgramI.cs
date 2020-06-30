@@ -723,7 +723,7 @@ namespace leetcode
                             continue;
                         }
 
-                        row[j] = (char)('1' + num);
+                        row[j] = (char) ('1' + num);
                         rows[i, num] = cols[j, num] = martix[rIndex, cIndex][num] = true;
                         if (Set(i, j + 1, index + 1))
                         {
@@ -799,7 +799,7 @@ namespace leetcode
             {
                 if (start > end)
                 {
-                    return new TreeNode[] { null };
+                    return new TreeNode[] {null};
                 }
 
                 var items = new List<TreeNode>();
@@ -1132,8 +1132,7 @@ namespace leetcode
         #endregion
 
         #region 72. 编辑距离
-
-        //todo 性能
+        
         //https://leetcode-cn.com/problems/edit-distance/
         void MinDistance(int i1, int i2, string word1, string word2, int step, ref int res)
         {
@@ -1142,21 +1141,25 @@ namespace leetcode
                 res = Math.Min(res, step);
                 return;
             }
+
             if (step >= res)
             {
                 return;
             }
+
             if (i1 >= word1.Length)
             {
                 MinDistance(i1, i2 + 1, word1, word2, step + 1, ref res);
                 return;
             }
+
             if (i2 >= word2.Length)
             {
                 //删除一个字符
                 MinDistance(i1 + 1, i2, word1, word2, step + 1, ref res);
                 return;
             }
+
             if (word1[i1] == word2[i2])
             {
                 MinDistance(i1 + 1, i2 + 1, word1, word2, step, ref res);
@@ -1171,6 +1174,48 @@ namespace leetcode
                 MinDistance(i1 + 1, i2 + 1, word1, word2, step + 1, ref res);
             }
         }
+
+        int MinDistanceCache(int i1, int i2, string word1, string word2, int[,] cache)
+        {
+            if (i1 >= word1.Length && i2 >= word2.Length)
+            {
+                return 0;
+            }
+
+            if (i1 >= word1.Length)
+            {
+                return word2.Length - i2;
+            }
+
+            if (i2 >= word2.Length)
+            {
+                //删除一个字符
+                return word1.Length - i1;
+            }
+
+            if (cache[i1, i2] != 0)
+            {
+                return cache[i1, i2];
+            }
+
+            if (word1[i1] == word2[i2])
+            {
+                cache[i1, i2] = MinDistanceCache(i1 + 1, i2 + 1, word1, word2, cache);
+            }
+            else
+            {
+                //插入一个字符
+                var s1 = MinDistanceCache(i1, i2 + 1, word1, word2, cache);
+                //删除一个字符
+                var s2 = MinDistanceCache(i1 + 1, i2, word1, word2, cache);
+                //替换一个字符
+                var s3 = MinDistanceCache(i1 + 1, i2 + 1, word1, word2, cache);
+                cache[i1, i2] = Math.Min(Math.Min(s1, s2), s3) + 1;
+            }
+
+            return cache[i1, i2];
+        }
+
         public int MinDistance(string word1, string word2)
         {
             if (string.IsNullOrEmpty(word2))
@@ -1178,9 +1223,173 @@ namespace leetcode
                 return word1.Length;
             }
 
-            var res = int.MaxValue;
-            MinDistance(0, 0, word1, word2, 0, ref res);
-            return res;
+            return MinDistanceCache(0, 0, word1, word2, new int[word1.Length, word2.Length]);
+        }
+
+        #endregion
+
+        #region 82. 删除排序链表中的重复元素 II
+
+        //https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list-ii/
+        public ListNode DeleteDuplicatesII(ListNode head)
+        {
+            if (head == null || head.next == null)
+            {
+                return head;
+            }
+
+            var dict = new Dictionary<int, int>();
+            var node = head;
+            while (node != null)
+            {
+                if (dict.ContainsKey(node.val))
+                {
+                    dict[node.val]++;
+                }
+                else
+                {
+                    dict[node.val] = 1;
+                }
+
+                node = node.next;
+            }
+
+            var newHead = new ListNode(0);
+            node = newHead;
+            while (head != null)
+            {
+                if (dict[head.val] == 1)
+                {
+                    node.next = head;
+                    node = node.next;
+                }
+
+                head = head.next;
+            }
+
+            node.next = null;
+            return newHead.next;
+        }
+
+        #endregion
+
+        #region 51. N皇后
+
+        //https://leetcode-cn.com/problems/n-queens/
+
+        //棋子从上往下放，只需要检查上层
+        bool CheckQueen(int x, int y, char[][] flags, int n)
+        {
+            for (int i = 0; i <= x; i++)
+            {
+                if (flags[i][y] == 'Q')
+                {
+                    return false;
+                }
+            }
+
+            int x1 = x, y1 = y;
+            while (x >= 0 && y >= 0)
+            {
+                if (flags[x][y] == 'Q')
+                {
+                    return false;
+                }
+
+                x--;
+                y--;
+            }
+
+            while (x1 >= 0 && y1 < n)
+            {
+                if (flags[x1][y1] == 'Q')
+                {
+                    return false;
+                }
+
+                x1--;
+                y1++;
+            }
+
+            return true;
+        }
+
+        bool SolveNQueens(int row, char[][] flags, int n, IList<IList<string>> result)
+        {
+            if (row >= n)
+            {
+                var items = flags.Select(chars => new string(chars)).ToArray();
+                result.Add(items);
+                return true;
+            }
+
+            var flag = false;
+            for (int i = 0; i < n; i++)
+            {
+                if (!CheckQueen(row, i, flags, n))
+                {
+                    continue;
+                }
+
+                flags[row][i] = 'Q';
+                flag = SolveNQueens(row + 1, flags, n, result) || flag;
+                flags[row][i] = '.';
+            }
+
+            return flag;
+        }
+
+        public IList<IList<string>> SolveNQueens(int n)
+        {
+            var result = new List<IList<string>>();
+            var flags = new char[n][];
+            for (int i = 0; i < n; i++)
+            {
+                flags[i] = new char[n];
+                Array.Fill(flags[i], '.');
+            }
+
+            SolveNQueens(0, flags, n, result);
+            return result;
+        }
+
+        #endregion
+
+        #region 52. N皇后 II
+
+        //https://leetcode-cn.com/problems/n-queens-ii/
+        int TotalNQueens(int row, int n, char[][] flags, int count)
+        {
+            if (row >= n)
+            {
+                return count + 1;
+            }
+
+            for (int i = 0; i < n; i++)
+            {
+                if (!CheckQueen(row, i, flags, n))
+                {
+                    continue;
+                }
+
+                flags[row][i] = 'Q';
+                count = TotalNQueens(row + 1, n, flags, count);
+                flags[row][i] = '.';
+            }
+
+            return count;
+        }
+
+        public int TotalNQueens(int n)
+        {
+            var flags = new char[n][];
+            for (int i = 0; i < n; i++)
+            {
+                flags[i] = new char[n];
+                Array.Fill(flags[i], '.');
+            }
+
+            return TotalNQueens(0, n, flags, 0);
         }
 
         #endregion

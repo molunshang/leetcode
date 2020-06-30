@@ -29,6 +29,7 @@ namespace leetcode
 
         static void Main(string[] args)
         {
+            program.TotalNQueens(5);
             program.MinDistance("trinitrophenylmethylnitramine", "dinitrophenylhydrazine");
             program.IsMatchI("aaabbbaabaaaaababaabaaabbabbbbbbbbaabababbabbbaaaaba", "a*******b");
             var chars = JsonConvert.DeserializeObject<char[][]>(
@@ -6436,9 +6437,10 @@ namespace leetcode
 
         #endregion
 
-        #region 面试题 02.04. 分割链表
+        #region 面试题 02.04. 分割链表/86. 分隔链表
 
         //https://leetcode-cn.com/problems/partition-list-lcci/
+        //https://leetcode-cn.com/problems/partition-list/
         public ListNode Partition(ListNode head, int x)
         {
             ListNode prev = null, next = null, prevRoot = null, nextRoot = null;
