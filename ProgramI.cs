@@ -723,7 +723,7 @@ namespace leetcode
                             continue;
                         }
 
-                        row[j] = (char)('1' + num);
+                        row[j] = (char) ('1' + num);
                         rows[i, num] = cols[j, num] = martix[rIndex, cIndex][num] = true;
                         if (Set(i, j + 1, index + 1))
                         {
@@ -799,7 +799,7 @@ namespace leetcode
             {
                 if (start > end)
                 {
-                    return new TreeNode[] { null };
+                    return new TreeNode[] {null};
                 }
 
                 var items = new List<TreeNode>();
@@ -1395,6 +1395,7 @@ namespace leetcode
         #endregion
 
         #region 221. 最大正方形
+
         //https://leetcode-cn.com/problems/maximal-square/
         public int MaximalSquare(char[][] matrix)
         {
@@ -1402,6 +1403,7 @@ namespace leetcode
             {
                 return 0;
             }
+
             var dp = new int[matrix.Length, matrix[0].Length];
             var res = 0;
             for (int i = 0; i < matrix.Length; i++)
@@ -1412,6 +1414,7 @@ namespace leetcode
                     {
                         continue;
                     }
+
                     if (i == 0 || j == 0)
                     {
                         dp[i, j] = 1;
@@ -1420,28 +1423,35 @@ namespace leetcode
                     {
                         dp[i, j] = Math.Min(Math.Min(dp[i - 1, j], dp[i, j - 1]), dp[i - 1, j - 1]) + 1;
                     }
+
                     res = Math.Max(res, dp[i, j] * dp[i, j]);
                 }
             }
+
             return res;
         }
+
         #endregion
 
         #region 279. 完全平方数
+
         //https://leetcode-cn.com/problems/perfect-squares/
 
         private Dictionary<int, int> squaresCache = new Dictionary<int, int>();
+
         public int NumSquares(int n)
         {
             if (n == 1)
             {
                 return 1;
             }
+
             if (squaresCache.TryGetValue(n, out var res))
             {
                 return res;
             }
-            var num = (int)Math.Floor(Math.Sqrt(n));
+
+            var num = (int) Math.Floor(Math.Sqrt(n));
             if (num * num == n)
             {
                 res = 1;
@@ -1453,11 +1463,363 @@ namespace leetcode
                 {
                     res = Math.Min(NumSquares(n - i * i), res);
                 }
+
                 res++;
             }
+
             squaresCache[n] = res;
             return res;
         }
+
+        #endregion
+
+        #region 718. 最长重复子数组
+
+        //https://leetcode-cn.com/problems/maximum-length-of-repeated-subarray/
+        public int FindLength(int[] A, int[] B)
+        {
+            var dict = new Dictionary<int, IList<int>>();
+            for (int i = 0; i < A.Length; i++)
+            {
+                if (!dict.ContainsKey(A[i]))
+                {
+                    dict[A[i]] = new List<int>();
+                }
+
+                dict[A[i]].Add(i);
+            }
+
+            var res = 0;
+            for (int i = 0; i < B.Length; i++)
+            {
+                var num = B[i];
+                if (!dict.TryGetValue(num, out var indexs))
+                {
+                    continue;
+                }
+
+                if (B.Length - i <= res)
+                {
+                    break;
+                }
+
+                foreach (var index in indexs)
+                {
+                    if (A.Length - index <= res)
+                    {
+                        continue;
+                    }
+
+                    var len = 1;
+                    for (int j = index + 1, k = i + 1; j < A.Length && k < B.Length; j++, k++)
+                    {
+                        if (A[j] != B[k])
+                        {
+                            break;
+                        }
+
+                        len++;
+                    }
+
+                    res = Math.Max(res, len);
+                }
+            }
+
+            return res;
+        }
+
+        public int FindLengthDP(int[] A, int[] B)
+        {
+            var dp = new int[A.Length + 1, B.Length + 1];
+            var res = 0;
+            for (int i = A.Length - 1; i >= 0; i--)
+            {
+                for (int j = B.Length - 1; j >= 0; j--)
+                {
+                    dp[i, j] = A[i] == B[j] ? dp[i + 1, j + 1] + 1 : 0;
+                    res = Math.Max(res, dp[i, j]);
+                }
+            }
+
+            return res;
+        }
+
+        #endregion
+
+        #region 322. 零钱兑换
+
+        //https://leetcode-cn.com/problems/coin-change/
+        bool CoinChange(int[] coins, int amount, int step, ref int res)
+        {
+            if (amount == 0 || step >= res)
+            {
+                res = Math.Min(step, res);
+                return true;
+            }
+
+            var flag = false;
+            for (int i = coins.Length - 1; i >= 0; i--)
+            {
+                if (amount < coins[i])
+                {
+                    continue;
+                }
+
+                flag = CoinChange(coins, amount - coins[i], step + 1, ref res) || flag;
+            }
+
+            return flag;
+        }
+
+        public int CoinChangeDP(int[] coins, int amount, Dictionary<int, int> cache)
+        {
+            if (amount == 0)
+            {
+                return 0;
+            }
+
+            if (amount < 0)
+            {
+                return -1;
+            }
+
+            if (cache.TryGetValue(amount, out var res))
+            {
+                return res;
+            }
+
+            res = -1;
+            for (int i = coins.Length - 1; i >= 0; i--)
+            {
+                if (amount < coins[i])
+                {
+                    continue;
+                }
+
+                var next = CoinChangeDP(coins, amount - coins[i], cache);
+                if (next >= 0)
+                {
+                    res = res == -1 ? next + 1 : Math.Min(next + 1, res);
+                }
+            }
+
+            cache[amount] = res;
+            return res;
+        }
+
+        public int CoinChange(int[] coins, int amount)
+        {
+            if (coins.Length <= 0 || amount <= 0)
+            {
+                return 0;
+            }
+
+            var res = CoinChangeDP(coins, amount, new Dictionary<int, int>());
+            return res;
+        }
+
+        #endregion
+
+        #region 338. 比特位计数
+
+        //https://leetcode-cn.com/problems/counting-bits/
+        public int[] CountBits(int num)
+        {
+            var result = new int[num + 1];
+            for (int i = 1; i <= num; i++)
+            {
+                if (((i - 1) & i) == 0)
+                {
+                    result[i] = 1;
+                }
+                else
+                {
+                    var n = i;
+                    while (n != 0)
+                    {
+                        result[i]++;
+                        n = (n - 1) & n;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        #endregion
+
+        #region 438. 找到字符串中所有字母异位词
+
+        //https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/
+        public IList<int> FindAnagrams(string s, string p)
+        {
+            var dict = new Dictionary<char, int>();
+            foreach (var ch in p)
+            {
+                if (dict.ContainsKey(ch))
+                {
+                    dict[ch]++;
+                }
+                else
+                {
+                    dict[ch] = 1;
+                }
+            }
+
+            var result = new List<int>();
+            var counter = new Dictionary<char, int>();
+            var len = 0;
+            for (int i = 0, j = 0; i < s.Length; i++)
+            {
+                if (counter.ContainsKey(s[i]))
+                {
+                    counter[s[i]]++;
+                }
+                else
+                {
+                    counter[s[i]] = 1;
+                }
+
+                len++;
+                if (len < p.Length)
+                {
+                    continue;
+                }
+
+                if (counter.Count == dict.Count &&
+                    counter.All(kv => dict.ContainsKey(kv.Key) && dict[kv.Key] == kv.Value))
+                {
+                    result.Add(j);
+                }
+
+                counter[s[j]]--;
+                if (counter[s[j]] == 0)
+                {
+                    counter.Remove(s[j]);
+                }
+
+                j++;
+                len--;
+            }
+
+            return result;
+        }
+
+        #endregion
+
+        #region 337. 打家劫舍 III
+
+        //https://leetcode-cn.com/problems/house-robber-iii/
+        private int Rob(TreeNode root, IDictionary<TreeNode, int> cache)
+        {
+            if (root == null)
+            {
+                return 0;
+            }
+
+            if (cache.TryGetValue(root, out var res))
+            {
+                return res;
+            }
+
+            res = root.val;
+            if (root.left != null)
+            {
+                res += Rob(root.left.left, cache) + Rob(root.left.right, cache);
+            }
+
+            if (root.right != null)
+            {
+                res += Rob(root.right.right, cache) + Rob(root.right.left, cache);
+            }
+
+            res = Math.Max(res, Rob(root.left, cache) + Rob(root.right, cache));
+            cache[root] = res;
+            return res;
+        }
+
+        public int Rob(TreeNode root)
+        {
+            if (root == null)
+            {
+                return 0;
+            }
+
+            return Rob(root, new Dictionary<TreeNode, int>());
+        }
+
+        #endregion
+
+        #region 213. 打家劫舍 II
+
+        //https://leetcode-cn.com/problems/house-robber-ii/
+        public int RobII(int[] nums)
+        {
+            int Dfs(int start, int end)
+            {
+                int pre1 = 0, pre2 = 0, current = 0;
+                for (int i = start; i < end; i++)
+                {
+                    current = Math.Max(pre1, pre2 + nums[i]);
+                    pre2 = pre1;
+                    pre1 = current;
+                }
+
+                return current;
+            }
+
+            if (nums == null || nums.Length == 0)
+            {
+                return 0;
+            }
+
+            return nums.Length == 1 ? nums[0] : Math.Max(Dfs(0, nums.Length - 1), Dfs(1, nums.Length));
+        }
+
+        #endregion
+
+        #region 85. 最大矩形
+
+        //https://leetcode-cn.com/problems/maximal-rectangle/
+        public int MaximalRectangle(char[][] matrix)
+        {
+            if (matrix.Length == 0 || matrix[0].Length == 0)
+            {
+                return 0;
+            }
+
+            var w = new int[matrix.Length, matrix[0].Length];
+            var res = 0;
+            for (int i = 0; i < matrix.Length; i++)
+            {
+                for (int j = 0; j < matrix[0].Length; j++)
+                {
+                    if (matrix[i][j] == '0')
+                    {
+                        continue;
+                    }
+
+                    if (j == 0)
+                    {
+                        w[i, j] = 1;
+                    }
+                    else
+                    {
+                        w[i, j] = w[i, j - 1] + 1;
+                    }
+
+                    var width = w[i, j];
+                    for (int h = i; h >= 0; h--)
+                    {
+                        width = Math.Min(width, w[h, j]);
+                        res = Math.Max(res, width * (i - h + 1));
+                    }
+                }
+            }
+
+            return res;
+        }
+
         #endregion
     }
 }
