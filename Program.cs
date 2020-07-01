@@ -29,6 +29,7 @@ namespace leetcode
 
         static void Main(string[] args)
         {
+            program.RemoveInvalidParentheses("(a)())()");
             Console.WriteLine(program.NumSquares(12));
             program.MaximalRectangle(JsonConvert.DeserializeObject<char[][]>("[['1','0','1','1','0'],['1','0','1','1','1'],['1','1','1','1','1'],['1','0','1','1','0']]"));
             program.TotalNQueens(5);

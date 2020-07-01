@@ -723,7 +723,7 @@ namespace leetcode
                             continue;
                         }
 
-                        row[j] = (char) ('1' + num);
+                        row[j] = (char)('1' + num);
                         rows[i, num] = cols[j, num] = martix[rIndex, cIndex][num] = true;
                         if (Set(i, j + 1, index + 1))
                         {
@@ -799,7 +799,7 @@ namespace leetcode
             {
                 if (start > end)
                 {
-                    return new TreeNode[] {null};
+                    return new TreeNode[] { null };
                 }
 
                 var items = new List<TreeNode>();
@@ -1451,7 +1451,7 @@ namespace leetcode
                 return res;
             }
 
-            var num = (int) Math.Floor(Math.Sqrt(n));
+            var num = (int)Math.Floor(Math.Sqrt(n));
             if (num * num == n)
             {
                 res = 1;
@@ -1820,6 +1820,109 @@ namespace leetcode
             return res;
         }
 
+        #endregion
+
+        #region 301. 删除无效的括号
+        //todo 待完成
+        //https://leetcode-cn.com/problems/remove-invalid-parentheses/
+        bool IsValid(IList<char> chars)
+        {
+            var left = 0;
+            foreach (var ch in chars)
+            {
+                if (ch == '(')
+                {
+                    left++;
+                }
+                else if (ch == ')')
+                {
+                    left--;
+                }
+                if (left < 0)
+                {
+                    return false;
+                }
+            }
+            return left == 0;
+        }
+
+        void RemoveInvalidParentheses(char[] chars, int l, int r, ISet<string> result)
+        {
+            if (chars.Length == 0)
+            {
+                return;
+            }
+            if (l == r)
+            {
+                if (IsValid(chars))
+                {
+                    result.Add(new string(chars));
+                    return;
+                }
+                if (result.Count > 0)
+                {
+                    return;
+                }
+                for (int li = 0; li < chars.Length; li++)
+                {
+                    for (int ri = 0; ri < chars.Length; ri++)
+                    {
+                        if (chars[li] == '(' && (li == 0 || chars[li - 1] != '(') && chars[ri] == ')' && (ri <= 0 || chars[ri - 1] != ')'))
+                        {
+                            RemoveInvalidParentheses(chars.Where((c, i) => i != ri && i != li).ToArray(), l - 1, r - 1, result);
+                        }
+                    }
+                }
+                //删除（）
+            }
+            else if (l > r)
+            {
+                //删除（
+                for (int i = 0; i < chars.Length; i++)
+                {
+                    if (chars[i] != '(' || (i > 0 && chars[i - 1] == '('))
+                    {
+                        continue;
+                    }
+                    RemoveInvalidParentheses(chars.Where((c, li) => li != i).ToArray(), l - 1, r, result);
+                }
+            }
+            else
+            {
+                //删除）
+                for (int i = 0; i < chars.Length; i++)
+                {
+                    if (chars[i] != ')' || (i > 0 && chars[i - 1] == ')'))
+                    {
+                        continue;
+                    }
+                    RemoveInvalidParentheses(chars.Where((c, ri) => ri != i).ToArray(), l, r - 1, result);
+                }
+            }
+        }
+        public IList<string> RemoveInvalidParentheses(string s)
+        {
+            int l = 0, r = 0;
+            foreach (var c in s)
+            {
+                if (c == '(')
+                {
+                    l++;
+                }
+                else if (c == ')')
+                {
+                    r++;
+                }
+            }
+
+            var result = new HashSet<string>();
+            RemoveInvalidParentheses(s.ToCharArray(), l, r, result);
+            if (result.Count <= 0)
+            {
+                return new[] { string.Empty };
+            }
+            return result.ToArray();
+        }
         #endregion
     }
 }
