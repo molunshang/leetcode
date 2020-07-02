@@ -723,7 +723,7 @@ namespace leetcode
                             continue;
                         }
 
-                        row[j] = (char)('1' + num);
+                        row[j] = (char) ('1' + num);
                         rows[i, num] = cols[j, num] = martix[rIndex, cIndex][num] = true;
                         if (Set(i, j + 1, index + 1))
                         {
@@ -799,7 +799,7 @@ namespace leetcode
             {
                 if (start > end)
                 {
-                    return new TreeNode[] { null };
+                    return new TreeNode[] {null};
                 }
 
                 var items = new List<TreeNode>();
@@ -1451,7 +1451,7 @@ namespace leetcode
                 return res;
             }
 
-            var num = (int)Math.Floor(Math.Sqrt(n));
+            var num = (int) Math.Floor(Math.Sqrt(n));
             if (num * num == n)
             {
                 res = 1;
@@ -1823,8 +1823,11 @@ namespace leetcode
         #endregion
 
         #region 301. 删除无效的括号
-        //todo 待完成
+
         //https://leetcode-cn.com/problems/remove-invalid-parentheses/
+
+        #region 自实现
+
         bool IsValid(IList<char> chars)
         {
             var left = 0;
@@ -1838,42 +1841,60 @@ namespace leetcode
                 {
                     left--;
                 }
+
                 if (left < 0)
                 {
                     return false;
                 }
             }
+
             return left == 0;
         }
 
-        void RemoveInvalidParentheses(char[] chars, int l, int r, ISet<string> result)
+
+        void RemoveInvalidParentheses(char[] chars, int l, int r, ISet<string> result, ISet<string> visited,
+            ref int max)
         {
             if (chars.Length == 0)
             {
                 return;
             }
+
+            if (!visited.Add(new string(chars)))
+            {
+                return;
+            }
+
             if (l == r)
             {
-                if (IsValid(chars))
+                if (chars.Length >= max && IsValid(chars))
                 {
+                    if (chars.Length > max)
+                    {
+                        max = chars.Length;
+                        result.Clear();
+                    }
+
                     result.Add(new string(chars));
                     return;
                 }
-                if (result.Count > 0)
+
+                if (chars.Length <= max)
                 {
                     return;
                 }
+
                 for (int li = 0; li < chars.Length; li++)
                 {
                     for (int ri = 0; ri < chars.Length; ri++)
                     {
-                        if (chars[li] == '(' && (li == 0 || chars[li - 1] != '(') && chars[ri] == ')' && (ri <= 0 || chars[ri - 1] != ')'))
+                        if (chars[li] == '(' && chars[ri] == ')')
                         {
-                            RemoveInvalidParentheses(chars.Where((c, i) => i != ri && i != li).ToArray(), l - 1, r - 1, result);
+                            RemoveInvalidParentheses(chars.Where((c, i) => i != ri && i != li).ToArray(), l - 1, r - 1,
+                                result, visited, ref max);
                         }
                     }
                 }
-                //删除（）
             }
             else if (l > r)
             {
@@ -1884,7 +1905,9 @@ namespace leetcode
                     {
                         continue;
                     }
-                    RemoveInvalidParentheses(chars.Where((c, li) => li != i).ToArray(), l - 1, r, result);
+
+                    RemoveInvalidParentheses(chars.Where((c, li) => li != i).ToArray(), l - 1, r, result, visited,
+                        ref max);
                 }
             }
             else
@@ -1896,10 +1919,13 @@ namespace leetcode
                     {
                         continue;
                     }
-                    RemoveInvalidParentheses(chars.Where((c, ri) => ri != i).ToArray(), l, r - 1, result);
+
+                    RemoveInvalidParentheses(chars.Where((c, ri) => ri != i).ToArray(), l, r - 1, result, visited,
+                        ref max);
                 }
             }
         }
+
         public IList<string> RemoveInvalidParentheses(string s)
         {
             int l = 0, r = 0;
@@ -1915,14 +1941,180 @@ namespace leetcode
                 }
             }
 
+            var max = 0;
             var result = new HashSet<string>();
-            RemoveInvalidParentheses(s.ToCharArray(), l, r, result);
-            if (result.Count <= 0)
+            RemoveInvalidParentheses(s.ToCharArray(), l, r, result, new HashSet<string>(), ref max);
+            return result.Count <= 0 ? new[] {string.Empty} : result.ToArray();
+        }
+
+        #endregion
+
+        #region 回溯实现
+
+        void RemoveInvalidParenthesesDP(string s, int index, int left, int right, ISet<string> result,
+            StringBuilder str, ref int max)
+        {
+            if (index >= s.Length)
             {
-                return new[] { string.Empty };
+                if (left == right && str.Length >= max)
+                {
+                    if (str.Length > max)
+                    {
+                        result.Clear();
+                        max = str.Length;
+                    }
+
+                    result.Add(str.ToString());
+                }
+
+                return;
             }
+
+            var ch = s[index];
+            if (ch != '(' && ch != ')')
+            {
+                str.Append(ch);
+                RemoveInvalidParenthesesDP(s, index + 1, left, right, result, str, ref max);
+            }
+            else
+            {
+                RemoveInvalidParenthesesDP(s, index + 1, left, right, result, str, ref max);
+                str.Append(ch);
+                if (ch == '(')
+                {
+                    RemoveInvalidParenthesesDP(s, index + 1, left + 1, right, result, str, ref max);
+                }
+                else if (ch == ')' && left > right)
+                {
+                    RemoveInvalidParenthesesDP(s, index + 1, left, right + 1, result, str, ref max);
+                }
+            }
+            str.Remove(str.Length - 1, 1);
+        }
+
+        public IList<string> RemoveInvalidParenthesesDP(string s)
+        {
+            var result = new HashSet<string>();
+            int left = 0, right = 0, max = 0;
+            RemoveInvalidParenthesesDP(s, 0, left, right, result, new StringBuilder(), ref max);
             return result.ToArray();
         }
+
+        #endregion
+
+        #endregion
+
+        #region 309. 最佳买卖股票时机含冷冻期
+
+        //https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/
+        public int MaxProfitI(int[] prices)
+        {
+            if (prices.Length < 2)
+            {
+                return 0;
+            }
+
+            var day = prices.Length;
+            var dp = new int[day, 2];
+            // dp[i][k][0] = max(dp[i-1][k][0], dp[i-1][k][1] + prices[i])
+            // max(   选择 rest  ,             选择 sell      )
+            // 解释：今天我没有持有股票，有两种可能：
+            // 要么是我昨天就没有持有，然后今天选择 rest，所以我今天还是没有持有；
+            // 要么是我昨天持有股票，但是今天我 sell 了，所以我今天没有持有股票了。
+            // dp[i][k][1] = max(dp[i-1][k][1], dp[i-1][k-1][0] - prices[i])
+            // max(   选择 rest  ,           选择 buy         )
+            // 解释：今天我持有着股票，有两种可能：
+            // 要么我昨天就持有着股票，然后今天选择 rest，所以我今天还持有着股票；
+            // 要么我昨天本没有持有，但今天我选择 buy，所以今天我就持有股票了。
+            dp[0, 0] = 0;
+            dp[0, 1] = -prices[0];
+            for (int i = 1; i < prices.Length; i++)
+            {
+                dp[i, 0] = Math.Max(dp[i - 1, 0] /*昨天没有*/, dp[i - 1, 1] + prices[i] /*昨天有，今天卖*/);
+                dp[i, 1] = Math.Max(dp[i - 1, 1] /*昨天有*/, (i > 1 ? dp[i - 2, 0] : 0) - prices[i] /*前天没有,今天买*/);
+            }
+
+            return dp[day - 1, 0];
+        }
+
+        #endregion
+
+        #region 621. 任务调度器
+
+        //https://leetcode-cn.com/problems/task-scheduler/
+        public int LeastInterval(char[] tasks, int n)
+        {
+            Dictionary<char, int> taskDict = new Dictionary<char, int>(), waitDict = new Dictionary<char, int>();
+            foreach (var task in tasks)
+            {
+                if (taskDict.TryGetValue(task, out var size))
+                {
+                    taskDict[task] = size + 1;
+                }
+                else
+                {
+                    taskDict[task] = 1;
+                    waitDict[task] = 0;
+                }
+            }
+
+            var time = 0;
+            while (taskDict.Count > 0)
+            {
+                time++;
+                var task = waitDict.Where(kv => kv.Value == 0 || time - kv.Value > n)
+                    .OrderByDescending(kv => taskDict[kv.Key]).FirstOrDefault();
+                if (!taskDict.ContainsKey(task.Key))
+                {
+                    continue;
+                }
+
+                var size = taskDict[task.Key];
+                if (size == 1)
+                {
+                    taskDict.Remove(task.Key);
+                    waitDict.Remove(task.Key);
+                }
+                else
+                {
+                    taskDict[task.Key] = size - 1;
+                    waitDict[task.Key] = time;
+                }
+            }
+
+            return time;
+        }
+
+        public int LeastIntervalBySort(char[] tasks, int n)
+        {
+            var bucket = new int[26];
+            foreach (var task in tasks)
+            {
+                bucket[task - 'A']++;
+            }
+
+            Array.Sort(bucket);
+            var time = 0;
+            while (bucket[25] > 0)
+            {
+                var i = 0;
+                while (i <= n && bucket[25] > 0)
+                {
+                    if (i < 26 && bucket[25 - i] > 0)
+                    {
+                        bucket[25 - i]--;
+                    }
+
+                    i++;
+                    time++;
+                }
+
+                Array.Sort(bucket);
+            }
+
+            return time;
+        }
+
         #endregion
     }
 }
