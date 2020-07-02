@@ -723,7 +723,7 @@ namespace leetcode
                             continue;
                         }
 
-                        row[j] = (char) ('1' + num);
+                        row[j] = (char)('1' + num);
                         rows[i, num] = cols[j, num] = martix[rIndex, cIndex][num] = true;
                         if (Set(i, j + 1, index + 1))
                         {
@@ -799,7 +799,7 @@ namespace leetcode
             {
                 if (start > end)
                 {
-                    return new TreeNode[] {null};
+                    return new TreeNode[] { null };
                 }
 
                 var items = new List<TreeNode>();
@@ -1451,7 +1451,7 @@ namespace leetcode
                 return res;
             }
 
-            var num = (int) Math.Floor(Math.Sqrt(n));
+            var num = (int)Math.Floor(Math.Sqrt(n));
             if (num * num == n)
             {
                 res = 1;
@@ -1944,7 +1944,7 @@ namespace leetcode
             var max = 0;
             var result = new HashSet<string>();
             RemoveInvalidParentheses(s.ToCharArray(), l, r, result, new HashSet<string>(), ref max);
-            return result.Count <= 0 ? new[] {string.Empty} : result.ToArray();
+            return result.Count <= 0 ? new[] { string.Empty } : result.ToArray();
         }
 
         #endregion
@@ -2115,6 +2115,62 @@ namespace leetcode
             return time;
         }
 
+        #endregion
+
+        #region 312. 戳气球
+        //https://leetcode-cn.com/problems/burst-balloons/
+
+        //暴力解
+        void MaxCoins(IList<int> nums, int sum, ref int result)
+        {
+            if (nums.Count == 1)
+            {
+                result = Math.Max(result, sum + nums[0]);
+                return;
+            }
+
+            for (int i = 0; i < nums.Count; i++)
+            {
+                var rm = nums[i];
+                var num = (i > 0 ? nums[i - 1] : 1) * rm * (i < nums.Count - 1 ? nums[i + 1] : 1);
+                nums.RemoveAt(i);
+                MaxCoins(nums, sum + num, ref result);
+                nums.Insert(i, rm);
+            }
+        }
+        int MaxCoinsDp(int[] nums, int[,] cache, int l, int r)
+        {
+            //头尾各添加1个元素,当nums剩余长度<=2时，实际上nums已空
+            if (l + 1 == r)
+            {
+                return 0;
+            }
+            if (cache[l, r] != 0)
+            {
+                return cache[l, r];
+            }
+            var res = 0;
+            for (int i = l + 1; i < r; i++)
+            {
+                res = Math.Max(res, MaxCoinsDp(nums, cache, l, i) + nums[l] * nums[i] * nums[r] + MaxCoinsDp(nums, cache, i, r));
+            }
+            cache[l, r] = res;
+            return res;
+        }
+        public int MaxCoins(int[] nums)
+        {
+            if (nums.Length <= 0)
+            {
+                return 0;
+            }
+            var items = new int[nums.Length + 2];
+            items[0] = items[items.Length - 1] = 1;
+            for (int i = 0; i < nums.Length; i++)
+            {
+                items[i + 1] = nums[i];
+            }
+            return MaxCoinsDp(items, new int[items.Length, items.Length], 0, items.Length - 1);
+        }
         #endregion
     }
 }
