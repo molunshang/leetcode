@@ -723,7 +723,7 @@ namespace leetcode
                             continue;
                         }
 
-                        row[j] = (char)('1' + num);
+                        row[j] = (char) ('1' + num);
                         rows[i, num] = cols[j, num] = martix[rIndex, cIndex][num] = true;
                         if (Set(i, j + 1, index + 1))
                         {
@@ -799,7 +799,7 @@ namespace leetcode
             {
                 if (start > end)
                 {
-                    return new TreeNode[] { null };
+                    return new TreeNode[] {null};
                 }
 
                 var items = new List<TreeNode>();
@@ -1451,7 +1451,7 @@ namespace leetcode
                 return res;
             }
 
-            var num = (int)Math.Floor(Math.Sqrt(n));
+            var num = (int) Math.Floor(Math.Sqrt(n));
             if (num * num == n)
             {
                 res = 1;
@@ -1944,7 +1944,7 @@ namespace leetcode
             var max = 0;
             var result = new HashSet<string>();
             RemoveInvalidParentheses(s.ToCharArray(), l, r, result, new HashSet<string>(), ref max);
-            return result.Count <= 0 ? new[] { string.Empty } : result.ToArray();
+            return result.Count <= 0 ? new[] {string.Empty} : result.ToArray();
         }
 
         #endregion
@@ -1989,6 +1989,7 @@ namespace leetcode
                     RemoveInvalidParenthesesDP(s, index + 1, left, right + 1, result, str, ref max);
                 }
             }
+
             str.Remove(str.Length - 1, 1);
         }
 
@@ -2118,6 +2119,7 @@ namespace leetcode
         #endregion
 
         #region 312. 戳气球
+
         //https://leetcode-cn.com/problems/burst-balloons/
 
         //暴力解
@@ -2138,6 +2140,7 @@ namespace leetcode
                 nums.Insert(i, rm);
             }
         }
+
         int MaxCoinsDp(int[] nums, int[,] cache, int l, int r)
         {
             //头尾各添加1个元素,当nums剩余长度<=2时，实际上nums已空
@@ -2145,32 +2148,183 @@ namespace leetcode
             {
                 return 0;
             }
+
             if (cache[l, r] != 0)
             {
                 return cache[l, r];
             }
+
             var res = 0;
             for (int i = l + 1; i < r; i++)
             {
-                res = Math.Max(res, MaxCoinsDp(nums, cache, l, i) + nums[l] * nums[i] * nums[r] + MaxCoinsDp(nums, cache, i, r));
+                res = Math.Max(res,
+                    MaxCoinsDp(nums, cache, l, i) + nums[l] * nums[i] * nums[r] + MaxCoinsDp(nums, cache, i, r));
             }
+
             cache[l, r] = res;
             return res;
         }
+
         public int MaxCoins(int[] nums)
         {
             if (nums.Length <= 0)
             {
                 return 0;
             }
+
             var items = new int[nums.Length + 2];
             items[0] = items[items.Length - 1] = 1;
             for (int i = 0; i < nums.Length; i++)
             {
                 items[i + 1] = nums[i];
             }
+
             return MaxCoinsDp(items, new int[items.Length, items.Length], 0, items.Length - 1);
         }
+
+        #endregion
+
+        #region 399. 除法求值
+
+        //https://leetcode-cn.com/problems/evaluate-division/
+        public double[] CalcEquation(IList<IList<string>> equations, double[] values, IList<IList<string>> queries)
+        {
+            var dict = new Dictionary<string, IList<Tuple<string, double>>>();
+            for (int i = 0; i < equations.Count; i++)
+            {
+                var eq = equations[i];
+                if (!dict.TryGetValue(eq[0], out var items))
+                {
+                    items = new List<Tuple<string, double>>();
+                    dict[eq[0]] = items;
+                }
+
+                items.Add(new Tuple<string, double>(eq[1], values[i]));
+                if (!dict.TryGetValue(eq[1], out items))
+                {
+                    items = new List<Tuple<string, double>>();
+                    dict[eq[1]] = items;
+                }
+
+                items.Add(new Tuple<string, double>(eq[0], 1.0 / values[i]));
+            }
+
+            var result = new double[queries.Count];
+            var queue = new Queue<Tuple<string, double>>();
+            var visited = new HashSet<string>();
+            for (int i = 0; i < queries.Count; i++)
+            {
+                var query = queries[i];
+                result[i] = -1.0;
+                string key = query[0], target = query[1];
+                if (key == target)
+                {
+                    result[i] = 1.0;
+                    continue;
+                }
+
+                if (!dict.ContainsKey(key) || !dict.ContainsKey(target))
+                {
+                    continue;
+                }
+
+                queue.Enqueue(new Tuple<string, double>(key, 1.0));
+                while (queue.Count > 0)
+                {
+                    var current = queue.Dequeue();
+                    if (!visited.Add(current.Item1))
+                    {
+                        continue;
+                    }
+
+                    var next = dict[current.Item1];
+                    foreach (var tuple in next)
+                    {
+                        if (tuple.Item1 == target)
+                        {
+                            result[i] = tuple.Item2 * current.Item2;
+                            queue.Clear();
+                            break;
+                        }
+
+                        queue.Enqueue(new Tuple<string, double>(tuple.Item1, tuple.Item2 * current.Item2));
+                    }
+                }
+
+                visited.Clear();
+            }
+
+            return result;
+        }
+
+        #endregion
+
+        #region 130. 被围绕的区域
+
+        //https://leetcode-cn.com/problems/surrounded-regions/
+        public void Solve(char[][] board)
+        {
+            if (board.Length <= 0 || board[0].Length <= 0)
+            {
+                return;
+            }
+
+            var flags = new bool[board.Length, board[0].Length];
+
+            bool Set(int x, int y)
+            {
+                if (x == 0 || x == board.Length - 1 || y == 0 || y == board[0].Length - 1)
+                {
+                    return board[x][y] == 'X';
+                }
+
+                flags[x, y] = true;
+                if (board[x - 1][y] == 'O' || board[x][y - 1] == 'O')
+                {
+                    return false;
+                }
+
+                //下右
+                board[x][y] = 'X';
+                var flag = Set(x + 1, y) && Set(x, y + 1);
+                if (!flag)
+                {
+                    board[x][y] = 'O';
+                }
+
+                return flag;
+            }
+
+            for (int i = 0; i < board.Length; i++)
+            {
+                int s = 0, e = board[0].Length - 1;
+                while (s < e && board[i][s] == 'O')
+                {
+                    s++;
+                    flags[i, s] = true;
+                }
+                while (s < e && board[i][e] == 'O')
+                {
+                    e--;
+                    flags[i, e] = true;
+                }
+            }
+            for (int i = 0; i < board[0].Length; i++)
+            {
+                int s = 0, e = board.Length - 1;
+                while (s < e && board[s][i] == 'O')
+                {
+                    s++;
+                    flags[i, s] = true;
+                }
+                while (s < e && board[e][i] == 'O')
+                {
+                    e--;
+                    flags[i, e] = true;
+                }
+            }
+        }
+
         #endregion
     }
 }
