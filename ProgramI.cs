@@ -723,7 +723,7 @@ namespace leetcode
                             continue;
                         }
 
-                        row[j] = (char) ('1' + num);
+                        row[j] = (char)('1' + num);
                         rows[i, num] = cols[j, num] = martix[rIndex, cIndex][num] = true;
                         if (Set(i, j + 1, index + 1))
                         {
@@ -799,7 +799,7 @@ namespace leetcode
             {
                 if (start > end)
                 {
-                    return new TreeNode[] {null};
+                    return new TreeNode[] { null };
                 }
 
                 var items = new List<TreeNode>();
@@ -1451,7 +1451,7 @@ namespace leetcode
                 return res;
             }
 
-            var num = (int) Math.Floor(Math.Sqrt(n));
+            var num = (int)Math.Floor(Math.Sqrt(n));
             if (num * num == n)
             {
                 res = 1;
@@ -1944,7 +1944,7 @@ namespace leetcode
             var max = 0;
             var result = new HashSet<string>();
             RemoveInvalidParentheses(s.ToCharArray(), l, r, result, new HashSet<string>(), ref max);
-            return result.Count <= 0 ? new[] {string.Empty} : result.ToArray();
+            return result.Count <= 0 ? new[] { string.Empty } : result.ToArray();
         }
 
         #endregion
@@ -2269,62 +2269,83 @@ namespace leetcode
                 return;
             }
 
-            var flags = new bool[board.Length, board[0].Length];
-
-            bool Set(int x, int y)
+            void Set(int x, int y)
             {
-                if (x == 0 || x == board.Length - 1 || y == 0 || y == board[0].Length - 1)
+                if (x < 0 || x >= board.Length || y < 0 || y >= board[0].Length || board[x][y] == '#' || board[x][y] == 'X')
                 {
-                    return board[x][y] == 'X';
+                    return;
                 }
-
-                flags[x, y] = true;
-                if (board[x - 1][y] == 'O' || board[x][y - 1] == 'O')
+                board[x][y] = '#';
+                Set(x + 1, y);
+                Set(x - 1, y);
+                Set(x, y + 1);
+                Set(x, y - 1);
+            }
+            for (int i = 0; i < board.Length; i++)
+            {
+                for (int j = 0; j < board[0].Length; j++)
                 {
-                    return false;
+                    if (board[i][j] == 'X')
+                    {
+                        continue;
+                    }
+                    if (i == 0 || j == 0 || i == board.Length - 1 || j == board[0].Length - 1)
+                    {
+                        Set(i, j);
+                    }
                 }
-
-                //下右
-                board[x][y] = 'X';
-                var flag = Set(x + 1, y) && Set(x, y + 1);
-                if (!flag)
-                {
-                    board[x][y] = 'O';
-                }
-
-                return flag;
             }
 
             for (int i = 0; i < board.Length; i++)
             {
-                int s = 0, e = board[0].Length - 1;
-                while (s < e && board[i][s] == 'O')
+                for (int j = 0; j < board[0].Length; j++)
                 {
-                    s++;
-                    flags[i, s] = true;
-                }
-                while (s < e && board[i][e] == 'O')
-                {
-                    e--;
-                    flags[i, e] = true;
-                }
-            }
-            for (int i = 0; i < board[0].Length; i++)
-            {
-                int s = 0, e = board.Length - 1;
-                while (s < e && board[s][i] == 'O')
-                {
-                    s++;
-                    flags[i, s] = true;
-                }
-                while (s < e && board[e][i] == 'O')
-                {
-                    e--;
-                    flags[i, e] = true;
+                    if (board[i][j] == '#')
+                    {
+                        board[i][j] = 'O';
+                    }
+                    else if (board[i][j] == '#')
+                    {
+                        board[i][j] = 'X';
+                    }
                 }
             }
         }
 
+        #endregion
+
+        #region 409. 最长回文串
+        //https://leetcode-cn.com/problems/longest-palindrome/
+        public int LongestPalindromeI(string s)
+        {
+            var dict = new Dictionary<char, int>();
+            foreach (var c in s)
+            {
+                if (dict.TryGetValue(c, out var n))
+                {
+                    dict[c] = n + 1;
+                }
+                else
+                {
+                    dict[c] = 1;
+                }
+            }
+            var res = 0;
+            var single = false;
+            foreach (var kv in dict)
+            {
+                if (kv.Value % 2 == 0)
+                {
+                    res += kv.Value;
+                }
+                else
+                {
+                    res += kv.Value - 1;
+                    single = true;
+                }
+            }
+            return res + (single ? 1 : 0);
+        }
         #endregion
     }
 }
