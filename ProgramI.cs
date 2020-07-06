@@ -723,7 +723,7 @@ namespace leetcode
                             continue;
                         }
 
-                        row[j] = (char) ('1' + num);
+                        row[j] = (char)('1' + num);
                         rows[i, num] = cols[j, num] = martix[rIndex, cIndex][num] = true;
                         if (Set(i, j + 1, index + 1))
                         {
@@ -799,7 +799,7 @@ namespace leetcode
             {
                 if (start > end)
                 {
-                    return new TreeNode[] {null};
+                    return new TreeNode[] { null };
                 }
 
                 var items = new List<TreeNode>();
@@ -1451,7 +1451,7 @@ namespace leetcode
                 return res;
             }
 
-            var num = (int) Math.Floor(Math.Sqrt(n));
+            var num = (int)Math.Floor(Math.Sqrt(n));
             if (num * num == n)
             {
                 res = 1;
@@ -1944,7 +1944,7 @@ namespace leetcode
             var max = 0;
             var result = new HashSet<string>();
             RemoveInvalidParentheses(s.ToCharArray(), l, r, result, new HashSet<string>(), ref max);
-            return result.Count <= 0 ? new[] {string.Empty} : result.ToArray();
+            return result.Count <= 0 ? new[] { string.Empty } : result.ToArray();
         }
 
         #endregion
@@ -2405,50 +2405,30 @@ namespace leetcode
 
         #region 210. 课程表 II
 
-        //todo 未完成
         //https://leetcode-cn.com/problems/course-schedule-ii/
         public int[] FindOrder(int numCourses, int[][] prerequisites)
         {
-            if (prerequisites.Length <= 0 || prerequisites[0].Length <= 0)
-            {
-                var res = new int[numCourses];
-                for (int i = 0; i < res.Length; i++)
-                {
-                    res[i] = i;
-                }
-
-                return res;
-            }
-
-            var classSet = new HashSet<int>();
-            var dependSet = new HashSet<int>();
             var preDict = new Dictionary<int, ISet<int>>();
+            var indexs = new int[numCourses];
             foreach (var prerequisite in prerequisites)
             {
-                var k = prerequisite[1];
+                int k = prerequisite[1], v = prerequisite[0];
                 if (!preDict.TryGetValue(k, out var set))
                 {
                     set = new HashSet<int>();
                     preDict[k] = set;
                 }
-
-                set.Add(prerequisite[0]);
-                dependSet.Add(prerequisite[0]);
-
-                set.Add(prerequisite[1]);
-                classSet.Add(prerequisite[0]);
-                classSet.Add(prerequisite[1]);
+                set.Add(v);
+                indexs[v]++;
             }
 
             var starts = new Queue<int>();
-            foreach (var cl in classSet)
+            for (int i = 0; i < numCourses; i++)
             {
-                if (dependSet.Contains(cl))
+                if (indexs[i] == 0)
                 {
-                    continue;
+                    starts.Enqueue(i);
                 }
-
-                starts.Enqueue(cl);
             }
 
             if (starts.Count <= 0)
@@ -2457,15 +2437,9 @@ namespace leetcode
             }
 
             var result = new List<int>();
-            var visited = new HashSet<int>();
             while (starts.Count > 0)
             {
                 var start = starts.Dequeue();
-                if (!visited.Add(start))
-                {
-                    continue;
-                }
-
                 result.Add(start);
                 if (!preDict.TryGetValue(start, out var pres))
                 {
@@ -2474,28 +2448,103 @@ namespace leetcode
 
                 foreach (var pre in pres)
                 {
-                    starts.Enqueue(pre);
+                    indexs[pre]--;
+                    if (indexs[pre] == 0)
+                    {
+                        starts.Enqueue(pre);
+                    }
                 }
             }
 
-            if (result.Count != classSet.Count)
+            if (result.Count != numCourses)
             {
                 return new int[0];
             }
-
-            for (int i = 0; i < numCourses && result.Count < numCourses; i++)
-            {
-                if (classSet.Contains(i))
-                {
-                    continue;
-                }
-
-                result.Add(i);
-            }
-
             return result.ToArray();
         }
 
+        #endregion
+
+        #region 150. 逆波兰表达式求值
+        //https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/
+        public int EvalRPN(string[] tokens)
+        {
+            var dictFunc = new Dictionary<string, Func<int, int, int>>();
+            dictFunc.Add("+", (a, b) => a + b);
+            dictFunc.Add("-", (a, b) => a - b);
+            dictFunc.Add("*", (a, b) => a * b);
+            dictFunc.Add("/", (a, b) => a / b);
+            var stack = new Stack<int>();
+            foreach (var token in tokens)
+            {
+                if (dictFunc.TryGetValue(token, out var func))
+                {
+                    int a = stack.Pop(), b = stack.Pop();
+                    stack.Push(func(b, a));
+                }
+                else
+                {
+                    stack.Push(int.Parse(token));
+                }
+            }
+            return stack.Pop();
+        }
+        #endregion
+
+        #region 227. 基本计算器 II
+        //https://leetcode-cn.com/problems/basic-calculator-ii/
+        public int Calculate(string s)
+        {
+            var level = new Dictionary<char, int>();
+            level.Add('+', 0);
+            level.Add('-', 0);
+            level.Add('*', 1);
+            level.Add('/', 1);
+            var stack = new Stack<int>();
+            var operators = new Stack<char>();
+            var num = 0;
+            s = s.Trim();
+            for (int i = 0; i < s.Length; i++)
+            {
+                var ch = s[i];
+                if (ch == ' ')
+                {
+                    continue;
+                }
+                if (char.IsDigit(ch))
+                {
+                    num = num * 10 + (ch - '0');
+                    if (i != s.Length - 1)
+                    {
+                        continue;
+                    }
+                }
+                stack.Push(num);
+                num = 0;
+                while (operators.Count > 0 && (i == s.Length - 1 || level[ch] <= level[operators.Peek()]))
+                {
+                    int n1 = stack.Pop(), n2 = stack.Pop();
+                    var pre = operators.Pop();
+                    switch (pre)
+                    {
+                        case '*':
+                            stack.Push(n1 * n2);
+                            break;
+                        case '/':
+                            stack.Push(n2 / n1);
+                            break;
+                        case '+':
+                            stack.Push(n1 + n2);
+                            break;
+                        case '-':
+                            stack.Push(n2 - n1);
+                            break;
+                    }
+                }
+                operators.Push(ch);
+            }
+            return stack.Pop();
+        }
         #endregion
     }
 }
