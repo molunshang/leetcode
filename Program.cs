@@ -29,6 +29,9 @@ namespace leetcode
 
         static void Main(string[] args)
         {
+            //6
+            //[[1,2],[3,0],[4,2],[3,5]]
+            program.FindOrder(6, new[] {new[] {1, 2}, new[] {3, 0}, new[] {4, 2}, new[] {3, 5}});
             program.Solve(JsonConvert.DeserializeObject<char[][]>(
                 "[['O','X','O','O','O','X'],['O','O','X','X','X','O'],['X','X','X','X','X','O'],['O','O','O','O','X','X'],['X','X','O','O','X','O'],['O','O','X','X','X','X']]"));
             Console.WriteLine(program.LeastInterval(

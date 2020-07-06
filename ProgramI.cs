@@ -723,7 +723,7 @@ namespace leetcode
                             continue;
                         }
 
-                        row[j] = (char)('1' + num);
+                        row[j] = (char) ('1' + num);
                         rows[i, num] = cols[j, num] = martix[rIndex, cIndex][num] = true;
                         if (Set(i, j + 1, index + 1))
                         {
@@ -799,7 +799,7 @@ namespace leetcode
             {
                 if (start > end)
                 {
-                    return new TreeNode[] { null };
+                    return new TreeNode[] {null};
                 }
 
                 var items = new List<TreeNode>();
@@ -1451,7 +1451,7 @@ namespace leetcode
                 return res;
             }
 
-            var num = (int)Math.Floor(Math.Sqrt(n));
+            var num = (int) Math.Floor(Math.Sqrt(n));
             if (num * num == n)
             {
                 res = 1;
@@ -1944,7 +1944,7 @@ namespace leetcode
             var max = 0;
             var result = new HashSet<string>();
             RemoveInvalidParentheses(s.ToCharArray(), l, r, result, new HashSet<string>(), ref max);
-            return result.Count <= 0 ? new[] { string.Empty } : result.ToArray();
+            return result.Count <= 0 ? new[] {string.Empty} : result.ToArray();
         }
 
         #endregion
@@ -2271,16 +2271,19 @@ namespace leetcode
 
             void Set(int x, int y)
             {
-                if (x < 0 || x >= board.Length || y < 0 || y >= board[0].Length || board[x][y] == '#' || board[x][y] == 'X')
+                if (x < 0 || x >= board.Length || y < 0 || y >= board[0].Length || board[x][y] == '#' ||
+                    board[x][y] == 'X')
                 {
                     return;
                 }
+
                 board[x][y] = '#';
                 Set(x + 1, y);
                 Set(x - 1, y);
                 Set(x, y + 1);
                 Set(x, y - 1);
             }
+
             for (int i = 0; i < board.Length; i++)
             {
                 for (int j = 0; j < board[0].Length; j++)
@@ -2289,6 +2292,7 @@ namespace leetcode
                     {
                         continue;
                     }
+
                     if (i == 0 || j == 0 || i == board.Length - 1 || j == board[0].Length - 1)
                     {
                         Set(i, j);
@@ -2315,6 +2319,7 @@ namespace leetcode
         #endregion
 
         #region 409. 最长回文串
+
         //https://leetcode-cn.com/problems/longest-palindrome/
         public int LongestPalindromeI(string s)
         {
@@ -2330,6 +2335,7 @@ namespace leetcode
                     dict[c] = 1;
                 }
             }
+
             var res = 0;
             var single = false;
             foreach (var kv in dict)
@@ -2344,8 +2350,152 @@ namespace leetcode
                     single = true;
                 }
             }
+
             return res + (single ? 1 : 0);
         }
+
+        #endregion
+
+        #region 1502. 判断能否形成等差数列
+
+        //https://leetcode-cn.com/problems/can-make-arithmetic-progression-from-sequence/
+        public bool CanMakeArithmeticProgression(int[] arr)
+        {
+            if (arr.Length < 3)
+            {
+                return true;
+            }
+
+            ISet<int> set = new HashSet<int>();
+            int one = arr[0], two = arr[1];
+            if (one < two)
+            {
+                one = two;
+                two = arr[0];
+            }
+
+            set.Add(one);
+            set.Add(two);
+            for (int i = 2; i < arr.Length; i++)
+            {
+                if (arr[i] > one)
+                {
+                    two = one;
+                    one = arr[i];
+                }
+                else if (arr[i] > two)
+                {
+                    two = arr[i];
+                }
+
+                set.Add(arr[i]);
+            }
+
+            int step = one - two;
+            if (step == 0)
+            {
+                return set.Count == 1;
+            }
+
+            set.Add(one + step);
+            return arr.All(anArr => set.Contains(anArr + step));
+        }
+
+        #endregion
+
+        #region 210. 课程表 II
+
+        //todo 未完成
+        //https://leetcode-cn.com/problems/course-schedule-ii/
+        public int[] FindOrder(int numCourses, int[][] prerequisites)
+        {
+            if (prerequisites.Length <= 0 || prerequisites[0].Length <= 0)
+            {
+                var res = new int[numCourses];
+                for (int i = 0; i < res.Length; i++)
+                {
+                    res[i] = i;
+                }
+
+                return res;
+            }
+
+            var classSet = new HashSet<int>();
+            var dependSet = new HashSet<int>();
+            var preDict = new Dictionary<int, ISet<int>>();
+            foreach (var prerequisite in prerequisites)
+            {
+                var k = prerequisite[1];
+                if (!preDict.TryGetValue(k, out var set))
+                {
+                    set = new HashSet<int>();
+                    preDict[k] = set;
+                }
+
+                set.Add(prerequisite[0]);
+                dependSet.Add(prerequisite[0]);
+
+                set.Add(prerequisite[1]);
+                classSet.Add(prerequisite[0]);
+                classSet.Add(prerequisite[1]);
+            }
+
+            var starts = new Queue<int>();
+            foreach (var cl in classSet)
+            {
+                if (dependSet.Contains(cl))
+                {
+                    continue;
+                }
+
+                starts.Enqueue(cl);
+            }
+
+            if (starts.Count <= 0)
+            {
+                return new int[0];
+            }
+
+            var result = new List<int>();
+            var visited = new HashSet<int>();
+            while (starts.Count > 0)
+            {
+                var start = starts.Dequeue();
+                if (!visited.Add(start))
+                {
+                    continue;
+                }
+
+                result.Add(start);
+                if (!preDict.TryGetValue(start, out var pres))
+                {
+                    continue;
+                }
+
+                foreach (var pre in pres)
+                {
+                    starts.Enqueue(pre);
+                }
+            }
+
+            if (result.Count != classSet.Count)
+            {
+                return new int[0];
+            }
+
+            for (int i = 0; i < numCourses && result.Count < numCourses; i++)
+            {
+                if (classSet.Contains(i))
+                {
+                    continue;
+                }
+
+                result.Add(i);
+            }
+
+            return result.ToArray();
+        }
+
         #endregion
     }
 }

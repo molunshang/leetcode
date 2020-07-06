@@ -5,8 +5,9 @@ using System.Text;
 
 namespace leetcode
 {
-    public class Solution
+    public partial class Solution
     {
+        public Solution(){}
         public TreeNode BuildTree(int[] preorder, int preStart, int preEnd, int[] inorder, int inStart, int inEnd)
         {
             if (preStart > preEnd)
