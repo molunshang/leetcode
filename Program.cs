@@ -31,6 +31,7 @@ namespace leetcode
         {
             //6
             //[[1,2],[3,0],[4,2],[3,5]]
+            program.CanReach(new[] {3, 0, 1, 2}, 0);
             program.Calculate("1+2*5/3+6/4*2");
             program.FindOrder(6, new[] {new[] {1, 2}, new[] {3, 0}, new[] {4, 2}, new[] {3, 5}});
             program.Solve(JsonConvert.DeserializeObject<char[][]>(

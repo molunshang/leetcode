@@ -723,7 +723,7 @@ namespace leetcode
                             continue;
                         }
 
-                        row[j] = (char)('1' + num);
+                        row[j] = (char) ('1' + num);
                         rows[i, num] = cols[j, num] = martix[rIndex, cIndex][num] = true;
                         if (Set(i, j + 1, index + 1))
                         {
@@ -799,7 +799,7 @@ namespace leetcode
             {
                 if (start > end)
                 {
-                    return new TreeNode[] { null };
+                    return new TreeNode[] {null};
                 }
 
                 var items = new List<TreeNode>();
@@ -1451,7 +1451,7 @@ namespace leetcode
                 return res;
             }
 
-            var num = (int)Math.Floor(Math.Sqrt(n));
+            var num = (int) Math.Floor(Math.Sqrt(n));
             if (num * num == n)
             {
                 res = 1;
@@ -1944,7 +1944,7 @@ namespace leetcode
             var max = 0;
             var result = new HashSet<string>();
             RemoveInvalidParentheses(s.ToCharArray(), l, r, result, new HashSet<string>(), ref max);
-            return result.Count <= 0 ? new[] { string.Empty } : result.ToArray();
+            return result.Count <= 0 ? new[] {string.Empty} : result.ToArray();
         }
 
         #endregion
@@ -2418,6 +2418,7 @@ namespace leetcode
                     set = new HashSet<int>();
                     preDict[k] = set;
                 }
+
                 set.Add(v);
                 indexs[v]++;
             }
@@ -2460,12 +2461,14 @@ namespace leetcode
             {
                 return new int[0];
             }
+
             return result.ToArray();
         }
 
         #endregion
 
         #region 150. 逆波兰表达式求值
+
         //https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/
         public int EvalRPN(string[] tokens)
         {
@@ -2487,11 +2490,14 @@ namespace leetcode
                     stack.Push(int.Parse(token));
                 }
             }
+
             return stack.Pop();
         }
+
         #endregion
 
         #region 227. 基本计算器 II
+
         //https://leetcode-cn.com/problems/basic-calculator-ii/
         public int Calculate(string s)
         {
@@ -2511,6 +2517,7 @@ namespace leetcode
                 {
                     continue;
                 }
+
                 if (char.IsDigit(ch))
                 {
                     num = num * 10 + (ch - '0');
@@ -2519,6 +2526,7 @@ namespace leetcode
                         continue;
                     }
                 }
+
                 stack.Push(num);
                 num = 0;
                 while (operators.Count > 0 && (i == s.Length - 1 || level[ch] <= level[operators.Peek()]))
@@ -2541,10 +2549,286 @@ namespace leetcode
                             break;
                     }
                 }
+
                 operators.Push(ch);
             }
+
             return stack.Pop();
         }
+
         #endregion
+
+        #region 134. 加油站
+
+        //https://leetcode-cn.com/problems/gas-station/
+        public int CanCompleteCircuit(int[] gas, int[] cost)
+        {
+            for (int i = 0; i < gas.Length; i++)
+            {
+                var cur = gas[i];
+                int pre = i, ci = i + 1;
+                while (true)
+                {
+                    if (ci >= cost.Length)
+                    {
+                        ci = 0;
+                        pre = cost.Length - 1;
+                    }
+
+                    cur -= cost[pre];
+                    if (cur < 0)
+                    {
+                        break;
+                    }
+
+                    if (ci == i)
+                    {
+                        return i;
+                    }
+
+                    cur += gas[ci];
+                    pre = ci;
+                    ci++;
+                }
+            }
+
+            return -1;
+        }
+
+        #endregion
+
+        #region 212. 单词搜索 II
+
+        //https://leetcode-cn.com/problems/word-search-ii/
+        class TrieTree
+        {
+            public char Char;
+            public bool IsWord;
+            public TrieTree[] Trees;
+        }
+
+        void FindWords(int x, int y, char[][] board, TrieTree trieTree, bool[,] visited, ICollection<string> result,
+            IList<char> sub)
+        {
+            if (x < 0 || x >= board.Length || y < 0 || y >= board[0].Length || visited[x, y])
+            {
+                return;
+            }
+
+            var ch = board[x][y];
+            if (trieTree.Char != ch)
+            {
+                return;
+            }
+
+            sub.Add(ch);
+            if (trieTree.IsWord)
+            {
+                result.Add(new string(sub.ToArray()));
+            }
+
+            visited[x, y] = true;
+            if (trieTree.Trees != null)
+            {
+                foreach (var tree in trieTree.Trees)
+                {
+                    if (tree == null)
+                    {
+                        continue;
+                    }
+
+                    FindWords(x - 1, y, board, tree, visited, result, sub);
+                    FindWords(x + 1, y, board, tree, visited, result, sub);
+                    FindWords(x, y - 1, board, tree, visited, result, sub);
+                    FindWords(x, y + 1, board, tree, visited, result, sub);
+                }
+            }
+
+            visited[x, y] = false;
+            sub.RemoveAt(sub.Count - 1);
+        }
+
+        public IList<string> FindWords(char[][] board, string[] words)
+        {
+            var treeList = new TrieTree[26];
+            foreach (var word in words)
+            {
+                var currentTree = treeList;
+                for (int i = 0; i < word.Length; i++)
+                {
+                    var ch = word[i];
+                    var tree = currentTree[ch - 'a'];
+                    if (tree == null)
+                    {
+                        tree = new TrieTree() {Char = ch, Trees = new TrieTree[26]};
+                        currentTree[ch - 'a'] = tree;
+                    }
+
+                    tree.IsWord = tree.IsWord || i == word.Length - 1;
+                    currentTree = tree.Trees;
+                }
+            }
+
+            var result = new HashSet<string>();
+            var visited = new bool[board.Length, board[0].Length];
+            for (int i = 0; i < board.Length; i++)
+            {
+                for (int j = 0; j < board[0].Length; j++)
+                {
+                    var trieTree = treeList[board[i][j] - 'a'];
+                    if (trieTree == null)
+                    {
+                        continue;
+                    }
+
+                    FindWords(i, j, board, trieTree, visited, result, new List<char>());
+                }
+            }
+
+            return result.ToArray();
+        }
+
+        #endregion
+
+        #region 1306. 跳跃游戏 III
+
+        //https://leetcode-cn.com/problems/jump-game-iii/
+        public bool CanReach(int[] arr, int start)
+        {
+            var visited = new HashSet<int>();
+            var queue = new Queue<int>();
+            queue.Enqueue(start);
+            while (queue.Count > 0)
+            {
+                start = queue.Dequeue();
+                if (arr[start] == 0)
+                {
+                    return true;
+                }
+
+                if (!visited.Add(start))
+                {
+                    continue;
+                }
+
+                if (start + arr[start] < arr.Length)
+                {
+                    queue.Enqueue(start + arr[start]);
+                }
+
+                if (start - arr[start] > -1)
+                {
+                    queue.Enqueue(start - arr[start]);
+                }
+            }
+
+            return false;
+        }
+
+        #endregion
+
+        #region 1232. 缀点成线
+
+        //https://leetcode-cn.com/problems/check-if-it-is-a-straight-line/
+        public bool CheckStraightLine(int[][] coordinates)
+        {
+            if (coordinates.Length <= 2)
+            {
+                return true;
+            }
+
+            int x = coordinates[0][0] - coordinates[1][0], y = coordinates[0][1] - coordinates[1][1];
+            for (int i = 2; i < coordinates.Length; i++)
+            {
+                //求斜率 x1/y1=x2/y2 可以转换成 x1*y2=x2*y1
+                int x1 = coordinates[i - 1][0] - coordinates[i][0], y1 = coordinates[i - 1][1] - coordinates[i][1];
+                if (x1 * y != y1 * x)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        #endregion
+
+        #region 468. 验证IP地址
+
+        //https://leetcode-cn.com/problems/validate-ip-address/
+        bool ValidIP4Address(string ip)
+        {
+            var arr = ip.Split('.');
+            if (arr.Length != 4)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < arr.Length; i++)
+            {
+                if (arr[i].Length <= 0 || arr[i][0] == '0' && (i == 0 || arr[i].Length > 1))
+                {
+                    return false;
+                }
+
+                if (!byte.TryParse(arr[i], out _))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        bool ValidIP6Address(string ip)
+        {
+            var arr = ip.Split(':');
+            if (arr.Length != 8)
+            {
+                return false;
+            }
+
+            foreach (var s in arr)
+            {
+                if (s.Length <= 0 || s.Length > 4)
+                {
+                    return false;
+                }
+
+                if (s.Any(ch => ('0' > ch || ch > '9') && ('a' > ch || ch > 'f') && ('A' > ch || ch > 'F')))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public string ValidIPAddress(string ip)
+        {
+            if (ip.IndexOf('.') > 0 && ValidIP4Address(ip))
+            {
+                return "IPv4";
+            }
+
+            if (ip.IndexOf(':') > 0 && ValidIP6Address(ip))
+            {
+                return "IPv6";
+            }
+
+            return "Neither";
+        }
+
+        #endregion
+
+        #region 214. 最短回文串
+
+        //https://leetcode-cn.com/problems/shortest-palindrome/
+        public string ShortestPalindrome(string s) {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+        //largestNumber
     }
 }
