@@ -723,7 +723,7 @@ namespace leetcode
                             continue;
                         }
 
-                        row[j] = (char) ('1' + num);
+                        row[j] = (char)('1' + num);
                         rows[i, num] = cols[j, num] = martix[rIndex, cIndex][num] = true;
                         if (Set(i, j + 1, index + 1))
                         {
@@ -799,7 +799,7 @@ namespace leetcode
             {
                 if (start > end)
                 {
-                    return new TreeNode[] {null};
+                    return new TreeNode[] { null };
                 }
 
                 var items = new List<TreeNode>();
@@ -1451,7 +1451,7 @@ namespace leetcode
                 return res;
             }
 
-            var num = (int) Math.Floor(Math.Sqrt(n));
+            var num = (int)Math.Floor(Math.Sqrt(n));
             if (num * num == n)
             {
                 res = 1;
@@ -1944,7 +1944,7 @@ namespace leetcode
             var max = 0;
             var result = new HashSet<string>();
             RemoveInvalidParentheses(s.ToCharArray(), l, r, result, new HashSet<string>(), ref max);
-            return result.Count <= 0 ? new[] {string.Empty} : result.ToArray();
+            return result.Count <= 0 ? new[] { string.Empty } : result.ToArray();
         }
 
         #endregion
@@ -2660,7 +2660,7 @@ namespace leetcode
                     var tree = currentTree[ch - 'a'];
                     if (tree == null)
                     {
-                        tree = new TrieTree() {Char = ch, Trees = new TrieTree[26]};
+                        tree = new TrieTree() { Char = ch, Trees = new TrieTree[26] };
                         currentTree[ch - 'a'] = tree;
                     }
 
@@ -2824,11 +2824,231 @@ namespace leetcode
         #region 214. 最短回文串
 
         //https://leetcode-cn.com/problems/shortest-palindrome/
-        public string ShortestPalindrome(string s) {
-            throw new NotImplementedException();
+        //todo 性能优化
+        public string ShortestPalindrome(string s)
+        {
+            var reverseStr = new string(s.Reverse().ToArray());
+            for (int i = 0; i < reverseStr.Length; i++)
+            {
+                if (s.IndexOf(reverseStr.Substring(i, reverseStr.Length - i)) == 0)
+                {
+                    s = reverseStr.Substring(0, i) + s;
+                    break;
+                }
+            }
+            return s;
         }
 
         #endregion
-        //largestNumber
+
+        #region 179. 最大数
+        //https://leetcode-cn.com/problems/largest-number/
+        public string LargestNumber(int[] nums)
+        {
+            Array.Sort(nums, Comparer<int>.Create((a, b) =>
+             {
+                 string s1 = a + string.Empty + b, s2 = b + string.Empty + a;
+                 return s2.CompareTo(s1);
+             }));
+            if (nums[0] == 0)
+            {
+                return "0";
+            }
+            var res = new StringBuilder();
+            foreach (var num in nums)
+            {
+                res.Append(num);
+            }
+            return res.ToString();
+        }
+        #endregion
+
+        #region 547. 朋友圈
+        //https://leetcode-cn.com/problems/friend-circles/
+        void FindCircleNum(int n, int[][] m, ISet<int> friends)
+        {
+            if (!friends.Add(n))
+            {
+                return;
+            }
+            for (int i = 0; i < m[n].Length; i++)
+            {
+                if (m[n][i] == 0)
+                {
+                    continue;
+                }
+                FindCircleNum(i, m, friends);
+            }
+
+        }
+        public int FindCircleNum(int[][] m)
+        {
+            var n = m.Length;
+            var res = 0;
+            var friends = new HashSet<int>();
+            for (int i = 0; i < n; i++)
+            {
+                if (friends.Contains(i))
+                {
+                    continue;
+                }
+                FindCircleNum(i, m, friends);
+                res++;
+            }
+            return res;
+        }
+
+        #endregion
+
+        #region 1002. 查找常用字符
+        //https://leetcode-cn.com/problems/find-common-characters/
+        public IList<string> CommonChars(string[] a)
+        {
+            if (a.Length <= 0)
+            {
+                return new string[0];
+            }
+            var dict = new int[26];
+            foreach (var ch in a[0])
+            {
+                dict[ch - 'a']++;
+            }
+            var temp = new int[26];
+            for (int i = 1; i < a.Length; i++)
+            {
+                foreach (var ch in a[i])
+                {
+                    temp[ch - 'a']++;
+                }
+                for (int j = 0; j < dict.Length; j++)
+                {
+                    if (dict[j] != 0 && temp[j] != 0)
+                    {
+                        dict[j] = Math.Min(dict[j], temp[j]);
+                    }
+                    else
+                    {
+                        dict[j] = 0;
+                    }
+                    temp[j] = 0;
+                }
+            }
+            var result = new List<string>();
+            for (int i = 0; i < dict.Length; i++)
+            {
+                if (dict[i] == 0)
+                {
+                    continue;
+                }
+                result.AddRange(Enumerable.Repeat(((char)(i + 'a')).ToString(), dict[i]));
+            }
+            return result;
+        }
+        #endregion
+
+        #region 面试题 16.11. 跳水板
+        //https://leetcode-cn.com/problems/diving-board-lcci/
+
+        #region 回溯(超时)
+        void DivingBoard(int index, IList<int> lens, int k, int len, IList<int> result)
+        {
+            if (k == 0)
+            {
+                result.Add(len);
+                return;
+            }
+            for (int i = index; i < lens.Count; i++)
+            {
+                if (i > index && lens[i] == lens[i - 1])
+                {
+                    continue;
+                }
+                DivingBoard(i + 1, lens, k - 1, len + lens[i], result);
+            }
+        }
+
+        public int[] DivingBoard(int shorter, int longer, int k)
+        {
+            if (k <= 0)
+            {
+                return new int[0];
+            }
+            if (shorter == longer)
+            {
+                return new[] { longer * k };
+            }
+            var nums = new int[k * 2];
+            for (int i = 0, j = k; i < k; i++, j++)
+            {
+                nums[i] = shorter;
+                nums[j] = longer;
+            }
+            var result = new List<int>();
+            DivingBoard(0, nums, k, 0, result);
+            return result.ToArray();
+        }
+        #endregion
+
+        #region 递归（超时）
+        public int[] DivingBoardR(int shorter, int longer, int k)
+        {
+            if (k <= 0)
+            {
+                return new int[0];
+            }
+            if (shorter == longer)
+            {
+                return new[] { longer * k };
+            }
+            if (k == 1)
+            {
+                return new[] { shorter, longer };
+            }
+            var items = DivingBoardR(shorter, longer, k - 1);
+            if (items.Length <= 0)
+            {
+                return new[] { shorter, longer };
+            }
+            var res = new List<int>();
+            foreach (var item in items)
+            {
+                res.Add(item + shorter);
+            }
+            foreach (var item in items)
+            {
+                var n = item + longer;
+                if (res[res.Count - 1] >= n)
+                {
+                    continue;
+                }
+                res.Add(n);
+            }
+            return res.ToArray();
+        }
+        #endregion
+        //数学
+        public int[] DivingBoardMath(int shorter, int longer, int k)
+        {
+            if (k <= 0)
+            {
+                return new int[0];
+            }
+            if (shorter == longer)
+            {
+                return new[] { longer * k };
+            }
+            if (k == 1)
+            {
+                return new[] { shorter, longer };
+            }
+
+            var res = new List<int>();
+            for (int i = 0; i <= k; i++)
+            {
+                res.Add((k - i) * shorter + longer * i);
+            }
+            return res.ToArray();
+        }
+        #endregion
     }
 }
