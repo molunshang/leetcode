@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization.Json;
 using System.Text;
 
 namespace leetcode
@@ -723,7 +721,7 @@ namespace leetcode
                             continue;
                         }
 
-                        row[j] = (char)('1' + num);
+                        row[j] = (char) ('1' + num);
                         rows[i, num] = cols[j, num] = martix[rIndex, cIndex][num] = true;
                         if (Set(i, j + 1, index + 1))
                         {
@@ -799,7 +797,7 @@ namespace leetcode
             {
                 if (start > end)
                 {
-                    return new TreeNode[] { null };
+                    return new TreeNode[] {null};
                 }
 
                 var items = new List<TreeNode>();
@@ -1451,7 +1449,7 @@ namespace leetcode
                 return res;
             }
 
-            var num = (int)Math.Floor(Math.Sqrt(n));
+            var num = (int) Math.Floor(Math.Sqrt(n));
             if (num * num == n)
             {
                 res = 1;
@@ -1944,7 +1942,7 @@ namespace leetcode
             var max = 0;
             var result = new HashSet<string>();
             RemoveInvalidParentheses(s.ToCharArray(), l, r, result, new HashSet<string>(), ref max);
-            return result.Count <= 0 ? new[] { string.Empty } : result.ToArray();
+            return result.Count <= 0 ? new[] {string.Empty} : result.ToArray();
         }
 
         #endregion
@@ -2660,7 +2658,7 @@ namespace leetcode
                     var tree = currentTree[ch - 'a'];
                     if (tree == null)
                     {
-                        tree = new TrieTree() { Char = ch, Trees = new TrieTree[26] };
+                        tree = new TrieTree {Char = ch, Trees = new TrieTree[26]};
                         currentTree[ch - 'a'] = tree;
                     }
 
@@ -2836,34 +2834,40 @@ namespace leetcode
                     break;
                 }
             }
+
             return s;
         }
 
         #endregion
 
         #region 179. 最大数
+
         //https://leetcode-cn.com/problems/largest-number/
         public string LargestNumber(int[] nums)
         {
             Array.Sort(nums, Comparer<int>.Create((a, b) =>
-             {
-                 string s1 = a + string.Empty + b, s2 = b + string.Empty + a;
-                 return s2.CompareTo(s1);
-             }));
+            {
+                string s1 = a + string.Empty + b, s2 = b + string.Empty + a;
+                return s2.CompareTo(s1);
+            }));
             if (nums[0] == 0)
             {
                 return "0";
             }
+
             var res = new StringBuilder();
             foreach (var num in nums)
             {
                 res.Append(num);
             }
+
             return res.ToString();
         }
+
         #endregion
 
         #region 547. 朋友圈
+
         //https://leetcode-cn.com/problems/friend-circles/
         void FindCircleNum(int n, int[][] m, ISet<int> friends)
         {
@@ -2871,16 +2875,18 @@ namespace leetcode
             {
                 return;
             }
+
             for (int i = 0; i < m[n].Length; i++)
             {
                 if (m[n][i] == 0)
                 {
                     continue;
                 }
+
                 FindCircleNum(i, m, friends);
             }
-
         }
+
         public int FindCircleNum(int[][] m)
         {
             var n = m.Length;
@@ -2892,15 +2898,18 @@ namespace leetcode
                 {
                     continue;
                 }
+
                 FindCircleNum(i, m, friends);
                 res++;
             }
+
             return res;
         }
 
         #endregion
 
         #region 1002. 查找常用字符
+
         //https://leetcode-cn.com/problems/find-common-characters/
         public IList<string> CommonChars(string[] a)
         {
@@ -2908,11 +2917,13 @@ namespace leetcode
             {
                 return new string[0];
             }
+
             var dict = new int[26];
             foreach (var ch in a[0])
             {
                 dict[ch - 'a']++;
             }
+
             var temp = new int[26];
             for (int i = 1; i < a.Length; i++)
             {
@@ -2920,6 +2931,7 @@ namespace leetcode
                 {
                     temp[ch - 'a']++;
                 }
+
                 for (int j = 0; j < dict.Length; j++)
                 {
                     if (dict[j] != 0 && temp[j] != 0)
@@ -2930,9 +2942,11 @@ namespace leetcode
                     {
                         dict[j] = 0;
                     }
+
                     temp[j] = 0;
                 }
             }
+
             var result = new List<string>();
             for (int i = 0; i < dict.Length; i++)
             {
@@ -2940,16 +2954,21 @@ namespace leetcode
                 {
                     continue;
                 }
-                result.AddRange(Enumerable.Repeat(((char)(i + 'a')).ToString(), dict[i]));
+
+                result.AddRange(Enumerable.Repeat(((char) (i + 'a')).ToString(), dict[i]));
             }
+
             return result;
         }
+
         #endregion
 
         #region 面试题 16.11. 跳水板
+
         //https://leetcode-cn.com/problems/diving-board-lcci/
 
         #region 回溯(超时)
+
         void DivingBoard(int index, IList<int> lens, int k, int len, IList<int> result)
         {
             if (k == 0)
@@ -2957,12 +2976,14 @@ namespace leetcode
                 result.Add(len);
                 return;
             }
+
             for (int i = index; i < lens.Count; i++)
             {
                 if (i > index && lens[i] == lens[i - 1])
                 {
                     continue;
                 }
+
                 DivingBoard(i + 1, lens, k - 1, len + lens[i], result);
             }
         }
@@ -2973,47 +2994,57 @@ namespace leetcode
             {
                 return new int[0];
             }
+
             if (shorter == longer)
             {
-                return new[] { longer * k };
+                return new[] {longer * k};
             }
+
             var nums = new int[k * 2];
             for (int i = 0, j = k; i < k; i++, j++)
             {
                 nums[i] = shorter;
                 nums[j] = longer;
             }
+
             var result = new List<int>();
             DivingBoard(0, nums, k, 0, result);
             return result.ToArray();
         }
+
         #endregion
 
         #region 递归（超时）
+
         public int[] DivingBoardR(int shorter, int longer, int k)
         {
             if (k <= 0)
             {
                 return new int[0];
             }
+
             if (shorter == longer)
             {
-                return new[] { longer * k };
+                return new[] {longer * k};
             }
+
             if (k == 1)
             {
-                return new[] { shorter, longer };
+                return new[] {shorter, longer};
             }
+
             var items = DivingBoardR(shorter, longer, k - 1);
             if (items.Length <= 0)
             {
-                return new[] { shorter, longer };
+                return new[] {shorter, longer};
             }
+
             var res = new List<int>();
             foreach (var item in items)
             {
                 res.Add(item + shorter);
             }
+
             foreach (var item in items)
             {
                 var n = item + longer;
@@ -3021,11 +3052,15 @@ namespace leetcode
                 {
                     continue;
                 }
+
                 res.Add(n);
             }
+
             return res.ToArray();
         }
+
         #endregion
+
         //数学
         public int[] DivingBoardMath(int shorter, int longer, int k)
         {
@@ -3033,13 +3068,15 @@ namespace leetcode
             {
                 return new int[0];
             }
+
             if (shorter == longer)
             {
-                return new[] { longer * k };
+                return new[] {longer * k};
             }
+
             if (k == 1)
             {
-                return new[] { shorter, longer };
+                return new[] {shorter, longer};
             }
 
             var res = new List<int>();
@@ -3047,8 +3084,227 @@ namespace leetcode
             {
                 res.Add((k - i) * shorter + longer * i);
             }
+
             return res.ToArray();
         }
+
         #endregion
+
+        #region 1072. 按列翻转得到最大值等行数
+
+        //https://leetcode-cn.com/problems/flip-columns-for-maximum-number-of-equal-rows/
+        //位运算(异或操作，不同位变1，找出异或后相同的数量，即为最大数)
+        //题解：https://leetcode-cn.com/problems/flip-columns-for-maximum-number-of-equal-rows/solution/xun-zhao-ju-you-xiang-tong-de-te-zheng-de-xing-de-/
+        public int MaxEqualRowsAfterFlips(int[][] matrix)
+        {
+            if (matrix.Length <= 0 || matrix[0].Length <= 0)
+            {
+                return 0;
+            }
+
+            var dict = new Dictionary<string, int>();
+            var keyBuilder = new StringBuilder();
+            var res = 0;
+            foreach (var ints in matrix)
+            {
+                var flag = ints[0] == 0;
+                foreach (var i in ints)
+                {
+                    if (flag)
+                    {
+                        keyBuilder.Append(i);
+                    }
+                    else
+                    {
+                        keyBuilder.Append(i ^ 1);
+                    }
+                }
+
+                var key = keyBuilder.ToString();
+                if (dict.TryGetValue(key, out var n))
+                {
+                    dict[key] = n + 1;
+                }
+                else
+                {
+                    dict[key] = 1;
+                }
+
+                res = Math.Max(res, dict[key]);
+                keyBuilder.Clear();
+            }
+
+            return res;
+        }
+
+        #endregion
+
+        #region 1201. 丑数 III
+
+        //https://leetcode-cn.com/problems/ugly-number-iii/
+        //二分查找（最大公约数/最大公倍数）
+        //解题思路 https://leetcode-cn.com/problems/ugly-number-iii/solution/er-fen-fa-si-lu-pou-xi-by-alfeim/
+        public int NthUglyNumber(int n, int a, int b, int c)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region 830. 较大分组的位置
+
+        //https://leetcode-cn.com/problems/positions-of-large-groups/
+        public IList<IList<int>> LargeGroupPositions(string s)
+        {
+            if (s.Length < 3)
+            {
+                return new IList<int>[0];
+            }
+
+            var result = new List<IList<int>>();
+            var size = 0;
+            for (int i = 0, j = 0; i < s.Length; i++)
+            {
+                if (s[i] == s[j])
+                {
+                    size++;
+                    continue;
+                }
+
+                if (size >= 3)
+                {
+                    result.Add(new[] {j, i - 1});
+                }
+
+                j = i;
+                size = 1;
+            }
+
+            if (size >= 3)
+            {
+                result.Add(new[] {s.Length - size, s.Length - 1});
+            }
+
+            return result.ToArray();
+        }
+
+        #endregion
+
+        #region 1433. 检查一个字符串是否可以打破另一个字符串
+
+        //https://leetcode-cn.com/problems/check-if-a-string-can-break-another-string/
+        public bool CheckIfCanBreak(string s1, string s2)
+        {
+            char[] chars1 = s1.ToCharArray(), chars2 = s2.ToCharArray();
+            Array.Sort(chars1);
+            Array.Sort(chars2);
+            bool flag1 = true, flag2 = true;
+            for (int i = 0; i < chars1.Length; i++)
+            {
+                if (flag1 && chars1[i] < chars2[i])
+                {
+                    flag1 = false;
+                }
+
+                if (flag2 && chars1[i] > chars2[i])
+                {
+                    flag2 = false;
+                }
+
+                if (!flag1 && !flag2)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        #endregion
+
+        #region 1262. 可被三整除的最大和
+
+        //https://leetcode-cn.com/problems/greatest-sum-divisible-by-three/
+        public int MaxSumDivThree(int[] nums)
+        {
+            if (nums.Length <= 0)
+            {
+                return 0;
+            }
+
+            if (nums.Length == 1)
+            {
+                return nums[0] % 3 == 0 ? nums[0] : 0;
+            }
+
+            var dp = new int[3];
+            var res = new int[3];
+            for (int i = 0; i < nums.Length; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    var num = res[j] + nums[i];
+                    var mod = num % 3;
+                    dp[mod] = Math.Max(dp[mod], num);
+                }
+
+                for (int j = 0; j < 3; j++)
+                {
+                    res[j] = Math.Max(res[j], dp[j]);
+                }
+            }
+
+            return dp[0];
+        }
+
+        #endregion
+
+        #region 1185. 一周中的第几天
+
+        //https://leetcode-cn.com/problems/day-of-the-week/
+        public string DayOfTheWeek(int day, int month, int year)
+        {
+            var daysToMonth365 = new[]
+            {
+                0,
+                31,
+                59,
+                90,
+                120,
+                151,
+                181,
+                212,
+                243,
+                273,
+                304,
+                334,
+                365
+            };
+            var daysToMonth366 = new[]
+            {
+                0,
+                31,
+                60,
+                91,
+                121,
+                152,
+                182,
+                213,
+                244,
+                274,
+                305,
+                335,
+                366
+            };
+            var weeks = new[] {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+            var numArray = DateTime.IsLeapYear(year) ? daysToMonth366 : daysToMonth365;
+            var num = year - 1;
+            var days = num * 365 + num / 4 - num / 100 + num / 400 + numArray[month - 1] + day;
+            return weeks[days % weeks.Length];
+        }
+
+        #endregion
+        
+        
     }
 }

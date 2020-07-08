@@ -31,7 +31,7 @@ namespace leetcode
         {
             //6
             //[[1,2],[3,0],[4,2],[3,5]]
-            program.CanReach(new[] {3, 0, 1, 2}, 0);
+            program.MaxSumDivThree(new[] {3, 6, 5, 1, 8});
             program.Calculate("1+2*5/3+6/4*2");
             program.FindOrder(6, new[] {new[] {1, 2}, new[] {3, 0}, new[] {4, 2}, new[] {3, 5}});
             program.Solve(JsonConvert.DeserializeObject<char[][]>(
@@ -8135,7 +8135,7 @@ namespace leetcode
         #endregion
 
         #region 1365. 有多少小于当前数字的数字
-
+        //https://leetcode-cn.com/problems/how-many-numbers-are-smaller-than-the-current-number/
         public int[] SmallerNumbersThanCurrent(int[] nums)
         {
             var buckets = new int[101];
@@ -8144,17 +8144,19 @@ namespace leetcode
                 buckets[num]++;
             }
 
+            for (int i = 1; i < buckets.Length; i++)
+            {
+                buckets[i] += buckets[i - 1];
+            }
+
             var result = new int[nums.Length];
             for (int i = 0; i < nums.Length; i++)
             {
-                var num = nums[i];
-                var count = 0;
-                for (int j = 0; j < num; j++)
+                if (nums[i] == 0)
                 {
-                    count += buckets[j];
+                    continue;
                 }
-
-                result[i] = count;
+                result[i] = buckets[nums[i] - 1];
             }
 
             return result;
