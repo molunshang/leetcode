@@ -721,7 +721,7 @@ namespace leetcode
                             continue;
                         }
 
-                        row[j] = (char) ('1' + num);
+                        row[j] = (char)('1' + num);
                         rows[i, num] = cols[j, num] = martix[rIndex, cIndex][num] = true;
                         if (Set(i, j + 1, index + 1))
                         {
@@ -797,7 +797,7 @@ namespace leetcode
             {
                 if (start > end)
                 {
-                    return new TreeNode[] {null};
+                    return new TreeNode[] { null };
                 }
 
                 var items = new List<TreeNode>();
@@ -1449,7 +1449,7 @@ namespace leetcode
                 return res;
             }
 
-            var num = (int) Math.Floor(Math.Sqrt(n));
+            var num = (int)Math.Floor(Math.Sqrt(n));
             if (num * num == n)
             {
                 res = 1;
@@ -1942,7 +1942,7 @@ namespace leetcode
             var max = 0;
             var result = new HashSet<string>();
             RemoveInvalidParentheses(s.ToCharArray(), l, r, result, new HashSet<string>(), ref max);
-            return result.Count <= 0 ? new[] {string.Empty} : result.ToArray();
+            return result.Count <= 0 ? new[] { string.Empty } : result.ToArray();
         }
 
         #endregion
@@ -2658,7 +2658,7 @@ namespace leetcode
                     var tree = currentTree[ch - 'a'];
                     if (tree == null)
                     {
-                        tree = new TrieTree {Char = ch, Trees = new TrieTree[26]};
+                        tree = new TrieTree { Char = ch, Trees = new TrieTree[26] };
                         currentTree[ch - 'a'] = tree;
                     }
 
@@ -2955,7 +2955,7 @@ namespace leetcode
                     continue;
                 }
 
-                result.AddRange(Enumerable.Repeat(((char) (i + 'a')).ToString(), dict[i]));
+                result.AddRange(Enumerable.Repeat(((char)(i + 'a')).ToString(), dict[i]));
             }
 
             return result;
@@ -2997,7 +2997,7 @@ namespace leetcode
 
             if (shorter == longer)
             {
-                return new[] {longer * k};
+                return new[] { longer * k };
             }
 
             var nums = new int[k * 2];
@@ -3025,18 +3025,18 @@ namespace leetcode
 
             if (shorter == longer)
             {
-                return new[] {longer * k};
+                return new[] { longer * k };
             }
 
             if (k == 1)
             {
-                return new[] {shorter, longer};
+                return new[] { shorter, longer };
             }
 
             var items = DivingBoardR(shorter, longer, k - 1);
             if (items.Length <= 0)
             {
-                return new[] {shorter, longer};
+                return new[] { shorter, longer };
             }
 
             var res = new List<int>();
@@ -3071,12 +3071,12 @@ namespace leetcode
 
             if (shorter == longer)
             {
-                return new[] {longer * k};
+                return new[] { longer * k };
             }
 
             if (k == 1)
             {
-                return new[] {shorter, longer};
+                return new[] { shorter, longer };
             }
 
             var res = new List<int>();
@@ -3146,6 +3146,7 @@ namespace leetcode
         //解题思路 https://leetcode-cn.com/problems/ugly-number-iii/solution/er-fen-fa-si-lu-pou-xi-by-alfeim/
         public int NthUglyNumber(int n, int a, int b, int c)
         {
+            //todo 暂未完成
             throw new NotImplementedException();
         }
 
@@ -3173,7 +3174,7 @@ namespace leetcode
 
                 if (size >= 3)
                 {
-                    result.Add(new[] {j, i - 1});
+                    result.Add(new[] { j, i - 1 });
                 }
 
                 j = i;
@@ -3182,7 +3183,7 @@ namespace leetcode
 
             if (size >= 3)
             {
-                result.Add(new[] {s.Length - size, s.Length - 1});
+                result.Add(new[] { s.Length - size, s.Length - 1 });
             }
 
             return result.ToArray();
@@ -3296,7 +3297,7 @@ namespace leetcode
                 335,
                 366
             };
-            var weeks = new[] {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+            var weeks = new[] { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
             var numArray = DateTime.IsLeapYear(year) ? daysToMonth366 : daysToMonth365;
             var num = year - 1;
             var days = num * 365 + num / 4 - num / 100 + num / 400 + numArray[month - 1] + day;
@@ -3304,7 +3305,135 @@ namespace leetcode
         }
 
         #endregion
-        
-        
+
+        #region 1008. 先序遍历构造二叉树
+        //https://leetcode-cn.com/problems/construct-binary-search-tree-from-preorder-traversal/
+        TreeNode BstFromPreorder(int[] preorder, int start, int end)
+        {
+            if (start > end)
+            {
+                return null;
+            }
+            var root = new TreeNode(preorder[start]);
+            for (int i = start + 1; i <= end; i++)
+            {
+                if (preorder[i] > preorder[start])
+                {
+                    root.left = BstFromPreorder(preorder, start + 1, i - 1);
+                    root.right = BstFromPreorder(preorder, i, end);
+                    return root;
+                }
+            }
+            root.left = BstFromPreorder(preorder, start + 1, end);
+            return root;
+        }
+
+        TreeNode BstFromPreorder(int[] preorder, int start, int end, ref int index)
+        {
+            if (index >= preorder.Length)
+            {
+                return null;
+            }
+            var val = preorder[index];
+            if (val < start || val > end)
+            {
+                return null;
+            }
+            index++;
+            var root = new TreeNode(val);
+            root.left = BstFromPreorder(preorder, start, val, ref index);
+            root.right = BstFromPreorder(preorder, val, end, ref index);
+            return root;
+        }
+
+        public TreeNode BstFromPreorder(int[] preorder)
+        {
+            var ignore = 0;
+            return BstFromPreorder(preorder, int.MinValue, int.MaxValue, ref ignore);
+        }
+        #endregion
+
+        #region 187. 重复的DNA序列
+        //https://leetcode-cn.com/problems/repeated-dna-sequences/
+        public IList<string> FindRepeatedDnaSequences(string s)
+        {
+            ISet<string> tmp = new HashSet<string>(), res = new HashSet<string>();
+            for (int i = 0, end = s.Length - 10; i <= end; i++)
+            {
+                var key = s.Substring(i, 10);
+                if (!tmp.Add(key))
+                {
+                    res.Add(key);
+                }
+            }
+            return res.ToArray();
+        }
+        #endregion
+        #region 1380. 矩阵中的幸运数
+        //https://leetcode-cn.com/problems/lucky-numbers-in-a-matrix/
+        public IList<int> LuckyNumbers(int[][] matrix)
+        {
+            var result = new List<int>();
+            for (int i = 0; i < matrix.Length; i++)
+            {
+                var nums = matrix[i];
+                var min = 0;
+                for (int j = 1; j < nums.Length; j++)
+                {
+                    if (nums[j] < nums[min])
+                    {
+                        min = j;
+                    }
+                }
+                var flag = true;
+                for (int r = 0; r < matrix.Length; r++)
+                {
+                    if (matrix[r][min] > nums[min])
+                    {
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag)
+                {
+                    result.Add(nums[min]);
+                }
+            }
+            return result;
+        }
+
+        public IList<int> LuckyNumbersN(int[][] matrix)
+        {
+            if (matrix.Length <= 0 || matrix[0].Length <= 0)
+            {
+                return new int[0];
+            }
+            var result = new List<int>();
+            var mins = new int[matrix.Length];
+            var maxs = new int[matrix[0].Length];
+            Array.Fill(mins, int.MaxValue);
+            for (int i = 0; i < matrix.Length; i++)
+            {
+                var nums = matrix[i];
+                for (int j = 0; j < nums.Length; j++)
+                {
+                    mins[i] = Math.Min(mins[i], nums[j]);
+                    maxs[j] = Math.Max(maxs[j], nums[j]);
+                }
+            }
+            for (int i = 0; i < matrix.Length; i++)
+            {
+                var nums = matrix[i];
+                for (int j = 0; j < nums.Length; j++)
+                {
+                    if (nums[j] == mins[i] && nums[j] == maxs[j])
+                    {
+                        result.Add(nums[j]);
+                    }
+                }
+            }
+            return result;
+        }
+        #endregion
     }
 }
