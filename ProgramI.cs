@@ -721,7 +721,7 @@ namespace leetcode
                             continue;
                         }
 
-                        row[j] = (char) ('1' + num);
+                        row[j] = (char)('1' + num);
                         rows[i, num] = cols[j, num] = martix[rIndex, cIndex][num] = true;
                         if (Set(i, j + 1, index + 1))
                         {
@@ -797,7 +797,7 @@ namespace leetcode
             {
                 if (start > end)
                 {
-                    return new TreeNode[] {null};
+                    return new TreeNode[] { null };
                 }
 
                 var items = new List<TreeNode>();
@@ -1449,7 +1449,7 @@ namespace leetcode
                 return res;
             }
 
-            var num = (int) Math.Floor(Math.Sqrt(n));
+            var num = (int)Math.Floor(Math.Sqrt(n));
             if (num * num == n)
             {
                 res = 1;
@@ -1942,7 +1942,7 @@ namespace leetcode
             var max = 0;
             var result = new HashSet<string>();
             RemoveInvalidParentheses(s.ToCharArray(), l, r, result, new HashSet<string>(), ref max);
-            return result.Count <= 0 ? new[] {string.Empty} : result.ToArray();
+            return result.Count <= 0 ? new[] { string.Empty } : result.ToArray();
         }
 
         #endregion
@@ -2658,7 +2658,7 @@ namespace leetcode
                     var tree = currentTree[ch - 'a'];
                     if (tree == null)
                     {
-                        tree = new TrieTree {Char = ch, Trees = new TrieTree[26]};
+                        tree = new TrieTree { Char = ch, Trees = new TrieTree[26] };
                         currentTree[ch - 'a'] = tree;
                     }
 
@@ -2955,7 +2955,7 @@ namespace leetcode
                     continue;
                 }
 
-                result.AddRange(Enumerable.Repeat(((char) (i + 'a')).ToString(), dict[i]));
+                result.AddRange(Enumerable.Repeat(((char)(i + 'a')).ToString(), dict[i]));
             }
 
             return result;
@@ -2997,7 +2997,7 @@ namespace leetcode
 
             if (shorter == longer)
             {
-                return new[] {longer * k};
+                return new[] { longer * k };
             }
 
             var nums = new int[k * 2];
@@ -3025,18 +3025,18 @@ namespace leetcode
 
             if (shorter == longer)
             {
-                return new[] {longer * k};
+                return new[] { longer * k };
             }
 
             if (k == 1)
             {
-                return new[] {shorter, longer};
+                return new[] { shorter, longer };
             }
 
             var items = DivingBoardR(shorter, longer, k - 1);
             if (items.Length <= 0)
             {
-                return new[] {shorter, longer};
+                return new[] { shorter, longer };
             }
 
             var res = new List<int>();
@@ -3071,12 +3071,12 @@ namespace leetcode
 
             if (shorter == longer)
             {
-                return new[] {longer * k};
+                return new[] { longer * k };
             }
 
             if (k == 1)
             {
-                return new[] {shorter, longer};
+                return new[] { shorter, longer };
             }
 
             var res = new List<int>();
@@ -3174,7 +3174,7 @@ namespace leetcode
 
                 if (size >= 3)
                 {
-                    result.Add(new[] {j, i - 1});
+                    result.Add(new[] { j, i - 1 });
                 }
 
                 j = i;
@@ -3183,7 +3183,7 @@ namespace leetcode
 
             if (size >= 3)
             {
-                result.Add(new[] {s.Length - size, s.Length - 1});
+                result.Add(new[] { s.Length - size, s.Length - 1 });
             }
 
             return result.ToArray();
@@ -3297,7 +3297,7 @@ namespace leetcode
                 335,
                 366
             };
-            var weeks = new[] {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+            var weeks = new[] { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
             var numArray = DateTime.IsLeapYear(year) ? daysToMonth366 : daysToMonth365;
             var num = year - 1;
             var days = num * 365 + num / 4 - num / 100 + num / 400 + numArray[month - 1] + day;
@@ -3470,7 +3470,7 @@ namespace leetcode
                     var tree = currentTree[ch - 'a'];
                     if (tree == null)
                     {
-                        tree = new TrieTree {Char = ch, Trees = new TrieTree[26]};
+                        tree = new TrieTree { Char = ch, Trees = new TrieTree[26] };
                         currentTree[ch - 'a'] = tree;
                     }
 
@@ -3564,5 +3564,59 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 18. 四数之和
+        //https://leetcode-cn.com/problems/4sum/
+        public IList<IList<int>> FourSum(int[] nums, int target)
+        {
+            var result = new List<IList<int>>();
+            Array.Sort(nums);
+            for (int i = 0; i < nums.Length; i++)
+            {
+                if (i > 0 && nums[i] == nums[i - 1])
+                {
+                    continue;
+                }
+                for (int j = i + 1; j < nums.Length; j++)
+                {
+                    if (j > i + 1 && nums[j] == nums[j - 1])
+                    {
+                        continue;
+                    }
+                    int start = j + 1, end = nums.Length - 1;
+                    var baseNum = nums[i] + nums[j];
+                    while (start < end)
+                    {
+                        var num = baseNum + nums[start] + nums[end];
+                        if (num == target)
+                        {
+                            result.Add(new int[] { nums[i], nums[j], nums[start], nums[end] });
+                            while (start < end && nums[start] == nums[start + 1])
+                            {
+                                start++;
+                            }
+                            while (start < end && nums[end] == nums[end - 1])
+                            {
+                                end--;
+                            }
+                            start++;
+                            end--;
+                        }
+                        else if (num < target)
+                        {
+                            start++;
+                        }
+                        else
+                        {
+                            end--;
+                        }
+                    }
+                }
+
+            }
+            return result;
+        }
+        #endregion
+
     }
 }
