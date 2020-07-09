@@ -721,7 +721,7 @@ namespace leetcode
                             continue;
                         }
 
-                        row[j] = (char)('1' + num);
+                        row[j] = (char) ('1' + num);
                         rows[i, num] = cols[j, num] = martix[rIndex, cIndex][num] = true;
                         if (Set(i, j + 1, index + 1))
                         {
@@ -797,7 +797,7 @@ namespace leetcode
             {
                 if (start > end)
                 {
-                    return new TreeNode[] { null };
+                    return new TreeNode[] {null};
                 }
 
                 var items = new List<TreeNode>();
@@ -1449,7 +1449,7 @@ namespace leetcode
                 return res;
             }
 
-            var num = (int)Math.Floor(Math.Sqrt(n));
+            var num = (int) Math.Floor(Math.Sqrt(n));
             if (num * num == n)
             {
                 res = 1;
@@ -1942,7 +1942,7 @@ namespace leetcode
             var max = 0;
             var result = new HashSet<string>();
             RemoveInvalidParentheses(s.ToCharArray(), l, r, result, new HashSet<string>(), ref max);
-            return result.Count <= 0 ? new[] { string.Empty } : result.ToArray();
+            return result.Count <= 0 ? new[] {string.Empty} : result.ToArray();
         }
 
         #endregion
@@ -2658,7 +2658,7 @@ namespace leetcode
                     var tree = currentTree[ch - 'a'];
                     if (tree == null)
                     {
-                        tree = new TrieTree { Char = ch, Trees = new TrieTree[26] };
+                        tree = new TrieTree {Char = ch, Trees = new TrieTree[26]};
                         currentTree[ch - 'a'] = tree;
                     }
 
@@ -2955,7 +2955,7 @@ namespace leetcode
                     continue;
                 }
 
-                result.AddRange(Enumerable.Repeat(((char)(i + 'a')).ToString(), dict[i]));
+                result.AddRange(Enumerable.Repeat(((char) (i + 'a')).ToString(), dict[i]));
             }
 
             return result;
@@ -2997,7 +2997,7 @@ namespace leetcode
 
             if (shorter == longer)
             {
-                return new[] { longer * k };
+                return new[] {longer * k};
             }
 
             var nums = new int[k * 2];
@@ -3025,18 +3025,18 @@ namespace leetcode
 
             if (shorter == longer)
             {
-                return new[] { longer * k };
+                return new[] {longer * k};
             }
 
             if (k == 1)
             {
-                return new[] { shorter, longer };
+                return new[] {shorter, longer};
             }
 
             var items = DivingBoardR(shorter, longer, k - 1);
             if (items.Length <= 0)
             {
-                return new[] { shorter, longer };
+                return new[] {shorter, longer};
             }
 
             var res = new List<int>();
@@ -3071,12 +3071,12 @@ namespace leetcode
 
             if (shorter == longer)
             {
-                return new[] { longer * k };
+                return new[] {longer * k};
             }
 
             if (k == 1)
             {
-                return new[] { shorter, longer };
+                return new[] {shorter, longer};
             }
 
             var res = new List<int>();
@@ -3174,7 +3174,7 @@ namespace leetcode
 
                 if (size >= 3)
                 {
-                    result.Add(new[] { j, i - 1 });
+                    result.Add(new[] {j, i - 1});
                 }
 
                 j = i;
@@ -3183,7 +3183,7 @@ namespace leetcode
 
             if (size >= 3)
             {
-                result.Add(new[] { s.Length - size, s.Length - 1 });
+                result.Add(new[] {s.Length - size, s.Length - 1});
             }
 
             return result.ToArray();
@@ -3297,7 +3297,7 @@ namespace leetcode
                 335,
                 366
             };
-            var weeks = new[] { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+            var weeks = new[] {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
             var numArray = DateTime.IsLeapYear(year) ? daysToMonth366 : daysToMonth365;
             var num = year - 1;
             var days = num * 365 + num / 4 - num / 100 + num / 400 + numArray[month - 1] + day;
@@ -3307,6 +3307,7 @@ namespace leetcode
         #endregion
 
         #region 1008. 先序遍历构造二叉树
+
         //https://leetcode-cn.com/problems/construct-binary-search-tree-from-preorder-traversal/
         TreeNode BstFromPreorder(int[] preorder, int start, int end)
         {
@@ -3314,6 +3315,7 @@ namespace leetcode
             {
                 return null;
             }
+
             var root = new TreeNode(preorder[start]);
             for (int i = start + 1; i <= end; i++)
             {
@@ -3324,6 +3326,7 @@ namespace leetcode
                     return root;
                 }
             }
+
             root.left = BstFromPreorder(preorder, start + 1, end);
             return root;
         }
@@ -3334,11 +3337,13 @@ namespace leetcode
             {
                 return null;
             }
+
             var val = preorder[index];
             if (val < start || val > end)
             {
                 return null;
             }
+
             index++;
             var root = new TreeNode(val);
             root.left = BstFromPreorder(preorder, start, val, ref index);
@@ -3351,9 +3356,11 @@ namespace leetcode
             var ignore = 0;
             return BstFromPreorder(preorder, int.MinValue, int.MaxValue, ref ignore);
         }
+
         #endregion
 
         #region 187. 重复的DNA序列
+
         //https://leetcode-cn.com/problems/repeated-dna-sequences/
         public IList<string> FindRepeatedDnaSequences(string s)
         {
@@ -3366,10 +3373,14 @@ namespace leetcode
                     res.Add(key);
                 }
             }
+
             return res.ToArray();
         }
+
         #endregion
+
         #region 1380. 矩阵中的幸运数
+
         //https://leetcode-cn.com/problems/lucky-numbers-in-a-matrix/
         public IList<int> LuckyNumbers(int[][] matrix)
         {
@@ -3385,6 +3396,7 @@ namespace leetcode
                         min = j;
                     }
                 }
+
                 var flag = true;
                 for (int r = 0; r < matrix.Length; r++)
                 {
@@ -3394,11 +3406,13 @@ namespace leetcode
                         break;
                     }
                 }
+
                 if (flag)
                 {
                     result.Add(nums[min]);
                 }
             }
+
             return result;
         }
 
@@ -3408,6 +3422,7 @@ namespace leetcode
             {
                 return new int[0];
             }
+
             var result = new List<int>();
             var mins = new int[matrix.Length];
             var maxs = new int[matrix[0].Length];
@@ -3421,6 +3436,7 @@ namespace leetcode
                     maxs[j] = Math.Max(maxs[j], nums[j]);
                 }
             }
+
             for (int i = 0; i < matrix.Length; i++)
             {
                 var nums = matrix[i];
@@ -3432,8 +3448,121 @@ namespace leetcode
                     }
                 }
             }
+
             return result;
         }
+
+        #endregion
+
+        #region 面试题 17.13. 恢复空格
+
+        //https://leetcode-cn.com/problems/re-space-lcci/
+        //思路：求出以s[i]结尾的字符串匹配的最多字符数 s.length-dp[i]即为最小变更数
+        public int Respace(string[] dictionary, string sentence)
+        {
+            var treeList = new TrieTree[26];
+            foreach (var word in dictionary)
+            {
+                var currentTree = treeList;
+                for (int i = 0; i < word.Length; i++)
+                {
+                    var ch = word[i];
+                    var tree = currentTree[ch - 'a'];
+                    if (tree == null)
+                    {
+                        tree = new TrieTree {Char = ch, Trees = new TrieTree[26]};
+                        currentTree[ch - 'a'] = tree;
+                    }
+
+                    tree.IsWord = tree.IsWord || i == word.Length - 1;
+                    currentTree = tree.Trees;
+                }
+            }
+
+            var dp = new int[sentence.Length + 1];
+            for (int i = 0; i < sentence.Length; i++)
+            {
+                var list = treeList;
+                dp[i + 1] = Math.Max(dp[i + 1], dp[i]);
+                for (int j = i; j < sentence.Length; j++)
+                {
+                    var ch = sentence[j] - 'a';
+                    var tree = list[ch];
+                    if (tree == null)
+                    {
+                        break;
+                    }
+
+                    if (tree.IsWord)
+                    {
+                        dp[j + 1] = Math.Max(dp[j + 1], dp[i] + j - i + 1);
+                    }
+
+                    if (tree.Trees == null)
+                    {
+                        break;
+                    }
+
+                    list = tree.Trees;
+                }
+            }
+
+            return sentence.Length - dp[dp.Length - 1];
+        }
+
+        #endregion
+
+        #region 887. 鸡蛋掉落
+
+        //https://leetcode-cn.com/problems/super-egg-drop/
+        public int SuperEggDrop(int k, int n)
+        {
+            var cache = new int[k + 1, n + 1];
+
+            int Dp(int eggs, int levels)
+            {
+                //只有一个鸡蛋，只能够从第一层开始一层一层扔
+                if (eggs == 1)
+                {
+                    return levels;
+                }
+
+                if (levels == 0)
+                {
+                    return 0;
+                }
+
+                if (cache[eggs, levels] != 0)
+                {
+                    return cache[eggs, levels];
+                }
+
+                int res = n;
+                int l = 1, r = levels;
+                while (l <= r)
+                {
+                    var mid = (l + r) / 2;
+                    var brokens = Dp(eggs - 1, mid - 1); //鸡蛋碎了，需要从下一层开始eggs-1,level-1
+                    var notBrokens = Dp(eggs, levels - mid); //鸡蛋没碎，继续试，还是levels-level层要试
+                    if (brokens > notBrokens)
+                    {
+                        res = Math.Min(res, brokens + 1);
+                        r = mid - 1; //鸡蛋碎了，需要从mid层下找
+                    }
+                    else
+                    {
+                        res = Math.Min(res, notBrokens + 1);
+                        l = mid + 1; //鸡蛋没碎，从mid层1上找
+                    }
+                }
+
+                cache[eggs, levels] = res;
+                return res;
+            }
+
+            return Dp(k, n);
+        }
+
         #endregion
     }
 }

@@ -31,6 +31,7 @@ namespace leetcode
         {
             //6
             //[[1,2],[3,0],[4,2],[3,5]]
+            program.Respace(new[] {"vprkj","sqvuzjz","ptkrqrkussszzprkqrjrtzzvrkrrrskkrrursqdqpp","spqzqtrqs","rkktkruzsjkrzqq","rk","k","zkvdzqrzpkrukdqrqjzkrqrzzkkrr","pzpstvqzrzprqkkkd","jvutvjtktqvvdkzujkq","r","pspkr","tdkkktdsrkzpzpuzvszzzzdjj","zk","pqkjkzpvdpktzskdkvzjkkj","sr","zqjkzksvkvvrsjrjkkjkztrpuzrqrqvvpkutqkrrqpzu"}, "rkktkruzsjkrzqqzkvdzqrzpkrukdqrqjzkrqrzzkkrr");
             program.MaxSumDivThree(new[] {3, 6, 5, 1, 8});
             program.Calculate("1+2*5/3+6/4*2");
             program.FindOrder(6, new[] {new[] {1, 2}, new[] {3, 0}, new[] {4, 2}, new[] {3, 5}});
