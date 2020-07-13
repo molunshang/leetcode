@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace leetcode
 {
     partial class Program
     {
         #region 315. 计算右侧小于当前元素的个数
+
         //https://leetcode-cn.com/problems/count-of-smaller-numbers-after-self/
 
         int BinaryInsert(int[] nums, int target, int len)
@@ -15,6 +17,7 @@ namespace leetcode
                 nums[0] = target;
                 return 0;
             }
+
             int s = 0, e = len - 1;
             while (s < e)
             {
@@ -28,14 +31,17 @@ namespace leetcode
                     s = m + 1;
                 }
             }
+
             int index = nums[s] >= target ? s : s + 1;
             if (index < len)
             {
                 Array.Copy(nums, index, nums, index + 1, len - index);
             }
+
             nums[index] = target;
             return index;
         }
+
         //todo 归并排序性能优化
         public IList<int> CountSmaller(int[] nums)
         {
@@ -45,11 +51,14 @@ namespace leetcode
             {
                 result[i] = BinaryInsert(copy, nums[i], l);
             }
+
             return result;
         }
+
         #endregion
 
         #region 174. 地下城游戏
+
         //https://leetcode-cn.com/problems/dungeon-game/
         void CalculateMinimumHP(int x, int y, int[][] dungeon, int sum, int live, ref int result)
         {
@@ -57,6 +66,7 @@ namespace leetcode
             {
                 return;
             }
+
             var res = sum;
             if (sum <= 0)
             {
@@ -64,14 +74,18 @@ namespace leetcode
                 live += res;
                 res = 1;
             }
+
             if (x >= dungeon.Length || y >= dungeon[0].Length)
             {
-                if ((x == dungeon.Length && y == dungeon[0].Length - 1) || (x == dungeon.Length - 1 && y == dungeon[0].Length))
+                if ((x == dungeon.Length && y == dungeon[0].Length - 1) ||
+                    (x == dungeon.Length - 1 && y == dungeon[0].Length))
                 {
                     result = Math.Min(result, live);
                 }
+
                 return;
             }
+
             res += dungeon[x][y];
             CalculateMinimumHP(x + 1, y, dungeon, res, live, ref result);
             CalculateMinimumHP(x, y + 1, dungeon, res, live, ref result);
@@ -83,10 +97,12 @@ namespace leetcode
             {
                 return Math.Max(1, 1 - dungeon[x][y]);
             }
+
             if (cache[x, y] != 0)
             {
                 return cache[x, y];
             }
+
             var num = dungeon[x][y];
             int res;
             if (x == dungeon.Length - 1)
@@ -99,17 +115,152 @@ namespace leetcode
             }
             else
             {
-                res = Math.Max(1, Math.Min(CalculateMinimumHP(x, y + 1, dungeon, cache), CalculateMinimumHP(x + 1, y, dungeon, cache)) - num);
+                res = Math.Max(1,
+                    Math.Min(CalculateMinimumHP(x, y + 1, dungeon, cache),
+                        CalculateMinimumHP(x + 1, y, dungeon, cache)) - num);
             }
+
             cache[x, y] = res;
             return res;
         }
+
         public int CalculateMinimumHP(int[][] dungeon)
         {
             var cache = new int[dungeon.Length, dungeon[0].Length];
             var live = CalculateMinimumHP(0, 0, dungeon, cache);
             return live;
         }
+
+        #endregion
+
+
+        #region 面试题 04.09. 二叉搜索树序列
+
+        //https://leetcode-cn.com/problems/bst-sequences-lcci/
+        void BSTSequences(ISet<TreeNode> level, IList<IList<int>> result, IList<int> path)
+        {
+            if (level.Count <= 0)
+            {
+                result.Add(path.ToArray());
+                return;
+            }
+
+            //搜索二叉树（需要进行层级遍历）
+            var currentLevel = new HashSet<TreeNode>(level);
+            foreach (var node in level)
+            {
+                path.Add(node.val);
+                if (node.left != null)
+                {
+                    currentLevel.Add(node.left);
+                }
+
+                if (node.right != null)
+                {
+                    currentLevel.Add(node.right);
+                }
+
+                //遍历当前节点后，下一级与同级节点依旧可以访问，（移除当前节点，遍历下一级与同级其他节点）
+                currentLevel.Remove(node);
+                BSTSequences(currentLevel, result, path);
+                if (node.left != null)
+                {
+                    currentLevel.Remove(node.left);
+                }
+
+                if (node.right != null)
+                {
+                    currentLevel.Remove(node.right);
+                }
+
+                currentLevel.Add(node);
+                path.RemoveAt(path.Count - 1);
+            }
+        }
+
+        public IList<IList<int>> BSTSequences(TreeNode root)
+        {
+            if (root == null)
+            {
+                return new IList<int>[] {new int[0]};
+            }
+
+            if (root.left == null && root.right == null)
+            {
+                return new IList<int>[] {new[] {root.val}};
+            }
+
+            var paths = new List<IList<int>>();
+            BSTSequences(new HashSet<TreeNode>() {root}, paths, new List<int>());
+            return paths;
+        }
+
+        #endregion
+
+        #region 214. 最短回文串
+
+        //https://leetcode-cn.com/problems/shortest-palindrome/
+        //todo 性能优化
+        public string ShortestPalindrome(string s)
+        {
+            var reverseStr = new string(s.Reverse().ToArray());
+            for (int i = 0; i < reverseStr.Length; i++)
+            {
+                if (s.IndexOf(reverseStr.Substring(i, reverseStr.Length - i)) == 0)
+                {
+                    s = reverseStr.Substring(0, i) + s;
+                    break;
+                }
+            }
+
+            return s;
+        }
+
+        #endregion
+
+        #region 1201. 丑数 III
+
+        //https://leetcode-cn.com/problems/ugly-number-iii/
+        //二分查找（最大公约数/最大公倍数）
+        //解题思路 https://leetcode-cn.com/problems/ugly-number-iii/solution/er-fen-fa-si-lu-pou-xi-by-alfeim/
+        public int NthUglyNumber(int n, int a, int b, int c)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region 454. 四数相加 II
+
+        //https://leetcode-cn.com/problems/4sum-ii/
+        public int FourSumCount(int[] A, int[] B, int[] C, int[] D)
+        {
+            var res = 0;
+            var exists = new Dictionary<int, int>();
+            foreach (var a in A)
+            {
+                foreach (var b in B)
+                {
+                    var num = a + b;
+                    exists[num] = exists.TryGetValue(num, out var size) ? size + 1 : 1;
+                }
+            }
+
+            foreach (var c in C)
+            {
+                foreach (var d in D)
+                {
+                    var find = 0 - (c + d);
+                    if (exists.TryGetValue(find, out var n))
+                    {
+                        res += n;
+                    }
+                }
+            }
+
+            return res;
+        }
+
         #endregion
     }
 }

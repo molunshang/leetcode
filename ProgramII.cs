@@ -2819,27 +2819,6 @@ namespace leetcode
 
         #endregion
 
-        #region 214. 最短回文串
-
-        //https://leetcode-cn.com/problems/shortest-palindrome/
-        //todo 性能优化
-        public string ShortestPalindrome(string s)
-        {
-            var reverseStr = new string(s.Reverse().ToArray());
-            for (int i = 0; i < reverseStr.Length; i++)
-            {
-                if (s.IndexOf(reverseStr.Substring(i, reverseStr.Length - i)) == 0)
-                {
-                    s = reverseStr.Substring(0, i) + s;
-                    break;
-                }
-            }
-
-            return s;
-        }
-
-        #endregion
-
         #region 179. 最大数
 
         //https://leetcode-cn.com/problems/largest-number/
@@ -3135,19 +3114,6 @@ namespace leetcode
             }
 
             return res;
-        }
-
-        #endregion
-
-        #region 1201. 丑数 III
-
-        //https://leetcode-cn.com/problems/ugly-number-iii/
-        //二分查找（最大公约数/最大公倍数）
-        //解题思路 https://leetcode-cn.com/problems/ugly-number-iii/solution/er-fen-fa-si-lu-pou-xi-by-alfeim/
-        public int NthUglyNumber(int n, int a, int b, int c)
-        {
-            //todo 暂未完成
-            throw new NotImplementedException();
         }
 
         #endregion
