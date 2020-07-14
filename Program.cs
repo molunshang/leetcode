@@ -30,8 +30,7 @@ namespace leetcode
 
         static void Main(string[] args)
         {
-            //6
-            //[[1,2],[3,0],[4,2],[3,5]]            
+            program.MinimumTotal(JsonConvert.DeserializeObject<int[][]>("[[2],[3,4],[6,5,7],[4,1,8,3]]"));
             program.CalculateMinimumHP(JsonConvert.DeserializeObject<int[][]>("[[-2,-3,3],[-5,-10,1],[10,30,-5]]"));
             program.CalculateMinimumHP(
                 JsonConvert.DeserializeObject<int[][]>("[[-5,-10,1],[-2,-3,3],[10,30,-5],[-5,-10,1],[10,30,-5]]"));
@@ -90,7 +89,7 @@ namespace leetcode
             var t = new TreeNode(2);
             t.left = new TreeNode(1);
             t.right = new TreeNode(3);
-            program.IsValidBST1(t);
+            program.IsValidBST(t);
             Console.WriteLine(program.EquationsPossible(new[]
                 {"a!=i", "g==k", "k==j", "k!=i", "c!=e", "a!=e", "k!=a", "a!=g", "g!=c"}));
             Console.WriteLine(program.EquationsPossible(new[] {"b==b", "b==e", "e==c", "d!=e"}));
@@ -2821,24 +2820,24 @@ namespace leetcode
 
         //https://leetcode-cn.com/problems/validate-binary-search-tree/
         //https://leetcode-cn.com/problems/legal-binary-search-tree-lcci/
-        public bool IsValidBST(TreeNode node, int rootVal, bool isLeft)
+        public bool IsValidBST(TreeNode node, TreeNode max, TreeNode min)
         {
             if (node == null)
             {
                 return true;
             }
 
-            if (isLeft && (node.val >= rootVal))
+            if (max != null && node.val >= max.val)
             {
                 return false;
             }
 
-            if (!isLeft && (node.val <= rootVal))
+            if (min != null && node.val <= min.val)
             {
                 return false;
             }
 
-            return IsValidBST(node.left, rootVal, isLeft) && IsValidBST(node.right, rootVal, isLeft);
+            return IsValidBST(node.left, node, min) && IsValidBST(node.right, max, node);
         }
 
         public bool IsValidBST(TreeNode root)
@@ -2848,16 +2847,10 @@ namespace leetcode
                 return true;
             }
 
-            var flag = IsValidBST(root.left, root.val, true) && IsValidBST(root.right, root.val, false);
-            if (!flag)
-            {
-                return false;
-            }
-
-            return IsValidBST(root.left) && IsValidBST(root.right);
+            return IsValidBST(root, null, null);
         }
 
-        public bool IsValidBST1(TreeNode root)
+        public bool IsValidBSTByStack(TreeNode root)
         {
             if (root == null)
             {
@@ -7253,17 +7246,14 @@ namespace leetcode
                     root = root.left;
                 }
 
-                if (stack.Count > 0)
+                root = stack.Pop();
+                k--;
+                if (k == 0)
                 {
-                    root = stack.Pop();
-                    k--;
-                    if (k == 0)
-                    {
-                        return root.val;
-                    }
-
-                    root = root.right;
+                    return root.val;
                 }
+
+                root = root.right;
             }
 
             return -1;
@@ -9195,7 +9185,7 @@ namespace leetcode
                 return left + 1;
             }
 
-            return Math.Min(MinDepth(root.left), MinDepth(root.right)) + 1;
+            return Math.Min(left, right) + 1;
         }
 
         #endregion

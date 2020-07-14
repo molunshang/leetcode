@@ -263,8 +263,66 @@ namespace leetcode
 
         #endregion
 
-        #region 常数时间插入、删除和获取随机元素
-        //https://leetcode-cn.com/problems/insert-delete-getrandom-o1/
+        #region 120. 三角形最小路径和
+
+        //https://leetcode-cn.com/problems/triangle/
+        public int MinimumTotal(IList<IList<int>> triangle)
+        {
+            if (triangle.Count <= 0)
+            {
+                return 0;
+            }
+
+            var prev = new List<int>();
+            var path = new List<int>();
+            for (var i = 0; i < triangle.Count; i++)
+            {
+                var cur = triangle[i];
+                for (var j = 0; j < cur.Count; j++)
+                {
+                    if (i == 0)
+                    {
+                        //第一行，只有1个元素
+                        path.Add(cur[j]);
+                    }
+                    else if (j == 0)
+                    {
+                        //第一列，只有上一行同下标元素
+                        path.Add(prev[j] + cur[j]);
+                    }
+                    else if (j == cur.Count - 1)
+                    {
+                        //最后一列，只有(i-1,j-1)
+                        path.Add(prev[j - 1] + cur[j]);
+                    }
+                    else
+                    {
+                        //min((i-1,j) (i-1,j-1))
+                        path.Add(Math.Min(prev[j], prev[j - 1]) + cur[j]);
+                    }
+                }
+
+                var tmp = prev;
+                prev = path;
+                path = tmp;
+                path.Clear();
+            }
+
+            path = prev;
+            if (path.Count <= 0)
+            {
+                return 0;
+            }
+
+            var res = path[0];
+            for (var i = 1; i < path.Count; i++)
+            {
+                res = Math.Min(res, path[i]);
+            }
+
+            return res;
+        }
+
         #endregion
     }
 }
