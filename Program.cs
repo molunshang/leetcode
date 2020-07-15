@@ -3770,7 +3770,7 @@ namespace leetcode
             int left = 1, right = nums.Length - 1;
             while (left < right)
             {
-                var mid = (left + right) / 2; //数组一半大小，同时也是数组中位数
+                var mid = (left + right) / 2; //边界范围中位数
                 foreach (var num in nums)
                 {
                     if (num <= mid)
@@ -3779,7 +3779,7 @@ namespace leetcode
                     }
                 }
 
-                if (size > mid) //小于中位数的数字个数超出数组一半大小，说明该数在数组左区间
+                if (size > mid) //小于mid的数字个数超出mid，说明该数在数组左区间
                 {
                     right = mid;
                 }
