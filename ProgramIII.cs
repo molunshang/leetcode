@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace leetcode
 {
@@ -322,6 +323,118 @@ namespace leetcode
 
             return res;
         }
+
+        #endregion
+
+        #region 785. 判断二分图
+
+        //https://leetcode-cn.com/problems/is-graph-bipartite/
+
+        #region 回溯（超时）
+
+        bool IsBipartite(int point, int[][] graph, IList<ISet<int>> sets)
+        {
+            if (point >= graph.Length)
+            {
+                return true;
+            }
+
+            if (point == 0)
+            {
+                sets[point].Add(point);
+                return IsBipartite(point + 1, graph, sets);
+            }
+
+            var curSet = graph[point];
+            for (var i = 0; i < sets.Count; i++)
+            {
+                var set = sets[i];
+                if (curSet.Intersect(set).Any())
+                {
+                    continue;
+                }
+
+                set.Add(point);
+                if (IsBipartite(point + 1, graph, sets))
+                {
+                    return true;
+                }
+
+                set.Remove(point);
+            }
+
+            return false;
+        }
+
+        public bool IsBipartite(int[][] graph)
+        {
+            return IsBipartite(0, graph, new ISet<int>[] {new HashSet<int>(), new HashSet<int>()});
+        }
+
+        #endregion
+
+        #region BFS染色（点加入setA时，与其相连的点则加入setB，如果应该加入setB/setA的点已经存在setA/setB中时则不可能分割成两个集合）
+
+        public bool IsBipartiteBFS(int[][] graph)
+        {
+            ISet<int> setA = new HashSet<int>(), setB = new HashSet<int>();
+            var queue = new Queue<int>();
+            for (int j = 0; j < graph.Length; j++)
+            {
+                if (setA.Contains(j) || setB.Contains(j))
+                {
+                    continue;
+                }
+
+                queue.Enqueue(j);
+                while (queue.Count > 0)
+                {
+                    var point = queue.Dequeue();
+                    if (setB.Contains(point))
+                    {
+                        return false;
+                    }
+
+                    if (!setA.Add(point))
+                    {
+                        continue;
+                    }
+
+                    var next = graph[point];
+                    foreach (var p in next)
+                    {
+                        if (p == point)
+                        {
+                            continue;
+                        }
+
+                        if (setA.Contains(p))
+                        {
+                            return false;
+                        }
+
+                        if (!setB.Add(p))
+                        {
+                            continue;
+                        }
+
+                        foreach (var i in graph[p])
+                        {
+                            if (i == p)
+                            {
+                                continue;
+                            }
+
+                            queue.Enqueue(i);
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        #endregion
 
         #endregion
     }
