@@ -183,16 +183,16 @@ namespace leetcode
         {
             if (root == null)
             {
-                return new IList<int>[] {new int[0]};
+                return new IList<int>[] { new int[0] };
             }
 
             if (root.left == null && root.right == null)
             {
-                return new IList<int>[] {new[] {root.val}};
+                return new IList<int>[] { new[] { root.val } };
             }
 
             var paths = new List<IList<int>>();
-            BSTSequences(new HashSet<TreeNode>() {root}, paths, new List<int>());
+            BSTSequences(new HashSet<TreeNode>() { root }, paths, new List<int>());
             return paths;
         }
 
@@ -368,7 +368,7 @@ namespace leetcode
 
         public bool IsBipartite(int[][] graph)
         {
-            return IsBipartite(0, graph, new ISet<int>[] {new HashSet<int>(), new HashSet<int>()});
+            return IsBipartite(0, graph, new ISet<int>[] { new HashSet<int>(), new HashSet<int>() });
         }
 
         #endregion
@@ -436,6 +436,123 @@ namespace leetcode
 
         #endregion
 
+        #endregion
+
+        #region 329. 矩阵中的最长递增路径
+        //https://leetcode-cn.com/problems/longest-increasing-path-in-a-matrix/
+        int Max(params int[] args)
+        {
+            var max = args[0];
+            for (int i = 1; i < args.Length; i++)
+            {
+                max = Math.Max(max, args[i]);
+            }
+            return max;
+        }
+        int LongestIncreasingPath(int x, int y, int prev, int[][] matrix, bool flag, int[,,] cache)
+        {
+            if (x < 0 || x >= matrix.Length || y < 0 || y >= matrix[0].Length)
+            {
+                return 0;
+            }
+            if (flag)//升序
+            {
+                if (matrix[x][y] <= prev)
+                {
+                    return 0;
+                }
+            }
+            else if (matrix[x][y] >= prev)//降序
+            {
+                return 0;
+            }
+            var i = flag ? 0 : 1;
+            if (cache[x, y, i] != 0)
+            {
+                return cache[x, y, i];
+            }
+            var l1 = LongestIncreasingPath(x - 1, y, matrix[x][y], matrix, flag, cache);
+            var l2 = LongestIncreasingPath(x + 1, y, matrix[x][y], matrix, flag, cache);
+            var l3 = LongestIncreasingPath(x, y - 1, matrix[x][y], matrix, flag, cache);
+            var l4 = LongestIncreasingPath(x, y + 1, matrix[x][y], matrix, flag, cache);
+            ////递增+递减 最大
+            var count = Max(l1, l2, l3, l4) + 1;
+            cache[x, y, i] = count;
+            return count;
+        }
+        public int LongestIncreasingPath(int[][] matrix)
+        {
+            if (matrix.Length <= 0 || matrix[0].Length <= 0)
+            {
+                return 0;
+            }
+            //0 大于路径 
+            //1 小于路径
+            var res = 1;
+            var cache = new int[matrix.Length, matrix[0].Length, 2];
+            for (int i = 0; i < matrix.Length; i++)
+            {
+                for (int j = 0; j < matrix[0].Length; j++)
+                {
+                    int prev = LongestIncreasingPath(i, j, int.MaxValue, matrix, false, cache), next = LongestIncreasingPath(i, j, int.MinValue, matrix, true, cache);
+                    res = Math.Max(res, prev + next - 1);
+                }
+            }
+            return res;
+        }
+
+        #region 未完成
+        //    var dp = new int[matrix.Length, matrix[0].Length, 2];
+        //    var res = 1;
+        //        for (int i = 0; i<matrix.Length; i++)
+        //        {
+        //            for (int j = 0; j<matrix[0].Length; j++)
+        //            {
+        //                if (i == 0)
+        //                {
+        //                    dp[i, j, 0] = j == 0 ? 1 : (matrix[i][j] > matrix[i][j - 1]? dp[i, j - 1, 0] + 1 : 1);
+        //    dp[i, j, 1] = j == 0 ? 1 : (matrix[i][j] < matrix[i][j - 1]? dp[i, j - 1, 1] + 1 : 1);
+        //}
+        //                else if (j == 0)
+        //                {
+        //                    dp[i, j, 0] = i == 0 ? 1 : (matrix[i][j] > matrix[i - 1][j]? dp[i - 1, j, 0] + 1 : 1);
+        //                    dp[i, j, 1] = i == 0 ? 1 : (matrix[i][j] < matrix[i - 1][j]? dp[i - 1, j, 1] + 1 : 1);
+        //                }
+        //                else
+        //                {
+        //                    dp[i, j, 0] = 1;
+        //                    dp[i, j, 1] = 1;
+        //                    if (matrix[i][j] > matrix[i][j - 1] && matrix[i][j] > matrix[i - 1][j])
+        //                    {
+        //                        dp[i, j, 0] = Math.Max(dp[i - 1, j, 0], dp[i, j - 1, 0]) + 1;
+        //                    }
+        //                    else if (matrix[i][j] > matrix[i][j - 1])
+        //                    {
+        //                        dp[i, j, 0] = dp[i, j - 1, 0] + 1;
+        //                    }
+        //                    else if (matrix[i][j] > matrix[i - 1][j])
+        //                    {
+        //                        dp[i, j, 0] = dp[i - 1, j, 0] + 1;
+        //                    }
+
+        //                    if (matrix[i][j] < matrix[i][j - 1] && matrix[i][j] < matrix[i - 1][j])
+        //                    {
+        //                        dp[i, j, 1] = Math.Max(dp[i - 1, j, 1], dp[i, j - 1, 1]) + 1;
+        //                    }
+        //                    else if (matrix[i][j] < matrix[i][j - 1])
+        //                    {
+        //                        dp[i, j, 1] = dp[i, j - 1, 1] + 1;
+        //                    }
+        //                    else if (matrix[i][j] < matrix[i - 1][j])
+        //                    {
+        //                        dp[i, j, 1] = dp[i - 1, j, 1] + 1;
+        //                    }
+        //                }
+        //                res = Math.Max(res, dp[i, j, 0] + dp[i, j, 1] - 1);
+        //            }
+        //        }
+        //        return res;
+        #endregion
         #endregion
     }
 }

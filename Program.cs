@@ -30,7 +30,7 @@ namespace leetcode
 
         static void Main(string[] args)
         {
-            program.IsBipartiteBFS(JsonConvert.DeserializeObject<int[][]>("[[1,3],[0,2],[1,3],[0,2]]"));
+            program.LongestIncreasingPath(JsonConvert.DeserializeObject<int[][]>("[[7,8,9],[9,7,6],[7,2,3]]"));
             program.CalculateMinimumHP(JsonConvert.DeserializeObject<int[][]>("[[-2,-3,3],[-5,-10,1],[10,30,-5]]"));
             program.CalculateMinimumHP(
                 JsonConvert.DeserializeObject<int[][]>("[[-5,-10,1],[-2,-3,3],[10,30,-5],[-5,-10,1],[10,30,-5]]"));
