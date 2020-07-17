@@ -43,7 +43,6 @@ namespace leetcode
             return index;
         }
 
-        //todo 归并排序性能优化
         public IList<int> CountSmaller(int[] nums)
         {
             var result = new int[nums.Length];
@@ -53,6 +52,61 @@ namespace leetcode
                 result[i] = BinaryInsert(copy, nums[i], l);
             }
 
+            return result;
+        }
+
+        void MergeSortCount(int[] nums, int[] tmp, int[] indexs, int[] count, int start, int end)
+        {
+            if (start >= end)
+            {
+                return;
+            }
+
+            var mid = (start + end) / 2;
+            MergeSortCount(nums, tmp, indexs, count, start, mid);
+            MergeSortCount(nums, tmp, indexs, count, mid + 1, end);
+            int i = start, j = mid + 1, index = 0;
+            if (nums[indexs[mid]] <= nums[indexs[j]])
+            {
+                return;
+            }
+
+            var size = 0; //indexs[i]大于后半段数组中数的数量
+            while (i <= mid && j <= end)
+            {
+                if (nums[indexs[i]] <= nums[indexs[j]])
+                {
+                    count[indexs[i]] += size;
+                    tmp[index++] = indexs[i++];
+                }
+                else
+                {
+                    tmp[index++] = indexs[j++];
+                    size++;
+                }
+            }
+
+            while (i <= mid)
+            {
+                count[indexs[i]] += end - mid;
+                tmp[index++] = indexs[i++];
+            }
+
+            while (j <= end)
+            {
+                tmp[index++] = indexs[j++];
+            }
+
+            Array.Copy(tmp, 0, indexs, start, index);
+        }
+
+        //归并排序统计
+        public IList<int> CountSmallerByMergeSort(int[] nums)
+        {
+            var result = new int[nums.Length];
+            var tmp = new int[nums.Length];
+            var indexs = Enumerable.Range(0, nums.Length).ToArray();
+            MergeSortCount(nums, tmp, indexs, result, 0, nums.Length - 1);
             return result;
         }
 
@@ -439,6 +493,7 @@ namespace leetcode
         #endregion
 
         #region 329. 矩阵中的最长递增路径
+
         //https://leetcode-cn.com/problems/longest-increasing-path-in-a-matrix/
         int Max(params int[] args)
         {
@@ -447,45 +502,52 @@ namespace leetcode
             {
                 max = Math.Max(max, args[i]);
             }
+
             return max;
         }
+
         int LongestIncreasingPath(int x, int y, int prev, int[][] matrix, bool flag, int[,,] cache)
         {
             if (x < 0 || x >= matrix.Length || y < 0 || y >= matrix[0].Length)
             {
                 return 0;
             }
-            if (flag)//升序
+
+            if (flag) //升序
             {
                 if (matrix[x][y] <= prev)
                 {
                     return 0;
                 }
             }
-            else if (matrix[x][y] >= prev)//降序
+            else if (matrix[x][y] >= prev) //降序
             {
                 return 0;
             }
+
             var i = flag ? 0 : 1;
             if (cache[x, y, i] != 0)
             {
                 return cache[x, y, i];
             }
+
             var l1 = LongestIncreasingPath(x - 1, y, matrix[x][y], matrix, flag, cache);
             var l2 = LongestIncreasingPath(x + 1, y, matrix[x][y], matrix, flag, cache);
             var l3 = LongestIncreasingPath(x, y - 1, matrix[x][y], matrix, flag, cache);
             var l4 = LongestIncreasingPath(x, y + 1, matrix[x][y], matrix, flag, cache);
-            ////递增+递减 最大
+            ////递增/递减 最大
             var count = Max(l1, l2, l3, l4) + 1;
             cache[x, y, i] = count;
             return count;
         }
+
         public int LongestIncreasingPath(int[][] matrix)
         {
             if (matrix.Length <= 0 || matrix[0].Length <= 0)
             {
                 return 0;
             }
+
             //0 大于路径 
             //1 小于路径
             var res = 1;
@@ -494,14 +556,17 @@ namespace leetcode
             {
                 for (int j = 0; j < matrix[0].Length; j++)
                 {
-                    int prev = LongestIncreasingPath(i, j, int.MaxValue, matrix, false, cache), next = LongestIncreasingPath(i, j, int.MinValue, matrix, true, cache);
+                    int prev = LongestIncreasingPath(i, j, int.MaxValue, matrix, false, cache),
+                        next = LongestIncreasingPath(i, j, int.MinValue, matrix, true, cache);
                     res = Math.Max(res, prev + next - 1);
                 }
             }
+
             return res;
         }
 
         #region 未完成
+
         //    var dp = new int[matrix.Length, matrix[0].Length, 2];
         //    var res = 1;
         //        for (int i = 0; i<matrix.Length; i++)
@@ -552,7 +617,81 @@ namespace leetcode
         //            }
         //        }
         //        return res;
+
         #endregion
+
+        #endregion
+
+        #region 324. 摆动排序 II
+
+        //https://leetcode-cn.com/problems/wiggle-sort-ii/
+
+        #region 回溯暴力解
+
+        bool WiggleSort(int index, int[] nums, Dictionary<int, int> dict, int keyIndex, List<int> keys)
+        {
+            if (index >= nums.Length)
+            {
+                return true;
+            }
+
+            int s, e;
+            if ((index & 1) == 0)
+            {
+                s = 0;
+                e = keyIndex - 1;
+            }
+            else
+            {
+                s = keyIndex + 1;
+                e = keys.Count - 1;
+            }
+
+            while (s <= e)
+            {
+                var key = keys[s];
+                if (dict[key] <= 0)
+                {
+                    continue;
+                }
+
+                nums[index] = key;
+                dict[key]--;
+                if (WiggleSort(index + 1, nums, dict, s, keys))
+                {
+                    return true;
+                }
+
+                dict[key]++;
+                s++;
+            }
+
+            return false;
+        }
+
+        public void WiggleSortByBacktracking(int[] nums)
+        {
+            var dict = nums.GroupBy(n => n).ToDictionary(g => g.Key, g => g.Count());
+            var keys = dict.Keys.OrderBy(n => n).ToList();
+            WiggleSort(0, nums, dict, keys.Count, keys);
+        }
+
+        #endregion
+
+        public void WiggleSort(int[] nums)
+        {
+            var copy = nums.OrderBy(n => n).ToArray();
+            int e = copy.Length - 1, mid = e / 2;
+            for (int j = 0; j < nums.Length; j += 2)
+            {
+                nums[j] = copy[mid--];
+            }
+            for (int j = 1; j < nums.Length; j += 2)
+            {
+                nums[j] = copy[e--];
+            }
+        }
+
         #endregion
     }
 }

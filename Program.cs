@@ -30,6 +30,7 @@ namespace leetcode
 
         static void Main(string[] args)
         {
+            program.WiggleSort(new[] {4,5,5,6 });
             program.LongestIncreasingPath(JsonConvert.DeserializeObject<int[][]>("[[7,8,9],[9,7,6],[7,2,3]]"));
             program.CalculateMinimumHP(JsonConvert.DeserializeObject<int[][]>("[[-2,-3,3],[-5,-10,1],[10,30,-5]]"));
             program.CalculateMinimumHP(
