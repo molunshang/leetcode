@@ -2406,6 +2406,10 @@ namespace leetcode
         //https://leetcode-cn.com/problems/course-schedule-ii/
         public int[] FindOrder(int numCourses, int[][] prerequisites)
         {
+            if (prerequisites.Length <= 0 || prerequisites[0].Length <= 0)
+            {
+                return Enumerable.Range(0, numCourses).ToArray();
+            }
             var preDict = new Dictionary<int, ISet<int>>();
             var indexs = new int[numCourses];
             foreach (var prerequisite in prerequisites)
@@ -2435,11 +2439,12 @@ namespace leetcode
                 return new int[0];
             }
 
-            var result = new List<int>();
+            var result =new int[numCourses];
+            var index = 0;
             while (starts.Count > 0)
             {
                 var start = starts.Dequeue();
-                result.Add(start);
+                result[index++] = start;
                 if (!preDict.TryGetValue(start, out var pres))
                 {
                     continue;
@@ -2455,12 +2460,7 @@ namespace leetcode
                 }
             }
 
-            if (result.Count != numCourses)
-            {
-                return new int[0];
-            }
-
-            return result.ToArray();
+            return index != numCourses ? new int[0] : result;
         }
 
         #endregion

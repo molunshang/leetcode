@@ -7217,7 +7217,7 @@ namespace leetcode
                 return false;
             }
 
-            while (n != 0)
+            while (n != 1)
             {
                 if (n % 3 != 0)
                 {
@@ -8399,51 +8399,20 @@ namespace leetcode
         //https://leetcode-cn.com/problems/word-ladder/solution/dan-ci-jie-long-by-leetcode/
         public int LadderLength(string beginWord, string endWord, IList<string> wordList)
         {
-            bool CanJoin(string s1, string s2)
-            {
-                var diff = 0;
-                for (int i = 0; i < s1.Length; i++)
-                {
-                    if (s1[i] != s2[i])
-                    {
-                        diff++;
-                    }
-                }
-
-                return diff == 1;
-            }
-
-            var dict = new Dictionary<string, ISet<string>>();
-            dict[beginWord] = new HashSet<string>();
+            var dict = new Dictionary<string, IList<string>>();
             foreach (var word in wordList)
             {
-                dict[word] = new HashSet<string>();
-                if (CanJoin(word, beginWord))
+                for (int i = 0; i < word.Length; i++)
                 {
-                    dict[beginWord].Add(word);
-                    dict[word].Add(beginWord);
-                }
-            }
-
-            for (int i = 0; i < wordList.Count - 1; i++)
-            {
-                var word1 = wordList[i];
-                for (int j = i + 1; j < wordList.Count; j++)
-                {
-                    var word2 = wordList[j];
-                    if (CanJoin(word1, word2))
+                    var key = word.Substring(0, i) + "*" + word.Substring(i+1);
+                    if (!dict.TryGetValue(key, out var items))
                     {
-                        dict[word1].Add(word2);
-                        dict[word2].Add(word1);
+                        items=new List<string>();
+                        dict[key] = items;
                     }
+                    items.Add(word);
                 }
             }
-
-            if (!dict.ContainsKey(endWord) || dict[beginWord].Count <= 0)
-            {
-                return 0;
-            }
-
             var visited = new HashSet<string>();
             var step = 0;
             var queue = new Queue<string>();
@@ -8456,21 +8425,27 @@ namespace leetcode
                 {
                     size--;
                     var word = queue.Dequeue();
+                    if (!visited.Add(word))
+                    {
+                        continue;
+                    }
                     if (word == endWord)
                     {
                         return step;
                     }
-
-                    visited.Add(word);
-                    foreach (var next in dict[word])
+                    for (int i = 0; i < word.Length; i++)
                     {
-                        if (visited.Contains(next))
+                        var key = word.Substring(0, i) + "*" + word.Substring(i+1);
+                        if (!dict.TryGetValue(key, out var items))
                         {
                             continue;
                         }
-
-                        queue.Enqueue(next);
+                        foreach (var next in items)
+                        {
+                            queue.Enqueue(next);
+                        }
                     }
+                    
                 }
             }
 

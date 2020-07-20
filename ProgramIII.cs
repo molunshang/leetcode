@@ -237,16 +237,16 @@ namespace leetcode
         {
             if (root == null)
             {
-                return new IList<int>[] { new int[0] };
+                return new IList<int>[] {new int[0]};
             }
 
             if (root.left == null && root.right == null)
             {
-                return new IList<int>[] { new[] { root.val } };
+                return new IList<int>[] {new[] {root.val}};
             }
 
             var paths = new List<IList<int>>();
-            BSTSequences(new HashSet<TreeNode>() { root }, paths, new List<int>());
+            BSTSequences(new HashSet<TreeNode>() {root}, paths, new List<int>());
             return paths;
         }
 
@@ -422,7 +422,7 @@ namespace leetcode
 
         public bool IsBipartite(int[][] graph)
         {
-            return IsBipartite(0, graph, new ISet<int>[] { new HashSet<int>(), new HashSet<int>() });
+            return IsBipartite(0, graph, new ISet<int>[] {new HashSet<int>(), new HashSet<int>()});
         }
 
         #endregion
@@ -686,6 +686,7 @@ namespace leetcode
             {
                 nums[j] = copy[mid--];
             }
+
             for (int j = 1; j < nums.Length; j += 2)
             {
                 nums[j] = copy[e--];
@@ -695,6 +696,7 @@ namespace leetcode
         #endregion
 
         #region 97. 交错字符串
+
         //https://leetcode-cn.com/problems/interleaving-string/
         bool IsInterleave(int i1, int i2, int i3, string s1, string s2, string s3, bool?[,] cache)
         {
@@ -702,19 +704,23 @@ namespace leetcode
             {
                 return i1 >= s1.Length && i2 >= s2.Length;
             }
+
             if (cache[i1, i2].HasValue)
             {
                 return cache[i1, i2].Value;
             }
+
             var flag = false;
             if (i1 < s1.Length && s1[i1] == s3[i3])
             {
                 flag = IsInterleave(i1 + 1, i2, i3 + 1, s1, s2, s3, cache);
             }
+
             if (!flag && i2 < s2.Length && s2[i2] == s3[i3])
             {
                 flag = IsInterleave(i1, i2 + 1, i3 + 1, s1, s2, s3, cache);
             }
+
             cache[i1, i2] = flag;
             return flag;
         }
@@ -725,6 +731,7 @@ namespace leetcode
             {
                 return false;
             }
+
             var cache = new bool?[s1.Length + 1, s2.Length + 1];
             return IsInterleave(0, 0, 0, s1, s2, s3, cache);
         }
@@ -735,25 +742,40 @@ namespace leetcode
             {
                 return false;
             }
+
             var dp = new bool[s1.Length + 1, s2.Length + 1];
             dp[0, 0] = true;
             for (int i = 0; i <= s1.Length; i++)
             {
                 for (int j = 0; j <= s2.Length; j++)
                 {
-                    var k = i + j - 1;//如果匹配，s1匹配字符串+s2匹配字符数=s3已遍历字符数，所以 i+j-1 为s3的索引
+                    var k = i + j - 1; //如果匹配，s1匹配字符串+s2匹配字符数=s3已遍历字符数，所以 i+j-1 为s3的索引
                     if (i > 0)
                     {
                         dp[i, j] = dp[i, j] || dp[i - 1, j] && s1[i - 1] == s3[k];
                     }
+
                     if (j > 0)
                     {
                         dp[i, j] = dp[i, j] || dp[i, j - 1] && s2[j - 1] == s3[k];
                     }
                 }
             }
+
             return dp[s1.Length, s2.Length];
         }
+
+        #endregion
+
+        #region 268. 缺失数字
+
+        //https://leetcode-cn.com/problems/missing-number/
+        public int MissingNumberBySum(int[] nums)
+        {
+            var total = nums.Length * (nums.Length + 1) / 2;
+            return nums.Aggregate(total, (current, n) => current - n);
+        }
+
         #endregion
     }
 }
