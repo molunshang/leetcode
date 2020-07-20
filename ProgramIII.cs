@@ -237,16 +237,16 @@ namespace leetcode
         {
             if (root == null)
             {
-                return new IList<int>[] {new int[0]};
+                return new IList<int>[] { new int[0] };
             }
 
             if (root.left == null && root.right == null)
             {
-                return new IList<int>[] {new[] {root.val}};
+                return new IList<int>[] { new[] { root.val } };
             }
 
             var paths = new List<IList<int>>();
-            BSTSequences(new HashSet<TreeNode>() {root}, paths, new List<int>());
+            BSTSequences(new HashSet<TreeNode>() { root }, paths, new List<int>());
             return paths;
         }
 
@@ -422,7 +422,7 @@ namespace leetcode
 
         public bool IsBipartite(int[][] graph)
         {
-            return IsBipartite(0, graph, new ISet<int>[] {new HashSet<int>(), new HashSet<int>()});
+            return IsBipartite(0, graph, new ISet<int>[] { new HashSet<int>(), new HashSet<int>() });
         }
 
         #endregion
@@ -776,6 +776,94 @@ namespace leetcode
             return nums.Aggregate(total, (current, n) => current - n);
         }
 
+        #endregion
+
+        #region 1130. 叶值的最小代价生成树
+        //https://leetcode-cn.com/problems/minimum-cost-tree-from-leaf-values/
+        public int MctFromLeafValues(int[] arr)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+
+        #region 780. 到达终点
+        //https://leetcode-cn.com/problems/reaching-points/
+
+        bool ReachingPoints(int sx, int sy, int tx, int ty, Dictionary<string, bool> cache)
+        {
+            var key = sx + "," + sy;
+            if (cache.TryGetValue(key, out var res))
+            {
+                return res;
+            }
+            res = ReachingPoints(sx, sx + sy, tx, ty) || ReachingPoints(sx + sy, sy, tx, ty);
+            cache[key] = res;
+            return res;
+        }
+
+        public bool ReachingPoints(int sx, int sy, int tx, int ty)
+        {
+            while (tx >= sx && ty >= sy)
+            {
+                if (tx == ty)
+                {
+                    break;
+                }
+                if (tx > ty)
+                {
+                    if (ty > sy)
+                    {
+                        tx %= ty;
+                    }
+                    else
+                    {
+                        return (tx - sx) % ty == 0;
+                    }
+                }
+                else
+                {
+                    if (tx > sx)
+                    {
+                        ty %= tx;
+                    }
+                    else
+                    {
+                        return (ty - sy) % tx == 0;
+                    }
+                }
+            }
+            return tx == sx && ty == sy;
+        }
+        #endregion
+
+        #region 821. 字符的最短距离
+        //https://leetcode-cn.com/problems/shortest-distance-to-a-character/
+        public int[] ShortestToChar(string s, char c)
+        {
+            var stack = new Stack<int>();
+            var res = new int[s.Length];
+            var prev = -1;
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (s[i] == c)
+                {
+                    while (stack.Count > 0)
+                    {
+                        res[stack.Peek()] = Math.Min(i - stack.Pop(), i - prev);
+                    }
+                    prev = i;
+                }
+                else
+                {
+                    stack.Push(i);
+                }
+            }
+            while (stack.Count > 0)
+            {
+                res[stack.Peek()] = stack.Pop() - prev;
+            }
+            return res;
+        }
         #endregion
     }
 }
