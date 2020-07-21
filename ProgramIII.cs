@@ -238,16 +238,16 @@ namespace leetcode
         {
             if (root == null)
             {
-                return new IList<int>[] {new int[0]};
+                return new IList<int>[] { new int[0] };
             }
 
             if (root.left == null && root.right == null)
             {
-                return new IList<int>[] {new[] {root.val}};
+                return new IList<int>[] { new[] { root.val } };
             }
 
             var paths = new List<IList<int>>();
-            BSTSequences(new HashSet<TreeNode>() {root}, paths, new List<int>());
+            BSTSequences(new HashSet<TreeNode>() { root }, paths, new List<int>());
             return paths;
         }
 
@@ -423,7 +423,7 @@ namespace leetcode
 
         public bool IsBipartite(int[][] graph)
         {
-            return IsBipartite(0, graph, new ISet<int>[] {new HashSet<int>(), new HashSet<int>()});
+            return IsBipartite(0, graph, new ISet<int>[] { new HashSet<int>(), new HashSet<int>() });
         }
 
         #endregion
@@ -924,6 +924,85 @@ namespace leetcode
             return -1;
         }
 
+        #endregion
+
+        #region 498. 对角线遍历
+        //https://leetcode-cn.com/problems/diagonal-traverse/
+        public int[] FindDiagonalOrder(int[][] matrix)
+        {
+            if (matrix.Length <= 0 || matrix[0].Length <= 0)
+            {
+                return new int[0];
+            }
+            int size = matrix.Length * matrix[0].Length;
+            int[] res = new int[size];
+            int x = 0, y = 0, i = 0;
+            var up = true;
+            while (i < res.Length)
+            {
+                res[i] = matrix[x][y];
+                if (up)
+                {
+                    //x-1,y+1 向上
+                    bool cx = x == 0, cy = y == matrix[0].Length - 1;
+                    if (cx || cy)
+                    {
+                        up = false;
+                        if (x == 0)
+                        {
+                            if (cy)
+                            {
+                                x++;
+                            }
+                            else
+                            {
+                                y++;
+                            }
+                        }
+                        else
+                        {
+                            x++;
+                        }
+                    }
+                    else
+                    {
+                        x--;
+                        y++;
+                    }
+                }
+                else
+                {
+                    //x+1,y-1 向下
+                    bool cx = x == matrix.Length - 1, cy = y == 0;
+                    if (cx || cy)
+                    {
+                        up = true;
+                        if (y == 0)
+                        {
+                            if (cx)
+                            {
+                                y++;
+                            }
+                            else
+                            {
+                                x++;
+                            }
+                        }
+                        else
+                        {
+                            y++;
+                        }
+                    }
+                    else
+                    {
+                        x++;
+                        y--;
+                    }
+                }
+                i++;
+            }
+            return res;
+        }
         #endregion
     }
 }
