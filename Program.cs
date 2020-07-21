@@ -30,7 +30,8 @@ namespace leetcode
 
         static void Main(string[] args)
         {
-            program.WiggleSort(new[] {4,5,5,6 });
+            program.KthGrammar(30, (int)Math.Pow(2, 29) - 1);
+            program.WiggleSort(new[] {4, 5, 5, 6});
             program.LongestIncreasingPath(JsonConvert.DeserializeObject<int[][]>("[[7,8,9],[9,7,6],[7,2,3]]"));
             program.CalculateMinimumHP(JsonConvert.DeserializeObject<int[][]>("[[-2,-3,3],[-5,-10,1],[10,30,-5]]"));
             program.CalculateMinimumHP(
@@ -6242,6 +6243,26 @@ namespace leetcode
             return current;
         }
 
+        public IList<int> GetRowSingleList(int rowIndex)
+        {
+            var row = new List<int>();
+            row.Add(1);
+            for (int i = 1; i <= rowIndex; i++)
+            {
+                int one, two = row[0];
+                for (int j = 1; j < row.Count; j++)
+                {
+                    one = two;
+                    two = row[j];
+                    row[j] = one + two;
+                }
+
+                row.Add(1);
+            }
+
+            return row;
+        }
+
         #endregion
 
         #region 126. 单词接龙 II
@@ -8404,15 +8425,17 @@ namespace leetcode
             {
                 for (int i = 0; i < word.Length; i++)
                 {
-                    var key = word.Substring(0, i) + "*" + word.Substring(i+1);
+                    var key = word.Substring(0, i) + "*" + word.Substring(i + 1);
                     if (!dict.TryGetValue(key, out var items))
                     {
-                        items=new List<string>();
+                        items = new List<string>();
                         dict[key] = items;
                     }
+
                     items.Add(word);
                 }
             }
+
             var visited = new HashSet<string>();
             var step = 0;
             var queue = new Queue<string>();
@@ -8429,23 +8452,25 @@ namespace leetcode
                     {
                         continue;
                     }
+
                     if (word == endWord)
                     {
                         return step;
                     }
+
                     for (int i = 0; i < word.Length; i++)
                     {
-                        var key = word.Substring(0, i) + "*" + word.Substring(i+1);
+                        var key = word.Substring(0, i) + "*" + word.Substring(i + 1);
                         if (!dict.TryGetValue(key, out var items))
                         {
                             continue;
                         }
+
                         foreach (var next in items)
                         {
                             queue.Enqueue(next);
                         }
                     }
-                    
                 }
             }
 
