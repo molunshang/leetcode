@@ -238,16 +238,16 @@ namespace leetcode
         {
             if (root == null)
             {
-                return new IList<int>[] { new int[0] };
+                return new IList<int>[] {new int[0]};
             }
 
             if (root.left == null && root.right == null)
             {
-                return new IList<int>[] { new[] { root.val } };
+                return new IList<int>[] {new[] {root.val}};
             }
 
             var paths = new List<IList<int>>();
-            BSTSequences(new HashSet<TreeNode>() { root }, paths, new List<int>());
+            BSTSequences(new HashSet<TreeNode>() {root}, paths, new List<int>());
             return paths;
         }
 
@@ -423,7 +423,7 @@ namespace leetcode
 
         public bool IsBipartite(int[][] graph)
         {
-            return IsBipartite(0, graph, new ISet<int>[] { new HashSet<int>(), new HashSet<int>() });
+            return IsBipartite(0, graph, new ISet<int>[] {new HashSet<int>(), new HashSet<int>()});
         }
 
         #endregion
@@ -894,6 +894,7 @@ namespace leetcode
             {
                 return KthGrammar(n - 1, k, flag);
             }
+
             return KthGrammar(n - 1, k - half, 1 - flag);
         }
 
@@ -921,12 +922,14 @@ namespace leetcode
                 prev += nums[i];
                 sum -= nums[i];
             }
+
             return -1;
         }
 
         #endregion
 
         #region 498. 对角线遍历
+
         //https://leetcode-cn.com/problems/diagonal-traverse/
         public int[] FindDiagonalOrder(int[][] matrix)
         {
@@ -934,6 +937,7 @@ namespace leetcode
             {
                 return new int[0];
             }
+
             int size = matrix.Length * matrix[0].Length;
             int[] res = new int[size];
             int x = 0, y = 0, i = 0;
@@ -999,10 +1003,135 @@ namespace leetcode
                         y--;
                     }
                 }
+
                 i++;
             }
+
             return res;
         }
+
+        #endregion
+
+
+        #region 5. 最长回文子串
+
+        //https://leetcode-cn.com/problems/longest-palindromic-substring/
+        //暴力解
+        public string LongestPalindrome(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return string.Empty;
+            }
+
+            bool Check(int start, int end)
+            {
+                while (start < end)
+                {
+                    if (s[start] != s[end])
+                    {
+                        return false;
+                    }
+
+                    start++;
+                    end--;
+                }
+
+                return true;
+            }
+
+            int l = 0, len = 0;
+            for (var i = 0; i < s.Length; i++)
+            {
+                for (var j = i; j < s.Length; j++)
+                {
+                    if (len >= (j - i) + 1)
+                    {
+                        continue;
+                    }
+
+                    if (Check(i, j))
+                    {
+                        l = i;
+                        len = j - i + 1;
+                    }
+                }
+            }
+
+            return s.Substring(l, len);
+        }
+
+        //动态规划
+        public string LongestPalindromeByDp(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return string.Empty;
+            }
+
+            var dp = new bool[s.Length, s.Length];
+            int start = 0, len = 0;
+            for (int l = 1; l <= s.Length; l++)
+            {
+                for (int i = 0, j = i + l - 1; j < s.Length; i++, j++)
+                {
+                    if (l == 1)
+                    {
+                        dp[i, j] = true;
+                    }
+                    else if (l == 2)
+                    {
+                        dp[i, j] = s[i] == s[j];
+                    }
+                    else
+                    {
+                        dp[i, j] = dp[i + 1, j - 1] && s[i] == s[j];
+                    }
+
+                    if (dp[i, j] && len < l)
+                    {
+                        len = l;
+                        start = i;
+                    }
+                }
+            }
+
+            return s.Substring(start, len);
+        }
+
+        //中心搜索
+        public string LongestPalindromeByCenterSearch(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return string.Empty;
+            }
+
+            int CenterSearch(int l, int r)
+            {
+                while (l >= 0 && r < s.Length  && s[l] == s[r])
+                {
+                    l--;
+                    r++;
+                }
+
+                return r - l - 1;
+            }
+
+            int start = 0, len = 0;
+            for (int i = 0; i < s.Length; i++)
+            {
+                var l = Math.Max(CenterSearch(i, i), CenterSearch(i, i + 1));
+                if (l > len)
+                {
+                    start = i - (l - 1) / 2;
+                    len = l;
+                }
+            }
+
+            return s.Substring(start, len);
+        }
+
         #endregion
     }
 }

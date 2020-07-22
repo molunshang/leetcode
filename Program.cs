@@ -30,7 +30,7 @@ namespace leetcode
 
         static void Main(string[] args)
         {
-            program.KthGrammar(30, (int)Math.Pow(2, 29) - 1);
+            program.KthGrammar(30, (int) Math.Pow(2, 29) - 1);
             program.WiggleSort(new[] {4, 5, 5, 6});
             program.LongestIncreasingPath(JsonConvert.DeserializeObject<int[][]>("[[7,8,9],[9,7,6],[7,2,3]]"));
             program.CalculateMinimumHP(JsonConvert.DeserializeObject<int[][]>("[[-2,-3,3],[-5,-10,1],[10,30,-5]]"));
@@ -3467,57 +3467,6 @@ namespace leetcode
             }
 
             return max;
-        }
-
-        #endregion
-
-        #region 5. 最长回文子串
-
-        //5. 最长回文子串
-        //https://leetcode-cn.com/problems/longest-palindromic-substring/
-        bool Check(string s, int start, int end)
-        {
-            while (start < end)
-            {
-                if (s[start] != s[end])
-                {
-                    return false;
-                }
-
-                start++;
-                end--;
-            }
-
-            return true;
-        }
-
-
-        public string LongestPalindrome(string s)
-        {
-            if (string.IsNullOrEmpty(s))
-            {
-                return string.Empty;
-            }
-
-            int start = 0, len = 0;
-            for (var i = 0; i < s.Length; i++)
-            {
-                for (var j = i; j < s.Length; j++)
-                {
-                    if (len >= (j - i) + 1)
-                    {
-                        continue;
-                    }
-
-                    if (Check(s, i, j))
-                    {
-                        start = i;
-                        len = j - i + 1;
-                    }
-                }
-            }
-
-            return s.Substring(start, len);
         }
 
         #endregion
