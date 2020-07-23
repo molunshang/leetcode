@@ -238,16 +238,16 @@ namespace leetcode
         {
             if (root == null)
             {
-                return new IList<int>[] {new int[0]};
+                return new IList<int>[] { new int[0] };
             }
 
             if (root.left == null && root.right == null)
             {
-                return new IList<int>[] {new[] {root.val}};
+                return new IList<int>[] { new[] { root.val } };
             }
 
             var paths = new List<IList<int>>();
-            BSTSequences(new HashSet<TreeNode>() {root}, paths, new List<int>());
+            BSTSequences(new HashSet<TreeNode>() { root }, paths, new List<int>());
             return paths;
         }
 
@@ -423,7 +423,7 @@ namespace leetcode
 
         public bool IsBipartite(int[][] graph)
         {
-            return IsBipartite(0, graph, new ISet<int>[] {new HashSet<int>(), new HashSet<int>()});
+            return IsBipartite(0, graph, new ISet<int>[] { new HashSet<int>(), new HashSet<int>() });
         }
 
         #endregion
@@ -1109,7 +1109,7 @@ namespace leetcode
 
             int CenterSearch(int l, int r)
             {
-                while (l >= 0 && r < s.Length  && s[l] == s[r])
+                while (l >= 0 && r < s.Length && s[l] == s[r])
                 {
                     l--;
                     r++;
@@ -1132,6 +1132,83 @@ namespace leetcode
             return s.Substring(start, len);
         }
 
+        #endregion
+
+        public int StrStr(string haystack, string needle)
+        {
+            if (string.IsNullOrEmpty(needle))
+            {
+                return 0;
+            }
+            if (haystack.Length < needle.Length)
+            {
+                return -1;
+            }
+            return haystack.IndexOf(needle);
+        }
+        #region 27. 移除元素
+        //https://leetcode-cn.com/problems/remove-element/
+        public int RemoveElement(int[] nums, int val)
+        {
+            int fast = 0, slow = 0;
+            while (fast < nums.Length)
+            {
+                if (nums[fast] != val)
+                {
+                    nums[slow] = nums[fast];
+                    slow++;
+                }
+                fast++;
+            }
+            return slow;
+        }
+        #endregion
+
+        #region 485. 最大连续1的个数
+        //https://leetcode-cn.com/problems/max-consecutive-ones/
+        public int FindMaxConsecutiveOnes(int[] nums)
+        {
+            var len = 0;
+            int fast = 0, slow = 0;
+            while (fast < nums.Length)
+            {
+                if (nums[fast] == 0)
+                {
+                    len = Math.Max(fast - slow, len);
+                    slow = fast + 1;
+                }
+                fast++;
+            }
+            if (slow < fast)
+            {
+                len = Math.Max(fast - slow, len);
+            }
+            return len;
+        }
+        #endregion
+
+        #region 209. 长度最小的子数组
+        //https://leetcode-cn.com/problems/minimum-size-subarray-sum/
+        public int MinSubArrayLen(int s, int[] nums)
+        {
+            var len = int.MaxValue;
+            var sum = 0;
+            for (int i = 0, j = 0; i < nums.Length; i++)
+            {
+                sum += nums[i];
+                while (sum >= s)
+                {
+                    len = Math.Min(len, i - j + 1);
+                    sum -= nums[j];
+                    if (j >= i)
+                    {
+                        return 1;
+                    }
+                    j++;
+                }
+            }
+            return len == int.MaxValue ? 0 : len;
+        }
         #endregion
     }
 }
