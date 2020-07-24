@@ -175,7 +175,7 @@ namespace leetcode
 
         //80. 删除排序数组中的重复项 II
         //https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array-ii/
-        static int RemoveDuplicates(int[] nums)
+        static int RemoveDuplicatesII(int[] nums)
         {
             var res = nums.Length;
             int startIndex = 0, skipIndex = 0;

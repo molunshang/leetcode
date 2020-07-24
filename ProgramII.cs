@@ -769,21 +769,23 @@ namespace leetcode
         //https://leetcode-cn.com/problems/minimum-size-subarray-sum/
         public int MinSubArrayLen(int s, int[] nums)
         {
-            int len = nums.Length, sum = 0;
-            var found = false;
+            var len = int.MaxValue;
+            var sum = 0;
             for (int i = 0, j = 0; i < nums.Length; i++)
             {
                 sum += nums[i];
-                while (sum >= s && j <= i)
+                while (sum >= s)
                 {
-                    found = true;
                     len = Math.Min(len, i - j + 1);
                     sum -= nums[j];
+                    if (j >= i)
+                    {
+                        return 1;
+                    }
                     j++;
                 }
             }
-
-            return found ? len : 0;
+            return len == int.MaxValue ? 0 : len;
         }
 
         #endregion
