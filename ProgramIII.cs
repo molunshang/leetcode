@@ -238,16 +238,16 @@ namespace leetcode
         {
             if (root == null)
             {
-                return new IList<int>[] {new int[0]};
+                return new IList<int>[] { new int[0] };
             }
 
             if (root.left == null && root.right == null)
             {
-                return new IList<int>[] {new[] {root.val}};
+                return new IList<int>[] { new[] { root.val } };
             }
 
             var paths = new List<IList<int>>();
-            BSTSequences(new HashSet<TreeNode>() {root}, paths, new List<int>());
+            BSTSequences(new HashSet<TreeNode>() { root }, paths, new List<int>());
             return paths;
         }
 
@@ -423,7 +423,7 @@ namespace leetcode
 
         public bool IsBipartite(int[][] graph)
         {
-            return IsBipartite(0, graph, new ISet<int>[] {new HashSet<int>(), new HashSet<int>()});
+            return IsBipartite(0, graph, new ISet<int>[] { new HashSet<int>(), new HashSet<int>() });
         }
 
         #endregion
@@ -507,6 +507,7 @@ namespace leetcode
             return max;
         }
 
+        #region 找出(x,y)的递增递减路径相加计算
         int LongestIncreasingPath(int x, int y, int prev, int[][] matrix, bool flag, int[,,] cache)
         {
             if (x < 0 || x >= matrix.Length || y < 0 || y >= matrix[0].Length)
@@ -542,7 +543,8 @@ namespace leetcode
             return count;
         }
 
-        public int LongestIncreasingPath(int[][] matrix)
+
+        public int LongestIncreasingPathByPrevNext(int[][] matrix)
         {
             if (matrix.Length <= 0 || matrix[0].Length <= 0)
             {
@@ -565,61 +567,44 @@ namespace leetcode
 
             return res;
         }
-
-        #region 未完成
-
-        //    var dp = new int[matrix.Length, matrix[0].Length, 2];
-        //    var res = 1;
-        //        for (int i = 0; i<matrix.Length; i++)
-        //        {
-        //            for (int j = 0; j<matrix[0].Length; j++)
-        //            {
-        //                if (i == 0)
-        //                {
-        //                    dp[i, j, 0] = j == 0 ? 1 : (matrix[i][j] > matrix[i][j - 1]? dp[i, j - 1, 0] + 1 : 1);
-        //    dp[i, j, 1] = j == 0 ? 1 : (matrix[i][j] < matrix[i][j - 1]? dp[i, j - 1, 1] + 1 : 1);
-        //}
-        //                else if (j == 0)
-        //                {
-        //                    dp[i, j, 0] = i == 0 ? 1 : (matrix[i][j] > matrix[i - 1][j]? dp[i - 1, j, 0] + 1 : 1);
-        //                    dp[i, j, 1] = i == 0 ? 1 : (matrix[i][j] < matrix[i - 1][j]? dp[i - 1, j, 1] + 1 : 1);
-        //                }
-        //                else
-        //                {
-        //                    dp[i, j, 0] = 1;
-        //                    dp[i, j, 1] = 1;
-        //                    if (matrix[i][j] > matrix[i][j - 1] && matrix[i][j] > matrix[i - 1][j])
-        //                    {
-        //                        dp[i, j, 0] = Math.Max(dp[i - 1, j, 0], dp[i, j - 1, 0]) + 1;
-        //                    }
-        //                    else if (matrix[i][j] > matrix[i][j - 1])
-        //                    {
-        //                        dp[i, j, 0] = dp[i, j - 1, 0] + 1;
-        //                    }
-        //                    else if (matrix[i][j] > matrix[i - 1][j])
-        //                    {
-        //                        dp[i, j, 0] = dp[i - 1, j, 0] + 1;
-        //                    }
-
-        //                    if (matrix[i][j] < matrix[i][j - 1] && matrix[i][j] < matrix[i - 1][j])
-        //                    {
-        //                        dp[i, j, 1] = Math.Max(dp[i - 1, j, 1], dp[i, j - 1, 1]) + 1;
-        //                    }
-        //                    else if (matrix[i][j] < matrix[i][j - 1])
-        //                    {
-        //                        dp[i, j, 1] = dp[i, j - 1, 1] + 1;
-        //                    }
-        //                    else if (matrix[i][j] < matrix[i - 1][j])
-        //                    {
-        //                        dp[i, j, 1] = dp[i - 1, j, 1] + 1;
-        //                    }
-        //                }
-        //                res = Math.Max(res, dp[i, j, 0] + dp[i, j, 1] - 1);
-        //            }
-        //        }
-        //        return res;
-
         #endregion
+
+        int LongestIncreasingPath(int x, int y, int[][] matrix, int prev, int[,] cache)
+        {
+            if (x < 0 || x >= matrix.Length || y < 0 || y >= matrix[0].Length || matrix[x][y] <= prev)
+            {
+                return 0;
+            }
+            if (cache[x, y] != 0)
+            {
+                return cache[x, y];
+            }
+            var l1 = LongestIncreasingPath(x, y + 1, matrix, matrix[x][y], cache);
+            var l2 = LongestIncreasingPath(x, y - 1, matrix, matrix[x][y], cache);
+            var l3 = LongestIncreasingPath(x + 1, y, matrix, matrix[x][y], cache);
+            var l4 = LongestIncreasingPath(x - 1, y, matrix, matrix[x][y], cache);
+            var res = Max(l1, l2, l3, l4) + 1;
+            cache[x, y] = res;
+            return res;
+        }
+        public int LongestIncreasingPath(int[][] matrix)
+        {
+            if (matrix.Length <= 0 || matrix[0].Length <= 0)
+            {
+                return 0;
+            }
+            var res = 1;
+            var cache = new int[matrix.Length, matrix[0].Length];
+            for (int i = 0; i < matrix.Length; i++)
+            {
+                for (int j = 0; j < matrix[0].Length; j++)
+                {
+                    res = Math.Max(res, LongestIncreasingPath(i, j, matrix, int.MinValue, cache));
+                }
+            }
+
+            return res;
+        }
 
         #endregion
 
@@ -1223,6 +1208,38 @@ namespace leetcode
             return slow;
         }
 
+        #endregion
+
+        #region 410. 分割数组的最大值
+        //https://leetcode-cn.com/problems/split-array-largest-sum/
+        int SplitArray(int[] nums, int index, int m, int[,] cache)
+        {
+            if (cache[index, m] != 0)
+            {
+                return cache[index, m];
+            }
+            if (m == 1)
+            {
+                var res = nums.Skip(index).Sum();
+                cache[index, m] = res;
+                return res;
+            }
+            //n 个子数组中最大值的最小值
+            int sum = 0, min = int.MaxValue;
+            for (int i = index, l = nums.Length - index; i < nums.Length && l >= m; i++, l--)
+            {
+                sum += nums[i];
+                var cur = Math.Max(sum, SplitArray(nums, i + 1, m - 1, cache));
+                min = Math.Min(min, cur);
+            }
+            cache[index, m] = min;
+            return min;
+        }
+        public int SplitArray(int[] nums, int m)
+        {
+            var subMax = SplitArray(nums, 0, m, new int[nums.Length, m + 1]);
+            return subMax;
+        }
         #endregion
     }
 }
