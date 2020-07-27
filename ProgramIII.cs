@@ -1241,5 +1241,23 @@ namespace leetcode
             return subMax;
         }
         #endregion
+
+        #region 1. 两数之和
+        //https://leetcode-cn.com/problems/two-sum/
+        public int[] TwoSumI(int[] nums, int target)
+        {
+            var dict = new Dictionary<int, int>();
+            for (int i = 0; i < nums.Length; i++)
+            {
+                var find = target - nums[i];
+                if (dict.TryGetValue(find, out var index))
+                {
+                    return new[] { index, i };
+                }
+                dict[nums[i]] = i;
+            }
+            return new int[0];
+        }
+        #endregion
     }
 }
