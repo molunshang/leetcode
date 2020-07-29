@@ -31,6 +31,8 @@ namespace leetcode
         static void Main(string[] args)
         {
             //program.SplitArray(new[] { 2,3,1,2,4,3 }, 5);
+            //[]
+            Console.WriteLine(program.MinimalSteps(new[] {"S#O", "M..", "M.T"}));
             program.SplitArray(new[] {7, 2, 5, 10, 8, 1}, 2);
             program.KthGrammar(30, (int) Math.Pow(2, 29) - 1);
             program.WiggleSort(new[] {4, 5, 5, 6});

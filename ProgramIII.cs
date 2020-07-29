@@ -238,16 +238,16 @@ namespace leetcode
         {
             if (root == null)
             {
-                return new IList<int>[] { new int[0] };
+                return new IList<int>[] {new int[0]};
             }
 
             if (root.left == null && root.right == null)
             {
-                return new IList<int>[] { new[] { root.val } };
+                return new IList<int>[] {new[] {root.val}};
             }
 
             var paths = new List<IList<int>>();
-            BSTSequences(new HashSet<TreeNode>() { root }, paths, new List<int>());
+            BSTSequences(new HashSet<TreeNode>() {root}, paths, new List<int>());
             return paths;
         }
 
@@ -423,7 +423,7 @@ namespace leetcode
 
         public bool IsBipartite(int[][] graph)
         {
-            return IsBipartite(0, graph, new ISet<int>[] { new HashSet<int>(), new HashSet<int>() });
+            return IsBipartite(0, graph, new ISet<int>[] {new HashSet<int>(), new HashSet<int>()});
         }
 
         #endregion
@@ -508,6 +508,7 @@ namespace leetcode
         }
 
         #region 找出(x,y)的递增递减路径相加计算
+
         int LongestIncreasingPath(int x, int y, int prev, int[][] matrix, bool flag, int[,,] cache)
         {
             if (x < 0 || x >= matrix.Length || y < 0 || y >= matrix[0].Length)
@@ -567,6 +568,7 @@ namespace leetcode
 
             return res;
         }
+
         #endregion
 
         int LongestIncreasingPath(int x, int y, int[][] matrix, int prev, int[,] cache)
@@ -575,10 +577,12 @@ namespace leetcode
             {
                 return 0;
             }
+
             if (cache[x, y] != 0)
             {
                 return cache[x, y];
             }
+
             var l1 = LongestIncreasingPath(x, y + 1, matrix, matrix[x][y], cache);
             var l2 = LongestIncreasingPath(x, y - 1, matrix, matrix[x][y], cache);
             var l3 = LongestIncreasingPath(x + 1, y, matrix, matrix[x][y], cache);
@@ -587,12 +591,14 @@ namespace leetcode
             cache[x, y] = res;
             return res;
         }
+
         public int LongestIncreasingPath(int[][] matrix)
         {
             if (matrix.Length <= 0 || matrix[0].Length <= 0)
             {
                 return 0;
             }
+
             var res = 1;
             var cache = new int[matrix.Length, matrix[0].Length];
             for (int i = 0; i < matrix.Length; i++)
@@ -1185,6 +1191,7 @@ namespace leetcode
         #endregion
 
         #region 26. 删除排序数组中的重复项
+
         //https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array/
         public int RemoveDuplicates(int[] nums)
         {
@@ -1211,6 +1218,7 @@ namespace leetcode
         #endregion
 
         #region 410. 分割数组的最大值
+
         //https://leetcode-cn.com/problems/split-array-largest-sum/
         int SplitArray(int[] nums, int index, int m, int[,] cache)
         {
@@ -1218,12 +1226,14 @@ namespace leetcode
             {
                 return cache[index, m];
             }
+
             if (m == 1)
             {
                 var res = nums.Skip(index).Sum();
                 cache[index, m] = res;
                 return res;
             }
+
             //n 个子数组中最大值的最小值
             int sum = 0, min = int.MaxValue;
             for (int i = index, l = nums.Length - index; i < nums.Length && l >= m; i++, l--)
@@ -1232,17 +1242,21 @@ namespace leetcode
                 var cur = Math.Max(sum, SplitArray(nums, i + 1, m - 1, cache));
                 min = Math.Min(min, cur);
             }
+
             cache[index, m] = min;
             return min;
         }
+
         public int SplitArray(int[] nums, int m)
         {
             var subMax = SplitArray(nums, 0, m, new int[nums.Length, m + 1]);
             return subMax;
         }
+
         #endregion
 
         #region 1. 两数之和
+
         //https://leetcode-cn.com/problems/two-sum/
         public int[] TwoSumI(int[] nums, int target)
         {
@@ -1252,12 +1266,50 @@ namespace leetcode
                 var find = target - nums[i];
                 if (dict.TryGetValue(find, out var index))
                 {
-                    return new[] { index, i };
+                    return new[] {index, i};
                 }
+
                 dict[nums[i]] = i;
             }
+
             return new int[0];
         }
+
+        #endregion
+
+        #region LCP 13. 寻宝
+
+        //https://leetcode-cn.com/problems/xun-bao/
+        public int MinimalSteps(string[] maze)
+        {
+            // int m = 0, x = 0, y = 0;
+            // for (var i = 0; i < maze.Length; i++)
+            // {
+            //     var str = maze[i];
+            //     for (var j = 0; j < str.Length; j++)
+            //     {
+            //         if (str[j] == 'M')
+            //         {
+            //             m++;
+            //         }
+            //         else if (str[j] == 'O')
+            //         {
+            //         }
+            //         else if (str[j] == 'S')
+            //         {
+            //             x = i;
+            //             y = j;
+            //         }
+            //     }
+            // }
+            //
+            // var res = int.MaxValue;
+            // var flag = MinimalSteps(x, y, maze, m, new bool[maze.Length, maze.Length],
+            //     new bool[maze.Length, maze.Length], 0, ref res, false);
+            // return flag ? res : -1;
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }
