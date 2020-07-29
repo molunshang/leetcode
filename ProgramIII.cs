@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -238,16 +239,16 @@ namespace leetcode
         {
             if (root == null)
             {
-                return new IList<int>[] {new int[0]};
+                return new IList<int>[] { new int[0] };
             }
 
             if (root.left == null && root.right == null)
             {
-                return new IList<int>[] {new[] {root.val}};
+                return new IList<int>[] { new[] { root.val } };
             }
 
             var paths = new List<IList<int>>();
-            BSTSequences(new HashSet<TreeNode>() {root}, paths, new List<int>());
+            BSTSequences(new HashSet<TreeNode>() { root }, paths, new List<int>());
             return paths;
         }
 
@@ -423,7 +424,7 @@ namespace leetcode
 
         public bool IsBipartite(int[][] graph)
         {
-            return IsBipartite(0, graph, new ISet<int>[] {new HashSet<int>(), new HashSet<int>()});
+            return IsBipartite(0, graph, new ISet<int>[] { new HashSet<int>(), new HashSet<int>() });
         }
 
         #endregion
@@ -1266,7 +1267,7 @@ namespace leetcode
                 var find = target - nums[i];
                 if (dict.TryGetValue(find, out var index))
                 {
-                    return new[] {index, i};
+                    return new[] { index, i };
                 }
 
                 dict[nums[i]] = i;
@@ -1282,32 +1283,182 @@ namespace leetcode
         //https://leetcode-cn.com/problems/xun-bao/
         public int MinimalSteps(string[] maze)
         {
-            // int m = 0, x = 0, y = 0;
-            // for (var i = 0; i < maze.Length; i++)
-            // {
-            //     var str = maze[i];
-            //     for (var j = 0; j < str.Length; j++)
-            //     {
-            //         if (str[j] == 'M')
-            //         {
-            //             m++;
-            //         }
-            //         else if (str[j] == 'O')
-            //         {
-            //         }
-            //         else if (str[j] == 'S')
-            //         {
-            //             x = i;
-            //             y = j;
-            //         }
-            //     }
-            // }
-            //
-            // var res = int.MaxValue;
-            // var flag = MinimalSteps(x, y, maze, m, new bool[maze.Length, maze.Length],
-            //     new bool[maze.Length, maze.Length], 0, ref res, false);
-            // return flag ? res : -1;
-            throw new NotImplementedException();
+            int m = maze.Length, n = maze[0].Length;
+            var steps = new[] { (1, 0), (-1, 0), (0, 1), (0, -1) };
+
+            void FillArray(int[,] arr, int val)
+            {
+                for (int i = 0; i < arr.GetLength(0); i++)
+                {
+                    for (int j = 0; j < arr.GetLength(1); j++)
+                    {
+                        arr[i, j] = val;
+                    }
+                }
+            }
+
+            int[,] BfsFill(int x, int y)
+            {
+                var res = new int[m, n];
+                FillArray(res, -1);
+                res[x, y] = 0;
+                var queue = new Queue<int[]>();
+                queue.Enqueue(new[] { x, y });
+                while (queue.Count > 0)
+                {
+                    var cur = queue.Dequeue();
+                    int cx = cur[0], cy = cur[1];
+                    foreach (var step in steps)
+                    {
+                        int nx = cx + step.Item1, ny = cy + step.Item2;
+                        if (nx >= 0 && nx < m && ny >= 0 && ny < n && maze[nx][ny] != '#' && res[nx, ny] == -1)
+                        {
+                            res[nx, ny] = res[cx, cy] + 1;
+                            queue.Enqueue(new[] { nx, ny });
+                        }
+
+                    }
+                }
+                return res;
+            }
+
+            int sx = -1, sy = -1, tx = -1, ty = -1;
+            List<int[]> mPoints = new List<int[]>(), oPoints = new List<int[]>();
+            for (var i = 0; i < maze.Length; i++)
+            {
+                var str = maze[i];
+                for (var j = 0; j < str.Length; j++)
+                {
+                    if (str[j] == 'M')
+                    {
+                        mPoints.Add(new[] { i, j });
+                    }
+                    else if (str[j] == 'O')
+                    {
+                        oPoints.Add(new[] { i, j });
+                    }
+                    else if (str[j] == 'S')
+                    {
+                        sx = i;
+                        sy = j;
+                    }
+                    else if (str[j] == 'T')
+                    {
+                        tx = i;
+                        ty = j;
+                    }
+                }
+            }
+
+            //从起点到其他节点的最短距离
+            var startDist = BfsFill(sx, sy);
+            if (mPoints.Count <= 0)
+            {
+                return startDist[tx, ty];
+            }
+
+            int nb = mPoints.Count, ns = oPoints.Count;
+
+            var mDist = new int[mPoints.Count][,];//记录每个机关到其他节点的最短距离
+            var mDistinct = new int[mPoints.Count, mPoints.Count + 2];////从机关到机关和起点终点的最短距离
+            FillArray(mDistinct, -1);
+            for (int i = 0; i < mPoints.Count; i++)
+            {
+                var point = mPoints[i];
+                var dist = BfsFill(point[0], point[1]);
+                mDist[i] = dist;
+                mDistinct[i, mPoints.Count + 1] = dist[tx, ty];
+            }
+
+            for (int i = 0; i < mPoints.Count; i++)
+            {
+                int tmp = -1;
+                for (int k = 0; k < oPoints.Count; k++)
+                {
+                    var point = oPoints[k];
+                    int midX = point[0], midY = point[1];
+                    if (mDist[i][midX, midY] != -1 && startDist[midX, midY] != -1)
+                    {
+                        if (tmp == -1 || tmp > mDist[i][midX, midY] + startDist[midX, midY])
+                        {
+                            tmp = mDist[i][midX, midY] + startDist[midX, midY];
+                        }
+                    }
+                }
+                mDistinct[i, mPoints.Count] = tmp;
+                for (int j = i + 1; j < mPoints.Count; j++)
+                {
+                    int mn = -1;
+                    for (int k = 0; k < oPoints.Count; k++)
+                    {
+                        var oPoint = oPoints[k];
+                        int midX = oPoint[0], midY = oPoint[1];
+                        if (mDist[i][midX, midY] != -1 && mDist[j][midX, midY] != -1)
+                        {
+                            if (mn == -1 || mn > mDist[i][midX, midY] + mDist[j][midX, midY])
+                            {
+                                mn = mDist[i][midX, midY] + mDist[j][midX, midY];
+                            }
+                        }
+                    }
+                    mDistinct[i, j] = mn;
+                    mDistinct[j, i] = mn;
+                }
+            }
+
+            // 无法达成的情形
+            for (int i = 0; i < nb; i++)
+            {
+                if (mDistinct[i, nb] == -1 || mDistinct[i, nb + 1] == -1)
+                {
+                    return -1;
+                }
+            }
+
+            // dp 数组， -1 代表没有遍历到
+            var dp = new int[1 << nb, nb];
+            FillArray(dp, -1);
+
+            for (int i = 0; i < nb; i++)
+            {
+                dp[1 << i, i] = mDistinct[i, nb];
+            }
+
+            // 由于更新的状态都比未更新的大，所以直接从小到大遍历即可
+            for (int mask = 1; mask < (1 << nb); mask++)
+            {
+                for (int i = 0; i < nb; i++)
+                {
+                    // 当前 dp 是合法的
+                    if ((mask & (1 << i)) != 0)
+                    {
+                        for (int j = 0; j < nb; j++)
+                        {
+                            // j 不在 mask 里
+                            if ((mask & (1 << j)) == 0)
+                            {
+                                int next = mask | (1 << j);
+                                if (dp[next, j] == -1 || dp[next, j] > dp[mask, i] + mDistinct[i, j])
+                                {
+                                    dp[next, j] = dp[mask, i] + mDistinct[i, j];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            int ret = -1;
+            int finalMask = (1 << nb) - 1;
+            for (int i = 0; i < nb; i++)
+            {
+                if (ret == -1 || ret > dp[finalMask, i] + mDistinct[i, nb + 1])
+                {
+                    ret = dp[finalMask, i] + mDistinct[i, nb + 1];
+                }
+            }
+
+            return ret;
         }
 
         #endregion
