@@ -1462,5 +1462,31 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 343. 整数拆分
+
+        //https://leetcode-cn.com/problems/integer-break/
+        private Dictionary<int,int> intBreakCache=new Dictionary<int, int>();
+        public int IntegerBreak(int n) 
+        {
+            if (n <= 2)
+            {
+                return 1;
+            }
+
+            if (intBreakCache.TryGetValue(n, out var res))
+            {
+                return res;
+            }
+            for (int i = 2; i < n; i++)
+            {
+                res = Math.Max(res, Math.Max(i * (n - i), i * IntegerBreak(n - i)));
+            }
+
+            intBreakCache[n] = res;
+            return res;
+        }
+
+        #endregion
     }
 }
