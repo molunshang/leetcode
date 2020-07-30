@@ -1466,8 +1466,8 @@ namespace leetcode
         #region 343. 整数拆分
 
         //https://leetcode-cn.com/problems/integer-break/
-        private Dictionary<int,int> intBreakCache=new Dictionary<int, int>();
-        public int IntegerBreak(int n) 
+        private Dictionary<int, int> intBreakCache = new Dictionary<int, int>();
+        public int IntegerBreak(int n)
         {
             if (n <= 2)
             {
@@ -1487,6 +1487,70 @@ namespace leetcode
             return res;
         }
 
+        #endregion
+
+        #region 7. 整数反转
+        //https://leetcode-cn.com/problems/reverse-integer/
+        public int Reverse(int x)
+        {
+            long res = 0;
+            while (x != 0)
+            {
+                res = res * 10 + (x % 10);
+                if (res > int.MaxValue || res < int.MinValue)
+                {
+                    return 0;
+                }
+                x /= 10;
+            }
+            return (int)res;
+        }
+        #endregion
+
+        #region 8. 字符串转换整数 (atoi)
+        //https://leetcode-cn.com/problems/string-to-integer-atoi/
+        public int MyAtoi(string str)
+        {
+            int l = 0, r = str.Length - 1;
+            while (l <= r && str[l] == ' ')
+            {
+                l++;
+            }
+            while (l <= r && str[r] == ' ')
+            {
+                r--;
+            }
+            if (l > r)
+            {
+                return 0;
+            }
+            long res = 0;
+            var flag = true;
+            if (str[l] == '-' || str[l] == '+')
+            {
+                flag = str[l] == '+';
+                l++;
+            }
+            while (l <= r)
+            {
+                var ch = str[l];
+                if (char.IsDigit(ch))
+                {
+                    res = res * 10 + (ch - '0');
+                    if (res > int.MaxValue)
+                    {
+                        return flag ? int.MaxValue : int.MinValue;
+                    }
+                }
+                else
+                {
+                    break;
+                }
+                l++;
+            }
+
+            return flag ? (int)res : -(int)res;
+        }
         #endregion
     }
 }
