@@ -239,16 +239,16 @@ namespace leetcode
         {
             if (root == null)
             {
-                return new IList<int>[] { new int[0] };
+                return new IList<int>[] {new int[0]};
             }
 
             if (root.left == null && root.right == null)
             {
-                return new IList<int>[] { new[] { root.val } };
+                return new IList<int>[] {new[] {root.val}};
             }
 
             var paths = new List<IList<int>>();
-            BSTSequences(new HashSet<TreeNode>() { root }, paths, new List<int>());
+            BSTSequences(new HashSet<TreeNode>() {root}, paths, new List<int>());
             return paths;
         }
 
@@ -424,7 +424,7 @@ namespace leetcode
 
         public bool IsBipartite(int[][] graph)
         {
-            return IsBipartite(0, graph, new ISet<int>[] { new HashSet<int>(), new HashSet<int>() });
+            return IsBipartite(0, graph, new ISet<int>[] {new HashSet<int>(), new HashSet<int>()});
         }
 
         #endregion
@@ -1267,7 +1267,7 @@ namespace leetcode
                 var find = target - nums[i];
                 if (dict.TryGetValue(find, out var index))
                 {
-                    return new[] { index, i };
+                    return new[] {index, i};
                 }
 
                 dict[nums[i]] = i;
@@ -1284,7 +1284,7 @@ namespace leetcode
         public int MinimalSteps(string[] maze)
         {
             int m = maze.Length, n = maze[0].Length;
-            var steps = new[] { (1, 0), (-1, 0), (0, 1), (0, -1) };
+            var steps = new[] {(1, 0), (-1, 0), (0, 1), (0, -1)};
 
             void FillArray(int[,] arr, int val)
             {
@@ -1303,7 +1303,7 @@ namespace leetcode
                 FillArray(res, -1);
                 res[x, y] = 0;
                 var queue = new Queue<int[]>();
-                queue.Enqueue(new[] { x, y });
+                queue.Enqueue(new[] {x, y});
                 while (queue.Count > 0)
                 {
                     var cur = queue.Dequeue();
@@ -1314,11 +1314,11 @@ namespace leetcode
                         if (nx >= 0 && nx < m && ny >= 0 && ny < n && maze[nx][ny] != '#' && res[nx, ny] == -1)
                         {
                             res[nx, ny] = res[cx, cy] + 1;
-                            queue.Enqueue(new[] { nx, ny });
+                            queue.Enqueue(new[] {nx, ny});
                         }
-
                     }
                 }
+
                 return res;
             }
 
@@ -1331,11 +1331,11 @@ namespace leetcode
                 {
                     if (str[j] == 'M')
                     {
-                        mPoints.Add(new[] { i, j });
+                        mPoints.Add(new[] {i, j});
                     }
                     else if (str[j] == 'O')
                     {
-                        oPoints.Add(new[] { i, j });
+                        oPoints.Add(new[] {i, j});
                     }
                     else if (str[j] == 'S')
                     {
@@ -1359,8 +1359,8 @@ namespace leetcode
 
             int nb = mPoints.Count, ns = oPoints.Count;
 
-            var mDist = new int[mPoints.Count][,];//记录每个机关到其他节点的最短距离
-            var mDistinct = new int[mPoints.Count, mPoints.Count + 2];////从机关到机关和起点终点的最短距离
+            var mDist = new int[mPoints.Count][,]; //记录每个机关到其他节点的最短距离
+            var mDistinct = new int[mPoints.Count, mPoints.Count + 2]; ////从机关到机关和起点终点的最短距离
             FillArray(mDistinct, -1);
             for (int i = 0; i < mPoints.Count; i++)
             {
@@ -1385,6 +1385,7 @@ namespace leetcode
                         }
                     }
                 }
+
                 mDistinct[i, mPoints.Count] = tmp;
                 for (int j = i + 1; j < mPoints.Count; j++)
                 {
@@ -1401,6 +1402,7 @@ namespace leetcode
                             }
                         }
                     }
+
                     mDistinct[i, j] = mn;
                     mDistinct[j, i] = mn;
                 }
@@ -1467,6 +1469,7 @@ namespace leetcode
 
         //https://leetcode-cn.com/problems/integer-break/
         private Dictionary<int, int> intBreakCache = new Dictionary<int, int>();
+
         public int IntegerBreak(int n)
         {
             if (n <= 2)
@@ -1478,6 +1481,7 @@ namespace leetcode
             {
                 return res;
             }
+
             for (int i = 2; i < n; i++)
             {
                 res = Math.Max(res, Math.Max(i * (n - i), i * IntegerBreak(n - i)));
@@ -1490,6 +1494,7 @@ namespace leetcode
         #endregion
 
         #region 7. 整数反转
+
         //https://leetcode-cn.com/problems/reverse-integer/
         public int Reverse(int x)
         {
@@ -1501,13 +1506,17 @@ namespace leetcode
                 {
                     return 0;
                 }
+
                 x /= 10;
             }
-            return (int)res;
+
+            return (int) res;
         }
+
         #endregion
 
         #region 8. 字符串转换整数 (atoi)
+
         //https://leetcode-cn.com/problems/string-to-integer-atoi/
         public int MyAtoi(string str)
         {
@@ -1516,14 +1525,17 @@ namespace leetcode
             {
                 l++;
             }
+
             while (l <= r && str[r] == ' ')
             {
                 r--;
             }
+
             if (l > r)
             {
                 return 0;
             }
+
             long res = 0;
             var flag = true;
             if (str[l] == '-' || str[l] == '+')
@@ -1531,6 +1543,7 @@ namespace leetcode
                 flag = str[l] == '+';
                 l++;
             }
+
             while (l <= r)
             {
                 var ch = str[l];
@@ -1546,10 +1559,92 @@ namespace leetcode
                 {
                     break;
                 }
+
                 l++;
             }
 
-            return flag ? (int)res : -(int)res;
+            return flag ? (int) res : -(int) res;
+        }
+
+        #endregion
+
+        #region 面试题 08.03. 魔术索引
+
+        //https://leetcode-cn.com/problems/magic-index-lcci/
+        int FindMagicIndex(int[] nums, int l, int r)
+        {
+            while (l < r)
+            {
+                var mid = (l + r) / 2;
+                //降序/相同数组
+                if (nums[l] >= nums[r])
+                {
+                    if (nums[mid] == mid)
+                    {
+                        return mid;
+                    }
+
+                    if (nums[mid] < mid)
+                    {
+                        r = mid - 1;
+                    }
+                    else
+                    {
+                        l = mid + 1;
+                    }
+                }
+                else
+                {
+                    if (nums[mid] < 0)
+                    {
+                        return FindMagicIndex(nums, mid + 1, r);
+                    }
+
+                    var t = FindMagicIndex(nums, l, mid);
+                    if (t == -1)
+                    {
+                        t = FindMagicIndex(nums, mid + 1, r);
+                    }
+
+                    return t;
+                }
+            }
+
+            return nums[l] == l ? l : -1;
+        }
+
+        public int FindMagicIndex(int[] nums)
+        {
+            return FindMagicIndex(nums, 0, nums.Length - 1);
+        }
+
+        #endregion
+
+        #region 第一个错误的版本
+
+        //https://leetcode-cn.com/problems/first-bad-version/
+        bool IsBadVersion(int version)
+        {
+            return false;
+        }
+
+        public int FirstBadVersion(int n)
+        {
+            int l = 1, r = n;
+            while (l < r)
+            {
+                var mid = l + (r - l) / 2;
+                if (IsBadVersion(mid))
+                {
+                    r = mid;
+                }
+                else
+                {
+                    l = mid + 1;
+                }
+            }
+
+            return IsBadVersion(l) ? l : l + 1;
         }
         #endregion
     }
