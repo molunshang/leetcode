@@ -515,8 +515,18 @@ namespace leetcode
 
         public bool CanFinishDfs(int numCourses, int[][] prerequisites)
         {
-            bool Dfs(Dictionary<int, ISet<int>> dict, int key, ISet<int> paths)
+            if (prerequisites.Length <= 0)
             {
+                return true;
+            }
+            var dict = new Dictionary<int, IList<int>>();
+            ISet<int> paths = new HashSet<int>(), resultSet = new HashSet<int>();
+            bool Dfs(int key)
+            {
+                if (resultSet.Contains(key))
+                {
+                    return true;
+                }
                 if (!paths.Add(key))
                 {
                     return false;
@@ -524,35 +534,27 @@ namespace leetcode
 
                 if (dict.TryGetValue(key, out var next))
                 {
-                    if (next.Any(k => !Dfs(dict, k, paths)))
+                    if (next.Any(k => !Dfs(k)))
                     {
                         return false;
                     }
                 }
 
                 paths.Remove(key);
+                resultSet.Add(key);
                 return true;
             }
-
-            if (prerequisites.Length <= 0)
-            {
-                return true;
-            }
-
-            var depend = new Dictionary<int, ISet<int>>();
             foreach (var num in prerequisites)
             {
-                if (!depend.TryGetValue(num[0], out var set))
+                if (!dict.TryGetValue(num[0], out var set))
                 {
-                    set = new HashSet<int>();
-                    depend[num[0]] = set;
+                    set = new List<int>();
+                    dict[num[0]] = set;
                 }
 
                 set.Add(num[1]);
             }
-
-            var path = new HashSet<int>();
-            return depend.All(kv => Dfs(depend, kv.Key, path));
+            return dict.All(kv => Dfs(kv.Key));
         }
 
         #endregion
@@ -2441,7 +2443,7 @@ namespace leetcode
                 return new int[0];
             }
 
-            var result =new int[numCourses];
+            var result = new int[numCourses];
             var index = 0;
             while (starts.Count > 0)
             {
