@@ -1690,5 +1690,76 @@ namespace leetcode
         }
         #endregion
 
+        #region 336. 回文对
+        //https://leetcode-cn.com/problems/palindrome-pairs/submissions/
+
+        public IList<IList<int>> PalindromePairs(string[] words)
+        {
+            var wordsRev = new List<string>();
+            var indices = new Dictionary<string, int>();
+
+            int FindWord(string s, int left, int right)
+            {
+                var key = s.Substring(left, right - left + 1);
+                if (indices.TryGetValue(key, out var index))
+                {
+                    return index;
+                }
+                return -1;
+            }
+
+            bool IsPalindrome(string s, int left, int right)
+            {
+                int len = right - left + 1;
+                for (int i = 0; i < len / 2; i++)
+                {
+                    if (s[left + i] != s[right - i])
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            int n = words.Length;
+            for (int i = 0; i < words.Length; i++)
+            {
+                var word = new string(words[i].Reverse().ToArray());
+                wordsRev.Add(word);
+                indices.Add(word, i);
+            }
+
+            IList<IList<int>> ret = new List<IList<int>>();
+            for (int i = 0; i < n; i++)
+            {
+                var word = words[i];
+                int m = word.Length;
+                if (m == 0)
+                {
+                    continue;
+                }
+                for (int j = 0; j <= m; j++)
+                {
+                    if (IsPalindrome(word, j, m - 1))
+                    {
+                        int leftId = FindWord(word, 0, j - 1);
+                        if (leftId != -1 && leftId != i)
+                        {
+                            ret.Add(new[] { i, leftId });
+                        }
+                    }
+                    if (j != 0 && IsPalindrome(word, 0, j - 1))
+                    {
+                        int rightId = FindWord(word, j, m - 1);
+                        if (rightId != -1 && rightId != i)
+                        {
+                            ret.Add(new[] { rightId, i });
+                        }
+                    }
+                }
+            }
+            return ret;
+        }
+        #endregion
     }
 }
