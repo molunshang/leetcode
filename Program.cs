@@ -30,6 +30,8 @@ namespace leetcode
 
         static void Main(string[] args)
         {
+            
+            program.FindClosestElements(new[] {1, 10, 15, 25, 35, 45, 50, 59}, 1, 30);
             program.RestoreIpAddresses("25525511135");
             var root = new TreeNode(1);
             root.left = new TreeNode(3);
@@ -5256,98 +5258,6 @@ namespace leetcode
             var result = new List<string>();
             LetterCombinations(dic, digits, 0, subs, result);
             return result;
-        }
-
-        #endregion
-
-        #region 33. 搜索旋转排序数组
-
-        public int SearchRotate(int[] nums, int target)
-        {
-            if (nums.Length <= 0)
-            {
-                return -1;
-            }
-
-            int left = 0, right = nums.Length - 1;
-            while (left < right)
-            {
-                if (target == nums[left])
-                {
-                    return left;
-                }
-
-                if (target == nums[right])
-                {
-                    return right;
-                }
-
-                var mid = (left + right) / 2;
-                if (nums[mid] == target)
-                {
-                    return mid;
-                }
-
-                if (nums[mid] > nums[left]) //左边数组有序 在左边 
-                {
-                    if (target < nums[left] || target > nums[mid])
-                    {
-                        left = mid + 1;
-                    }
-                    else
-                    {
-                        right = mid - 1;
-                    }
-                }
-                else if (nums[mid] < nums[right]) //右边数组有序 在右边
-                {
-                    if (target >= nums[right] || target < nums[mid])
-                    {
-                        right = mid - 1;
-                    }
-                    else
-                    {
-                        left = mid + 1;
-                    }
-                }
-                else if (nums[mid] < nums[left]) //左边数组非有序，旋转数在左边
-                {
-                    if (target >= nums[left] || target < nums[mid]) //m<left,left<t => m <t     // && nums[mid] < target
-                    {
-                        right = mid - 1;
-                    }
-                    else //m<left,t<left
-                    {
-                        left = mid + 1;
-                    }
-                }
-                else if (nums[mid] > nums[right]) //右边数组非有序，旋转数在右边
-                {
-                    if (target <= nums[right] || target > nums[mid]
-                    ) //m<left,left<t => m <t     // && nums[mid] < target
-                    {
-                        left = mid + 1;
-                    }
-                    else //m<left,t<left
-                    {
-                        right = mid - 1;
-                    }
-                }
-                else if (nums[mid] == nums[right] && nums[mid] == nums[left])
-                {
-                    right--;
-                }
-                else if (nums[mid] == nums[left])
-                {
-                    left++;
-                }
-                else if (nums[mid] == nums[right])
-                {
-                    right--;
-                }
-            }
-
-            return nums[left] == target ? left : -1;
         }
 
         #endregion

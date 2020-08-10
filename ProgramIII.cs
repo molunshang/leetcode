@@ -239,16 +239,16 @@ namespace leetcode
         {
             if (root == null)
             {
-                return new IList<int>[] { new int[0] };
+                return new IList<int>[] {new int[0]};
             }
 
             if (root.left == null && root.right == null)
             {
-                return new IList<int>[] { new[] { root.val } };
+                return new IList<int>[] {new[] {root.val}};
             }
 
             var paths = new List<IList<int>>();
-            BSTSequences(new HashSet<TreeNode>() { root }, paths, new List<int>());
+            BSTSequences(new HashSet<TreeNode>() {root}, paths, new List<int>());
             return paths;
         }
 
@@ -424,7 +424,7 @@ namespace leetcode
 
         public bool IsBipartite(int[][] graph)
         {
-            return IsBipartite(0, graph, new ISet<int>[] { new HashSet<int>(), new HashSet<int>() });
+            return IsBipartite(0, graph, new ISet<int>[] {new HashSet<int>(), new HashSet<int>()});
         }
 
         #endregion
@@ -1267,7 +1267,7 @@ namespace leetcode
                 var find = target - nums[i];
                 if (dict.TryGetValue(find, out var index))
                 {
-                    return new[] { index, i };
+                    return new[] {index, i};
                 }
 
                 dict[nums[i]] = i;
@@ -1284,7 +1284,7 @@ namespace leetcode
         public int MinimalSteps(string[] maze)
         {
             int m = maze.Length, n = maze[0].Length;
-            var steps = new[] { (1, 0), (-1, 0), (0, 1), (0, -1) };
+            var steps = new[] {(1, 0), (-1, 0), (0, 1), (0, -1)};
 
             void FillArray(int[,] arr, int val)
             {
@@ -1303,7 +1303,7 @@ namespace leetcode
                 FillArray(res, -1);
                 res[x, y] = 0;
                 var queue = new Queue<int[]>();
-                queue.Enqueue(new[] { x, y });
+                queue.Enqueue(new[] {x, y});
                 while (queue.Count > 0)
                 {
                     var cur = queue.Dequeue();
@@ -1314,7 +1314,7 @@ namespace leetcode
                         if (nx >= 0 && nx < m && ny >= 0 && ny < n && maze[nx][ny] != '#' && res[nx, ny] == -1)
                         {
                             res[nx, ny] = res[cx, cy] + 1;
-                            queue.Enqueue(new[] { nx, ny });
+                            queue.Enqueue(new[] {nx, ny});
                         }
                     }
                 }
@@ -1331,11 +1331,11 @@ namespace leetcode
                 {
                     if (str[j] == 'M')
                     {
-                        mPoints.Add(new[] { i, j });
+                        mPoints.Add(new[] {i, j});
                     }
                     else if (str[j] == 'O')
                     {
-                        oPoints.Add(new[] { i, j });
+                        oPoints.Add(new[] {i, j});
                     }
                     else if (str[j] == 'S')
                     {
@@ -1510,7 +1510,7 @@ namespace leetcode
                 x /= 10;
             }
 
-            return (int)res;
+            return (int) res;
         }
 
         #endregion
@@ -1563,7 +1563,7 @@ namespace leetcode
                 l++;
             }
 
-            return flag ? (int)res : -(int)res;
+            return flag ? (int) res : -(int) res;
         }
 
         #endregion
@@ -1670,7 +1670,7 @@ namespace leetcode
             list.Sort();
             numSet.Clear();
             int l = 0, r = 0, min = int.MaxValue;
-            var res = new[] { list[0], list[0] };
+            var res = new[] {list[0], list[0]};
             for (; r < list.Count; r++)
             {
                 numSet.Add(list[r]);
@@ -1756,7 +1756,7 @@ namespace leetcode
                         int leftId = FindWord(word, 0, j - 1);
                         if (leftId != -1 && leftId != i)
                         {
-                            ret.Add(new[] { i, leftId });
+                            ret.Add(new[] {i, leftId});
                         }
                     }
 
@@ -1765,7 +1765,7 @@ namespace leetcode
                         int rightId = FindWord(word, j, m - 1);
                         if (rightId != -1 && rightId != i)
                         {
-                            ret.Add(new[] { rightId, i });
+                            ret.Add(new[] {rightId, i});
                         }
                     }
                 }
@@ -1785,6 +1785,7 @@ namespace leetcode
             {
                 return x;
             }
+
             int l = 1, r = n;
             while (l < r)
             {
@@ -1807,9 +1808,11 @@ namespace leetcode
 
             return l;
         }
+
         #endregion
 
         #region 99. 恢复二叉搜索树
+
         //https://leetcode-cn.com/problems/recover-binary-search-tree/
         public void RecoverTree(TreeNode root)
         {
@@ -1817,6 +1820,7 @@ namespace leetcode
             {
                 return;
             }
+
             var stack = new Stack<TreeNode>();
             var vals = new List<int>();
             var head = root;
@@ -1827,10 +1831,12 @@ namespace leetcode
                     stack.Push(root);
                     root = root.left;
                 }
+
                 root = stack.Pop();
                 vals.Add(root.val);
                 root = root.right;
             }
+
             vals.Sort();
             root = head;
             var i = 0;
@@ -1841,6 +1847,7 @@ namespace leetcode
                     stack.Push(root);
                     root = root.left;
                 }
+
                 root = stack.Pop();
                 root.val = vals[i++];
                 root = root.right;
@@ -1854,6 +1861,7 @@ namespace leetcode
             {
                 return;
             }
+
             var stack = new Stack<TreeNode>();
             TreeNode x = null, y = null, prev = null;
             while (root != null || stack.Count > 0)
@@ -1863,6 +1871,7 @@ namespace leetcode
                     stack.Push(root);
                     root = root.left;
                 }
+
                 root = stack.Pop();
                 if (prev != null && prev.val > root.val)
                 {
@@ -1876,17 +1885,339 @@ namespace leetcode
                         break;
                     }
                 }
+
                 prev = root;
                 root = root.right;
             }
-            if (x == null || y == null)
+
+            if (x == null)
             {
                 return;
             }
+
             var tmp = x.val;
             x.val = y.val;
             y.val = tmp;
         }
+
+        #endregion
+
+        #region 696. 计数二进制子串
+
+        //https://leetcode-cn.com/problems/count-binary-substrings/
+        public int CountBinarySubstrings(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return 0;
+            }
+
+            int Count(int l, int r)
+            {
+                var count = 1;
+                while (l > 0 && r < s.Length - 1 && s[l] == s[l - 1] && s[r] == s[r + 1])
+                {
+                    count++;
+                    l--;
+                    r++;
+                }
+
+                return count;
+            }
+
+            var res = 0;
+            for (var i = 0; i < s.Length - 1; i++)
+            {
+                if (s[i] != s[i + 1])
+                {
+                    var len = Count(i, i + 1);
+                    res += len;
+                    i += len - 1;
+                }
+            }
+
+            return res;
+        }
+
+        public int CountBinarySubstringsByGroup(string s)
+        {
+            int res = 0, i = 0, count = 0;
+            while (i < s.Length)
+            {
+                var ch = s[i++];
+                var len = 1;
+                while (i < s.Length && ch == s[i])
+                {
+                    i++;
+                    len++;
+                }
+
+                res += Math.Min(count, len);
+                count = len;
+            }
+
+            return res;
+        }
+
+        #endregion
+
+        #region 33. 搜索旋转排序数组
+
+        //https://leetcode-cn.com/problems/search-in-rotated-sorted-array/
+        public int SearchRotate(int[] nums, int target)
+        {
+            if (nums.Length <= 0)
+            {
+                return -1;
+            }
+
+            int left = 0, right = nums.Length - 1;
+            while (left < right)
+            {
+                if (target == nums[left])
+                {
+                    return left;
+                }
+
+                if (target == nums[right])
+                {
+                    return right;
+                }
+
+                var mid = (left + right) / 2;
+                if (nums[mid] == target)
+                {
+                    return mid;
+                }
+
+                if (nums[mid] > nums[left]) //左边数组有序 在左边 
+                {
+                    if (target < nums[left] || target > nums[mid])
+                    {
+                        left = mid + 1;
+                    }
+                    else
+                    {
+                        right = mid - 1;
+                    }
+                }
+                else if (nums[mid] < nums[right]) //右边数组有序 在右边
+                {
+                    if (target >= nums[right] || target < nums[mid])
+                    {
+                        right = mid - 1;
+                    }
+                    else
+                    {
+                        left = mid + 1;
+                    }
+                }
+                else if (nums[mid] < nums[left]) //左边数组非有序，旋转数在左边
+                {
+                    if (target >= nums[left] || target < nums[mid]) //m<left,left<t => m <t     // && nums[mid] < target
+                    {
+                        right = mid - 1;
+                    }
+                    else //m<left,t<left
+                    {
+                        left = mid + 1;
+                    }
+                }
+                else if (nums[mid] > nums[right]) //右边数组非有序，旋转数在右边
+                {
+                    if (target <= nums[right] || target > nums[mid]
+                    ) //m<left,left<t => m <t     // && nums[mid] < target
+                    {
+                        left = mid + 1;
+                    }
+                    else //m<left,t<left
+                    {
+                        right = mid - 1;
+                    }
+                }
+                else if (nums[mid] == nums[right] && nums[mid] == nums[left])
+                {
+                    right--;
+                }
+                else if (nums[mid] == nums[left])
+                {
+                    left++;
+                }
+                else if (nums[mid] == nums[right])
+                {
+                    right--;
+                }
+            }
+
+            return nums[left] == target ? left : -1;
+        }
+
+        //代码优化
+        public int SearchRotateCodeClean(int[] nums, int target)
+        {
+            if (nums.Length <= 0)
+            {
+                return -1;
+            }
+
+            int l = 0, r = nums.Length - 1;
+            while (l < r)
+            {
+                if (nums[l] == target)
+                {
+                    return l;
+                }
+
+                if (nums[r] == target)
+                {
+                    return r;
+                }
+
+                var mid = l + (r - l) / 2;
+                if (nums[mid] == target)
+                {
+                    return mid;
+                }
+
+                //左半边有序
+                if (nums[mid] > nums[l])
+                {
+                    //存在左半边
+                    //2 3
+                    if (target > nums[l] && target < nums[mid])
+                    {
+                        r = mid - 1;
+                    }
+                    else
+                    {
+                        l = mid + 1;
+                    }
+                }
+                else //右半边可能有序 (m,r)有序
+                {
+                    if (target > nums[mid] && target < nums[r])
+                    {
+                        l = mid + 1;
+                    }
+                    else
+                    {
+                        r = mid - 1;
+                    }
+                }
+            }
+
+            return nums[l] == target ? l : -1;
+        }
+
+        #endregion
+
+        #region 153. 寻找旋转排序数组中的最小值
+
+        //https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/
+        public int FindMin(int[] nums)
+        {
+            if (nums == null || nums.Length <= 0)
+            {
+                return -1;
+            }
+
+            int l = 0, r = nums.Length - 1;
+            while (l < r)
+            {
+                if (nums[l] < nums[r])
+                {
+                    break;
+                }
+
+                var m = l + (r - l) / 2;
+                if (nums[m] >= nums[l])
+                {
+                    //左边有序
+                    l = m + 1;
+                }
+                else
+                {
+                    r = m;
+                }
+            }
+
+            return nums[l];
+        }
+
+        #endregion
+
+        #region 658. 找到 K 个最接近的元素
+
+        //https://leetcode-cn.com/problems/find-k-closest-elements/
+        public IList<int> FindClosestElements(int[] arr, int k, int x)
+        {
+            int l = 0, r = arr.Length - 1;
+            while (l < r)
+            {
+                var m = (l + r) / 2;
+                if (arr[m] == x)
+                {
+                    l = m;
+                    break;
+                }
+
+                if (arr[m] < x)
+                {
+                    l = m + 1;
+                }
+                else
+                {
+                    r = m - 1;
+                }
+            }
+
+            if (arr[l] != x)
+            {
+                if (l > 0)
+                {
+                    int ln = x - arr[l - 1], rn = arr[l] - x;
+                    if (ln > rn)
+                    {
+                        l = r;
+                    }
+                }
+            }
+
+            int i = l, j = l;
+            var size = 1;
+            var res = new int[k];
+            while (size < k)
+            {
+                //[1,3] 1 2
+                //0 1 m=0 arr[m]=1 l=1
+                if (i > 0 && j < arr.Length - 1)
+                {
+                    int ln = x - arr[i - 1], rn = arr[j + 1] - x;
+                    if (ln <= rn)
+                    {
+                        i--;
+                    }
+                    else
+                    {
+                        j++;
+                    }
+                }
+                else if (i > 0)
+                {
+                    i--;
+                }
+                else
+                {
+                    j++;
+                }
+
+                size++;
+            }
+
+            Array.Copy(arr, i, res, 0, res.Length);
+            return res;
+        }
+
         #endregion
     }
 }
