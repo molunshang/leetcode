@@ -239,16 +239,16 @@ namespace leetcode
         {
             if (root == null)
             {
-                return new IList<int>[] {new int[0]};
+                return new IList<int>[] { new int[0] };
             }
 
             if (root.left == null && root.right == null)
             {
-                return new IList<int>[] {new[] {root.val}};
+                return new IList<int>[] { new[] { root.val } };
             }
 
             var paths = new List<IList<int>>();
-            BSTSequences(new HashSet<TreeNode>() {root}, paths, new List<int>());
+            BSTSequences(new HashSet<TreeNode>() { root }, paths, new List<int>());
             return paths;
         }
 
@@ -424,7 +424,7 @@ namespace leetcode
 
         public bool IsBipartite(int[][] graph)
         {
-            return IsBipartite(0, graph, new ISet<int>[] {new HashSet<int>(), new HashSet<int>()});
+            return IsBipartite(0, graph, new ISet<int>[] { new HashSet<int>(), new HashSet<int>() });
         }
 
         #endregion
@@ -1267,7 +1267,7 @@ namespace leetcode
                 var find = target - nums[i];
                 if (dict.TryGetValue(find, out var index))
                 {
-                    return new[] {index, i};
+                    return new[] { index, i };
                 }
 
                 dict[nums[i]] = i;
@@ -1284,7 +1284,7 @@ namespace leetcode
         public int MinimalSteps(string[] maze)
         {
             int m = maze.Length, n = maze[0].Length;
-            var steps = new[] {(1, 0), (-1, 0), (0, 1), (0, -1)};
+            var steps = new[] { (1, 0), (-1, 0), (0, 1), (0, -1) };
 
             void FillArray(int[,] arr, int val)
             {
@@ -1303,7 +1303,7 @@ namespace leetcode
                 FillArray(res, -1);
                 res[x, y] = 0;
                 var queue = new Queue<int[]>();
-                queue.Enqueue(new[] {x, y});
+                queue.Enqueue(new[] { x, y });
                 while (queue.Count > 0)
                 {
                     var cur = queue.Dequeue();
@@ -1314,7 +1314,7 @@ namespace leetcode
                         if (nx >= 0 && nx < m && ny >= 0 && ny < n && maze[nx][ny] != '#' && res[nx, ny] == -1)
                         {
                             res[nx, ny] = res[cx, cy] + 1;
-                            queue.Enqueue(new[] {nx, ny});
+                            queue.Enqueue(new[] { nx, ny });
                         }
                     }
                 }
@@ -1331,11 +1331,11 @@ namespace leetcode
                 {
                     if (str[j] == 'M')
                     {
-                        mPoints.Add(new[] {i, j});
+                        mPoints.Add(new[] { i, j });
                     }
                     else if (str[j] == 'O')
                     {
-                        oPoints.Add(new[] {i, j});
+                        oPoints.Add(new[] { i, j });
                     }
                     else if (str[j] == 'S')
                     {
@@ -1510,7 +1510,7 @@ namespace leetcode
                 x /= 10;
             }
 
-            return (int) res;
+            return (int)res;
         }
 
         #endregion
@@ -1563,7 +1563,7 @@ namespace leetcode
                 l++;
             }
 
-            return flag ? (int) res : -(int) res;
+            return flag ? (int)res : -(int)res;
         }
 
         #endregion
@@ -1670,7 +1670,7 @@ namespace leetcode
             list.Sort();
             numSet.Clear();
             int l = 0, r = 0, min = int.MaxValue;
-            var res = new[] {list[0], list[0]};
+            var res = new[] { list[0], list[0] };
             for (; r < list.Count; r++)
             {
                 numSet.Add(list[r]);
@@ -1756,7 +1756,7 @@ namespace leetcode
                         int leftId = FindWord(word, 0, j - 1);
                         if (leftId != -1 && leftId != i)
                         {
-                            ret.Add(new[] {i, leftId});
+                            ret.Add(new[] { i, leftId });
                         }
                     }
 
@@ -1765,7 +1765,7 @@ namespace leetcode
                         int rightId = FindWord(word, j, m - 1);
                         if (rightId != -1 && rightId != i)
                         {
-                            ret.Add(new[] {rightId, i});
+                            ret.Add(new[] { rightId, i });
                         }
                     }
                 }

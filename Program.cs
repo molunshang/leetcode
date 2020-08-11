@@ -30,8 +30,7 @@ namespace leetcode
 
         static void Main(string[] args)
         {
-            
-            program.FindClosestElements(new[] {1, 10, 15, 25, 35, 45, 50, 59}, 1, 30);
+            program.FindClosestElements(new[] { 1, 10, 15, 25, 35, 45, 50, 59 }, 1, 30);
             program.RestoreIpAddresses("25525511135");
             var root = new TreeNode(1);
             root.left = new TreeNode(3);
@@ -8099,23 +8098,16 @@ namespace leetcode
         {
             while (true)
             {
-                if (start > end)
+                if (start == end)
                 {
-                    return -1;
+                    return start;
                 }
 
                 var target = (start + end) / 2;
 
-                if ((target == 0 || nums[target] > nums[target - 1]) &&
-                    (target == nums.Length - 1 || nums[target] > nums[target + 1]))
+                if (nums[target] > nums[target + 1])
                 {
-                    return target;
-                }
-
-                var index = FindPeakElement(nums, start, target - 1);
-                if (index >= 0)
-                {
-                    return index;
+                    return FindPeakElement(nums, start, target);
                 }
 
                 start = target + 1;
