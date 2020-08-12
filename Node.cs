@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace leetcode
 {
     public class Node
@@ -7,7 +9,7 @@ namespace leetcode
         public Node random;
         public Node left;
         public Node right;
-
+        public IList<Node> neighbors;
         public Node(int _val)
         {
             val = _val;
