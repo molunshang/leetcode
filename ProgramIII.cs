@@ -2290,5 +2290,63 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 20. 有效的括号
+
+        //https://leetcode-cn.com/problems/valid-parentheses/
+        public bool IsValid(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return true;
+            }
+
+            if ((s.Length & 1) == 1)
+            {
+                return false;
+            }
+
+            var dict = new Dictionary<char, char> {{'(', ')'}, {'[', ']'}, {'{', '}'}};
+            var stack = new Stack<char>();
+            foreach (var ch in s)
+            {
+                if (dict.ContainsKey(ch))
+                {
+                    stack.Push(ch);
+                }
+                else if (stack.Count <= 0 || ch != dict[stack.Pop()])
+                {
+                    return false;
+                }
+            }
+
+            return stack.Count <= 0;
+        }
+
+        #endregion
+
+        #region 744. 寻找比目标字母大的最小字母
+
+        //https://leetcode-cn.com/problems/find-smallest-letter-greater-than-target/
+        public char NextGreatestLetter(char[] letters, char target)
+        {
+            int l = 0, r = letters.Length - 1;
+            while (l <= r)
+            {
+                var m = (l + r) / 2;
+                if (letters[m] <= target)
+                {
+                    l = m + 1;
+                }
+                else
+                {
+                    r = m - 1;
+                }
+            }
+
+            return letters[l % letters.Length];
+        }
+
+        #endregion
     }
 }

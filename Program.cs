@@ -4870,29 +4870,6 @@ namespace leetcode
         #region 22. 括号生成
 
         //https://leetcode-cn.com/problems/generate-parentheses/
-        bool IsValid(string str)
-        {
-            var l = 0;
-            foreach (var ch in str)
-            {
-                if (ch == '(')
-                {
-                    l++;
-                }
-                else
-                {
-                    l--;
-                }
-
-                if (l < 0)
-                {
-                    return false;
-                }
-            }
-
-            return l == 0;
-        }
-
         void GenerateParenthesis(int left, int right, IList<string> result, StringBuilder str)
         {
             if (left <= 0 && right <= 0)
