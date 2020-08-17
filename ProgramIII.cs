@@ -2446,5 +2446,38 @@ namespace leetcode
             return image;
         }
         #endregion
+
+        #region 寻找旋转排序数组中的最小值 II
+
+        //https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array-ii/
+        public int FindMinII(int[] nums)
+        {
+            int l = 0, r = nums.Length - 1;
+            while (l < r)
+            {
+                if (nums[l] < nums[r])
+                {
+                    return nums[l];
+                }
+
+                var m = (l + r) / 2;
+                if (nums[m] > nums[l])
+                {
+                    l = m + 1;
+                }
+                else if (nums[m] < nums[l])
+                {
+                    r = m;
+                }
+                else
+                {
+                    l++;
+                }
+            }
+
+            return nums[l];
+        }
+
+        #endregion
     }
 }
