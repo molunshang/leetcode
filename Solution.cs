@@ -1031,51 +1031,6 @@ namespace leetcode
             return null;
         }
 
-        public int Search(int[] nums, int target)
-        {
-            if (nums == null || nums.Length <= 0)
-            {
-                return 0;
-            }
-
-            int start = 0, end = nums.Length - 1, left, right;
-            while (start <= end)
-            {
-                var mid = (start + end) / 2;
-                if (nums[mid] <= target)
-                {
-                    start = mid + 1;
-                }
-                else
-                {
-                    end = mid - 1;
-                }
-            }
-
-            if (end >= 0 && nums[end] != target)
-            {
-                return 0;
-            }
-
-            right = end;
-            start = 0;
-            while (start <= end)
-            {
-                var mid = (start + end) / 2;
-                if (nums[mid] >= target)
-                {
-                    end = mid - 1;
-                }
-                else
-                {
-                    start = mid + 1;
-                }
-            }
-
-            left = start;
-            return right - left + 1;
-        }
-
         public int MissingNumber(int[] nums)
         {
             //由数组特点可知，nums[i]==i,如果nums[i]!=i，说明数组缺失
