@@ -239,16 +239,16 @@ namespace leetcode
         {
             if (root == null)
             {
-                return new IList<int>[] { new int[0] };
+                return new IList<int>[] {new int[0]};
             }
 
             if (root.left == null && root.right == null)
             {
-                return new IList<int>[] { new[] { root.val } };
+                return new IList<int>[] {new[] {root.val}};
             }
 
             var paths = new List<IList<int>>();
-            BSTSequences(new HashSet<TreeNode>() { root }, paths, new List<int>());
+            BSTSequences(new HashSet<TreeNode>() {root}, paths, new List<int>());
             return paths;
         }
 
@@ -424,7 +424,7 @@ namespace leetcode
 
         public bool IsBipartite(int[][] graph)
         {
-            return IsBipartite(0, graph, new ISet<int>[] { new HashSet<int>(), new HashSet<int>() });
+            return IsBipartite(0, graph, new ISet<int>[] {new HashSet<int>(), new HashSet<int>()});
         }
 
         #endregion
@@ -1267,7 +1267,7 @@ namespace leetcode
                 var find = target - nums[i];
                 if (dict.TryGetValue(find, out var index))
                 {
-                    return new[] { index, i };
+                    return new[] {index, i};
                 }
 
                 dict[nums[i]] = i;
@@ -1284,7 +1284,7 @@ namespace leetcode
         public int MinimalSteps(string[] maze)
         {
             int m = maze.Length, n = maze[0].Length;
-            var steps = new[] { (1, 0), (-1, 0), (0, 1), (0, -1) };
+            var steps = new[] {(1, 0), (-1, 0), (0, 1), (0, -1)};
 
             void FillArray(int[,] arr, int val)
             {
@@ -1303,7 +1303,7 @@ namespace leetcode
                 FillArray(res, -1);
                 res[x, y] = 0;
                 var queue = new Queue<int[]>();
-                queue.Enqueue(new[] { x, y });
+                queue.Enqueue(new[] {x, y});
                 while (queue.Count > 0)
                 {
                     var cur = queue.Dequeue();
@@ -1314,7 +1314,7 @@ namespace leetcode
                         if (nx >= 0 && nx < m && ny >= 0 && ny < n && maze[nx][ny] != '#' && res[nx, ny] == -1)
                         {
                             res[nx, ny] = res[cx, cy] + 1;
-                            queue.Enqueue(new[] { nx, ny });
+                            queue.Enqueue(new[] {nx, ny});
                         }
                     }
                 }
@@ -1331,11 +1331,11 @@ namespace leetcode
                 {
                     if (str[j] == 'M')
                     {
-                        mPoints.Add(new[] { i, j });
+                        mPoints.Add(new[] {i, j});
                     }
                     else if (str[j] == 'O')
                     {
-                        oPoints.Add(new[] { i, j });
+                        oPoints.Add(new[] {i, j});
                     }
                     else if (str[j] == 'S')
                     {
@@ -1510,7 +1510,7 @@ namespace leetcode
                 x /= 10;
             }
 
-            return (int)res;
+            return (int) res;
         }
 
         #endregion
@@ -1563,7 +1563,7 @@ namespace leetcode
                 l++;
             }
 
-            return flag ? (int)res : -(int)res;
+            return flag ? (int) res : -(int) res;
         }
 
         #endregion
@@ -1670,7 +1670,7 @@ namespace leetcode
             list.Sort();
             numSet.Clear();
             int l = 0, r = 0, min = int.MaxValue;
-            var res = new[] { list[0], list[0] };
+            var res = new[] {list[0], list[0]};
             for (; r < list.Count; r++)
             {
                 numSet.Add(list[r]);
@@ -1756,7 +1756,7 @@ namespace leetcode
                         int leftId = FindWord(word, 0, j - 1);
                         if (leftId != -1 && leftId != i)
                         {
-                            ret.Add(new[] { i, leftId });
+                            ret.Add(new[] {i, leftId});
                         }
                     }
 
@@ -1765,7 +1765,7 @@ namespace leetcode
                         int rightId = FindWord(word, j, m - 1);
                         if (rightId != -1 && rightId != i)
                         {
-                            ret.Add(new[] { rightId, i });
+                            ret.Add(new[] {rightId, i});
                         }
                     }
                 }
@@ -2306,7 +2306,7 @@ namespace leetcode
                 return false;
             }
 
-            var dict = new Dictionary<char, char> { { '(', ')' }, { '[', ']' }, { '{', '}' } };
+            var dict = new Dictionary<char, char> {{'(', ')'}, {'[', ']'}, {'{', '}'}};
             var stack = new Stack<char>();
             foreach (var ch in s)
             {
@@ -2350,6 +2350,7 @@ namespace leetcode
         #endregion
 
         #region 546. 移除盒子
+
         //https://leetcode-cn.com/problems/remove-boxes/
 
         //暴力解
@@ -2359,6 +2360,7 @@ namespace leetcode
             {
                 return boxes.Count;
             }
+
             var max = 0;
             int slow = 0, fast = 0;
             while (slow < boxes.Count && fast <= boxes.Count)
@@ -2377,8 +2379,10 @@ namespace leetcode
                     slow = fast;
                 }
             }
+
             return max;
         }
+
         public int RemoveBoxes(int[] boxes)
         {
             return RemoveBoxes(new List<int>(boxes));
@@ -2395,15 +2399,18 @@ namespace leetcode
                 {
                     return 0;
                 }
+
                 if (cache[l, r, k] != 0)
                 {
                     return cache[l, r, k];
                 }
+
                 while (l < r && boxes[r] == boxes[r - 1])
                 {
                     k++;
                     r--;
                 }
+
                 cache[l, r, k] = Dfs(l, r - 1, 0) + (k + 1) * (k + 1);
                 for (int i = l; i < r; i++)
                 {
@@ -2412,14 +2419,19 @@ namespace leetcode
                         cache[l, r, k] = Math.Max(cache[l, r, k], Dfs(l, i, k + 1) + Dfs(i + 1, r - 1, 0));
                     }
                 }
+
                 return cache[l, r, k];
-            };
+            }
+
+            ;
 
             return Dfs(0, boxes.Length - 1, 0);
         }
+
         #endregion
 
         #region 733. 图像渲染
+
         //https://leetcode-cn.com/problems/flood-fill/
         public int[][] FloodFill(int[][] image, int sr, int sc, int newColor)
         {
@@ -2428,8 +2440,9 @@ namespace leetcode
             {
                 return image;
             }
+
             var queue = new Queue<int[]>();
-            queue.Enqueue(new[] { sr, sc });
+            queue.Enqueue(new[] {sr, sc});
             while (queue.TryDequeue(out var point))
             {
                 int x = point[0], y = point[1];
@@ -2437,14 +2450,17 @@ namespace leetcode
                 {
                     continue;
                 }
+
                 image[x][y] = newColor;
-                queue.Enqueue(new[] { x + 1, y });
-                queue.Enqueue(new[] { x - 1, y });
-                queue.Enqueue(new[] { x, y + 1 });
-                queue.Enqueue(new[] { x, y - 1 });
+                queue.Enqueue(new[] {x + 1, y});
+                queue.Enqueue(new[] {x - 1, y});
+                queue.Enqueue(new[] {x, y + 1});
+                queue.Enqueue(new[] {x, y - 1});
             }
+
             return image;
         }
+
         #endregion
 
         #region 寻找旋转排序数组中的最小值 II
@@ -2476,6 +2492,83 @@ namespace leetcode
             }
 
             return nums[l];
+        }
+
+        #endregion
+
+        #region 109. 有序链表转换二叉搜索树
+
+        //https://leetcode-cn.com/problems/convert-sorted-list-to-binary-search-tree/
+
+        ListNode SplitHalf(ListNode head)
+        {
+            ListNode slow = head, fast = head, prev = null;
+            while (fast != null && fast.next != null)
+            {
+                prev = slow;
+                slow = slow.next;
+                fast = fast.next.next;
+            }
+
+            if (prev != null)
+            {
+                prev.next = null;
+            }
+
+            return slow;
+        }
+
+        public TreeNode SortedListToBST(ListNode head)
+        {
+            if (head == null)
+            {
+                return null;
+            }
+
+            if (head.next == null)
+            {
+                return new TreeNode(head.val);
+            }
+
+            var half = SplitHalf(head);
+            var root = new TreeNode(half.val) {left = SortedListToBST(head), right = SortedListToBST(half.next)};
+            return root;
+        }
+
+        #endregion
+
+        #region 719. 找出第 k 小的距离对
+
+        //https://leetcode-cn.com/problems/find-k-th-smallest-pair-distance/
+
+        public int SmallestDistancePair(int[] nums, int k)
+        {
+            Array.Sort(nums);
+            int l = 0, h = nums[nums.Length - 1] - nums[0];
+            while (l < h)
+            {
+                var m = (l + h) / 2;
+                int count = 0, left = 0;
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    while (left < i && nums[i] - nums[left] > m)
+                    {
+                        left++;
+                    }
+
+                    count += i - left;
+                }
+
+                if (count >= k)
+                {
+                    h = m;
+                }
+                else
+                {
+                    l = m + 1;
+                }
+            }
+            return l;
         }
 
         #endregion

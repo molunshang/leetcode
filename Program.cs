@@ -6355,23 +6355,6 @@ namespace leetcode
 
         #endregion
 
-        #region 109. 有序链表转换二叉搜索树
-
-        //https://leetcode-cn.com/problems/convert-sorted-list-to-binary-search-tree/
-        public TreeNode SortedListToBST(ListNode head)
-        {
-            var eles = new List<int>();
-            while (head != null)
-            {
-                eles.Add(head.val);
-                head = head.next;
-            }
-
-            return SortedArrayToBST(eles, 0, eles.Count - 1);
-        }
-
-        #endregion
-
         #region 面试题 02.04. 分割链表/86. 分隔链表
 
         //https://leetcode-cn.com/problems/partition-list-lcci/
