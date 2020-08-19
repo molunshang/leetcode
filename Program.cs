@@ -30,6 +30,7 @@ namespace leetcode
 
         static void Main(string[] args)
         {
+            program.CountEval("0&0&0&1^1|0", 1);
             program.RemoveBoxes(new[] { 1, 3, 2, 2, 2, 3, 4, 3, 1 });
             program.IsPerfectSquare(2147395600);
             program.FindClosestElements(new[] { 1, 10, 15, 25, 35, 45, 50, 59 }, 1, 30);
@@ -8518,54 +8519,6 @@ namespace leetcode
                 start++;
                 end--;
             }
-        }
-
-        #endregion
-
-        #region 647. 回文子串
-
-        //https://leetcode-cn.com/problems/palindromic-substrings/
-        public int CountSubstrings(string s)
-        {
-            bool Is(string str, int l, int r)
-            {
-                while (l < r)
-                {
-                    if (str[l] != str[r])
-                    {
-                        return false;
-                    }
-
-                    l++;
-                    r--;
-                }
-
-                return true;
-            }
-
-            bool[] start = new bool[s.Length], end = new bool[s.Length];
-            var count = 0;
-            for (int i = 0; i < s.Length; i++)
-            {
-                for (int j = i; j < s.Length; j++)
-                {
-                    if (j > 0 && start[i] && end[j - 1])
-                    {
-                        if (start[i] == end[j])
-                        {
-                            count++;
-                            start[i] = start[j] = true;
-                        }
-                    }
-                    else if (Is(s, i, j))
-                    {
-                        start[i] = start[j] = true;
-                        count++;
-                    }
-                }
-            }
-
-            return count;
         }
 
         #endregion

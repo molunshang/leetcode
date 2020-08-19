@@ -2631,5 +2631,172 @@ namespace leetcode
             return nums[l] == target;
         }
         #endregion
+
+        #region 647. 回文子串
+
+        //https://leetcode-cn.com/problems/palindromic-substrings/
+        public int CountSubstrings(string s)
+        {
+            int CenterCount(string str, int l, int r)
+            {
+                var count = 0;
+                while (l >= 0 && r < str.Length && str[l] == str[r])
+                {
+                    l--;
+                    r++;
+                    count++;
+                }
+
+                return count;
+            }
+
+            var res = 0;
+            for (int i = 0; i < s.Length; i++)
+            {
+                res += CenterCount(s, i, i);
+                res += CenterCount(s, i, i + 1);
+            }
+
+            return res;
+        }
+
+        public int CountSubstringsByDp(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return 0;
+            }
+
+            var res = 0;
+            var dp = new bool[s.Length, s.Length];
+            for (int len = 1; len <= s.Length; len++)
+            {
+                for (int i = 0, j = i + len - 1; j < s.Length; i++, j++)
+                {
+                    if (len == 1)
+                    {
+                        dp[i, j] = true;
+                    }
+                    else if (len == 2)
+                    {
+                        dp[i, j] = s[i] == s[j];
+                    }
+                    else
+                    {
+                        dp[i, j] = s[i] == s[j] && dp[i + 1, j - 1];
+                    }
+
+                    if (dp[i, j])
+                    {
+                        res++;
+                    }
+                }
+            }
+
+            return res;
+        }
+
+        #endregion
+
+        #region 1510. 石子游戏 IV
+
+        //https://leetcode-cn.com/problems/stone-game-iv/
+
+        public bool WinnerSquareGame(int n)
+        {
+            var cahce = new Dictionary<int, bool>();
+
+            bool Dfs(int num)
+            {
+                if (num <= 1)
+                {
+                    return num == 1;
+                }
+
+                if (cahce.TryGetValue(num, out var flag))
+                {
+                    return flag;
+                }
+
+                for (int i = 1; i * i <= num; i++)
+                {
+                    if (!Dfs(num - i * i))
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+
+                cahce[num] = flag;
+                return flag;
+            }
+
+            return Dfs(n);
+        }
+
+        #endregion
+
+        #region 面试题 08.14. 布尔运算
+        
+        //todo 未完成
+        //https://leetcode-cn.com/problems/boolean-evaluation-lcci/
+        void CountEval(string s, int result, Dictionary<char, Func<int, int, int>> operatorDict, int index,
+            Stack<int> nums, Stack<char> operators, ref int res)
+        {
+            while (true)
+            {
+                char ch;
+                if (index >= s.Length)
+                {
+                    while (operators.TryPop(out ch))
+                    {
+                        nums.Push(operatorDict[ch](nums.Pop(), nums.Pop()));
+                    }
+
+                    Console.WriteLine(nums.Count + "," + nums.Peek() + "," + result);
+                    if (nums.Pop() == result)
+                    {
+                        res++;
+                    }
+
+                    return;
+                }
+
+                ch = s[index];
+                if (operatorDict.ContainsKey(ch))
+                {
+                    //计算
+                    var n = s[index + 1] - '0';
+                    var cpNums = new Stack<int>(nums);
+                    var cpOperators = new Stack<char>(operators);
+                    cpNums.Push(operatorDict[ch](cpNums.Pop(), n));
+                    CountEval(s, result, operatorDict, index + 2, cpNums, cpOperators,
+                        ref res);
+                    //不计算
+                    operators.Push(ch);
+                }
+                else
+                {
+                    nums.Push(ch - '0');
+                }
+
+                index += 1;
+            }
+        }
+
+        public int CountEval(string s, int result)
+        {
+            var operatorDict = new Dictionary<char, Func<int, int, int>>
+            {
+                {'&', (a, b) => a & b}, {'|', (a, b) => a | b}, {'^', (a, b) => a ^ b}
+            };
+            var nums = new Stack<int>();
+            var operators = new Stack<char>();
+            var res = 0;
+            CountEval(s, result, operatorDict, 0, nums, operators, ref res);
+            return res;
+        }
+
+        #endregion
     }
 }
