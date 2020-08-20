@@ -239,16 +239,16 @@ namespace leetcode
         {
             if (root == null)
             {
-                return new IList<int>[] { new int[0] };
+                return new IList<int>[] {new int[0]};
             }
 
             if (root.left == null && root.right == null)
             {
-                return new IList<int>[] { new[] { root.val } };
+                return new IList<int>[] {new[] {root.val}};
             }
 
             var paths = new List<IList<int>>();
-            BSTSequences(new HashSet<TreeNode>() { root }, paths, new List<int>());
+            BSTSequences(new HashSet<TreeNode>() {root}, paths, new List<int>());
             return paths;
         }
 
@@ -424,7 +424,7 @@ namespace leetcode
 
         public bool IsBipartite(int[][] graph)
         {
-            return IsBipartite(0, graph, new ISet<int>[] { new HashSet<int>(), new HashSet<int>() });
+            return IsBipartite(0, graph, new ISet<int>[] {new HashSet<int>(), new HashSet<int>()});
         }
 
         #endregion
@@ -1267,7 +1267,7 @@ namespace leetcode
                 var find = target - nums[i];
                 if (dict.TryGetValue(find, out var index))
                 {
-                    return new[] { index, i };
+                    return new[] {index, i};
                 }
 
                 dict[nums[i]] = i;
@@ -1284,7 +1284,7 @@ namespace leetcode
         public int MinimalSteps(string[] maze)
         {
             int m = maze.Length, n = maze[0].Length;
-            var steps = new[] { (1, 0), (-1, 0), (0, 1), (0, -1) };
+            var steps = new[] {(1, 0), (-1, 0), (0, 1), (0, -1)};
 
             void FillArray(int[,] arr, int val)
             {
@@ -1303,7 +1303,7 @@ namespace leetcode
                 FillArray(res, -1);
                 res[x, y] = 0;
                 var queue = new Queue<int[]>();
-                queue.Enqueue(new[] { x, y });
+                queue.Enqueue(new[] {x, y});
                 while (queue.Count > 0)
                 {
                     var cur = queue.Dequeue();
@@ -1314,7 +1314,7 @@ namespace leetcode
                         if (nx >= 0 && nx < m && ny >= 0 && ny < n && maze[nx][ny] != '#' && res[nx, ny] == -1)
                         {
                             res[nx, ny] = res[cx, cy] + 1;
-                            queue.Enqueue(new[] { nx, ny });
+                            queue.Enqueue(new[] {nx, ny});
                         }
                     }
                 }
@@ -1331,11 +1331,11 @@ namespace leetcode
                 {
                     if (str[j] == 'M')
                     {
-                        mPoints.Add(new[] { i, j });
+                        mPoints.Add(new[] {i, j});
                     }
                     else if (str[j] == 'O')
                     {
-                        oPoints.Add(new[] { i, j });
+                        oPoints.Add(new[] {i, j});
                     }
                     else if (str[j] == 'S')
                     {
@@ -1510,7 +1510,7 @@ namespace leetcode
                 x /= 10;
             }
 
-            return (int)res;
+            return (int) res;
         }
 
         #endregion
@@ -1563,7 +1563,7 @@ namespace leetcode
                 l++;
             }
 
-            return flag ? (int)res : -(int)res;
+            return flag ? (int) res : -(int) res;
         }
 
         #endregion
@@ -1670,7 +1670,7 @@ namespace leetcode
             list.Sort();
             numSet.Clear();
             int l = 0, r = 0, min = int.MaxValue;
-            var res = new[] { list[0], list[0] };
+            var res = new[] {list[0], list[0]};
             for (; r < list.Count; r++)
             {
                 numSet.Add(list[r]);
@@ -1756,7 +1756,7 @@ namespace leetcode
                         int leftId = FindWord(word, 0, j - 1);
                         if (leftId != -1 && leftId != i)
                         {
-                            ret.Add(new[] { i, leftId });
+                            ret.Add(new[] {i, leftId});
                         }
                     }
 
@@ -1765,7 +1765,7 @@ namespace leetcode
                         int rightId = FindWord(word, j, m - 1);
                         if (rightId != -1 && rightId != i)
                         {
-                            ret.Add(new[] { rightId, i });
+                            ret.Add(new[] {rightId, i});
                         }
                     }
                 }
@@ -2093,7 +2093,7 @@ namespace leetcode
                         l = mid + 1;
                     }
                 }
-                else if (nums[mid] < nums[l])//右半边可能有序 (m,r)有序
+                else if (nums[mid] < nums[l]) //右半边可能有序 (m,r)有序
                 {
                     if (target > nums[mid] && target < nums[r])
                     {
@@ -2310,7 +2310,7 @@ namespace leetcode
                 return false;
             }
 
-            var dict = new Dictionary<char, char> { { '(', ')' }, { '[', ']' }, { '{', '}' } };
+            var dict = new Dictionary<char, char> {{'(', ')'}, {'[', ']'}, {'{', '}'}};
             var stack = new Stack<char>();
             foreach (var ch in s)
             {
@@ -2446,7 +2446,7 @@ namespace leetcode
             }
 
             var queue = new Queue<int[]>();
-            queue.Enqueue(new[] { sr, sc });
+            queue.Enqueue(new[] {sr, sc});
             while (queue.TryDequeue(out var point))
             {
                 int x = point[0], y = point[1];
@@ -2456,10 +2456,10 @@ namespace leetcode
                 }
 
                 image[x][y] = newColor;
-                queue.Enqueue(new[] { x + 1, y });
-                queue.Enqueue(new[] { x - 1, y });
-                queue.Enqueue(new[] { x, y + 1 });
-                queue.Enqueue(new[] { x, y - 1 });
+                queue.Enqueue(new[] {x + 1, y});
+                queue.Enqueue(new[] {x - 1, y});
+                queue.Enqueue(new[] {x, y + 1});
+                queue.Enqueue(new[] {x, y - 1});
             }
 
             return image;
@@ -2535,7 +2535,7 @@ namespace leetcode
             }
 
             var half = SplitHalf(head);
-            var root = new TreeNode(half.val) { left = SortedListToBST(head), right = SortedListToBST(half.next) };
+            var root = new TreeNode(half.val) {left = SortedListToBST(head), right = SortedListToBST(half.next)};
             return root;
         }
 
@@ -2572,12 +2572,14 @@ namespace leetcode
                     l = m + 1;
                 }
             }
+
             return l;
         }
 
         #endregion
 
         #region 81. 搜索旋转排序数组 II
+
         //https://leetcode-cn.com/problems/search-in-rotated-sorted-array-ii/submissions/
         public bool SearchII(int[] nums, int target)
         {
@@ -2630,6 +2632,7 @@ namespace leetcode
 
             return nums[l] == target;
         }
+
         #endregion
 
         #region 647. 回文子串
@@ -2737,64 +2740,126 @@ namespace leetcode
         #endregion
 
         #region 面试题 08.14. 布尔运算
-        
-        //todo 未完成
+
         //https://leetcode-cn.com/problems/boolean-evaluation-lcci/
-        void CountEval(string s, int result, Dictionary<char, Func<int, int, int>> operatorDict, int index,
-            Stack<int> nums, Stack<char> operators, ref int res)
+        int[] CountEval(string s, int l, int r, int[,][] cache)
         {
-            while (true)
+            int[] res;
+            if (l >= r)
             {
-                char ch;
-                if (index >= s.Length)
-                {
-                    while (operators.TryPop(out ch))
-                    {
-                        nums.Push(operatorDict[ch](nums.Pop(), nums.Pop()));
-                    }
-
-                    Console.WriteLine(nums.Count + "," + nums.Peek() + "," + result);
-                    if (nums.Pop() == result)
-                    {
-                        res++;
-                    }
-
-                    return;
-                }
-
-                ch = s[index];
-                if (operatorDict.ContainsKey(ch))
-                {
-                    //计算
-                    var n = s[index + 1] - '0';
-                    var cpNums = new Stack<int>(nums);
-                    var cpOperators = new Stack<char>(operators);
-                    cpNums.Push(operatorDict[ch](cpNums.Pop(), n));
-                    CountEval(s, result, operatorDict, index + 2, cpNums, cpOperators,
-                        ref res);
-                    //不计算
-                    operators.Push(ch);
-                }
-                else
-                {
-                    nums.Push(ch - '0');
-                }
-
-                index += 1;
+                res = new int[2];
+                res[s[l] - '0'] = 1;
+                return res;
             }
+
+            if (cache[l, r] != null)
+            {
+                return cache[l, r];
+            }
+
+            res = new int[2];
+            for (int i = l + 1; i < r; i += 2)
+            {
+                int[] left = CountEval(s, l, i - 1, cache), right = CountEval(s, i + 1, r, cache);
+                switch (s[i])
+                {
+                    case '|':
+                        //0 0|0
+                        //1 1|1,1|0,0|1
+                        res[0] += left[0] * right[0];
+                        res[1] += left[0] * right[1] + left[1] * right[0] + left[1] * right[1];
+                        break;
+                    case '^':
+                        //0 0^0,1^1
+                        //1 0^1,1^0
+                        res[0] += left[0] * right[0] + left[1] * right[1];
+                        res[1] += left[0] * right[1] + left[1] * right[0];
+                        break;
+                    case '&':
+                        //0 0&0,1&0,0&1
+                        //1 1&1
+                        res[0] += left[0] * right[0] + left[1] * right[0] + left[0] * right[1];
+                        res[1] += left[1] * right[1];
+                        break;
+                }
+            }
+
+            cache[l, r] = res;
+            return res;
         }
 
         public int CountEval(string s, int result)
         {
-            var operatorDict = new Dictionary<char, Func<int, int, int>>
+            var cache = new int[s.Length, s.Length][];
+            var res = CountEval(s, 0, s.Length - 1, cache);
+            return res[result];
+        }
+
+        #endregion
+
+        #region 529. 扫雷游戏
+
+        //https://leetcode-cn.com/problems/minesweeper/
+        public char[][] UpdateBoard(char[][] board, int[] click)
+        {
+            var queue = new Queue<int[]>();
+            queue.Enqueue(click);
+            var steps = new[] {-1, 0, 1};
+            while (queue.TryDequeue(out click))
             {
-                {'&', (a, b) => a & b}, {'|', (a, b) => a | b}, {'^', (a, b) => a ^ b}
-            };
-            var nums = new Stack<int>();
-            var operators = new Stack<char>();
-            var res = 0;
-            CountEval(s, result, operatorDict, 0, nums, operators, ref res);
-            return res;
+                int x = click[0], y = click[1];
+                if (board[x][y] == 'M')
+                {
+                    board[x][y] = 'X';
+                    break;
+                }
+
+                if (board[x][y] != 'E')
+                {
+                    continue;
+                }
+
+                var m = 0;
+                foreach (var xstep in steps)
+                {
+                    foreach (var ystep in steps)
+                    {
+                        int nx = x + xstep, ny = y + ystep;
+                        if (nx < 0 || nx >= board.Length || ny < 0 || ny >= board[x].Length || nx == x && ny == y)
+                        {
+                            continue;
+                        }
+                        if (board[nx][ny] == 'M')
+                        {
+                            m++;
+                        }
+                    }
+                }
+
+                if (m == 0)
+                {
+                    board[x][y] = 'B';
+                    foreach (var xstep in steps)
+                    {
+                        foreach (var ystep in steps)
+                        {
+                            int nx = x + xstep, ny = y + ystep;
+                            if (nx < 0 || nx >= board.Length || ny < 0 || ny >= board[x].Length || nx == x && ny == y)
+                            {
+                                continue;
+                            }
+
+                            queue.Enqueue(new[] {nx, ny});
+                        }
+                    }
+                }
+                else
+                {
+                    board[x][y] = (char) ('0' + m);
+                }
+            }
+
+            return board;
         }
 
         #endregion
