@@ -2829,6 +2829,7 @@ namespace leetcode
                         {
                             continue;
                         }
+
                         if (board[nx][ny] == 'M')
                         {
                             m++;
@@ -2860,6 +2861,128 @@ namespace leetcode
             }
 
             return board;
+        }
+
+        #endregion
+
+        #region 921. 使括号有效的最少添加
+
+        //https://leetcode-cn.com/problems/minimum-add-to-make-parentheses-valid/
+        public int MinAddToMakeValid(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return 0;
+            }
+
+            int res = 0, l = 0;
+            foreach (var ch in s)
+            {
+                l += ch == '(' ? 1 : -1;
+                if (l < 0)
+                {
+                    l = 0;
+                    res++;
+                }
+            }
+
+            return res + l;
+        }
+
+        #endregion
+
+        #region 1129. 颜色交替的最短路径
+
+        //https://leetcode-cn.com/problems/shortest-path-with-alternating-colors/
+        public int[] ShortestAlternatingPaths(int n, int[][] red_edges, int[][] blue_edges)
+        {
+            IList<int>[] redDict = new IList<int>[n], blueDict = new IList<int>[n];
+            foreach (var edge in red_edges)
+            {
+                if (redDict[edge[0]] == null)
+                {
+                    redDict[edge[0]] = new List<int>();
+                }
+
+                redDict[edge[0]].Add(edge[1]);
+            }
+
+            foreach (var edge in blue_edges)
+            {
+                if (blueDict[edge[0]] == null)
+                {
+                    blueDict[edge[0]] = new List<int>();
+                }
+
+                blueDict[edge[0]].Add(edge[1]);
+            }
+
+            int Bfs(bool isRed, int target)
+            {
+                var queue = new Queue<int>();
+                HashSet<int> red = new HashSet<int>(), blue = new HashSet<int>();
+                var path = 0;
+                queue.Enqueue(0);
+                while (queue.Count > 0)
+                {
+                    var size = queue.Count;
+                    var set = isRed ? red : blue;
+                    var dict = isRed ? redDict : blueDict;
+                    while (size > 0)
+                    {
+                        size--;
+                        var point = queue.Dequeue();
+                        if (target == point)
+                        {
+                            return path;
+                        }
+
+                        if (!set.Add(point))
+                        {
+                            continue;
+                        }
+                        var next = dict[point];
+                        if (next == null)
+                        {
+                            continue;
+                        }
+
+                        foreach (var p in next)
+                        {
+                            queue.Enqueue(p);
+                        }
+                    }
+                    isRed = !isRed;
+                    path++;
+                }
+
+                return -1;
+            }
+
+
+            var res = new int[n];
+            for (int i = 1; i < n; i++)
+            {
+                int r = Bfs(true, i), b = Bfs(false, i);
+                if (r != -1 && b != -1)
+                {
+                    res[i] = Math.Min(r, b);
+                }
+                else if (r == -1)
+                {
+                    res[i] = b;
+                }
+                else if (b == -1)
+                {
+                    res[i] = r;
+                }
+                else
+                {
+                    res[i] = -1;
+                }
+            }
+
+            return res;
         }
 
         #endregion
