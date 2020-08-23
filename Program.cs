@@ -30,6 +30,7 @@ namespace leetcode
 
         static void Main(string[] args)
         {
+            program.RangeBitwiseAnd(5, 6);
             program.CountEval("0&0&0&1^1|0", 1);
             program.RemoveBoxes(new[] { 1, 3, 2, 2, 2, 3, 4, 3, 1 });
             program.IsPerfectSquare(2147395600);
