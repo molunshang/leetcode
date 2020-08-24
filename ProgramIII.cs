@@ -239,16 +239,16 @@ namespace leetcode
         {
             if (root == null)
             {
-                return new IList<int>[] { new int[0] };
+                return new IList<int>[] {new int[0]};
             }
 
             if (root.left == null && root.right == null)
             {
-                return new IList<int>[] { new[] { root.val } };
+                return new IList<int>[] {new[] {root.val}};
             }
 
             var paths = new List<IList<int>>();
-            BSTSequences(new HashSet<TreeNode>() { root }, paths, new List<int>());
+            BSTSequences(new HashSet<TreeNode>() {root}, paths, new List<int>());
             return paths;
         }
 
@@ -424,7 +424,7 @@ namespace leetcode
 
         public bool IsBipartite(int[][] graph)
         {
-            return IsBipartite(0, graph, new ISet<int>[] { new HashSet<int>(), new HashSet<int>() });
+            return IsBipartite(0, graph, new ISet<int>[] {new HashSet<int>(), new HashSet<int>()});
         }
 
         #endregion
@@ -1267,7 +1267,7 @@ namespace leetcode
                 var find = target - nums[i];
                 if (dict.TryGetValue(find, out var index))
                 {
-                    return new[] { index, i };
+                    return new[] {index, i};
                 }
 
                 dict[nums[i]] = i;
@@ -1284,7 +1284,7 @@ namespace leetcode
         public int MinimalSteps(string[] maze)
         {
             int m = maze.Length, n = maze[0].Length;
-            var steps = new[] { (1, 0), (-1, 0), (0, 1), (0, -1) };
+            var steps = new[] {(1, 0), (-1, 0), (0, 1), (0, -1)};
 
             void FillArray(int[,] arr, int val)
             {
@@ -1303,7 +1303,7 @@ namespace leetcode
                 FillArray(res, -1);
                 res[x, y] = 0;
                 var queue = new Queue<int[]>();
-                queue.Enqueue(new[] { x, y });
+                queue.Enqueue(new[] {x, y});
                 while (queue.Count > 0)
                 {
                     var cur = queue.Dequeue();
@@ -1314,7 +1314,7 @@ namespace leetcode
                         if (nx >= 0 && nx < m && ny >= 0 && ny < n && maze[nx][ny] != '#' && res[nx, ny] == -1)
                         {
                             res[nx, ny] = res[cx, cy] + 1;
-                            queue.Enqueue(new[] { nx, ny });
+                            queue.Enqueue(new[] {nx, ny});
                         }
                     }
                 }
@@ -1331,11 +1331,11 @@ namespace leetcode
                 {
                     if (str[j] == 'M')
                     {
-                        mPoints.Add(new[] { i, j });
+                        mPoints.Add(new[] {i, j});
                     }
                     else if (str[j] == 'O')
                     {
-                        oPoints.Add(new[] { i, j });
+                        oPoints.Add(new[] {i, j});
                     }
                     else if (str[j] == 'S')
                     {
@@ -1510,7 +1510,7 @@ namespace leetcode
                 x /= 10;
             }
 
-            return (int)res;
+            return (int) res;
         }
 
         #endregion
@@ -1563,7 +1563,7 @@ namespace leetcode
                 l++;
             }
 
-            return flag ? (int)res : -(int)res;
+            return flag ? (int) res : -(int) res;
         }
 
         #endregion
@@ -1670,7 +1670,7 @@ namespace leetcode
             list.Sort();
             numSet.Clear();
             int l = 0, r = 0, min = int.MaxValue;
-            var res = new[] { list[0], list[0] };
+            var res = new[] {list[0], list[0]};
             for (; r < list.Count; r++)
             {
                 numSet.Add(list[r]);
@@ -1756,7 +1756,7 @@ namespace leetcode
                         int leftId = FindWord(word, 0, j - 1);
                         if (leftId != -1 && leftId != i)
                         {
-                            ret.Add(new[] { i, leftId });
+                            ret.Add(new[] {i, leftId});
                         }
                     }
 
@@ -1765,7 +1765,7 @@ namespace leetcode
                         int rightId = FindWord(word, j, m - 1);
                         if (rightId != -1 && rightId != i)
                         {
-                            ret.Add(new[] { rightId, i });
+                            ret.Add(new[] {rightId, i});
                         }
                     }
                 }
@@ -2310,7 +2310,7 @@ namespace leetcode
                 return false;
             }
 
-            var dict = new Dictionary<char, char> { { '(', ')' }, { '[', ']' }, { '{', '}' } };
+            var dict = new Dictionary<char, char> {{'(', ')'}, {'[', ']'}, {'{', '}'}};
             var stack = new Stack<char>();
             foreach (var ch in s)
             {
@@ -2446,7 +2446,7 @@ namespace leetcode
             }
 
             var queue = new Queue<int[]>();
-            queue.Enqueue(new[] { sr, sc });
+            queue.Enqueue(new[] {sr, sc});
             while (queue.TryDequeue(out var point))
             {
                 int x = point[0], y = point[1];
@@ -2456,10 +2456,10 @@ namespace leetcode
                 }
 
                 image[x][y] = newColor;
-                queue.Enqueue(new[] { x + 1, y });
-                queue.Enqueue(new[] { x - 1, y });
-                queue.Enqueue(new[] { x, y + 1 });
-                queue.Enqueue(new[] { x, y - 1 });
+                queue.Enqueue(new[] {x + 1, y});
+                queue.Enqueue(new[] {x - 1, y});
+                queue.Enqueue(new[] {x, y + 1});
+                queue.Enqueue(new[] {x, y - 1});
             }
 
             return image;
@@ -2535,7 +2535,7 @@ namespace leetcode
             }
 
             var half = SplitHalf(head);
-            var root = new TreeNode(half.val) { left = SortedListToBST(head), right = SortedListToBST(half.next) };
+            var root = new TreeNode(half.val) {left = SortedListToBST(head), right = SortedListToBST(half.next)};
             return root;
         }
 
@@ -2804,7 +2804,7 @@ namespace leetcode
         {
             var queue = new Queue<int[]>();
             queue.Enqueue(click);
-            var steps = new[] { -1, 0, 1 };
+            var steps = new[] {-1, 0, 1};
             while (queue.TryDequeue(out click))
             {
                 int x = click[0], y = click[1];
@@ -2850,13 +2850,13 @@ namespace leetcode
                                 continue;
                             }
 
-                            queue.Enqueue(new[] { nx, ny });
+                            queue.Enqueue(new[] {nx, ny});
                         }
                     }
                 }
                 else
                 {
-                    board[x][y] = (char)('0' + m);
+                    board[x][y] = (char) ('0' + m);
                 }
             }
 
@@ -2941,6 +2941,7 @@ namespace leetcode
                         {
                             continue;
                         }
+
                         var next = dict[point];
                         if (next == null)
                         {
@@ -2952,6 +2953,7 @@ namespace leetcode
                             queue.Enqueue(p);
                         }
                     }
+
                     isRed = !isRed;
                     path++;
                 }
@@ -2988,6 +2990,7 @@ namespace leetcode
         #endregion
 
         #region 679. 24 点游戏
+
         //https://leetcode-cn.com/problems/24-game/
         public bool JudgePoint24(int[] nums)
         {
@@ -2996,12 +2999,14 @@ namespace leetcode
             operatorDict[1] = (a, b) => a - b;
             operatorDict[2] = (a, b) => a * b;
             operatorDict[3] = (a, b) => a / b;
+
             bool Dfs(IList<double> list)
             {
                 if (list.Count <= 0)
                 {
                     return false;
                 }
+
                 if (list.Count == 1)
                 {
                     return Math.Abs(list[0] - 24) <= 0.000001;
@@ -3017,6 +3022,7 @@ namespace leetcode
                         {
                             continue;
                         }
+
                         var two = list[j];
                         list.RemoveAt(j);
                         for (int k = 0; k < 4; k++)
@@ -3027,17 +3033,23 @@ namespace leetcode
                             {
                                 return true;
                             }
+
                             list.RemoveAt(list.Count - 1);
                         }
+
                         list.Insert(j, two);
                     }
+
                     list.Insert(i, one);
                 }
+
                 return false;
             }
-            var numbers = new List<double>(nums.Select(n => (double)n));
+
+            var numbers = new List<double>(nums.Select(n => (double) n));
             return Dfs(numbers);
         }
+
         //官解
         public bool JudgePoint24Answer(int[] nums)
         {
@@ -3047,10 +3059,12 @@ namespace leetcode
                 {
                     return false;
                 }
+
                 if (list.Count == 1)
                 {
                     return Math.Abs(list[0] - 24) <= 0.000001;
                 }
+
                 var next = new List<double>();
                 for (int i = 0; i < list.Count; i++)
                 {
@@ -3061,6 +3075,7 @@ namespace leetcode
                         {
                             continue;
                         }
+
                         var two = list[j];
                         next.AddRange(list.Where((n, m) => m != i && m != j));
                         for (int k = 0; k < 4; k++)
@@ -3069,6 +3084,7 @@ namespace leetcode
                             {
                                 continue;
                             }
+
                             if (k == 0)
                             {
                                 next.Add(one + two);
@@ -3087,25 +3103,33 @@ namespace leetcode
                                 {
                                     continue;
                                 }
+
                                 next.Add(one / two);
                             }
+
                             if (Dfs(next))
                             {
                                 return true;
                             }
+
                             next.RemoveAt(next.Count - 1);
                         }
+
                         next.Clear();
                     }
                 }
+
                 return false;
             }
-            var numbers = new List<double>(nums.Select(n => (double)n));
+
+            var numbers = new List<double>(nums.Select(n => (double) n));
             return Dfs(numbers);
         }
+
         #endregion
 
         #region 201. 数字范围按位与
+
         //https://leetcode-cn.com/problems/bitwise-and-of-numbers-range/
         public int RangeBitwiseAnd(int m, int n)
         {
@@ -3113,6 +3137,7 @@ namespace leetcode
             {
                 return 0;
             }
+
             int BitCount(int num)
             {
                 var count = 0;
@@ -3121,30 +3146,196 @@ namespace leetcode
                     count++;
                     num >>= 1;
                 }
+
                 return count;
             }
+
             var most = BitCount(m);
-            var bits = new Stack<int>();
-            for (int i = 0; i < most; i++)
+            var res = 0;
+            for (int i = most - 1; i >= 0; i--)
             {
                 var mask = int.MaxValue ^ (1 << i);
                 int mnum = n & mask, nnum = m & mask;
                 if (mnum >= m && mnum <= n || (nnum >= m && nnum <= n))
                 {
-                    bits.Push(0);
+                    res = (res << 1) | 0;
                 }
                 else
                 {
-                    bits.Push(1);
+                    res = (res << 1) | 1;
                 }
             }
-            var res = bits.Pop();
-            while (bits.TryPop(out var bit))
-            {
-                res = (res << 1) | bit;
-            }
+
             return res;
         }
+
+        #endregion
+
+        #region 459. 重复的子字符串
+
+        //https://leetcode-cn.com/problems/repeated-substring-pattern/
+        public bool RepeatedSubstringPattern(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return false;
+            }
+
+            for (int len = 1; len <= s.Length / 2; len++)
+            {
+                if (s.Length % len != 0)
+                {
+                    continue;
+                }
+
+                var flag = true;
+                var subStr = s.Substring(0, len);
+                for (int i = len; i < s.Length; i += len)
+                {
+                    if (subStr.Where((t, j) => subStr[j] != s[i + j]).Any())
+                    {
+                        flag = false;
+                        break;
+                    }
+                }
+
+                if (flag)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        #endregion
+
+        #region 1391. 检查网格中是否存在有效路径
+
+        //https://leetcode-cn.com/problems/check-if-there-is-a-valid-path-in-a-grid/
+        public bool HasValidPath(int[][] grid)
+        {
+            var pathDict = new IList<int>[13];
+            pathDict[0] = new[] {1, 2, 3, 4, 5, 6};
+            pathDict[1] = new[] {1, 3, 5};
+            pathDict[2] = new[] {1, 4, 6};
+            pathDict[3] = new[] {2, 5, 6};
+            pathDict[4] = new[] {2, 3, 4};
+            pathDict[5] = new[] {1, 4, 6};
+            pathDict[6] = new[] {2, 5, 6};
+            pathDict[7] = new[] {1, 3, 5};
+            pathDict[8] = new[] {2, 5, 6};
+            pathDict[9] = new[] {1, 3, 6};
+            pathDict[10] = new[] {2, 3, 4};
+            pathDict[11] = new[] {1, 3, 5};
+            pathDict[12] = new[] {2, 3, 4};
+            int targetX = grid.Length - 1, targetY = grid[0].Length - 1;
+            var visited = new bool[grid.Length, grid[0].Length];
+
+            bool Bfs()
+            {
+                var queue = new Queue<int[]>();
+                queue.Enqueue(new[] {0, 0, 0});
+                while (queue.TryDequeue(out var point))
+                {
+                    int x = point[0], y = point[1], step = point[2];
+                    if (x < 0 || x > targetX || y < 0 || y > targetY || visited[x, y])
+                    {
+                        continue;
+                    }
+
+                    var type = grid[x][y];
+                    if (!pathDict[step].Contains(type))
+                    {
+                        continue;
+                    }
+
+                    if (x == targetX && y == targetY)
+                    {
+                        return true;
+                    }
+
+                    visited[x, y] = true;
+                    switch (type)
+                    {
+                        case 1: //左右
+                            queue.Enqueue(new[] {x, y + 1, 1});
+                            queue.Enqueue(new[] {x, y - 1, 2});
+                            break;
+                        case 2: //上下
+                            queue.Enqueue(new[] {x + 1, y, 3});
+                            queue.Enqueue(new[] {x - 1, y, 4});
+                            break;
+                        case 3: //左下
+                            queue.Enqueue(new[] {x, y - 1, 5});
+                            queue.Enqueue(new[] {x + 1, y, 6});
+                            break;
+                        case 4: //右下
+                            queue.Enqueue(new[] {x, y + 1, 7});
+                            queue.Enqueue(new[] {x + 1, y, 8});
+                            break;
+                        case 5: //左上
+                            queue.Enqueue(new[] {x, y - 1, 9});
+                            queue.Enqueue(new[] {x - 1, y, 10});
+                            break;
+                        case 6: //右上
+                            queue.Enqueue(new[] {x, y + 1, 11});
+                            queue.Enqueue(new[] {x - 1, y, 12});
+                            break;
+                    }
+                }
+
+                return false;
+            }
+
+            bool Dfs(int x, int y, int direct)
+            {
+                if (x < 0 || x > targetX || y < 0 || y > targetY || visited[x, y])
+                {
+                    return false;
+                }
+
+                var type = grid[x][y];
+                if (!pathDict[direct].Contains(type))
+                {
+                    return false;
+                }
+
+                if (x == targetX && y == targetY)
+                {
+                    return true;
+                }
+
+                var flag = false;
+                visited[x, y] = true;
+                switch (type)
+                {
+                    case 1: //左右
+                        flag = Dfs(x, y + 1, 1) || Dfs(x, y - 1, 2);
+                        break;
+                    case 2: //上下
+                        flag = Dfs(x + 1, y, 3) || Dfs(x - 1, y, 4);
+                        break;
+                    case 3: //左下
+                        flag = Dfs(x, y - 1, 5) || Dfs(x + 1, y, 6);
+                        break;
+                    case 4: //右下
+                        flag = Dfs(x, y + 1, 7) || Dfs(x + 1, y, 8);
+                        break;
+                    case 5: //左上
+                        flag = Dfs(x, y - 1, 9) || Dfs(x - 1, y, 10);
+                        break;
+                    case 6: //右上
+                        flag = Dfs(x, y + 1, 11) || Dfs(x - 1, y, 12);
+                        break;
+                }
+
+                return flag;
+            }
+
+            return Bfs();
+        }
+
         #endregion
     }
 }
