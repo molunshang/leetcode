@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -317,6 +318,116 @@ namespace leetcode
             }
 
             return Dfs(targetDict, string.Empty);
+        }
+
+        #endregion
+
+        #region 332. 重新安排行程
+
+        //https://leetcode-cn.com/problems/reconstruct-itinerary/
+        public IList<string> FindItinerary(IList<IList<string>> tickets)
+        {
+            if (tickets.Count <= 0)
+            {
+                return new string[0];
+            }
+
+            var ticketDict = new Dictionary<string, List<string>>();
+            foreach (var ticket in tickets)
+            {
+                string from = ticket[0], to = ticket[1];
+                if (!ticketDict.TryGetValue(from, out var tos))
+                {
+                    tos = new List<string>();
+                    ticketDict[from] = tos;
+                }
+
+                tos.Add(to);
+            }
+
+            foreach (var list in ticketDict.Values)
+            {
+                list.Sort();
+            }
+
+            var paths = new List<string>();
+
+            bool Dfs(string from)
+            {
+                if (ticketDict.Count <= 0)
+                {
+                    paths.Add(from);
+                    return true;
+                }
+
+                if (!ticketDict.TryGetValue(from, out var tos) || tos.Count <= 0)
+                {
+                    return false;
+                }
+
+                paths.Add(from);
+                for (var i = 0; i < tos.Count; i++)
+                {
+                    var to = tos[i];
+                    tos.RemoveAt(i);
+                    if (tos.Count <= 0)
+                    {
+                        ticketDict.Remove(from);
+                    }
+
+                    if (Dfs(to))
+                    {
+                        return true;
+                    }
+
+                    if (tos.Count <= 0)
+                    {
+                        ticketDict[from] = tos;
+                    }
+
+                    tos.Insert(i, to);
+                }
+
+                paths.RemoveAt(paths.Count - 1);
+                return false;
+            }
+
+            Dfs("JFK");
+            return paths;
+        }
+
+        #endregion
+
+        #region 435. 无重叠区间
+
+        //https://leetcode-cn.com/problems/non-overlapping-intervals/
+        public int EraseOverlapIntervals(int[][] intervals)
+        {
+            if (intervals.Length <= 1)
+            {
+                return 0;
+            }
+
+            Array.Sort(intervals, Comparer<int[]>.Create((a, b) => a[0] == b[0] ? b[1] - a[1] : a[0] - b[0]));
+            //暴力解，超时
+            int Dfs(int prev, int cur)
+            {
+                if (cur >= intervals.Length)
+                {
+                    return 0;
+                }
+
+                var no = int.MaxValue;
+                if (prev < 0 || intervals[prev][1] <= intervals[cur][0])
+                {
+                    no = Dfs(cur, cur + 1);
+                }
+
+                var remove = Dfs(prev, cur + 1) + 1;
+                return Math.Min(no, remove);
+            }
+
+            return Dfs(-1, 0);
         }
 
         #endregion

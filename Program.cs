@@ -30,6 +30,8 @@ namespace leetcode
 
         static void Main(string[] args)
         {
+            //[[],[],[],[]]
+            program.FindItinerary(JsonConvert.DeserializeObject<IList<IList<string>>>(@"[[""JFK"",""KUL""],[""JFK"",""NRT""],[""NRT"",""JFK""]]"));
             program.MinStickers(
                 new[] {"slave", "doctor", "kept", "insect", "an", "window", "she", "range", "post", "guide"},
                 "supportclose");
