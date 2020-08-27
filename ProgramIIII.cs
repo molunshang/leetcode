@@ -17,7 +17,7 @@ namespace leetcode
         {
             if (array.Length <= 0)
             {
-                return new[] {-1, -1};
+                return new[] { -1, -1 };
             }
 
             //1 5 3 7
@@ -44,7 +44,7 @@ namespace leetcode
                 }
             }
 
-            return new[] {left, right};
+            return new[] { left, right };
         }
 
         #endregion
@@ -67,7 +67,7 @@ namespace leetcode
                 var step = i == 5 || i == 7 ? 4 : 3;
                 while (step != 0)
                 {
-                    chars.Add((char) ('a' + j));
+                    chars.Add((char)('a' + j));
                     j++;
                     step--;
                 }
@@ -427,6 +427,28 @@ namespace leetcode
                 return Math.Min(no, remove);
             }
 
+            //求出数组中最多不相交的区间数
+            //res= 总区间数-不相交区间数
+            int Dp()
+            {
+                var dp = new int[intervals.Length];
+                dp[0] = 1;
+                var ans = 0;
+                for (int i = 1; i < intervals.Length; i++)
+                {
+                    var max = 0;
+                    for (int j = i - 1; j >= 0; j--)
+                    {
+                        if (intervals[j][1] <= intervals[i][0])
+                        {
+                            max = Math.Max(dp[j], max);
+                        }
+                    }
+                    dp[i] = max + 1;
+                    ans = Math.Max(ans, dp[i]);
+                }
+                return intervals.Length - ans;
+            }
             return Dfs(-1, 0);
         }
 
