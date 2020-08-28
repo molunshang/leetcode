@@ -254,27 +254,6 @@ namespace leetcode
 
         #endregion
 
-        #region 214. 最短回文串
-
-        //https://leetcode-cn.com/problems/shortest-palindrome/
-        //todo 性能优化
-        public string ShortestPalindrome(string s)
-        {
-            var reverseStr = new string(s.Reverse().ToArray());
-            for (int i = 0; i < reverseStr.Length; i++)
-            {
-                if (s.IndexOf(reverseStr.Substring(i, reverseStr.Length - i)) == 0)
-                {
-                    s = reverseStr.Substring(0, i) + s;
-                    break;
-                }
-            }
-
-            return s;
-        }
-
-        #endregion
-
         #region 1201. 丑数 III
 
         //https://leetcode-cn.com/problems/ugly-number-iii/

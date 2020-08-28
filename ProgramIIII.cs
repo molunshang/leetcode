@@ -17,7 +17,7 @@ namespace leetcode
         {
             if (array.Length <= 0)
             {
-                return new[] { -1, -1 };
+                return new[] {-1, -1};
             }
 
             //1 5 3 7
@@ -44,7 +44,7 @@ namespace leetcode
                 }
             }
 
-            return new[] { left, right };
+            return new[] {left, right};
         }
 
         #endregion
@@ -67,7 +67,7 @@ namespace leetcode
                 var step = i == 5 || i == 7 ? 4 : 3;
                 while (step != 0)
                 {
-                    chars.Add((char)('a' + j));
+                    chars.Add((char) ('a' + j));
                     j++;
                     step--;
                 }
@@ -409,6 +409,7 @@ namespace leetcode
             }
 
             Array.Sort(intervals, Comparer<int[]>.Create((a, b) => a[0] == b[0] ? b[1] - a[1] : a[0] - b[0]));
+
             //暴力解，超时
             int Dfs(int prev, int cur)
             {
@@ -427,6 +428,7 @@ namespace leetcode
                 return Math.Min(no, remove);
             }
 
+            //动态规划
             //求出数组中最多不相交的区间数
             //res= 总区间数-不相交区间数
             int Dp()
@@ -444,12 +446,168 @@ namespace leetcode
                             max = Math.Max(dp[j], max);
                         }
                     }
+
                     dp[i] = max + 1;
                     ans = Math.Max(ans, dp[i]);
                 }
+
                 return intervals.Length - ans;
             }
-            return Dfs(-1, 0);
+
+            //贪心算法
+            int Greedy()
+            {
+                int prev = 0, count = 0; //prev 应保留区间
+                for (int i = 1; i < intervals.Length; i++)
+                {
+                    if (intervals[prev][1] > intervals[i][0]) //相交，需要移除数+1
+                    {
+                        if (intervals[prev][1] > intervals[i][1]) //判断应该移除覆盖范围较大区间
+                        {
+                            prev = i;
+                        }
+
+                        count++;
+                    }
+                    else //两个区间不相交，不需要移除，检查后面的是否有相交
+                    {
+                        prev = i;
+                    }
+                }
+
+                return count;
+            }
+
+            return Max(Dfs(-1, 0), Dp(), Greedy());
+        }
+
+        #endregion
+
+        #region 657. 机器人能否返回原点
+
+        //https://leetcode-cn.com/problems/robot-return-to-origin/
+        public bool JudgeCircle(string moves)
+        {
+            if (string.IsNullOrEmpty(moves))
+            {
+                return true;
+            }
+
+            int x = 0, y = 0;
+            foreach (var ch in moves)
+            {
+                switch (ch)
+                {
+                    case 'U':
+                        x--;
+                        break;
+                    case 'D':
+                        x++;
+                        break;
+                    case 'L':
+                        y--;
+                        break;
+                    case 'R':
+                        y++;
+                        break;
+                }
+            }
+
+            return x == 0 && y == 0;
+        }
+
+        #endregion
+
+        #region 673. 最长递增子序列的个数
+
+        //https://leetcode-cn.com/problems/number-of-longest-increasing-subsequence/
+        public int FindNumberOfLIS(int[] nums)
+        {
+            if (nums.Length <= 0)
+            {
+                return 0;
+            }
+
+            var dp = new int[nums.Length];
+            var counters = new int[nums.Length];
+            Array.Fill(counters, 1);
+            var len = 0;
+            for (int i = 0; i < nums.Length; i++)
+            {
+                for (int j = 0; j < i; j++)
+                {
+                    if (nums[i] <= nums[j])
+                    {
+                        continue;
+                    }
+
+                    if (dp[j] >= dp[i])
+                    {
+                        dp[i] = dp[j] + 1;
+                        counters[i] = counters[j];
+                    }
+                    else if (dp[j] + 1 == dp[i])
+                    {
+                        counters[i] += counters[j];
+                    }
+                }
+
+                len = Math.Max(len, dp[i]);
+            }
+
+            return counters.Where((c, i) => dp[i] == len).Sum();
+        }
+
+        #endregion
+
+        #region 214. 最短回文串
+
+        //https://leetcode-cn.com/problems/shortest-palindrome/
+        public string ShortestPalindrome(string s)
+        {
+            var reverseStr = new string(s.Reverse().ToArray());
+            for (int i = 0; i < reverseStr.Length; i++)
+            {
+                if (s.IndexOf(reverseStr.Substring(i, reverseStr.Length - i)) == 0)
+                {
+                    s = reverseStr.Substring(0, i) + s;
+                    break;
+                }
+            }
+
+            return s;
+        }
+        //递归
+
+        public string ShortestPalindromeII(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return s;
+            }
+
+            int l = 0;
+            for (int i = s.Length - 1; i >= 0; i--)
+            {
+                if (s[l] == s[i])
+                {
+                    l++;
+                }
+            }
+
+            if (l == s.Length)
+            {
+                return s;
+            }
+
+            if (l == 0)
+            {
+                return new string(s.Reverse().ToArray()) + s;
+            }
+
+            var keep = s.Substring(l);
+            var reverseStr = new string(keep.Reverse().ToArray());
+            return reverseStr + ShortestPalindromeII(s.Substring(0, l)) + keep;
         }
 
         #endregion
