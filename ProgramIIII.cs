@@ -17,7 +17,7 @@ namespace leetcode
         {
             if (array.Length <= 0)
             {
-                return new[] {-1, -1};
+                return new[] { -1, -1 };
             }
 
             //1 5 3 7
@@ -44,7 +44,7 @@ namespace leetcode
                 }
             }
 
-            return new[] {left, right};
+            return new[] { left, right };
         }
 
         #endregion
@@ -67,7 +67,7 @@ namespace leetcode
                 var step = i == 5 || i == 7 ? 4 : 3;
                 while (step != 0)
                 {
-                    chars.Add((char) ('a' + j));
+                    chars.Add((char)('a' + j));
                     j++;
                     step--;
                 }
@@ -610,6 +610,33 @@ namespace leetcode
             return reverseStr + ShortestPalindromeII(s.Substring(0, l)) + keep;
         }
 
+        #endregion
+
+        #region 841. 钥匙和房间
+        //https://leetcode-cn.com/problems/keys-and-rooms/
+        public bool CanVisitAllRooms(IList<IList<int>> rooms)
+        {
+            if (rooms.Count <= 0)
+            {
+                return true;
+            }
+            var stack = new Stack<int>();
+            var visited = new HashSet<int>();
+            stack.Push(0);
+            while (stack.TryPop(out var key))
+            {
+                if (!visited.Add(key))
+                {
+                    continue;
+                }
+                var keys = rooms[key];
+                foreach (var k in keys)
+                {
+                    stack.Push(k);
+                }
+            }
+            return visited.Count == rooms.Count;
+        }
         #endregion
     }
 }
