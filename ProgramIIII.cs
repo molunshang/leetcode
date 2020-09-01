@@ -638,5 +638,33 @@ namespace leetcode
             return visited.Count == rooms.Count;
         }
         #endregion
+
+        #region 486. 预测赢家
+        //https://leetcode-cn.com/problems/predict-the-winner/
+        public bool PredictTheWinner(int[] nums)
+        {
+            if (nums.Length <= 1)
+            {
+                return true;
+            }
+            //当前者选择值减去下一人的选择值，最终结果>=0说明可以
+            var cache = new int?[nums.Length, nums.Length];
+            int Dfs(int l, int r)
+            {
+                if (l == r)
+                {
+                    return nums[l];
+                }
+                if (cache[l, r].HasValue)
+                {
+                    return cache[l, r].Value;
+                }
+                var res = Math.Max(nums[l] - Dfs(l + 1, r), nums[r] - Dfs(l, r - 1));
+                cache[l, r] = res;
+                return res;
+            }
+            return Dfs(0, nums.Length - 1) >= 0;
+        }
+        #endregion
     }
 }
