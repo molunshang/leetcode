@@ -1355,6 +1355,63 @@ namespace leetcode
             return result;
         }
 
+        //重新实现
+        public IList<IList<string>> SolveNQueensRedo(int n)
+        {
+            var result = new List<IList<string>>();
+            var mask = new List<string>();
+            var line = new char[n];
+            Array.Fill(line, '.');
+            var cols = new bool[n];
+            bool CanSet(int y)
+            {
+                if (cols[y])
+                {
+                    return false;
+                }
+
+                for (int i = mask.Count - 1, j = y - 1; i >= 0 && j >= 0; i--, j--)
+                {
+                    if (mask[i][j] == 'Q')
+                    {
+                        return false;
+                    }
+                }
+                for (int i = mask.Count - 1, j = y + 1; i >= 0 && j < n; i--, j++)
+                {
+                    if (mask[i][j] == 'Q')
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            void Dfs(int num)
+            {
+                if (num <= 0)
+                {
+                    result.Add(mask.ToArray());
+                    return;
+                }
+                for (int i = 0; i < n; i++)
+                {
+                    if (!CanSet(i))
+                    {
+                        continue;
+                    }
+                    cols[i] = true;
+                    line[i] = 'Q';
+                    mask.Add(new string(line));
+                    line[i] = '.';
+                    Dfs(num - 1);
+                    mask.RemoveAt(mask.Count - 1);
+                    cols[i] = false;
+                }
+            }
+            Dfs(n);
+            return result;
+        }
+
         #endregion
 
         #region 52. N皇后 II

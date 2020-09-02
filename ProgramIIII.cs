@@ -666,5 +666,81 @@ namespace leetcode
             return Dfs(0, nums.Length - 1) >= 0;
         }
         #endregion
+
+        #region 145. 二叉树的后序遍历
+        //https://leetcode-cn.com/problems/binary-tree-postorder-traversal/
+        public IList<int> PostorderTraversal(TreeNode root)
+        {
+            var result = new List<int>();
+            void Dfs(TreeNode node)
+            {
+                if (node == null)
+                {
+                    return;
+                }
+                Dfs(node.left);
+                Dfs(node.right);
+                result.Add(node.val);
+            }
+            var stack = new Stack<TreeNode>();
+            var visited = new HashSet<TreeNode>();
+            while (root != null || stack.Count > 0)
+            {
+                while (root != null)
+                {
+                    stack.Push(root);
+                    root = root.left;
+                }
+                root = stack.Peek();
+                if (root.right == null || visited.Contains(root))
+                {
+                    stack.Pop();
+                    result.Add(root.val);
+                    root = null;
+                }
+                else
+                {
+                    visited.Add(root);
+                    root = root.right;
+                }
+            }
+            return result;
+        }
+        #endregion
+
+        #region 165. 比较版本号
+        //https://leetcode-cn.com/problems/compare-version-numbers/
+        public int CompareVersion(string version1, string version2)
+        {
+            int v1 = 0, v2 = 0;
+            while (v1 < version1.Length || v2 < version2.Length)
+            {
+                int n1 = 0, n2 = 0;
+                while (v1 < version1.Length && version1[v1] != '.')
+                {
+                    n1 = n1 * 10 + version1[v1++] - '0';
+                }
+                while (v2 < version2.Length && version2[v2] != '.')
+                {
+                    n2 = n2 * 10 + version2[v2++] - '0';
+                }
+                if (n1 == n2)
+                {
+                    v1++;
+                    v2++;
+                }
+                else if (n1 > n2)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+            return 0;
+        }
+        #endregion
+
     }
 }
