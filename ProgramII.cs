@@ -442,7 +442,43 @@ namespace leetcode
 
             return string.Join(string.Empty, nums);
         }
+        public string GetPermutationByDfs(int n, int k)
+        {
+            var nums = new int[n];
+            var visited = new bool[n + 1];
+            nums[0] = 1;
+            for (int i = 1; i < n; i++)
+            {
+                nums[i] = nums[i - 1] * i;
+            }
 
+            var res = new StringBuilder();
+            void Dfs(int index)
+            {
+                if (index >= n)
+                {
+                    return;
+                }
+                var size = nums[n - index - 1];
+                for (int i = 1; i <= n; i++)
+                {
+                    if (visited[i])
+                    {
+                        continue;
+                    }
+                    if (k > size)
+                    {
+                        k -= size;
+                        continue;
+                    }
+                    visited[i] = true;
+                    res.Append(i);
+                    Dfs(index + 1);
+                }
+            }
+            Dfs(0);
+            return res.ToString();
+        }
         #endregion
 
         #region 207. 课程表

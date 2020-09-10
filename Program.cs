@@ -4634,7 +4634,7 @@ namespace leetcode
         //https://leetcode-cn.com/problems/merge-sorted-array/
         //https://leetcode-cn.com/problems/sorted-merge-lcci/
         //插入排序
-        public void Merge(int[] nums1, int m, int[] nums2, int n)
+        public void MergeByInsertSort(int[] nums1, int m, int[] nums2, int n)
         {
             for (int i = 0; i < n; i++)
             {
@@ -4659,7 +4659,7 @@ namespace leetcode
         }
 
         //从后往前
-        public void Merge1(int[] nums1, int m, int[] nums2, int n)
+        public void Merge(int[] nums1, int m, int[] nums2, int n)
         {
             int i1 = m - 1, i2 = n - 1, index = nums1.Length - 1;
             while (i1 >= 0 && i2 >= 0)
@@ -4670,7 +4670,7 @@ namespace leetcode
                 }
                 else
                 {
-                    nums1[index--] = nums1[i2--];
+                    nums1[index--] = nums2[i2--];
                 }
             }
 
@@ -7596,6 +7596,30 @@ namespace leetcode
             var result = new List<IList<int>>();
             Array.Sort(candidates);
             CombinationSum(0, candidates, target, new List<int>(), result);
+            return result;
+        }
+
+        //DFS+剪枝
+        public IList<IList<int>> CombinationSumAndCut(int[] candidates, int target)
+        {
+            var result = new List<IList<int>>();
+            var items = new List<int>();
+            Array.Sort(candidates);
+            void Dfs(int sum, int j)
+            {
+                if (sum == target)
+                {
+                    result.Add(items.ToArray());
+                    return;
+                }
+                for (int i = j; i < candidates.Length && candidates[i] <= target - sum; i++)
+                {
+                    items.Add(candidates[i]);
+                    Dfs(sum + candidates[i], i);
+                    items.RemoveAt(items.Count - 1);
+                }
+            }
+            Dfs(0, 0);
             return result;
         }
 

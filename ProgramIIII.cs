@@ -741,6 +741,127 @@ namespace leetcode
             return 0;
         }
         #endregion
+        #region 1567. 乘积为正数的最长子数组长度
+        //https://leetcode-cn.com/problems/maximum-length-of-subarray-with-positive-product/
+        public int GetMaxLen(int[] nums)
+        {
+            //动态规划
+            int Dp()
+            {
+                if (nums.Length <= 0)
+                {
+                    return 0;
+                }
+                var dp = new int[nums.Length, 2];
+                if (nums[0] > 0)
+                {
+                    dp[0, 0] = 1;
+                }
+                else if (nums[0] < 0)
+                {
+                    dp[0, 1] = 1;
+                }
 
+                var ans = dp[0, 0];
+                for (int i = 1; i < nums.Length; i++)
+                {
+                    if (nums[i] == 0)
+                    {
+                        dp[i, 0] = dp[i, 1] = 0;
+                    }
+                    else if (nums[i] > 0)
+                    {
+                        dp[i, 0] = dp[i - 1, 0] + 1;
+                        dp[i, 1] = dp[i - 1, 1] > 0 ? dp[i - 1, 1] + 1 : 0;
+                    }
+                    else
+                    {
+                        dp[i, 0] = dp[i - 1, 1] > 0 ? dp[i - 1, 1] + 1 : 0;
+                        dp[i, 1] = dp[i - 1, 0] + 1;
+                    }
+                    ans = Math.Max(ans, dp[i, 0]);
+                }
+                return ans;
+            }
+            int res = 0, negative = 0, left = 0, right = 0;
+            for (int i = 0, j = 0, e = nums.Length - 1; i < nums.Length; i++)
+            {
+                if (nums[i] == 0 || i == e)
+                {
+                    if (nums[i] < 0)
+                    {
+                        negative++;
+                        right = i;
+                    }
+                    if (negative % 2 == 0)
+                    {
+                        res = Math.Max(res, i - j + (nums[i] == 0 ? 0 : 1));
+                    }
+                    else
+                    {
+                        res = Math.Max(res, Math.Max(right - j, i - left - (nums[i] == 0 ? 1 : 0)));
+                    }
+                    j = i + 1;
+                    negative = 0;
+                    left = j;
+                    right = j;
+                }
+                else if (nums[i] < 0)
+                {
+                    negative++;
+                    right = i;
+                    if (nums[left] >= 0)
+                    {
+                        left = i;
+                    }
+                }
+            }
+            return res;
+        }
+        #endregion
+
+        #region 45. 跳跃游戏 II
+        //https://leetcode-cn.com/problems/jump-game-ii/
+        //动态规划（超时）
+        public int JumpIIByDp(int[] nums)
+        {
+            var cache = new int[nums.Length];
+            int JumpDfs(int i)
+            {
+                if (i >= nums.Length - 1)
+                {
+                    return 0;
+                }
+                if (cache[i] != 0)
+                {
+                    return cache[i];
+                }
+                var step = int.MaxValue - 1;
+                for (int s = 1; s <= nums[i]; s++)
+                {
+                    step = Math.Min(step, JumpDfs(i + s) + 1);
+                }
+                cache[i] = step;
+                return step;
+            }
+            return JumpDfs(0);
+        }
+        //贪心算法
+        public int JumpII(int[] nums)
+        {
+            var step = 0;
+            int maxPos = 0, end = 0;
+            for (int i = 0; i < nums.Length - 1; i++)
+            {
+                maxPos = Math.Max(maxPos, nums[i] + i);
+                if (i == end)
+                {
+                    end = maxPos;
+                    step++;
+                }
+            }
+            return step;
+        }
+        #endregion
     }
 }
