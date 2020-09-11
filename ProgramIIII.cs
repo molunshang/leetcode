@@ -863,5 +863,102 @@ namespace leetcode
             return step;
         }
         #endregion
+
+        #region 216. 组合总和 III
+        //https://leetcode-cn.com/problems/combination-sum-iii/
+        public IList<IList<int>> CombinationSum3(int k, int n)
+        {
+            var result = new List<IList<int>>();
+            var seqs = new List<int>();
+            void Dfs(int num, int target)
+            {
+                if (seqs.Count >= k || target <= 0)
+                {
+                    if (seqs.Count == k && target == 0)
+                    {
+                        result.Add(seqs.ToArray());
+                    }
+                    return;
+                }
+                for (int i = num; i < 10 && i <= target; i++)
+                {
+                    seqs.Add(i);
+                    Dfs(i + 1, target - i);
+                    seqs.RemoveAt(seqs.Count - 1);
+                }
+            }
+            Dfs(1, n);
+            return result;
+        }
+        #endregion
+
+        #region 1302. 层数最深叶子节点的和
+        //https://leetcode-cn.com/problems/deepest-leaves-sum/
+        public int DeepestLeavesSum(TreeNode root)
+        {
+            if (root == null)
+            {
+                return 0;
+            }
+            var res = 0;
+            var queue = new Queue<TreeNode>();
+            queue.Enqueue(root);
+            while (queue.Count > 0)
+            {
+                var size = queue.Count;
+                var sum = 0;
+                while (size > 0)
+                {
+                    root = queue.Dequeue();
+                    sum += root.val;
+                    if (root.left != null)
+                    {
+                        queue.Enqueue(root.left);
+                    }
+                    if (root.right != null)
+                    {
+                        queue.Enqueue(root.right);
+                    }
+                    size--;
+                }
+                res = sum;
+            }
+            return res;
+        }
+        #endregion
+
+        #region 637. 二叉树的层平均值
+        //https://leetcode-cn.com/problems/average-of-levels-in-binary-tree/
+        public IList<double> AverageOfLevels(TreeNode root)
+        {
+            if (root == null)
+            {
+                return new double[0];
+            }
+            var result = new List<double>();
+            var queue = new Queue<TreeNode>();
+            queue.Enqueue(root);
+            while (queue.Count > 0)
+            {
+                var size = queue.Count;
+                double sum = 0.0D;
+                for (int i = size; i > 0; i--)
+                {
+                    root = queue.Dequeue();
+                    if (root.left != null)
+                    {
+                        queue.Enqueue(root.left);
+                    }
+                    if (root.right != null)
+                    {
+                        queue.Enqueue(root.right);
+                    }
+                    sum += root.val;
+                }
+                result.Add(sum / size);
+            }
+            return result;
+        }
+        #endregion
     }
 }
