@@ -1122,5 +1122,21 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 226. 翻转二叉树
+        //https://leetcode-cn.com/problems/invert-binary-tree/
+        public TreeNode InvertTree(TreeNode root)
+        {
+            if (root == null)
+            {
+                return root;
+            }
+            var tmp = root.left;
+            root.left = InvertTree(root.right);
+            root.right= InvertTree(tmp);
+            return root;
+
+        }
+        #endregion
     }
 }
