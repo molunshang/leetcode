@@ -17,7 +17,7 @@ namespace leetcode
         {
             if (array.Length <= 0)
             {
-                return new[] { -1, -1 };
+                return new[] {-1, -1};
             }
 
             //1 5 3 7
@@ -44,7 +44,7 @@ namespace leetcode
                 }
             }
 
-            return new[] { left, right };
+            return new[] {left, right};
         }
 
         #endregion
@@ -67,7 +67,7 @@ namespace leetcode
                 var step = i == 5 || i == 7 ? 4 : 3;
                 while (step != 0)
                 {
-                    chars.Add((char)('a' + j));
+                    chars.Add((char) ('a' + j));
                     j++;
                     step--;
                 }
@@ -613,6 +613,7 @@ namespace leetcode
         #endregion
 
         #region 841. 钥匙和房间
+
         //https://leetcode-cn.com/problems/keys-and-rooms/
         public bool CanVisitAllRooms(IList<IList<int>> rooms)
         {
@@ -620,6 +621,7 @@ namespace leetcode
             {
                 return true;
             }
+
             var stack = new Stack<int>();
             var visited = new HashSet<int>();
             stack.Push(0);
@@ -629,17 +631,21 @@ namespace leetcode
                 {
                     continue;
                 }
+
                 var keys = rooms[key];
                 foreach (var k in keys)
                 {
                     stack.Push(k);
                 }
             }
+
             return visited.Count == rooms.Count;
         }
+
         #endregion
 
         #region 486. 预测赢家
+
         //https://leetcode-cn.com/problems/predict-the-winner/
         public bool PredictTheWinner(int[] nums)
         {
@@ -647,41 +653,51 @@ namespace leetcode
             {
                 return true;
             }
+
             //当前者选择值减去下一人的选择值，最终结果>=0说明可以
             var cache = new int?[nums.Length, nums.Length];
+
             int Dfs(int l, int r)
             {
                 if (l == r)
                 {
                     return nums[l];
                 }
+
                 if (cache[l, r].HasValue)
                 {
                     return cache[l, r].Value;
                 }
+
                 var res = Math.Max(nums[l] - Dfs(l + 1, r), nums[r] - Dfs(l, r - 1));
                 cache[l, r] = res;
                 return res;
             }
+
             return Dfs(0, nums.Length - 1) >= 0;
         }
+
         #endregion
 
         #region 145. 二叉树的后序遍历
+
         //https://leetcode-cn.com/problems/binary-tree-postorder-traversal/
         public IList<int> PostorderTraversal(TreeNode root)
         {
             var result = new List<int>();
+
             void Dfs(TreeNode node)
             {
                 if (node == null)
                 {
                     return;
                 }
+
                 Dfs(node.left);
                 Dfs(node.right);
                 result.Add(node.val);
             }
+
             var stack = new Stack<TreeNode>();
             var visited = new HashSet<TreeNode>();
             while (root != null || stack.Count > 0)
@@ -691,6 +707,7 @@ namespace leetcode
                     stack.Push(root);
                     root = root.left;
                 }
+
                 root = stack.Peek();
                 if (root.right == null || visited.Contains(root))
                 {
@@ -704,11 +721,14 @@ namespace leetcode
                     root = root.right;
                 }
             }
+
             return result;
         }
+
         #endregion
 
         #region 165. 比较版本号
+
         //https://leetcode-cn.com/problems/compare-version-numbers/
         public int CompareVersion(string version1, string version2)
         {
@@ -720,10 +740,12 @@ namespace leetcode
                 {
                     n1 = n1 * 10 + version1[v1++] - '0';
                 }
+
                 while (v2 < version2.Length && version2[v2] != '.')
                 {
                     n2 = n2 * 10 + version2[v2++] - '0';
                 }
+
                 if (n1 == n2)
                 {
                     v1++;
@@ -738,10 +760,14 @@ namespace leetcode
                     return -1;
                 }
             }
+
             return 0;
         }
+
         #endregion
+
         #region 1567. 乘积为正数的最长子数组长度
+
         //https://leetcode-cn.com/problems/maximum-length-of-subarray-with-positive-product/
         public int GetMaxLen(int[] nums)
         {
@@ -752,6 +778,7 @@ namespace leetcode
                 {
                     return 0;
                 }
+
                 var dp = new int[nums.Length, 2];
                 if (nums[0] > 0)
                 {
@@ -779,10 +806,13 @@ namespace leetcode
                         dp[i, 0] = dp[i - 1, 1] > 0 ? dp[i - 1, 1] + 1 : 0;
                         dp[i, 1] = dp[i - 1, 0] + 1;
                     }
+
                     ans = Math.Max(ans, dp[i, 0]);
                 }
+
                 return ans;
             }
+
             int res = 0, negative = 0, left = 0, right = 0;
             for (int i = 0, j = 0, e = nums.Length - 1; i < nums.Length; i++)
             {
@@ -793,6 +823,7 @@ namespace leetcode
                         negative++;
                         right = i;
                     }
+
                     if (negative % 2 == 0)
                     {
                         res = Math.Max(res, i - j + (nums[i] == 0 ? 0 : 1));
@@ -801,6 +832,7 @@ namespace leetcode
                     {
                         res = Math.Max(res, Math.Max(right - j, i - left - (nums[i] == 0 ? 1 : 0)));
                     }
+
                     j = i + 1;
                     negative = 0;
                     left = j;
@@ -816,36 +848,45 @@ namespace leetcode
                     }
                 }
             }
+
             return res;
         }
+
         #endregion
 
         #region 45. 跳跃游戏 II
+
         //https://leetcode-cn.com/problems/jump-game-ii/
         //动态规划（超时）
         public int JumpIIByDp(int[] nums)
         {
             var cache = new int[nums.Length];
+
             int JumpDfs(int i)
             {
                 if (i >= nums.Length - 1)
                 {
                     return 0;
                 }
+
                 if (cache[i] != 0)
                 {
                     return cache[i];
                 }
+
                 var step = int.MaxValue - 1;
                 for (int s = 1; s <= nums[i]; s++)
                 {
                     step = Math.Min(step, JumpDfs(i + s) + 1);
                 }
+
                 cache[i] = step;
                 return step;
             }
+
             return JumpDfs(0);
         }
+
         //贪心算法
         public int JumpII(int[] nums)
         {
@@ -860,16 +901,20 @@ namespace leetcode
                     step++;
                 }
             }
+
             return step;
         }
+
         #endregion
 
         #region 216. 组合总和 III
+
         //https://leetcode-cn.com/problems/combination-sum-iii/
         public IList<IList<int>> CombinationSum3(int k, int n)
         {
             var result = new List<IList<int>>();
             var seqs = new List<int>();
+
             void Dfs(int num, int target)
             {
                 if (seqs.Count >= k || target <= 0)
@@ -878,8 +923,10 @@ namespace leetcode
                     {
                         result.Add(seqs.ToArray());
                     }
+
                     return;
                 }
+
                 for (int i = num; i < 10 && i <= target; i++)
                 {
                     seqs.Add(i);
@@ -887,12 +934,15 @@ namespace leetcode
                     seqs.RemoveAt(seqs.Count - 1);
                 }
             }
+
             Dfs(1, n);
             return result;
         }
+
         #endregion
 
         #region 1302. 层数最深叶子节点的和
+
         //https://leetcode-cn.com/problems/deepest-leaves-sum/
         public int DeepestLeavesSum(TreeNode root)
         {
@@ -900,6 +950,7 @@ namespace leetcode
             {
                 return 0;
             }
+
             var res = 0;
             var queue = new Queue<TreeNode>();
             queue.Enqueue(root);
@@ -915,19 +966,25 @@ namespace leetcode
                     {
                         queue.Enqueue(root.left);
                     }
+
                     if (root.right != null)
                     {
                         queue.Enqueue(root.right);
                     }
+
                     size--;
                 }
+
                 res = sum;
             }
+
             return res;
         }
+
         #endregion
 
         #region 637. 二叉树的层平均值
+
         //https://leetcode-cn.com/problems/average-of-levels-in-binary-tree/
         public IList<double> AverageOfLevels(TreeNode root)
         {
@@ -935,6 +992,7 @@ namespace leetcode
             {
                 return new double[0];
             }
+
             var result = new List<double>();
             var queue = new Queue<TreeNode>();
             queue.Enqueue(root);
@@ -949,16 +1007,120 @@ namespace leetcode
                     {
                         queue.Enqueue(root.left);
                     }
+
                     if (root.right != null)
                     {
                         queue.Enqueue(root.right);
                     }
+
                     sum += root.val;
                 }
+
                 result.Add(sum / size);
             }
+
             return result;
         }
+
+        #endregion
+
+        #region 面试题 03.01. 三合一
+
+        //https://leetcode-cn.com/problems/three-in-one-lcci/
+        public class TripleInOne
+        {
+            private int[] element;
+            private int[] index = new int[3];
+            private int[] count = new int[3];
+            private int stackSize;
+
+            public TripleInOne(int stackSize)
+            {
+                this.stackSize = stackSize;
+                element = new int[stackSize * 3];
+                for (var i = 0; i < index.Length; i++)
+                {
+                    index[i] = i * stackSize;
+                }
+            }
+
+            public void Push(int stackNum, int value)
+            {
+                if (count[stackNum] == stackSize)
+                {
+                    return;
+                }
+
+                element[index[stackNum]] = value;
+                index[stackNum]++;
+                count[stackNum]++;
+            }
+
+            public int Pop(int stackNum)
+            {
+                if (IsEmpty(stackNum))
+                {
+                    return -1;
+                }
+
+                var ele = element[index[stackNum] - 1];
+                index[stackNum]--;
+                count[stackNum]--;
+                return ele;
+            }
+
+            public int Peek(int stackNum)
+            {
+                if (IsEmpty(stackNum))
+                {
+                    return -1;
+                }
+
+                return element[index[stackNum] - 1];
+            }
+
+            public bool IsEmpty(int stackNum)
+            {
+                return count[stackNum] == 0;
+            }
+        }
+
+        #endregion
+
+        #region 面试题 05.03. 翻转数位
+
+        //https://leetcode-cn.com/problems/reverse-bits-lcci/
+        public int ReverseBits(int num)
+        {
+            if (num == 0)
+            {
+                return 1;
+            }
+
+            int size = 0, preSize = 0, res = 0;
+            for (int i = 0; i < 32; i++)
+            {
+                var mask = 1 << i;
+                if ((mask & num) == 0)
+                {
+                    res = Math.Max(res, size + preSize + 1);
+                    preSize = size;
+                    size = 0;
+                }
+                else
+                {
+                    size++;
+                }
+            }
+
+            if (size > 0)
+            {
+                res = Math.Max(res, size + preSize + 1);
+            }
+
+            return Math.Min(res, 32);
+        }
+
         #endregion
     }
 }

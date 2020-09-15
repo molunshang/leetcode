@@ -730,75 +730,80 @@ namespace leetcode
         #region 37. 解数独
 
         //https://leetcode-cn.com/problems/sudoku-solver/
+
         public void SolveSudoku(char[][] board)
         {
             bool[,] rows = new bool[9, 9], cols = new bool[9, 9];
-            var martix = new bool[3, 3][];
-
-            bool Set(int i, int j, int index)
+            var matrix = new bool[3, 3][];
+            for (var i = 0; i < board.Length; i++)
             {
-                if (index >= 81)
+                for (var j = 0; j < board[i].Length; j++)
                 {
-                    return true;
-                }
-
-                if (j >= 9)
-                {
-                    j = 0;
-                    i++;
-                }
-
-                var row = board[i];
-                if (row[j] == '.')
-                {
-                    int rIndex = i / 3, cIndex = j / 3;
-                    for (int num = 0; num < 9; num++)
-                    {
-                        if (rows[i, num] || cols[j, num] || martix[rIndex, cIndex][num])
-                        {
-                            continue;
-                        }
-
-                        row[j] = (char)('1' + num);
-                        rows[i, num] = cols[j, num] = martix[rIndex, cIndex][num] = true;
-                        if (Set(i, j + 1, index + 1))
-                        {
-                            return true;
-                        }
-
-                        rows[i, num] = cols[j, num] = martix[rIndex, cIndex][num] = false;
-                        row[j] = '.';
-                    }
-
-                    return false;
-                }
-
-                return Set(i, j + 1, index + 1);
-            }
-
-            for (int i = 0; i < 9; i++)
-            {
-                for (int j = 0; j < 9; j++)
-                {
-                    var row = board[i];
-                    int rIndex = i / 3, cIndex = j / 3;
-                    if (martix[rIndex, cIndex] == null)
-                    {
-                        martix[rIndex, cIndex] = new bool[9];
-                    }
-
-                    if (row[j] == '.')
+                    if (board[i][j] == '.')
                     {
                         continue;
                     }
 
-                    var n = row[j] - '1';
-                    rows[i, n] = cols[j, n] = martix[rIndex, cIndex][n] = true;
+                    var num = board[i][j] - '1';
+                    rows[i, num] = true;
+                    cols[j, num] = true;
+                    int x = i / 3, y = j / 3;
+                    if (matrix[x, y] == null)
+                    {
+                        matrix[x, y] = new bool[9];
+                    }
+
+                    matrix[x, y][num] = true;
                 }
             }
 
-            Set(0, 0, 0);
+            bool Set(int x, int y)
+            {
+                if (y >= 9)
+                {
+                    x++;
+                    y = 0;
+                }
+
+                if (x >= 9)
+                {
+                    return true;
+                }
+
+                if (board[x][y] != '.')
+                {
+                    return Set(x, y + 1);
+                }
+
+                var flag = matrix[x / 3, y / 3];
+                for (int i = 0; i < 9; i++)
+                {
+                    if (rows[x, i] || cols[y, i] || flag[i])
+                    {
+                        continue;
+                    }
+
+                    board[x][y] = (char) (i + '1');
+                    rows[x, i] = true;
+                    cols[y, i] = true;
+                    flag[i] = true;
+                    if (Set(x, y + 1))
+                    {
+                        return true;
+                    }
+
+                    board[x][y] = '.';
+                    rows[x, i] = false;
+                    cols[y, i] = false;
+                    flag[i] = false;
+                }
+
+                return false;
+            }
+
+            Set(0, 0);
         }
+
 
         #endregion
 
