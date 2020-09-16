@@ -31,7 +31,7 @@ namespace leetcode
         static void Main(string[] args)
         {
             //[[],[],[],[]]
-            program.ReverseBits(2147482622);
+            program.FindClosedNumbers(214748364);
             program.FindNumberOfLIS(new[] { 2, 2, 2, 2, 2, 3, 8, 7 });
             program.FindItinerary(JsonConvert.DeserializeObject<IList<IList<string>>>(@"[[""JFK"",""KUL""],[""JFK"",""NRT""],[""NRT"",""JFK""]]"));
             program.MinStickers(

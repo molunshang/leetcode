@@ -1123,20 +1123,227 @@ namespace leetcode
 
         #endregion
 
-        #region 226. 翻转二叉树
-        //https://leetcode-cn.com/problems/invert-binary-tree/
-        public TreeNode InvertTree(TreeNode root)
-        {
-            if (root == null)
-            {
-                return root;
-            }
-            var tmp = root.left;
-            root.left = InvertTree(root.right);
-            root.right= InvertTree(tmp);
-            return root;
+        #region 面试题 05.06. 整数转换
 
+        //https://leetcode-cn.com/problems/convert-integer-lcci/
+        public int ConvertInteger(int A, int B)
+        {
+            var xor = A ^ B;
+            var res = 0;
+            while (xor != 0)
+            {
+                xor &= (xor - 1);
+                res++;
+            }
+
+            return res;
         }
+
+        #endregion
+
+        #region 面试题 05.04. 下一个数
+
+        //https://leetcode-cn.com/problems/closed-number-lcci/
+        public int[] FindClosedNumbers(int num)
+        {
+            //大  找到1和高于1位的0交换 后面的1排到最后
+            //小 找到0和高于0位的1交换 后面的1排到最前
+            var res = new int[] {-1, -1};
+            int val = num, flagBit = -1, bit = 0, oneSize = 0;
+            while (val != 0)
+            {
+                if ((val & 1) == 1)
+                {
+                    flagBit = bit;
+                    if (val == 1 && flagBit < 30)
+                    {
+                        int high = 1 << (flagBit + 1), low = int.MaxValue ^ (1 << flagBit);
+                        res[0] = high | (num & low);
+                        break;
+                    }
+
+                    oneSize++;
+                }
+                else if (flagBit != -1)
+                {
+                    var baseNum = num;
+                    var high = 1 << bit;
+                    baseNum = (baseNum >> bit) << bit;
+                    for (int i = 0; i < oneSize - 1; i++)
+                    {
+                        baseNum |= (1 << i);
+                    }
+
+                    res[0] = high | baseNum;
+                    break;
+                }
+
+                val >>= 1;
+                bit++;
+            }
+
+            val = num;
+            flagBit = -1;
+            bit = 0;
+            oneSize = 0;
+            while (val != 0)
+            {
+                if ((val & 1) == 0)
+                {
+                    flagBit = bit;
+                }
+                else
+                {
+                    oneSize++;
+                    if (flagBit != -1)
+                    {
+                        num >>= bit + 1;
+                        num <<= 1;
+                        for (int i = 0; i < oneSize; i++)
+                        {
+                            num = (num << 1) | 1;
+                        }
+
+                        num <<= bit - oneSize;
+                        res[1] = num;
+                        break;
+                    }
+                }
+
+                val >>= 1;
+                bit++;
+            }
+
+            return res;
+        }
+
+        #endregion
+
+        #region 面试题 08.05. 递归乘法
+
+        //https://leetcode-cn.com/problems/recursive-mulitply-lcci/
+        public int Multiply(int A, int B)
+        {
+            if (A == 0 || B == 0)
+            {
+                return 0;
+            }
+
+            var flag = A > 0 && B > 0 || A < 0 && B < 0;
+
+            int Dfs(int a, int b)
+            {
+                if (b == 1)
+                {
+                    return a;
+                }
+
+                var num = Dfs(a, b >> 1);
+                return (b & 1) == 0 ? num + num : num + num + a;
+            }
+
+            var result = Dfs(Math.Abs(A), Math.Abs(B));
+            return flag ? result : -result;
+        }
+
+        #endregion
+
+        #region 面试题 08.02. 迷路的机器人
+
+        //https://leetcode-cn.com/problems/robot-in-a-grid-lcci/
+        public IList<IList<int>> PathWithObstacles(int[][] obstacleGrid)
+        {
+            var path = new List<IList<int>>();
+            int targetX = obstacleGrid.Length - 1, targetY = obstacleGrid[0].Length - 1;
+            var visited = new bool[obstacleGrid.Length, obstacleGrid[0].Length];
+            bool Dfs(int x, int y)
+            {
+                if (x < 0 || x >= obstacleGrid.Length || y < 0 || y >= obstacleGrid[0].Length ||
+                    obstacleGrid[x][y] == 1||visited[x,y])
+                {
+                    return false;
+                }
+
+                visited[x, y] = true;
+                path.Add(new[] {x, y});
+                if (x == targetX && y == targetY)
+                {
+                    return true;
+                }
+
+                if (Dfs(x + 1, y) || Dfs(x, y + 1))
+                {
+                    return true;
+                }
+
+                path.RemoveAt(path.Count - 1);
+                return false;
+            }
+
+            Dfs(0, 0);
+            var paths = new IList<IList<int>>[obstacleGrid.Length, obstacleGrid[0].Length];
+            paths[0, 0] = new IList<int>[] {new[] {0, 0}};
+            for (int i = 0; i <= targetX; i++)
+            {
+                for (int j = 0; j <= targetY; j++)
+                {
+                    if (obstacleGrid[i][j] == 1)
+                    {
+                        paths[i, j] = new IList<int>[0];
+                    }
+                    else
+                    {
+                        if (i == 0 && j == 0)
+                        {
+                            continue;
+                        }
+
+                        if (i == 0)
+                        {
+                            if (paths[i, j - 1].Count > 0)
+                            {
+                                var newPath = new List<IList<int>>(paths[i, j - 1]) {new[] {i, j}};
+                                paths[i, j] = newPath;
+                            }
+                            else
+                            {
+                                paths[i, j] = paths[i, j - 1];
+                            }
+                        }
+                        else if (j == 0)
+                        {
+                            paths[i, j] = paths[i - 1, j].Count > 0
+                                ? new List<IList<int>>(paths[i - 1, j]) {new[] {i, j}}
+                                : paths[i - 1, j];
+                        }
+                        else
+                        {
+                            if (paths[i - 1, j].Count <= 0 && paths[i, j - 1].Count <= 0)
+                            {
+                                paths[i, j] = paths[i - 1, j];
+                            }
+                            else if (paths[i - 1, j].Count <= 0)
+                            {
+                                paths[i, j] = new List<IList<int>>(paths[i, j - 1]) {new[] {i, j}};
+                            }
+                            else if (paths[i, j - 1].Count <= 0)
+                            {
+                                paths[i, j] = new List<IList<int>>(paths[i - 1, j]) {new[] {i, j}};
+                            }
+                            else
+                            {
+                                paths[i, j] = new List<IList<int>>(paths[i - 1, j].Count > paths[i, j - 1].Count
+                                    ? paths[i, j - 1]
+                                    : paths[i - 1, j]) {new[] {i, j}};
+                            }
+                        }
+                    }
+                }
+            }
+
+            return paths[targetX, targetY];
+        }
+
         #endregion
     }
 }
