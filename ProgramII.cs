@@ -1316,8 +1316,8 @@ namespace leetcode
 
         #endregion
 
-        #region 51. N皇后
-
+        #region 51. N皇后/面试题 08.12. 八皇后
+        //https://leetcode-cn.com/problems/eight-queens-lcci/
         //https://leetcode-cn.com/problems/n-queens/
 
         //棋子从上往下放，只需要检查上层

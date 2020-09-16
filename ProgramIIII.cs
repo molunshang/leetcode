@@ -17,7 +17,7 @@ namespace leetcode
         {
             if (array.Length <= 0)
             {
-                return new[] {-1, -1};
+                return new[] { -1, -1 };
             }
 
             //1 5 3 7
@@ -44,7 +44,7 @@ namespace leetcode
                 }
             }
 
-            return new[] {left, right};
+            return new[] { left, right };
         }
 
         #endregion
@@ -67,7 +67,7 @@ namespace leetcode
                 var step = i == 5 || i == 7 ? 4 : 3;
                 while (step != 0)
                 {
-                    chars.Add((char) ('a' + j));
+                    chars.Add((char)('a' + j));
                     j++;
                     step--;
                 }
@@ -1123,6 +1123,22 @@ namespace leetcode
 
         #endregion
 
+        #region 226. 翻转二叉树
+        //https://leetcode-cn.com/problems/invert-binary-tree/
+        public TreeNode InvertTree(TreeNode root)
+        {
+            if (root == null)
+            {
+                return root;
+            }
+            var tmp = root.left;
+            root.left = InvertTree(root.right);
+            root.right = InvertTree(tmp);
+            return root;
+
+        }
+        #endregion
+
         #region 面试题 05.06. 整数转换
 
         //https://leetcode-cn.com/problems/convert-integer-lcci/
@@ -1148,7 +1164,7 @@ namespace leetcode
         {
             //大  找到1和高于1位的0交换 后面的1排到最后
             //小 找到0和高于0位的1交换 后面的1排到最前
-            var res = new int[] {-1, -1};
+            var res = new int[] { -1, -1 };
             int val = num, flagBit = -1, bit = 0, oneSize = 0;
             while (val != 0)
             {
@@ -1256,16 +1272,17 @@ namespace leetcode
             var path = new List<IList<int>>();
             int targetX = obstacleGrid.Length - 1, targetY = obstacleGrid[0].Length - 1;
             var visited = new bool[obstacleGrid.Length, obstacleGrid[0].Length];
+            //回溯+剪枝
             bool Dfs(int x, int y)
             {
                 if (x < 0 || x >= obstacleGrid.Length || y < 0 || y >= obstacleGrid[0].Length ||
-                    obstacleGrid[x][y] == 1||visited[x,y])
+                    obstacleGrid[x][y] == 1 || visited[x, y])
                 {
                     return false;
                 }
 
                 visited[x, y] = true;
-                path.Add(new[] {x, y});
+                path.Add(new[] { x, y });
                 if (x == targetX && y == targetY)
                 {
                     return true;
@@ -1279,71 +1296,77 @@ namespace leetcode
                 path.RemoveAt(path.Count - 1);
                 return false;
             }
-
-            Dfs(0, 0);
-            var paths = new IList<IList<int>>[obstacleGrid.Length, obstacleGrid[0].Length];
-            paths[0, 0] = new IList<int>[] {new[] {0, 0}};
-            for (int i = 0; i <= targetX; i++)
+            //动态规划
+            IList<IList<int>> Dp()
             {
-                for (int j = 0; j <= targetY; j++)
+                var paths = new IList<IList<int>>[obstacleGrid.Length, obstacleGrid[0].Length];
+                paths[0, 0] = new IList<int>[] { new[] { 0, 0 } };
+                for (int i = 0; i <= targetX; i++)
                 {
-                    if (obstacleGrid[i][j] == 1)
+                    for (int j = 0; j <= targetY; j++)
                     {
-                        paths[i, j] = new IList<int>[0];
-                    }
-                    else
-                    {
-                        if (i == 0 && j == 0)
+                        if (obstacleGrid[i][j] == 1)
                         {
-                            continue;
-                        }
-
-                        if (i == 0)
-                        {
-                            if (paths[i, j - 1].Count > 0)
-                            {
-                                var newPath = new List<IList<int>>(paths[i, j - 1]) {new[] {i, j}};
-                                paths[i, j] = newPath;
-                            }
-                            else
-                            {
-                                paths[i, j] = paths[i, j - 1];
-                            }
-                        }
-                        else if (j == 0)
-                        {
-                            paths[i, j] = paths[i - 1, j].Count > 0
-                                ? new List<IList<int>>(paths[i - 1, j]) {new[] {i, j}}
-                                : paths[i - 1, j];
+                            paths[i, j] = new IList<int>[0];
                         }
                         else
                         {
-                            if (paths[i - 1, j].Count <= 0 && paths[i, j - 1].Count <= 0)
+                            if (i == 0 && j == 0)
                             {
-                                paths[i, j] = paths[i - 1, j];
+                                continue;
                             }
-                            else if (paths[i - 1, j].Count <= 0)
+
+                            if (i == 0)
                             {
-                                paths[i, j] = new List<IList<int>>(paths[i, j - 1]) {new[] {i, j}};
+                                if (paths[i, j - 1].Count > 0)
+                                {
+                                    var newPath = new List<IList<int>>(paths[i, j - 1]) { new[] { i, j } };
+                                    paths[i, j] = newPath;
+                                }
+                                else
+                                {
+                                    paths[i, j] = paths[i, j - 1];
+                                }
                             }
-                            else if (paths[i, j - 1].Count <= 0)
+                            else if (j == 0)
                             {
-                                paths[i, j] = new List<IList<int>>(paths[i - 1, j]) {new[] {i, j}};
+                                paths[i, j] = paths[i - 1, j].Count > 0
+                                    ? new List<IList<int>>(paths[i - 1, j]) { new[] { i, j } }
+                                    : paths[i - 1, j];
                             }
                             else
                             {
-                                paths[i, j] = new List<IList<int>>(paths[i - 1, j].Count > paths[i, j - 1].Count
-                                    ? paths[i, j - 1]
-                                    : paths[i - 1, j]) {new[] {i, j}};
+                                if (paths[i - 1, j].Count <= 0 && paths[i, j - 1].Count <= 0)
+                                {
+                                    paths[i, j] = paths[i - 1, j];
+                                }
+                                else if (paths[i - 1, j].Count <= 0)
+                                {
+                                    paths[i, j] = new List<IList<int>>(paths[i, j - 1]) { new[] { i, j } };
+                                }
+                                else if (paths[i, j - 1].Count <= 0)
+                                {
+                                    paths[i, j] = new List<IList<int>>(paths[i - 1, j]) { new[] { i, j } };
+                                }
+                                else
+                                {
+                                    paths[i, j] = new List<IList<int>>(paths[i - 1, j].Count > paths[i, j - 1].Count
+                                        ? paths[i, j - 1]
+                                        : paths[i - 1, j]) { new[] { i, j } };
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            return paths[targetX, targetY];
+                return paths[targetX, targetY];
+            }
+            Dfs(0, 0);
+            return path;
         }
 
         #endregion
+
+
     }
 }
