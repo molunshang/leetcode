@@ -17,7 +17,7 @@ namespace leetcode
         {
             if (array.Length <= 0)
             {
-                return new[] {-1, -1};
+                return new[] { -1, -1 };
             }
 
             //1 5 3 7
@@ -44,7 +44,7 @@ namespace leetcode
                 }
             }
 
-            return new[] {left, right};
+            return new[] { left, right };
         }
 
         #endregion
@@ -67,7 +67,7 @@ namespace leetcode
                 var step = i == 5 || i == 7 ? 4 : 3;
                 while (step != 0)
                 {
-                    chars.Add((char) ('a' + j));
+                    chars.Add((char)('a' + j));
                     j++;
                     step--;
                 }
@@ -1166,7 +1166,7 @@ namespace leetcode
         {
             //大  找到1和高于1位的0交换 后面的1排到最后
             //小 找到0和高于0位的1交换 后面的1排到最前
-            var res = new int[] {-1, -1};
+            var res = new int[] { -1, -1 };
             int val = num, flagBit = -1, bit = 0, oneSize = 0;
             while (val != 0)
             {
@@ -1285,7 +1285,7 @@ namespace leetcode
                 }
 
                 visited[x, y] = true;
-                path.Add(new[] {x, y});
+                path.Add(new[] { x, y });
                 if (x == targetX && y == targetY)
                 {
                     return true;
@@ -1304,7 +1304,7 @@ namespace leetcode
             IList<IList<int>> Dp()
             {
                 var paths = new IList<IList<int>>[obstacleGrid.Length, obstacleGrid[0].Length];
-                paths[0, 0] = new IList<int>[] {new[] {0, 0}};
+                paths[0, 0] = new IList<int>[] { new[] { 0, 0 } };
                 for (int i = 0; i <= targetX; i++)
                 {
                     for (int j = 0; j <= targetY; j++)
@@ -1324,7 +1324,7 @@ namespace leetcode
                             {
                                 if (paths[i, j - 1].Count > 0)
                                 {
-                                    var newPath = new List<IList<int>>(paths[i, j - 1]) {new[] {i, j}};
+                                    var newPath = new List<IList<int>>(paths[i, j - 1]) { new[] { i, j } };
                                     paths[i, j] = newPath;
                                 }
                                 else
@@ -1335,7 +1335,7 @@ namespace leetcode
                             else if (j == 0)
                             {
                                 paths[i, j] = paths[i - 1, j].Count > 0
-                                    ? new List<IList<int>>(paths[i - 1, j]) {new[] {i, j}}
+                                    ? new List<IList<int>>(paths[i - 1, j]) { new[] { i, j } }
                                     : paths[i - 1, j];
                             }
                             else
@@ -1346,17 +1346,17 @@ namespace leetcode
                                 }
                                 else if (paths[i - 1, j].Count <= 0)
                                 {
-                                    paths[i, j] = new List<IList<int>>(paths[i, j - 1]) {new[] {i, j}};
+                                    paths[i, j] = new List<IList<int>>(paths[i, j - 1]) { new[] { i, j } };
                                 }
                                 else if (paths[i, j - 1].Count <= 0)
                                 {
-                                    paths[i, j] = new List<IList<int>>(paths[i - 1, j]) {new[] {i, j}};
+                                    paths[i, j] = new List<IList<int>>(paths[i - 1, j]) { new[] { i, j } };
                                 }
                                 else
                                 {
                                     paths[i, j] = new List<IList<int>>(paths[i - 1, j].Count > paths[i, j - 1].Count
                                         ? paths[i, j - 1]
-                                        : paths[i - 1, j]) {new[] {i, j}};
+                                        : paths[i - 1, j]) { new[] { i, j } };
                                 }
                             }
                         }
@@ -1392,8 +1392,7 @@ namespace leetcode
             {
                 if (edges[n] == n)
                     return n;
-                n = edges[n];
-                edges[n] = GetParent(n);
+                edges[n] = GetParent(edges[n]);
                 return edges[n];
             }
 
@@ -1513,12 +1512,12 @@ namespace leetcode
 
             if (confilct < 0)
             {
-                return new[] {edges[cycle][0], edges[cycle][1]};
+                return new[] { edges[cycle][0], edges[cycle][1] };
             }
 
             return cycle < 0
-                ? new[] {edges[confilct][0], edges[confilct][1]}
-                : new[] {parents[edges[confilct][1]], edges[confilct][1]};
+                ? new[] { edges[confilct][0], edges[confilct][1] }
+                : new[] { parents[edges[confilct][1]], edges[confilct][1] };
         }
 
         #endregion
@@ -1549,5 +1548,64 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 721. 账户合并
+        //https://leetcode-cn.com/problems/accounts-merge/
+        public IList<IList<string>> AccountsMerge(IList<IList<string>> accounts)
+        {
+            var result = new List<IList<string>>();
+            var dict = new Dictionary<string, IList<int>>();
+            for (int i = 0; i < accounts.Count; i++)
+            {
+                var account = accounts[i];
+                for (int j = 1; j < account.Count; j++)
+                {
+                    var email = account[j];
+                    if (!dict.TryGetValue(email, out var items))
+                    {
+                        items = new List<int>();
+                        dict[email] = items;
+                    }
+                    items.Add(i);
+                }
+            }
+            var visited = new HashSet<int>();
+            for (int i = 0; i < accounts.Count; i++)
+            {
+                if (visited.Contains(i))
+                {
+                    continue;
+                }
+                var union = new List<string>();
+                union.Add(accounts[i][0]);
+                Dfs(i, union);
+                union.Sort(1, union.Count - 1, StringComparer.Ordinal);
+                result.Add(union.Distinct().ToArray());
+            }
+
+            void Dfs(int index, List<string> items)
+            {
+                if (!visited.Add(index))
+                {
+                    return;
+                }
+                var account = accounts[index];
+                for (int i = 1; i < account.Count; i++)
+                {
+                    var email = account[i];
+                    items.Add(email);
+                    if (dict.TryGetValue(email, out var next))
+                    {
+                        foreach (var n in next)
+                        {
+                            Dfs(n, items);
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+        #endregion
+
     }
 }

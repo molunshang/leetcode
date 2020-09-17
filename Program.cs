@@ -6028,12 +6028,11 @@ namespace leetcode
             var visited = new HashSet<int>();
             for (int i = index; i < nums.Length; i++)
             {
-                if (visited.Contains(nums[i]))
+                if (!visited.Add(nums[i]))
                 {
                     continue;
                 }
 
-                visited.Add(nums[i]);
                 Swap(nums, index, i);
                 PermuteUnique(nums, index + 1, result);
                 Swap(nums, index, i);
