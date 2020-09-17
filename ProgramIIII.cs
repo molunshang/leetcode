@@ -17,7 +17,7 @@ namespace leetcode
         {
             if (array.Length <= 0)
             {
-                return new[] { -1, -1 };
+                return new[] {-1, -1};
             }
 
             //1 5 3 7
@@ -44,7 +44,7 @@ namespace leetcode
                 }
             }
 
-            return new[] { left, right };
+            return new[] {left, right};
         }
 
         #endregion
@@ -67,7 +67,7 @@ namespace leetcode
                 var step = i == 5 || i == 7 ? 4 : 3;
                 while (step != 0)
                 {
-                    chars.Add((char)('a' + j));
+                    chars.Add((char) ('a' + j));
                     j++;
                     step--;
                 }
@@ -1124,6 +1124,7 @@ namespace leetcode
         #endregion
 
         #region 226. 翻转二叉树
+
         //https://leetcode-cn.com/problems/invert-binary-tree/
         public TreeNode InvertTree(TreeNode root)
         {
@@ -1131,12 +1132,13 @@ namespace leetcode
             {
                 return root;
             }
+
             var tmp = root.left;
             root.left = InvertTree(root.right);
             root.right = InvertTree(tmp);
             return root;
-
         }
+
         #endregion
 
         #region 面试题 05.06. 整数转换
@@ -1164,7 +1166,7 @@ namespace leetcode
         {
             //大  找到1和高于1位的0交换 后面的1排到最后
             //小 找到0和高于0位的1交换 后面的1排到最前
-            var res = new int[] { -1, -1 };
+            var res = new int[] {-1, -1};
             int val = num, flagBit = -1, bit = 0, oneSize = 0;
             while (val != 0)
             {
@@ -1272,6 +1274,7 @@ namespace leetcode
             var path = new List<IList<int>>();
             int targetX = obstacleGrid.Length - 1, targetY = obstacleGrid[0].Length - 1;
             var visited = new bool[obstacleGrid.Length, obstacleGrid[0].Length];
+
             //回溯+剪枝
             bool Dfs(int x, int y)
             {
@@ -1282,7 +1285,7 @@ namespace leetcode
                 }
 
                 visited[x, y] = true;
-                path.Add(new[] { x, y });
+                path.Add(new[] {x, y});
                 if (x == targetX && y == targetY)
                 {
                     return true;
@@ -1296,11 +1299,12 @@ namespace leetcode
                 path.RemoveAt(path.Count - 1);
                 return false;
             }
+
             //动态规划
             IList<IList<int>> Dp()
             {
                 var paths = new IList<IList<int>>[obstacleGrid.Length, obstacleGrid[0].Length];
-                paths[0, 0] = new IList<int>[] { new[] { 0, 0 } };
+                paths[0, 0] = new IList<int>[] {new[] {0, 0}};
                 for (int i = 0; i <= targetX; i++)
                 {
                     for (int j = 0; j <= targetY; j++)
@@ -1320,7 +1324,7 @@ namespace leetcode
                             {
                                 if (paths[i, j - 1].Count > 0)
                                 {
-                                    var newPath = new List<IList<int>>(paths[i, j - 1]) { new[] { i, j } };
+                                    var newPath = new List<IList<int>>(paths[i, j - 1]) {new[] {i, j}};
                                     paths[i, j] = newPath;
                                 }
                                 else
@@ -1331,7 +1335,7 @@ namespace leetcode
                             else if (j == 0)
                             {
                                 paths[i, j] = paths[i - 1, j].Count > 0
-                                    ? new List<IList<int>>(paths[i - 1, j]) { new[] { i, j } }
+                                    ? new List<IList<int>>(paths[i - 1, j]) {new[] {i, j}}
                                     : paths[i - 1, j];
                             }
                             else
@@ -1342,17 +1346,17 @@ namespace leetcode
                                 }
                                 else if (paths[i - 1, j].Count <= 0)
                                 {
-                                    paths[i, j] = new List<IList<int>>(paths[i, j - 1]) { new[] { i, j } };
+                                    paths[i, j] = new List<IList<int>>(paths[i, j - 1]) {new[] {i, j}};
                                 }
                                 else if (paths[i, j - 1].Count <= 0)
                                 {
-                                    paths[i, j] = new List<IList<int>>(paths[i - 1, j]) { new[] { i, j } };
+                                    paths[i, j] = new List<IList<int>>(paths[i - 1, j]) {new[] {i, j}};
                                 }
                                 else
                                 {
                                     paths[i, j] = new List<IList<int>>(paths[i - 1, j].Count > paths[i, j - 1].Count
                                         ? paths[i, j - 1]
-                                        : paths[i - 1, j]) { new[] { i, j } };
+                                        : paths[i - 1, j]) {new[] {i, j}};
                                 }
                             }
                         }
@@ -1361,12 +1365,189 @@ namespace leetcode
 
                 return paths[targetX, targetY];
             }
+
             Dfs(0, 0);
             return path;
         }
 
         #endregion
 
+        #region 685. 冗余连接 II
 
+        //https://leetcode-cn.com/problems/redundant-connection-ii/
+        class UnionSet
+        {
+            private int[] edges;
+
+            public UnionSet(int n)
+            {
+                edges = new int[n];
+                for (int i = 0; i < n; i++)
+                {
+                    edges[i] = i;
+                }
+            }
+
+            public int GetParent(int n)
+            {
+                if (edges[n] == n)
+                    return n;
+                n = edges[n];
+                edges[n] = GetParent(n);
+                return edges[n];
+            }
+
+            public void Union(int parent, int child)
+            {
+                edges[GetParent(child)] = GetParent(parent);
+            }
+
+            public bool IsConcat(int a, int b)
+            {
+                return GetParent(a) == GetParent(b);
+            }
+        }
+
+        public int[] FindRedundantDirectedConnection(int[][] edges)
+        {
+            //暴力解
+            int[] ForceDfs()
+            {
+                var items = new HashSet<int>[edges.Length + 1];
+                var starts = new HashSet<int>();
+                for (var i = 0; i < edges.Length; i++)
+                {
+                    int parent = edges[i][0], child = edges[i][1];
+                    if (items[parent] == null)
+                    {
+                        items[parent] = new HashSet<int>();
+                    }
+
+                    starts.Add(parent);
+                    items[parent].Add(child);
+                }
+
+                var visited = new HashSet<int>();
+                var queue = new Queue<int>();
+
+                bool Bfs()
+                {
+                    foreach (var start in starts)
+                    {
+                        queue.Enqueue(start);
+                        while (queue.TryDequeue(out var node) && visited.Count < edges.Length)
+                        {
+                            if (!visited.Add(node))
+                            {
+                                break;
+                            }
+
+                            if (items[node] == null || items[node].Count <= 0)
+                            {
+                                continue;
+                            }
+
+                            foreach (var n in items[node])
+                            {
+                                queue.Enqueue(n);
+                            }
+                        }
+
+                        if (visited.Count >= edges.Length)
+                        {
+                            return true;
+                        }
+
+                        visited.Clear();
+                        queue.Clear();
+                    }
+
+                    return false;
+                }
+
+                for (var i = edges.Length - 1; i >= 0; i--)
+                {
+                    int parent = edges[i][0], child = edges[i][1];
+                    items[parent].Remove(child);
+                    if (Bfs())
+                    {
+                        return edges[i];
+                    }
+
+                    items[parent].Add(child);
+                }
+
+                return null;
+            }
+
+            var nodeCount = edges.Length;
+            var unionSet = new UnionSet(nodeCount + 1);
+            var parents = new int[nodeCount + 1];
+            for (var i = 0; i < parents.Length; i++)
+            {
+                parents[i] = i;
+            }
+
+            int confilct = -1, cycle = -1;
+            for (int i = 0; i < nodeCount; i++)
+            {
+                var edge = edges[i];
+                int node1 = edge[0], node2 = edge[1];
+                if (parents[node2] != node2)
+                {
+                    confilct = i;
+                }
+                else
+                {
+                    parents[node2] = node1;
+                    if (unionSet.GetParent(node1) == unionSet.GetParent(node2))
+                    {
+                        cycle = i;
+                    }
+                    else
+                    {
+                        unionSet.Union(node1, node2);
+                    }
+                }
+            }
+
+            if (confilct < 0)
+            {
+                return new[] {edges[cycle][0], edges[cycle][1]};
+            }
+
+            return cycle < 0
+                ? new[] {edges[confilct][0], edges[confilct][1]}
+                : new[] {parents[edges[confilct][1]], edges[confilct][1]};
+        }
+
+        #endregion
+
+        #region 684. 冗余连接
+
+        //https://leetcode-cn.com/problems/redundant-connection/
+        public int[] FindRedundantConnection(int[][] edges)
+        {
+            var nodeCount = edges.Length;
+            var unionSet = new UnionSet(nodeCount + 1);
+            var rm = -1;
+            for (var i = 0; i < edges.Length; i++)
+            {
+                int n1 = edges[i][0], n2 = edges[i][1];
+                int f1 = unionSet.GetParent(n1), f2 = unionSet.GetParent(n2);
+                if (f1 == f2)
+                {
+                    rm = i;
+                }
+                else
+                {
+                    unionSet.Union(f1, f2);
+                }
+            }
+
+            return edges[rm];
+        }
+
+        #endregion
     }
 }
