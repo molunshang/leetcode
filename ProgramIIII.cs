@@ -17,7 +17,7 @@ namespace leetcode
         {
             if (array.Length <= 0)
             {
-                return new[] { -1, -1 };
+                return new[] {-1, -1};
             }
 
             //1 5 3 7
@@ -44,7 +44,7 @@ namespace leetcode
                 }
             }
 
-            return new[] { left, right };
+            return new[] {left, right};
         }
 
         #endregion
@@ -67,7 +67,7 @@ namespace leetcode
                 var step = i == 5 || i == 7 ? 4 : 3;
                 while (step != 0)
                 {
-                    chars.Add((char)('a' + j));
+                    chars.Add((char) ('a' + j));
                     j++;
                     step--;
                 }
@@ -1166,7 +1166,7 @@ namespace leetcode
         {
             //大  找到1和高于1位的0交换 后面的1排到最后
             //小 找到0和高于0位的1交换 后面的1排到最前
-            var res = new int[] { -1, -1 };
+            var res = new int[] {-1, -1};
             int val = num, flagBit = -1, bit = 0, oneSize = 0;
             while (val != 0)
             {
@@ -1285,7 +1285,7 @@ namespace leetcode
                 }
 
                 visited[x, y] = true;
-                path.Add(new[] { x, y });
+                path.Add(new[] {x, y});
                 if (x == targetX && y == targetY)
                 {
                     return true;
@@ -1304,7 +1304,7 @@ namespace leetcode
             IList<IList<int>> Dp()
             {
                 var paths = new IList<IList<int>>[obstacleGrid.Length, obstacleGrid[0].Length];
-                paths[0, 0] = new IList<int>[] { new[] { 0, 0 } };
+                paths[0, 0] = new IList<int>[] {new[] {0, 0}};
                 for (int i = 0; i <= targetX; i++)
                 {
                     for (int j = 0; j <= targetY; j++)
@@ -1324,7 +1324,7 @@ namespace leetcode
                             {
                                 if (paths[i, j - 1].Count > 0)
                                 {
-                                    var newPath = new List<IList<int>>(paths[i, j - 1]) { new[] { i, j } };
+                                    var newPath = new List<IList<int>>(paths[i, j - 1]) {new[] {i, j}};
                                     paths[i, j] = newPath;
                                 }
                                 else
@@ -1335,7 +1335,7 @@ namespace leetcode
                             else if (j == 0)
                             {
                                 paths[i, j] = paths[i - 1, j].Count > 0
-                                    ? new List<IList<int>>(paths[i - 1, j]) { new[] { i, j } }
+                                    ? new List<IList<int>>(paths[i - 1, j]) {new[] {i, j}}
                                     : paths[i - 1, j];
                             }
                             else
@@ -1346,17 +1346,17 @@ namespace leetcode
                                 }
                                 else if (paths[i - 1, j].Count <= 0)
                                 {
-                                    paths[i, j] = new List<IList<int>>(paths[i, j - 1]) { new[] { i, j } };
+                                    paths[i, j] = new List<IList<int>>(paths[i, j - 1]) {new[] {i, j}};
                                 }
                                 else if (paths[i, j - 1].Count <= 0)
                                 {
-                                    paths[i, j] = new List<IList<int>>(paths[i - 1, j]) { new[] { i, j } };
+                                    paths[i, j] = new List<IList<int>>(paths[i - 1, j]) {new[] {i, j}};
                                 }
                                 else
                                 {
                                     paths[i, j] = new List<IList<int>>(paths[i - 1, j].Count > paths[i, j - 1].Count
                                         ? paths[i, j - 1]
-                                        : paths[i - 1, j]) { new[] { i, j } };
+                                        : paths[i - 1, j]) {new[] {i, j}};
                                 }
                             }
                         }
@@ -1512,12 +1512,12 @@ namespace leetcode
 
             if (confilct < 0)
             {
-                return new[] { edges[cycle][0], edges[cycle][1] };
+                return new[] {edges[cycle][0], edges[cycle][1]};
             }
 
             return cycle < 0
-                ? new[] { edges[confilct][0], edges[confilct][1] }
-                : new[] { parents[edges[confilct][1]], edges[confilct][1] };
+                ? new[] {edges[confilct][0], edges[confilct][1]}
+                : new[] {parents[edges[confilct][1]], edges[confilct][1]};
         }
 
         #endregion
@@ -1550,6 +1550,7 @@ namespace leetcode
         #endregion
 
         #region 721. 账户合并
+
         //https://leetcode-cn.com/problems/accounts-merge/
         public IList<IList<string>> AccountsMerge(IList<IList<string>> accounts)
         {
@@ -1566,9 +1567,11 @@ namespace leetcode
                         items = new List<int>();
                         dict[email] = items;
                     }
+
                     items.Add(i);
                 }
             }
+
             var visited = new HashSet<int>();
             for (int i = 0; i < accounts.Count; i++)
             {
@@ -1576,6 +1579,7 @@ namespace leetcode
                 {
                     continue;
                 }
+
                 var union = new List<string>();
                 union.Add(accounts[i][0]);
                 Dfs(i, union);
@@ -1589,6 +1593,7 @@ namespace leetcode
                 {
                     return;
                 }
+
                 var account = accounts[index];
                 for (int i = 1; i < account.Count; i++)
                 {
@@ -1603,9 +1608,222 @@ namespace leetcode
                     }
                 }
             }
+
             return result;
         }
+
         #endregion
 
+        #region 784. 字母大小写全排列
+
+        //https://leetcode-cn.com/problems/letter-case-permutation/
+        public IList<string> LetterCasePermutation(string s)
+        {
+            var result = new List<string>();
+            var chars = s.ToCharArray();
+
+            void Dfs(int index)
+            {
+                result.Add(new string(chars));
+                if (index >= chars.Length)
+                {
+                    return;
+                }
+
+                for (int i = index; i < chars.Length; i++)
+                {
+                    var old = chars[i];
+                    if (char.IsLower(old))
+                    {
+                        chars[i] = char.ToUpper(old);
+                    }
+                    else if (char.IsUpper(old))
+                    {
+                        chars[i] = char.ToLower(old);
+                    }
+                    else
+                    {
+                        continue;
+                    }
+
+                    Dfs(i + 1);
+                    chars[i] = old;
+                }
+            }
+
+            Dfs(0);
+            return result;
+        }
+
+        #endregion
+
+        #region 496. 下一个更大元素 I
+
+        //https://leetcode-cn.com/problems/next-greater-element-i/
+        public int[] NextGreaterElement(int[] nums1, int[] nums2)
+        {
+            var stack = new Stack<int>();
+            var dict = new Dictionary<int, int>();
+            foreach (var n in nums2)
+            {
+                while (stack.Count > 0 && n > stack.Peek())
+                {
+                    dict[stack.Pop()] = n;
+                }
+
+                stack.Push(n);
+            }
+
+            var res = new int[nums1.Length];
+            for (int i = 0; i < res.Length; i++)
+            {
+                res[i] = dict.TryGetValue(nums1[i], out var n) ? n : -1;
+            }
+
+            return res;
+        }
+
+        #endregion
+
+        #region 224. 基本计算器
+
+        //https://leetcode-cn.com/problems/basic-calculator/
+        public int BasicCalculate(string s)
+        {
+            var nums = new Stack<int>();
+            var operators = new Stack<char>();
+            for (var i = 0; i < s.Length; i++)
+            {
+                var ch = s[i];
+                if (ch == ' ')
+                {
+                    continue;
+                }
+
+                if (char.IsDigit(ch))
+                {
+                    var num = ch - '0';
+                    while (i < s.Length - 1 && char.IsDigit(s[i + 1]))
+                    {
+                        i++;
+                        num = num * 10 + (s[i] - '0');
+                    }
+
+                    nums.Push(operators.Count > 0 && operators.Peek() == '-' ? -num : num);
+                }
+                else if (ch == ')')
+                {
+                    var num = nums.Pop();
+                    while (operators.TryPop(out ch))
+                    {
+                        if (ch == '(')
+                        {
+                            nums.Push(operators.Count > 0 && operators.Peek() == '-' ? -num : num);
+                            break;
+                        }
+
+                        num += nums.Pop();
+                    }
+                }
+                else
+                {
+                    operators.Push(ch);
+                }
+            }
+
+            var res = nums.Pop();
+            while (nums.TryPop(out var num))
+            {
+                res += num;
+            }
+
+            return res;
+        }
+
+        #endregion
+
+        #region 173. 二叉搜索树迭代器
+
+        //https://leetcode-cn.com/problems/binary-search-tree-iterator/
+        public class BSTIterator
+        {
+            private Stack<TreeNode> stack = new Stack<TreeNode>();
+            private TreeNode current;
+
+            public BSTIterator(TreeNode root)
+            {
+                current = root;
+            }
+
+            /** @return the next smallest number */
+            public int Next()
+            {
+                var num = -1;
+                while (stack.Count > 0 || current != null)
+                {
+                    while (current != null)
+                    {
+                        stack.Push(current);
+                        current = current.left;
+                    }
+
+                    current = stack.Pop();
+                    num = current.val;
+                    current = current.right;
+                    break;
+                }
+
+                return num;
+            }
+
+            /** @return whether we have a next smallest number */
+            public bool HasNext()
+            {
+                return stack.Count > 0 || current != null;
+            }
+        }
+
+        #endregion
+
+        #region 316. 去除重复字母
+
+        //https://leetcode-cn.com/problems/remove-duplicate-letters/
+        public string RemoveDuplicateLetters(string s)
+        {
+            //记录相同字符最后一次的出现位置
+            var indexDict = new Dictionary<char, int>();
+            for (var i = 0; i < s.Length; i++)
+            {
+                indexDict[s[i]] = i;
+            }
+
+            var stack = new Stack<char>();
+            var charSet = new HashSet<char>();
+            for (var i = 0; i < s.Length; i++)
+            {
+                //过滤掉已经选择的字符
+                if (charSet.Contains(s[i]))
+                {
+                    continue;
+                }
+
+                //单调栈，移除队列中大于当前字符同时后面依旧会出现的字符
+                while (stack.TryPeek(out var ch) && s[i] < ch && i < indexDict[ch])
+                {
+                    charSet.Remove(stack.Pop());
+                }
+                stack.Push(s[i]);
+                charSet.Add(s[i]);
+            }
+
+            var chars = new char[stack.Count];
+            for (int i = chars.Length - 1; i >= 0; i--)
+            {
+                chars[i] = stack.Pop();
+            }
+            return new string(chars);
+        }
+
+        #endregion
     }
 }
