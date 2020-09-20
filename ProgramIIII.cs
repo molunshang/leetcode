@@ -17,7 +17,7 @@ namespace leetcode
         {
             if (array.Length <= 0)
             {
-                return new[] {-1, -1};
+                return new[] { -1, -1 };
             }
 
             //1 5 3 7
@@ -44,7 +44,7 @@ namespace leetcode
                 }
             }
 
-            return new[] {left, right};
+            return new[] { left, right };
         }
 
         #endregion
@@ -67,7 +67,7 @@ namespace leetcode
                 var step = i == 5 || i == 7 ? 4 : 3;
                 while (step != 0)
                 {
-                    chars.Add((char) ('a' + j));
+                    chars.Add((char)('a' + j));
                     j++;
                     step--;
                 }
@@ -1166,7 +1166,7 @@ namespace leetcode
         {
             //大  找到1和高于1位的0交换 后面的1排到最后
             //小 找到0和高于0位的1交换 后面的1排到最前
-            var res = new int[] {-1, -1};
+            var res = new int[] { -1, -1 };
             int val = num, flagBit = -1, bit = 0, oneSize = 0;
             while (val != 0)
             {
@@ -1285,7 +1285,7 @@ namespace leetcode
                 }
 
                 visited[x, y] = true;
-                path.Add(new[] {x, y});
+                path.Add(new[] { x, y });
                 if (x == targetX && y == targetY)
                 {
                     return true;
@@ -1304,7 +1304,7 @@ namespace leetcode
             IList<IList<int>> Dp()
             {
                 var paths = new IList<IList<int>>[obstacleGrid.Length, obstacleGrid[0].Length];
-                paths[0, 0] = new IList<int>[] {new[] {0, 0}};
+                paths[0, 0] = new IList<int>[] { new[] { 0, 0 } };
                 for (int i = 0; i <= targetX; i++)
                 {
                     for (int j = 0; j <= targetY; j++)
@@ -1324,7 +1324,7 @@ namespace leetcode
                             {
                                 if (paths[i, j - 1].Count > 0)
                                 {
-                                    var newPath = new List<IList<int>>(paths[i, j - 1]) {new[] {i, j}};
+                                    var newPath = new List<IList<int>>(paths[i, j - 1]) { new[] { i, j } };
                                     paths[i, j] = newPath;
                                 }
                                 else
@@ -1335,7 +1335,7 @@ namespace leetcode
                             else if (j == 0)
                             {
                                 paths[i, j] = paths[i - 1, j].Count > 0
-                                    ? new List<IList<int>>(paths[i - 1, j]) {new[] {i, j}}
+                                    ? new List<IList<int>>(paths[i - 1, j]) { new[] { i, j } }
                                     : paths[i - 1, j];
                             }
                             else
@@ -1346,17 +1346,17 @@ namespace leetcode
                                 }
                                 else if (paths[i - 1, j].Count <= 0)
                                 {
-                                    paths[i, j] = new List<IList<int>>(paths[i, j - 1]) {new[] {i, j}};
+                                    paths[i, j] = new List<IList<int>>(paths[i, j - 1]) { new[] { i, j } };
                                 }
                                 else if (paths[i, j - 1].Count <= 0)
                                 {
-                                    paths[i, j] = new List<IList<int>>(paths[i - 1, j]) {new[] {i, j}};
+                                    paths[i, j] = new List<IList<int>>(paths[i - 1, j]) { new[] { i, j } };
                                 }
                                 else
                                 {
                                     paths[i, j] = new List<IList<int>>(paths[i - 1, j].Count > paths[i, j - 1].Count
                                         ? paths[i, j - 1]
-                                        : paths[i - 1, j]) {new[] {i, j}};
+                                        : paths[i - 1, j]) { new[] { i, j } };
                                 }
                             }
                         }
@@ -1512,12 +1512,12 @@ namespace leetcode
 
             if (confilct < 0)
             {
-                return new[] {edges[cycle][0], edges[cycle][1]};
+                return new[] { edges[cycle][0], edges[cycle][1] };
             }
 
             return cycle < 0
-                ? new[] {edges[confilct][0], edges[confilct][1]}
-                : new[] {parents[edges[confilct][1]], edges[confilct][1]};
+                ? new[] { edges[confilct][0], edges[confilct][1] }
+                : new[] { parents[edges[confilct][1]], edges[confilct][1] };
         }
 
         #endregion
@@ -1824,6 +1824,63 @@ namespace leetcode
             return new string(chars);
         }
 
+        #endregion
+
+        #region 404. 左叶子之和
+        //https://leetcode-cn.com/problems/sum-of-left-leaves/
+        public int SumOfLeftLeaves(TreeNode root)
+        {
+            if (root == null)
+            {
+                return 0;
+            }
+
+            var left = root.left;
+            int sum;
+            if (left != null && left.left == null && left.right == null)
+            {
+                sum = left.val;
+            }
+            else
+            {
+                sum = SumOfLeftLeaves(left);
+            }
+            sum += SumOfLeftLeaves(root.right);
+            return sum;
+        }
+        #endregion
+
+        #region 904. 水果成篮
+        //https://leetcode-cn.com/problems/fruit-into-baskets/
+        public int TotalFruit(int[] tree)
+        {
+            var fruits = new Dictionary<int, int>();
+            var ans = 0;
+            for (int i = 0, j = 0; i < tree.Length; i++)
+            {
+                var fruit = tree[i];
+                if (!fruits.TryGetValue(fruit, out var count))
+                {
+                    count = 0;
+                }
+                fruits[fruit] = count + 1;
+                while (fruits.Count > 2 && j < i)
+                {
+                    count = fruits[tree[j]];
+                    if (count <= 1)
+                    {
+                        fruits.Remove(tree[j]);
+                    }
+                    else
+                    {
+                        fruits[tree[j]] = count - 1;
+                    }
+                    j++;
+                }
+                ans = Math.Max(ans, i - j + 1);
+            }
+            return ans;
+        }
         #endregion
     }
 }
