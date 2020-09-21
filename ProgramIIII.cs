@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -17,7 +18,7 @@ namespace leetcode
         {
             if (array.Length <= 0)
             {
-                return new[] { -1, -1 };
+                return new[] {-1, -1};
             }
 
             //1 5 3 7
@@ -44,7 +45,7 @@ namespace leetcode
                 }
             }
 
-            return new[] { left, right };
+            return new[] {left, right};
         }
 
         #endregion
@@ -67,7 +68,7 @@ namespace leetcode
                 var step = i == 5 || i == 7 ? 4 : 3;
                 while (step != 0)
                 {
-                    chars.Add((char)('a' + j));
+                    chars.Add((char) ('a' + j));
                     j++;
                     step--;
                 }
@@ -1166,7 +1167,7 @@ namespace leetcode
         {
             //大  找到1和高于1位的0交换 后面的1排到最后
             //小 找到0和高于0位的1交换 后面的1排到最前
-            var res = new int[] { -1, -1 };
+            var res = new int[] {-1, -1};
             int val = num, flagBit = -1, bit = 0, oneSize = 0;
             while (val != 0)
             {
@@ -1285,7 +1286,7 @@ namespace leetcode
                 }
 
                 visited[x, y] = true;
-                path.Add(new[] { x, y });
+                path.Add(new[] {x, y});
                 if (x == targetX && y == targetY)
                 {
                     return true;
@@ -1304,7 +1305,7 @@ namespace leetcode
             IList<IList<int>> Dp()
             {
                 var paths = new IList<IList<int>>[obstacleGrid.Length, obstacleGrid[0].Length];
-                paths[0, 0] = new IList<int>[] { new[] { 0, 0 } };
+                paths[0, 0] = new IList<int>[] {new[] {0, 0}};
                 for (int i = 0; i <= targetX; i++)
                 {
                     for (int j = 0; j <= targetY; j++)
@@ -1324,7 +1325,7 @@ namespace leetcode
                             {
                                 if (paths[i, j - 1].Count > 0)
                                 {
-                                    var newPath = new List<IList<int>>(paths[i, j - 1]) { new[] { i, j } };
+                                    var newPath = new List<IList<int>>(paths[i, j - 1]) {new[] {i, j}};
                                     paths[i, j] = newPath;
                                 }
                                 else
@@ -1335,7 +1336,7 @@ namespace leetcode
                             else if (j == 0)
                             {
                                 paths[i, j] = paths[i - 1, j].Count > 0
-                                    ? new List<IList<int>>(paths[i - 1, j]) { new[] { i, j } }
+                                    ? new List<IList<int>>(paths[i - 1, j]) {new[] {i, j}}
                                     : paths[i - 1, j];
                             }
                             else
@@ -1346,17 +1347,17 @@ namespace leetcode
                                 }
                                 else if (paths[i - 1, j].Count <= 0)
                                 {
-                                    paths[i, j] = new List<IList<int>>(paths[i, j - 1]) { new[] { i, j } };
+                                    paths[i, j] = new List<IList<int>>(paths[i, j - 1]) {new[] {i, j}};
                                 }
                                 else if (paths[i, j - 1].Count <= 0)
                                 {
-                                    paths[i, j] = new List<IList<int>>(paths[i - 1, j]) { new[] { i, j } };
+                                    paths[i, j] = new List<IList<int>>(paths[i - 1, j]) {new[] {i, j}};
                                 }
                                 else
                                 {
                                     paths[i, j] = new List<IList<int>>(paths[i - 1, j].Count > paths[i, j - 1].Count
                                         ? paths[i, j - 1]
-                                        : paths[i - 1, j]) { new[] { i, j } };
+                                        : paths[i - 1, j]) {new[] {i, j}};
                                 }
                             }
                         }
@@ -1512,12 +1513,12 @@ namespace leetcode
 
             if (confilct < 0)
             {
-                return new[] { edges[cycle][0], edges[cycle][1] };
+                return new[] {edges[cycle][0], edges[cycle][1]};
             }
 
             return cycle < 0
-                ? new[] { edges[confilct][0], edges[confilct][1] }
-                : new[] { parents[edges[confilct][1]], edges[confilct][1] };
+                ? new[] {edges[confilct][0], edges[confilct][1]}
+                : new[] {parents[edges[confilct][1]], edges[confilct][1]};
         }
 
         #endregion
@@ -1812,6 +1813,7 @@ namespace leetcode
                 {
                     charSet.Remove(stack.Pop());
                 }
+
                 stack.Push(s[i]);
                 charSet.Add(s[i]);
             }
@@ -1821,12 +1823,14 @@ namespace leetcode
             {
                 chars[i] = stack.Pop();
             }
+
             return new string(chars);
         }
 
         #endregion
 
         #region 404. 左叶子之和
+
         //https://leetcode-cn.com/problems/sum-of-left-leaves/
         public int SumOfLeftLeaves(TreeNode root)
         {
@@ -1845,12 +1849,15 @@ namespace leetcode
             {
                 sum = SumOfLeftLeaves(left);
             }
+
             sum += SumOfLeftLeaves(root.right);
             return sum;
         }
+
         #endregion
 
         #region 904. 水果成篮
+
         //https://leetcode-cn.com/problems/fruit-into-baskets/
         public int TotalFruit(int[] tree)
         {
@@ -1863,6 +1870,7 @@ namespace leetcode
                 {
                     count = 0;
                 }
+
                 fruits[fruit] = count + 1;
                 while (fruits.Count > 2 && j < i)
                 {
@@ -1875,12 +1883,403 @@ namespace leetcode
                     {
                         fruits[tree[j]] = count - 1;
                     }
+
                     j++;
                 }
+
                 ans = Math.Max(ans, i - j + 1);
             }
+
             return ans;
         }
+
+        #endregion
+
+        #region 1038. 从二叉搜索树到更大和树
+
+        //https://leetcode-cn.com/problems/binary-search-tree-to-greater-sum-tree/
+        public TreeNode BstToGst(TreeNode root)
+        {
+            var node = root;
+            var stack = new Stack<TreeNode>();
+            TreeNode prev = null;
+            while (node != null || stack.Count > 0)
+            {
+                while (node != null)
+                {
+                    stack.Push(node);
+                    node = node.right;
+                }
+
+                node = stack.Pop();
+                if (prev != null)
+                {
+                    node.val += prev.val;
+                }
+
+                prev = node;
+                node = node.left;
+            }
+
+            return root;
+        }
+
+        #endregion
+
+        #region 106. 从中序与后序遍历序列构造二叉树
+
+        //https://leetcode-cn.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/
+        public TreeNode BuildTreeFromInAndPost(int[] inorder, int[] postorder)
+        {
+            TreeNode Dfs(int il, int ir, int pl, int pr)
+            {
+                if (pl >= pr)
+                {
+                    return pl > pr ? null : new TreeNode(postorder[pl]);
+                }
+
+                var root = new TreeNode(postorder[pr]);
+                var imid = -1;
+                for (int i = il; i <= ir; i++)
+                {
+                    if (inorder[i] != postorder[pr])
+                        continue;
+                    imid = i;
+                    break;
+                }
+
+                if (imid > -1)
+                {
+                    var pmid = pl + imid - il;
+                    root.left = Dfs(il, imid - 1, pl, pmid - 1);
+                    root.right = Dfs(imid + 1, ir, pmid, pr - 1);
+                }
+
+                return root;
+            }
+
+            return Dfs(0, inorder.Length - 1, 0, postorder.Length - 1);
+        }
+
+        #endregion
+
+        #region 117. 填充每个节点的下一个右侧节点指针 II
+
+        //https://leetcode-cn.com/problems/populating-next-right-pointers-in-each-node-ii/
+        public Node ConnectII(Node root)
+        {
+            void Connect(Node node)
+            {
+                if (node == null)
+                {
+                    return;
+                }
+
+                Node firstNode = null, lastNode = null;
+                while (node != null)
+                {
+                    Node left = node.left, right = node.right;
+                    if (left != null && right != null)
+                    {
+                        if (firstNode == null)
+                        {
+                            firstNode = left;
+                        }
+
+                        if (lastNode != null)
+                        {
+                            lastNode.next = left;
+                        }
+
+                        left.next = right;
+                        lastNode = right;
+                    }
+                    else if (left != null)
+                    {
+                        if (firstNode == null)
+                        {
+                            firstNode = left;
+                        }
+
+                        if (lastNode != null)
+                        {
+                            lastNode.next = left;
+                        }
+
+                        lastNode = left;
+                    }
+                    else if (right != null)
+                    {
+                        if (firstNode == null)
+                        {
+                            firstNode = right;
+                        }
+
+                        if (lastNode != null)
+                        {
+                            lastNode.next = right;
+                        }
+
+                        lastNode = right;
+                    }
+
+                    node = node.next;
+                }
+
+                Connect(firstNode);
+            }
+
+            Connect(root);
+
+            //作为链表进行链接
+            var head = root;
+            while (head != null)
+            {
+                var level = new Node(-1);
+                var tail = level;
+                while (head != null)
+                {
+                    if (head.left != null)
+                    {
+                        tail.next = head.left;
+                        tail = tail.next;
+                    }
+
+                    if (head.right != null)
+                    {
+                        tail.next = head.right;
+                        tail = tail.next;
+                    }
+
+                    head = head.next;
+                }
+
+                head = level.next;
+            }
+
+            return root;
+        }
+
+        #endregion
+
+        #region 129. 求根到叶子节点数字之和
+
+        //https://leetcode-cn.com/problems/sum-root-to-leaf-numbers/
+        public int SumNumbers(TreeNode root)
+        {
+            int Dfs(TreeNode node, int num)
+            {
+                while (true)
+                {
+                    if (node == null)
+                    {
+                        return num;
+                    }
+
+                    num = num * 10 + node.val;
+                    if (node.right == null)
+                    {
+                        node = node.left;
+                        continue;
+                    }
+
+                    if (node.left != null)
+                    {
+                        return Dfs(node.left, num) + Dfs(node.right, num);
+                    }
+
+                    node = node.right;
+                }
+            }
+
+            return Dfs(root, 0);
+        }
+
+        #endregion
+
+        #region 429. N叉树的层序遍历
+
+        //https://leetcode-cn.com/problems/n-ary-tree-level-order-traversal/
+        public IList<IList<int>> LevelOrder(Node root)
+        {
+            if (root == null)
+            {
+                return new IList<int>[0];
+            }
+
+            var result = new List<IList<int>>();
+            var queue = new Queue<Node>();
+            queue.Enqueue(root);
+            while (queue.Count > 0)
+            {
+                var size = queue.Count;
+                var items = new List<int>();
+                while (size > 0)
+                {
+                    size--;
+                    root = queue.Dequeue();
+                    items.Add(root.val);
+                    if (root.children != null && root.children.Count > 0)
+                    {
+                        foreach (var child in root.children)
+                        {
+                            queue.Enqueue(child);
+                        }
+                    }
+                }
+
+                result.Add(items);
+            }
+
+            return result;
+        }
+
+        #endregion
+
+        #region 199. 二叉树的右视图
+
+        //https://leetcode-cn.com/problems/binary-tree-right-side-view/
+        public IList<int> RightSideView(TreeNode root)
+        {
+            var result = new List<int>();
+
+            void Dfs(TreeNode node, int depth)
+            {
+                if (node == null)
+                {
+                    return;
+                }
+
+                if (result.Count <= depth)
+                {
+                    result.Add(node.val);
+                }
+                else
+                {
+                    result[depth] = node.val;
+                }
+
+                Dfs(node.left, depth + 1);
+                Dfs(node.right, depth + 1);
+            }
+
+            Dfs(root, 0);
+            return result;
+        }
+
+        #endregion
+
+        #region 222. 完全二叉树的节点个数
+
+        //https://leetcode-cn.com/problems/count-complete-tree-nodes/
+        public int CountNodes(TreeNode root)
+        {
+            //todo 二分计算二叉树节点
+            if (root == null)
+            {
+                return 0;
+            }
+
+            return CountNodes(root.left) + CountNodes(root.right) + 1;
+        }
+
+        #endregion
+
+        #region 700. 二叉搜索树中的搜索
+
+        //https://leetcode-cn.com/problems/search-in-a-binary-search-tree/
+        public TreeNode SearchBST(TreeNode root, int val)
+        {
+            while (true)
+            {
+                if (root == null || root.val == val)
+                {
+                    return root;
+                }
+
+
+                root = root.val > val ? root.left : root.right;
+            }
+        }
+
+        #endregion
+
+        #region 701. 二叉搜索树中的插入操作
+
+        //https://leetcode-cn.com/problems/insert-into-a-binary-search-tree/
+        public TreeNode InsertIntoBST(TreeNode root, int val)
+        {
+            if (root == null)
+            {
+                return new TreeNode(val);
+            }
+
+            var node = root;
+            while (node != null)
+            {
+                if (node.val > val)
+                {
+                    if (node.left == null)
+                    {
+                        node.left = new TreeNode(val);
+                        break;
+                    }
+
+                    node = node.left;
+                }
+                else
+                {
+                    if (node.right == null)
+                    {
+                        node.right = new TreeNode(val);
+                        break;
+                    }
+
+                    node = node.right;
+                }
+            }
+
+            return root;
+        }
+
+        #endregion
+
+        #region 1130. 叶值的最小代价生成树
+
+        //https://leetcode-cn.com/problems/minimum-cost-tree-from-leaf-values/
+        public int MctFromLeafValues(int[] arr)
+        {
+            var len = arr.Length;
+            //1.获取区间范围内的最大值
+            var maxVals = new int[len, len];
+            for (int i = 0; i < len; i++)
+            {
+                var max = int.MinValue;
+                for (int j = i; j < len; j++)
+                {
+                    max = Math.Max(max, arr[j]);
+                    maxVals[i, j] = max;
+                }
+            }
+
+            //2.二叉树划分区间分别进行计算
+            //todo 待完成区间计算
+            var dp = new int[len, len];
+            for (int i = 0; i < len; i++)
+            {
+                for (int j = i; j < len; j++)
+                {
+                    dp[i, j] = i == j ? 0 : int.MaxValue;
+                    for (int k = i; k < j; k++)
+                    {
+                        dp[i, j] = Math.Min(dp[i, j], dp[i, k] + dp[k + 1, j] + maxVals[i, k] * maxVals[k + 1, j]);
+                    }
+                }
+            }
+
+            return dp[0, len - 1];
+        }
+
         #endregion
     }
 }

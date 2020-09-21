@@ -750,16 +750,6 @@ namespace leetcode
 
         #endregion
 
-        #region 1130. 叶值的最小代价生成树
-
-        //https://leetcode-cn.com/problems/minimum-cost-tree-from-leaf-values/
-        public int MctFromLeafValues(int[] arr)
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
-
         #region 780. 到达终点
 
         //https://leetcode-cn.com/problems/reaching-points/

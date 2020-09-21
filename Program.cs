@@ -31,6 +31,7 @@ namespace leetcode
         static void Main(string[] args)
         {
             //[[],[],[],[]]
+            program.MctFromLeafValues(new[] {6, 2, 4});
             program.BasicCalculate("5-(4+1)");
             program.FindNumberOfLIS(new[] { 2, 2, 2, 2, 2, 3, 8, 7 });
             program.FindItinerary(JsonConvert.DeserializeObject<IList<IList<string>>>(@"[[""JFK"",""KUL""],[""JFK"",""NRT""],[""NRT"",""JFK""]]"));

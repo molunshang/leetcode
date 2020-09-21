@@ -10,6 +10,7 @@ namespace leetcode
         public Node left;
         public Node right;
         public IList<Node> neighbors;
+        public IList<Node> children;
         public Node(int _val)
         {
             val = _val;
