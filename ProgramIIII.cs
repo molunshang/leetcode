@@ -18,7 +18,7 @@ namespace leetcode
         {
             if (array.Length <= 0)
             {
-                return new[] { -1, -1 };
+                return new[] {-1, -1};
             }
 
             //1 5 3 7
@@ -45,7 +45,7 @@ namespace leetcode
                 }
             }
 
-            return new[] { left, right };
+            return new[] {left, right};
         }
 
         #endregion
@@ -68,7 +68,7 @@ namespace leetcode
                 var step = i == 5 || i == 7 ? 4 : 3;
                 while (step != 0)
                 {
-                    chars.Add((char)('a' + j));
+                    chars.Add((char) ('a' + j));
                     j++;
                     step--;
                 }
@@ -1167,7 +1167,7 @@ namespace leetcode
         {
             //大  找到1和高于1位的0交换 后面的1排到最后
             //小 找到0和高于0位的1交换 后面的1排到最前
-            var res = new int[] { -1, -1 };
+            var res = new int[] {-1, -1};
             int val = num, flagBit = -1, bit = 0, oneSize = 0;
             while (val != 0)
             {
@@ -1286,7 +1286,7 @@ namespace leetcode
                 }
 
                 visited[x, y] = true;
-                path.Add(new[] { x, y });
+                path.Add(new[] {x, y});
                 if (x == targetX && y == targetY)
                 {
                     return true;
@@ -1305,7 +1305,7 @@ namespace leetcode
             IList<IList<int>> Dp()
             {
                 var paths = new IList<IList<int>>[obstacleGrid.Length, obstacleGrid[0].Length];
-                paths[0, 0] = new IList<int>[] { new[] { 0, 0 } };
+                paths[0, 0] = new IList<int>[] {new[] {0, 0}};
                 for (int i = 0; i <= targetX; i++)
                 {
                     for (int j = 0; j <= targetY; j++)
@@ -1325,7 +1325,7 @@ namespace leetcode
                             {
                                 if (paths[i, j - 1].Count > 0)
                                 {
-                                    var newPath = new List<IList<int>>(paths[i, j - 1]) { new[] { i, j } };
+                                    var newPath = new List<IList<int>>(paths[i, j - 1]) {new[] {i, j}};
                                     paths[i, j] = newPath;
                                 }
                                 else
@@ -1336,7 +1336,7 @@ namespace leetcode
                             else if (j == 0)
                             {
                                 paths[i, j] = paths[i - 1, j].Count > 0
-                                    ? new List<IList<int>>(paths[i - 1, j]) { new[] { i, j } }
+                                    ? new List<IList<int>>(paths[i - 1, j]) {new[] {i, j}}
                                     : paths[i - 1, j];
                             }
                             else
@@ -1347,17 +1347,17 @@ namespace leetcode
                                 }
                                 else if (paths[i - 1, j].Count <= 0)
                                 {
-                                    paths[i, j] = new List<IList<int>>(paths[i, j - 1]) { new[] { i, j } };
+                                    paths[i, j] = new List<IList<int>>(paths[i, j - 1]) {new[] {i, j}};
                                 }
                                 else if (paths[i, j - 1].Count <= 0)
                                 {
-                                    paths[i, j] = new List<IList<int>>(paths[i - 1, j]) { new[] { i, j } };
+                                    paths[i, j] = new List<IList<int>>(paths[i - 1, j]) {new[] {i, j}};
                                 }
                                 else
                                 {
                                     paths[i, j] = new List<IList<int>>(paths[i - 1, j].Count > paths[i, j - 1].Count
                                         ? paths[i, j - 1]
-                                        : paths[i - 1, j]) { new[] { i, j } };
+                                        : paths[i - 1, j]) {new[] {i, j}};
                                 }
                             }
                         }
@@ -1513,12 +1513,12 @@ namespace leetcode
 
             if (confilct < 0)
             {
-                return new[] { edges[cycle][0], edges[cycle][1] };
+                return new[] {edges[cycle][0], edges[cycle][1]};
             }
 
             return cycle < 0
-                ? new[] { edges[confilct][0], edges[confilct][1] }
-                : new[] { parents[edges[confilct][1]], edges[confilct][1] };
+                ? new[] {edges[confilct][0], edges[confilct][1]}
+                : new[] {parents[edges[confilct][1]], edges[confilct][1]};
         }
 
         #endregion
@@ -2263,6 +2263,8 @@ namespace leetcode
             }
 
             //2.二叉树划分区间分别进行计算
+            //[0,1][2,3]…………[n-1,n]
+            //[0,2][3,5]…………[n-5,n]
             var dp = new int[len, len];
             for (int i = 1; i < len; i++)
             {
@@ -2271,12 +2273,218 @@ namespace leetcode
                     dp[j, j + i] = int.MaxValue;
                     for (int k = j; k < j + i; k++)
                     {
-                        dp[j, j + i] = Math.Min(dp[j, j + i], dp[j, k] + dp[k + 1, j + i] + maxVals[j, k] * maxVals[k + 1, j + i]);
+                        dp[j, j + i] = Math.Min(dp[j, j + i],
+                            dp[j, k] + dp[k + 1, j + i] + maxVals[j, k] * maxVals[k + 1, j + i]);
                     }
                 }
             }
 
             return dp[0, len - 1];
+        }
+
+        #endregion
+
+        #region 968. 监控二叉树
+
+        //https://leetcode-cn.com/problems/binary-tree-cameras/
+        public int MinCameraCover(TreeNode root)
+        {
+            if (root == null)
+            {
+                return 0;
+            }
+
+            //三种情况
+            //0.root安装监控，覆盖整个树
+            //1.覆盖整个树，不管root是否安装
+            //2.覆盖左右子树，不管root是否安装
+            //递推过程：https://leetcode-cn.com/problems/binary-tree-cameras/solution/shou-hua-tu-jie-cong-di-gui-you-hua-dao-dong-tai-g/
+            int[] Dfs(TreeNode node)
+            {
+                if (node == null)
+                {
+                    return new[] {int.MaxValue / 2, 0, 0};
+                }
+
+                var left = Dfs(node.left);
+                var right = Dfs(node.right);
+                var ans = new int[3];
+                ans[0] = left[2] + right[2] + 1;
+                ans[1] = Math.Min(ans[0], Math.Min(left[0] + right[1], left[1] + right[0]));
+                ans[2] = Math.Min(ans[0], left[1] + right[1]);
+                return ans;
+            }
+
+            var res = Dfs(root);
+            return res[1];
+        }
+
+        #endregion
+
+        #region 979. 在二叉树中分配硬币
+
+        //https://leetcode-cn.com/problems/distribute-coins-in-binary-tree/
+        public int DistributeCoins(TreeNode root)
+        {
+            if (root == null)
+            {
+                return 0;
+            }
+
+            //1.遇到0，找>1
+            //2.遇到>1,找0
+            var ans = 0;
+
+            int Dfs(TreeNode node)
+            {
+                if (node == null)
+                {
+                    return 0;
+                }
+
+                var l = Dfs(node.left);
+                var r = Dfs(node.right);
+                ans += Math.Abs(l) + Math.Abs(r); //累加node需要经过的节点数
+                return node.val + l + r - 1; //获取到当前位置需要的节点数
+            }
+
+            Dfs(root);
+            return ans;
+        }
+
+        #endregion
+
+        #region 面试题 05.07. 配对交换
+
+        //https://leetcode-cn.com/problems/exchange-lcci/
+        public int ExchangeBits(int num)
+        {
+            //计算mask数值
+            int mask0 = 1, mask1 = 2;
+            for (int i = 0; i < 15; i++)
+            {
+                mask0 |= mask0 << 2; //偶数位为1
+                mask1 |= mask1 << 2; //奇数位为1
+            }
+
+            //0xaaaaaaaa 奇数位全为1数
+            //0x55555555 偶数位全为1数
+            //&操作保留奇数位和偶数位，同时偶数位左移和奇数位右移得到最后结果
+            return (int) (((num & 0xaaaaaaaa) >> 1) | ((num & 0x55555555) << 1));
+        }
+
+        #endregion
+
+        #region 面试题 08.04. 幂集/78. 子集
+
+        //https://leetcode-cn.com/problems/power-set-lcci/
+        //https://leetcode-cn.com/problems/subsets/
+
+        public IList<IList<int>> Subsets(int[] nums)
+        {
+            var result = new List<IList<int>>();
+            var subs = new List<int>();
+
+            void Dfs(int i)
+            {
+                result.Add(subs.ToArray());
+                if (i >= nums.Length)
+                {
+                    return;
+                }
+
+                for (int j = i; j < nums.Length; j++)
+                {
+                    subs.Add(nums[j]);
+                    Dfs(j + 1);
+                    subs.RemoveAt(subs.Count - 1);
+                }
+            }
+
+            Dfs(0);
+            return result;
+        }
+
+        #endregion
+
+
+        #region 面试题38. 字符串的排列/面试题 08.07. 无重复字符串的排列组合
+
+        //https://leetcode-cn.com/problems/zi-fu-chuan-de-pai-lie-lcof/
+        //https://leetcode-cn.com/problems/permutation-i-lcci/
+
+        public string[] Permutation(string s)
+        {
+            var result = new List<string>();
+            var chars = s.ToCharArray();
+
+            void Swap(int i, int j)
+            {
+                var tmp = chars[j];
+                chars[j] = chars[i];
+                chars[i] = tmp;
+            }
+
+            void Dfs(int i)
+            {
+                if (i >= chars.Length)
+                {
+                    result.Add(new string(chars));
+                    return;
+                }
+
+                for (int j = i; j < chars.Length; j++)
+                {
+                    Swap(i, j);
+                    Dfs(i + 1);
+                    Swap(i, j);
+                }
+            }
+
+            Dfs(0);
+            return result.ToArray();
+        }
+
+        #endregion
+
+        #region 面试题 08.08. 有重复字符串的排列组合
+
+        //https://leetcode-cn.com/problems/permutation-ii-lcci/
+        public string[] PermutationII(string s)
+        {
+            var result = new List<string>();
+            var chars = s.OrderBy(c => c).ToArray();
+
+            void Swap(int i, int j)
+            {
+                var tmp = chars[j];
+                chars[j] = chars[i];
+                chars[i] = tmp;
+            }
+
+            void Dfs(int i)
+            {
+                if (i >= chars.Length)
+                {
+                    result.Add(new string(chars));
+                    return;
+                }
+
+                for (int j = i; j < chars.Length; j++)
+                {
+                    if (j > i && (chars[j] == chars[j - 1]||chars[j]==chars[i]))
+                    {
+                        continue;
+                    }
+
+                    Swap(i, j);
+                    Dfs(i + 1);
+                    Swap(i, j);
+                }
+            }
+
+            Dfs(0);
+            return result.ToArray();
         }
 
         #endregion
