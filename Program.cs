@@ -4905,9 +4905,11 @@ namespace leetcode
 
         #endregion
 
-        #region 22. 括号生成
+        #region 22. 括号生成/面试题 08.09. 括号
 
         //https://leetcode-cn.com/problems/generate-parentheses/
+        //https://leetcode-cn.com/problems/bracket-lcci/
+
         void GenerateParenthesis(int left, int right, IList<string> result, StringBuilder str)
         {
             if (left <= 0 && right <= 0)
