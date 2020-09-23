@@ -2848,5 +2848,51 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 501. 二叉搜索树中的众数
+        //https://leetcode-cn.com/problems/find-mode-in-binary-search-tree/
+        public int[] FindMode(TreeNode root)
+        {
+            if (root == null)
+            {
+                return new int[0];
+            }
+            var res = new List<int>();
+            int max = 0, count = 0;
+            var stack = new Stack<TreeNode>();
+            TreeNode prev = null;
+            while (stack.Count > 0 || root != null)
+            {
+                while (root != null)
+                {
+                    stack.Push(root);
+                    root = root.left;
+                }
+                root = stack.Pop();
+
+                if (prev == null || prev.val == root.val)
+                {
+                    count++;
+                }
+                else
+                {
+                    count = 1;
+                }
+                if (count == max)
+                {
+                    res.Add(root.val);
+                }
+                else if (count > max)
+                {
+                    max = count;
+                    res.Clear();
+                    res.Add(root.val);
+                }
+                prev = root;
+                root = root.right;
+            }
+            return res.ToArray();
+        }
+        #endregion
     }
 }
