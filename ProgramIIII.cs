@@ -2472,7 +2472,7 @@ namespace leetcode
 
                 for (int j = i; j < chars.Length; j++)
                 {
-                    if (j > i && (chars[j] == chars[j - 1]||chars[j]==chars[i]))
+                    if (j > i && (chars[j] == chars[j - 1] || chars[j] == chars[i]))
                     {
                         continue;
                     }
@@ -2485,6 +2485,366 @@ namespace leetcode
 
             Dfs(0);
             return result.ToArray();
+        }
+
+        #endregion
+
+        #region 面试题 08.13. 堆箱子
+
+        //https://leetcode-cn.com/problems/pile-box-lcci/
+        public int PileBox(int[][] box)
+        {
+            if (box.Length <= 0)
+            {
+                return 0;
+            }
+
+            Array.Sort(box, Comparer<int[]>.Create((a, b) =>
+            {
+                var cmp = b[0] - a[0];
+                if (cmp != 0)
+                {
+                    return cmp;
+                }
+
+                cmp = b[1] - a[1];
+                if (cmp == 0)
+                {
+                    cmp = b[2] - a[2];
+                }
+
+                return cmp;
+            }));
+            var mem = new int[box.Length];
+
+            int Dfs(int i)
+            {
+                if (i >= box.Length)
+                {
+                    return 0;
+                }
+
+                if (mem[i] != 0)
+                {
+                    return mem[i];
+                }
+
+                var cur = box[i];
+                var res = cur[2];
+                for (int j = i + 1; j < box.Length; j++)
+                {
+                    var next = box[j];
+                    if (cur[0] <= next[0] || cur[1] <= next[1] || cur[2] <= next[2])
+                    {
+                        continue;
+                    }
+
+                    res = Math.Max(res, Dfs(j) + cur[2]);
+                }
+
+                mem[i] = res;
+                return res;
+            }
+
+            var ans = 0;
+            for (int i = 0; i < box.Length; i++)
+            {
+                ans = Math.Max(ans, Dfs(i));
+            }
+
+            return ans;
+        }
+
+        #endregion
+
+        #region 42. 接雨水/面试题 17.21. 直方图的水量
+
+        //https://leetcode-cn.com/problems/trapping-rain-water/
+        //https://leetcode-cn.com/problems/volume-of-histogram-lcci/submissions/
+        public int Trap(int[] height)
+        {
+            //暴力解
+            var res = 0;
+            for (int i = 1; i < height.Length - 1; i++)
+            {
+                var h = height[i];
+                int left = h, right = h;
+                for (int l = i - 1; l >= 0; l--)
+                {
+                    left = Math.Max(left, height[l]);
+                }
+
+                for (int r = i + 1; r < height.Length; r++)
+                {
+                    right = Math.Max(right, height[r]);
+                }
+
+                res += Math.Min(left, right) - h;
+            }
+
+            return res;
+        }
+
+
+        public int TrapI(int[] height)
+        {
+            if (height.Length <= 2)
+            {
+                return 0;
+            }
+
+            var res = 0;
+            int[] leftMax = new int[height.Length], rightMax = new int[height.Length];
+            leftMax[0] = height[0];
+            rightMax[rightMax.Length - 1] = height[height.Length - 1];
+            for (int i = 1, j = height.Length - 2; i < height.Length; i++, j--)
+            {
+                leftMax[i] = Math.Max(leftMax[i - 1], height[i]);
+                rightMax[j] = Math.Max(rightMax[j + 1], height[j]);
+            }
+
+            for (int i = 1; i < height.Length - 1; i++)
+            {
+                res += Math.Min(leftMax[i], rightMax[i]) - height[i];
+            }
+
+            return res;
+        }
+
+        #endregion
+
+        #region 面试题 10.05. 稀疏数组搜索
+
+        //https://leetcode-cn.com/problems/sparse-array-search-lcci/
+        public int FindString(string[] words, string s)
+        {
+            int Find(int l, int r)
+            {
+                if (l >= r)
+                {
+                    return l > r ? -1 : words[l] == s ? l : -1;
+                }
+
+                var mid = (l + r) / 2;
+                if (string.IsNullOrEmpty(words[mid]))
+                {
+                    var index = Find(l, mid - 1);
+                    return index == -1 ? Find(mid + 1, r) : index;
+                }
+
+                var cmp = s.CompareTo(words[mid]);
+                if (cmp == 0)
+                {
+                    return mid;
+                }
+
+                return cmp < 0 ? Find(l, mid - 1) : Find(mid + 1, r);
+            }
+
+            int FindRemoveEmpty(int l, int r)
+            {
+                while (l <= r)
+                {
+                    var m = l + (r - l) / 2;
+                    var tmp = m;
+                    while (m < r && string.IsNullOrEmpty(words[m]))
+                    {
+                        m++;
+                    }
+
+                    if (string.IsNullOrEmpty(words[m]))
+                    {
+                        r = tmp - 1;
+                        continue;
+                    }
+
+                    var cmp = string.Compare(s, words[m], StringComparison.Ordinal);
+                    if (cmp == 0)
+                    {
+                        return m;
+                    }
+
+                    if (cmp < 0)
+                    {
+                        r = tmp - 1;
+                    }
+                    else
+                    {
+                        l = m + 1;
+                    }
+                }
+
+                return -1;
+            }
+
+            return Find(0, words.Length - 1);
+        }
+
+        #endregion
+
+        #region 324. 摆动排序 II/面试题 10.11. 峰与谷
+
+        //https://leetcode-cn.com/problems/wiggle-sort-ii/
+        //https://leetcode-cn.com/problems/peaks-and-valleys-lcci/
+
+        #region 回溯暴力解
+
+        bool WiggleSort(int index, int[] nums, Dictionary<int, int> dict, int keyIndex, List<int> keys)
+        {
+            if (index >= nums.Length)
+            {
+                return true;
+            }
+
+            int s, e;
+            if ((index & 1) == 0)
+            {
+                s = 0;
+                e = keyIndex - 1;
+            }
+            else
+            {
+                s = keyIndex + 1;
+                e = keys.Count - 1;
+            }
+
+            while (s <= e)
+            {
+                var key = keys[s];
+                if (dict[key] <= 0)
+                {
+                    continue;
+                }
+
+                nums[index] = key;
+                dict[key]--;
+                if (WiggleSort(index + 1, nums, dict, s, keys))
+                {
+                    return true;
+                }
+
+                dict[key]++;
+                s++;
+            }
+
+            return false;
+        }
+
+        public void WiggleSortByBacktracking(int[] nums)
+        {
+            var dict = nums.GroupBy(n => n).ToDictionary(g => g.Key, g => g.Count());
+            var keys = dict.Keys.OrderBy(n => n).ToList();
+            WiggleSort(0, nums, dict, keys.Count, keys);
+        }
+
+        #endregion
+
+        public void WiggleSort(int[] nums)
+        {
+            var copy = nums.OrderBy(n => n).ToArray();
+            int e = copy.Length - 1, mid = e / 2;
+            for (int j = 0; j < nums.Length; j += 2)
+            {
+                nums[j] = copy[mid--];
+            }
+
+            for (int j = 1; j < nums.Length; j += 2)
+            {
+                nums[j] = copy[e--];
+            }
+        }
+
+        public void WiggleSortByOn(int[] nums)
+        {
+            for (var i = 1; i < nums.Length; i++)
+            {
+                if (i % 2 == 0)
+                {
+                    //i为波峰 i-1为波谷 此时i-1已经小于i-2,所有i小于i-2
+                    if (nums[i] < nums[i - 1])
+                    {
+                        Swap(nums, i, i - 1);
+                        //交换
+                    }
+                }
+                else
+                {
+                    //i为波谷 i-1为波峰 此时i-1大于i-2,所有i大于i-2
+                    if (nums[i] > nums[i - 1])
+                    {
+                        Swap(nums, i, i - 1);
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+        #region 面试题 17.04. 消失的数字（无序数组）
+
+        //https://leetcode-cn.com/problems/missing-number-lcci/
+        public int MissingNumber_NoSort(int[] nums)
+        {
+            //位运算
+            int ByBit()
+            {
+                var ans = nums.Length;
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    ans = ans ^ i ^ nums[i];
+                }
+
+                return ans;
+            }
+
+            var sum = (nums.Length + 1) * nums.Length / 2;
+            return nums.Aggregate(sum, (current, num) => current - num);
+        }
+
+        #endregion
+
+        #region 面试题 17.05.  字母与数字
+
+        //https://leetcode-cn.com/problems/find-longest-subarray-lcci/
+        public string[] FindLongestSubarray(string[] array)
+        {
+            int[] nums = new int[array.Length + 1], letters = new int[array.Length + 1];
+            for (var i = 1; i <= array.Length; i++)
+            {
+                if (char.IsDigit(array[i - 1][0]))
+                {
+                    nums[i] = nums[i - 1] + 1;
+                    letters[i] = letters[i - 1];
+                }
+                else
+                {
+                    letters[i] = letters[i - 1] + 1;
+                    nums[i] = nums[i - 1];
+                }
+            }
+
+            int len = int.MinValue, index = -1;
+            for (int l = array.Length % 2 == 0 ? array.Length : array.Length - 1; l > 1 && l > len; l -= 2)
+            {
+                for (int i = 0, j = i + l; j <= array.Length && l > len; i++, j++)
+                {
+                    int ncount = nums[j] - nums[i], lcount = letters[j] - letters[i];
+                    if (ncount == lcount && l > len)
+                    {
+                        len = l;
+                        index = i;
+                    }
+                }
+            }
+
+            if (len <= 0)
+            {
+                return new string[0];
+            }
+
+            var result = new string[len];
+            Array.Copy(array, index, result, 0, len);
+            return result;
         }
 
         #endregion

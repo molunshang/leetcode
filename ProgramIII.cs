@@ -594,78 +594,7 @@ namespace leetcode
 
         #endregion
 
-        #region 324. 摆动排序 II
 
-        //https://leetcode-cn.com/problems/wiggle-sort-ii/
-
-        #region 回溯暴力解
-
-        bool WiggleSort(int index, int[] nums, Dictionary<int, int> dict, int keyIndex, List<int> keys)
-        {
-            if (index >= nums.Length)
-            {
-                return true;
-            }
-
-            int s, e;
-            if ((index & 1) == 0)
-            {
-                s = 0;
-                e = keyIndex - 1;
-            }
-            else
-            {
-                s = keyIndex + 1;
-                e = keys.Count - 1;
-            }
-
-            while (s <= e)
-            {
-                var key = keys[s];
-                if (dict[key] <= 0)
-                {
-                    continue;
-                }
-
-                nums[index] = key;
-                dict[key]--;
-                if (WiggleSort(index + 1, nums, dict, s, keys))
-                {
-                    return true;
-                }
-
-                dict[key]++;
-                s++;
-            }
-
-            return false;
-        }
-
-        public void WiggleSortByBacktracking(int[] nums)
-        {
-            var dict = nums.GroupBy(n => n).ToDictionary(g => g.Key, g => g.Count());
-            var keys = dict.Keys.OrderBy(n => n).ToList();
-            WiggleSort(0, nums, dict, keys.Count, keys);
-        }
-
-        #endregion
-
-        public void WiggleSort(int[] nums)
-        {
-            var copy = nums.OrderBy(n => n).ToArray();
-            int e = copy.Length - 1, mid = e / 2;
-            for (int j = 0; j < nums.Length; j += 2)
-            {
-                nums[j] = copy[mid--];
-            }
-
-            for (int j = 1; j < nums.Length; j += 2)
-            {
-                nums[j] = copy[e--];
-            }
-        }
-
-        #endregion
 
         #region 97. 交错字符串
 
@@ -2403,9 +2332,10 @@ namespace leetcode
 
         #endregion
 
-        #region 733. 图像渲染
+        #region 733. 图像渲染/面试题 08.10. 颜色填充
 
         //https://leetcode-cn.com/problems/flood-fill/
+        //https://leetcode-cn.com/problems/color-fill-lcci/
         public int[][] FloodFill(int[][] image, int sr, int sc, int newColor)
         {
             var color = image[sr][sc];
