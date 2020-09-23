@@ -297,64 +297,6 @@ namespace leetcode
 
         #endregion
 
-        #region 42. 接雨水
-
-        //https://leetcode-cn.com/problems/trapping-rain-water/
-        public int Trap(int[] height)
-        {
-            //暴力解
-            var res = 0;
-            for (int i = 1; i < height.Length - 1; i++)
-            {
-                var h = height[i];
-                int left = h, right = h;
-                for (int l = i - 1; l >= 0; l--)
-                {
-                    left = Math.Max(left, height[l]);
-                }
-
-                for (int r = i + 1; r < height.Length; r++)
-                {
-                    right = Math.Max(right, height[r]);
-                }
-
-                res += Math.Min(left, right) - h;
-            }
-
-            return res;
-        }
-
-        public int TrapI(int[] height)
-        {
-            if (height.Length <= 2)
-            {
-                return 0;
-            }
-
-            var res = 0;
-            int[] leftMax = new int[height.Length], rightMax = new int[height.Length];
-            leftMax[0] = height[0];
-            rightMax[rightMax.Length - 1] = height[height.Length - 1];
-            for (int i = 1; i < height.Length; i++)
-            {
-                leftMax[i] = Math.Max(leftMax[i - 1], height[i]);
-            }
-
-            for (int i = height.Length - 2; i >= 0; i--)
-            {
-                rightMax[i] = Math.Max(rightMax[i + 1], height[i]);
-            }
-
-            for (int i = 1; i < height.Length - 1; i++)
-            {
-                res += Math.Min(leftMax[i], rightMax[i]) - height[i];
-            }
-
-            return res;
-        }
-
-        #endregion
-
         #region 1464. 数组中两元素的最大乘积
 
         //https://leetcode-cn.com/problems/maximum-product-of-two-elements-in-an-array/
