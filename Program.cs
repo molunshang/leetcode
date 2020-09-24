@@ -31,7 +31,9 @@ namespace leetcode
         static void Main(string[] args)
         {
             //[[],[],[],[]]
-            program.FindLongestSubarray(new[] {"A", "1"});
+            program.CheckInclusion("abc", "bbbca");
+            program.FindLongestSubarray(new[]
+                {"A", "1", "B", "C", "D", "2", "3", "4", "E", "5", "F", "G", "6", "7", "H", "I", "J", "K", "L", "M"});
             var test = new TreeNode(0);
             test.left = new TreeNode(0);
             test.left.left = new TreeNode(0);
@@ -3658,26 +3660,14 @@ namespace leetcode
                 return string.Empty;
             }
 
-            Dictionary<char, int> dic = new Dictionary<char, int>(), subStr = new Dictionary<char, int>();
-            foreach (var ch in t)
-            {
-                if (dic.ContainsKey(ch))
-                {
-                    dic[ch]++;
-                }
-                else
-                {
-                    dic[ch] = 1;
-                }
-            }
-
+            var dic = t.GroupBy(c => c).ToDictionary(g => g.Key, g => g.Count());
             int start = 0, end = 0, minStart = 0, minLen = int.MaxValue;
             while (end < s.Length)
             {
                 var ch = s[end];
-                if (dic.ContainsKey(ch))
+                if (dic.TryGetValue(ch,out var count))
                 {
-                    dic[ch]--;
+                    dic[ch] = count - 1;
                 }
 
                 while (start <= end && dic.All(kv => kv.Value <= 0))
@@ -3707,7 +3697,6 @@ namespace leetcode
             }
 
             return minLen <= s.Length ? s.Substring(minStart, minLen) : string.Empty;
-            //return subStr.Count < set.Count ? string.Empty : s.Substring(start, len);
         }
 
         #endregion
@@ -5627,7 +5616,7 @@ namespace leetcode
         }
 
         #endregion
-        
+
         #region 131. 分割回文串
 
         //https://leetcode-cn.com/problems/palindrome-partitioning/

@@ -18,7 +18,7 @@ namespace leetcode
         {
             if (array.Length <= 0)
             {
-                return new[] { -1, -1 };
+                return new[] {-1, -1};
             }
 
             //1 5 3 7
@@ -45,7 +45,7 @@ namespace leetcode
                 }
             }
 
-            return new[] { left, right };
+            return new[] {left, right};
         }
 
         #endregion
@@ -68,7 +68,7 @@ namespace leetcode
                 var step = i == 5 || i == 7 ? 4 : 3;
                 while (step != 0)
                 {
-                    chars.Add((char)('a' + j));
+                    chars.Add((char) ('a' + j));
                     j++;
                     step--;
                 }
@@ -1167,7 +1167,7 @@ namespace leetcode
         {
             //大  找到1和高于1位的0交换 后面的1排到最后
             //小 找到0和高于0位的1交换 后面的1排到最前
-            var res = new int[] { -1, -1 };
+            var res = new int[] {-1, -1};
             int val = num, flagBit = -1, bit = 0, oneSize = 0;
             while (val != 0)
             {
@@ -1286,7 +1286,7 @@ namespace leetcode
                 }
 
                 visited[x, y] = true;
-                path.Add(new[] { x, y });
+                path.Add(new[] {x, y});
                 if (x == targetX && y == targetY)
                 {
                     return true;
@@ -1305,7 +1305,7 @@ namespace leetcode
             IList<IList<int>> Dp()
             {
                 var paths = new IList<IList<int>>[obstacleGrid.Length, obstacleGrid[0].Length];
-                paths[0, 0] = new IList<int>[] { new[] { 0, 0 } };
+                paths[0, 0] = new IList<int>[] {new[] {0, 0}};
                 for (int i = 0; i <= targetX; i++)
                 {
                     for (int j = 0; j <= targetY; j++)
@@ -1325,7 +1325,7 @@ namespace leetcode
                             {
                                 if (paths[i, j - 1].Count > 0)
                                 {
-                                    var newPath = new List<IList<int>>(paths[i, j - 1]) { new[] { i, j } };
+                                    var newPath = new List<IList<int>>(paths[i, j - 1]) {new[] {i, j}};
                                     paths[i, j] = newPath;
                                 }
                                 else
@@ -1336,7 +1336,7 @@ namespace leetcode
                             else if (j == 0)
                             {
                                 paths[i, j] = paths[i - 1, j].Count > 0
-                                    ? new List<IList<int>>(paths[i - 1, j]) { new[] { i, j } }
+                                    ? new List<IList<int>>(paths[i - 1, j]) {new[] {i, j}}
                                     : paths[i - 1, j];
                             }
                             else
@@ -1347,17 +1347,17 @@ namespace leetcode
                                 }
                                 else if (paths[i - 1, j].Count <= 0)
                                 {
-                                    paths[i, j] = new List<IList<int>>(paths[i, j - 1]) { new[] { i, j } };
+                                    paths[i, j] = new List<IList<int>>(paths[i, j - 1]) {new[] {i, j}};
                                 }
                                 else if (paths[i, j - 1].Count <= 0)
                                 {
-                                    paths[i, j] = new List<IList<int>>(paths[i - 1, j]) { new[] { i, j } };
+                                    paths[i, j] = new List<IList<int>>(paths[i - 1, j]) {new[] {i, j}};
                                 }
                                 else
                                 {
                                     paths[i, j] = new List<IList<int>>(paths[i - 1, j].Count > paths[i, j - 1].Count
                                         ? paths[i, j - 1]
-                                        : paths[i - 1, j]) { new[] { i, j } };
+                                        : paths[i - 1, j]) {new[] {i, j}};
                                 }
                             }
                         }
@@ -1513,12 +1513,12 @@ namespace leetcode
 
             if (confilct < 0)
             {
-                return new[] { edges[cycle][0], edges[cycle][1] };
+                return new[] {edges[cycle][0], edges[cycle][1]};
             }
 
             return cycle < 0
-                ? new[] { edges[confilct][0], edges[confilct][1] }
-                : new[] { parents[edges[confilct][1]], edges[confilct][1] };
+                ? new[] {edges[confilct][0], edges[confilct][1]}
+                : new[] {parents[edges[confilct][1]], edges[confilct][1]};
         }
 
         #endregion
@@ -2303,7 +2303,7 @@ namespace leetcode
             {
                 if (node == null)
                 {
-                    return new[] { int.MaxValue / 2, 0, 0 };
+                    return new[] {int.MaxValue / 2, 0, 0};
                 }
 
                 var left = Dfs(node.left);
@@ -2370,7 +2370,7 @@ namespace leetcode
             //0xaaaaaaaa 奇数位全为1数
             //0x55555555 偶数位全为1数
             //&操作保留奇数位和偶数位，同时偶数位左移和奇数位右移得到最后结果
-            return (int)(((num & 0xaaaaaaaa) >> 1) | ((num & 0x55555555) << 1));
+            return (int) (((num & 0xaaaaaaaa) >> 1) | ((num & 0x55555555) << 1));
         }
 
         #endregion
@@ -2803,53 +2803,8 @@ namespace leetcode
 
         #endregion
 
-        #region 面试题 17.05.  字母与数字
-
-        //https://leetcode-cn.com/problems/find-longest-subarray-lcci/
-        public string[] FindLongestSubarray(string[] array)
-        {
-            int[] nums = new int[array.Length + 1], letters = new int[array.Length + 1];
-            for (var i = 1; i <= array.Length; i++)
-            {
-                if (char.IsDigit(array[i - 1][0]))
-                {
-                    nums[i] = nums[i - 1] + 1;
-                    letters[i] = letters[i - 1];
-                }
-                else
-                {
-                    letters[i] = letters[i - 1] + 1;
-                    nums[i] = nums[i - 1];
-                }
-            }
-
-            int len = int.MinValue, index = -1;
-            for (int l = array.Length % 2 == 0 ? array.Length : array.Length - 1; l > 1 && l > len; l -= 2)
-            {
-                for (int i = 0, j = i + l; j <= array.Length && l > len; i++, j++)
-                {
-                    int ncount = nums[j] - nums[i], lcount = letters[j] - letters[i];
-                    if (ncount == lcount && l > len)
-                    {
-                        len = l;
-                        index = i;
-                    }
-                }
-            }
-
-            if (len <= 0)
-            {
-                return new string[0];
-            }
-
-            var result = new string[len];
-            Array.Copy(array, index, result, 0, len);
-            return result;
-        }
-
-        #endregion
-
         #region 501. 二叉搜索树中的众数
+
         //https://leetcode-cn.com/problems/find-mode-in-binary-search-tree/
         public int[] FindMode(TreeNode root)
         {
@@ -2857,6 +2812,7 @@ namespace leetcode
             {
                 return new int[0];
             }
+
             var res = new List<int>();
             int max = 0, count = 0;
             var stack = new Stack<TreeNode>();
@@ -2868,6 +2824,7 @@ namespace leetcode
                     stack.Push(root);
                     root = root.left;
                 }
+
                 root = stack.Pop();
 
                 if (prev == null || prev.val == root.val)
@@ -2878,6 +2835,7 @@ namespace leetcode
                 {
                     count = 1;
                 }
+
                 if (count == max)
                 {
                     res.Add(root.val);
@@ -2888,11 +2846,168 @@ namespace leetcode
                     res.Clear();
                     res.Add(root.val);
                 }
+
                 prev = root;
                 root = root.right;
             }
+
             return res.ToArray();
         }
+
+        #endregion
+
+
+        #region 面试题 17.05.  字母与数字
+
+        //https://leetcode-cn.com/problems/find-longest-subarray-lcci/
+        public string[] FindLongestSubarray(string[] array)
+        {
+            //暴力解
+            string[] Force()
+            {
+                int[] nums = new int[array.Length + 1], letters = new int[array.Length + 1];
+                for (var i = 1; i <= array.Length; i++)
+                {
+                    if (char.IsDigit(array[i - 1][0]))
+                    {
+                        nums[i] = nums[i - 1] + 1;
+                        letters[i] = letters[i - 1];
+                    }
+                    else
+                    {
+                        letters[i] = letters[i - 1] + 1;
+                        nums[i] = nums[i - 1];
+                    }
+                }
+
+                int len = int.MinValue, index = -1;
+                for (int l = array.Length % 2 == 0 ? array.Length : array.Length - 1; l > 1 && l > len; l -= 2)
+                {
+                    for (int i = 0, j = i + l; j <= array.Length && l > len; i++, j++)
+                    {
+                        int ncount = nums[j] - nums[i], lcount = letters[j] - letters[i];
+                        if (ncount == lcount && l > len)
+                        {
+                            len = l;
+                            index = i;
+                        }
+                    }
+                }
+
+                if (len <= 0)
+                {
+                    return new string[0];
+                }
+
+                var result = new string[len];
+                Array.Copy(array, index, result, 0, len);
+                return result;
+            }
+
+            //前缀和
+            string[] PrefixSum()
+            {
+                var dict = new Dictionary<int, int>();
+                int len = int.MinValue, index = -1, count = 0;
+                for (var i = 0; i < array.Length; i++)
+                {
+                    var isNum = char.IsDigit(array[i][0]);
+                    count += isNum ? 1 : -1;
+                    if (dict.TryGetValue(count, out var s) || count == 0)
+                    {
+                        if (count == 0)
+                        {
+                            s = -1;
+                        }
+
+                        var cur = i - s;
+                        if (cur > len)
+                        {
+                            len = cur;
+                            index = s > -1 && isNum == char.IsDigit(array[s][0]) ? s : s + 1;
+                        }
+                    }
+                    else
+                    {
+                        dict[count] = i;
+                    }
+                }
+
+                if (len <= 0)
+                {
+                    return count == 0 ? array : new string[0];
+                }
+
+                var result = new string[len];
+                Array.Copy(array, index, result, 0, len);
+                return result;
+            }
+
+            return PrefixSum();
+        }
+
+        #endregion
+
+        #region 567. 字符串的排列
+
+        //https://leetcode-cn.com/problems/permutation-in-string/
+        public bool CheckInclusion(string s1, string s2)
+        {
+            if (s1.Length > s2.Length)
+            {
+                return false;
+            }
+
+            var dict = s1.GroupBy(c => c).ToDictionary(g => g.Key, g => g.Count());
+            var sub = new Dictionary<char, int>();
+            int size = 0, n;
+            for (int i = 0, j = 0; i < s2.Length; i++)
+            {
+                var c = s2[i];
+                if (dict.ContainsKey(c))
+                {
+                    if (sub.TryGetValue(c, out n))
+                    {
+                        n++;
+                    }
+                    else
+                    {
+                        n = 1;
+                    }
+
+                    sub[c] = n;
+                    if (dict[c] == n)
+                    {
+                        size++;
+                    }
+                }
+
+                var len = i - j + 1;
+                if (len < s1.Length)
+                {
+                    continue;
+                }
+
+                if (size == dict.Count)
+                {
+                    return true;
+                }
+
+                c = s2[j++];
+                if (sub.TryGetValue(c, out n))
+                {
+                    if (n == dict[c])
+                    {
+                        size--;
+                    }
+
+                    sub[c] = n - 1;
+                }
+            }
+
+            return false;
+        }
+
         #endregion
     }
 }
