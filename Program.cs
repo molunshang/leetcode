@@ -31,7 +31,9 @@ namespace leetcode
         static void Main(string[] args)
         {
             //[[],[],[],[]]
-            program.CheckInclusion("abc", "bbbca");
+            //
+            
+            program.OpenLock(JsonConvert.DeserializeObject<string[]>("[\"0201\",\"0101\",\"0102\",\"1212\",\"2002\"]"),"0202");
             program.FindLongestSubarray(new[]
                 {"A", "1", "B", "C", "D", "2", "3", "4", "E", "5", "F", "G", "6", "7", "H", "I", "J", "K", "L", "M"});
             var test = new TreeNode(0);

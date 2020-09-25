@@ -1958,7 +1958,28 @@ namespace leetcode
                 return root;
             }
 
-            return Dfs(0, inorder.Length - 1, 0, postorder.Length - 1);
+            var indexDict = new Dictionary<int, int>();
+            for (var i = 0; i < inorder.Length; i++)
+            {
+                indexDict[inorder[i]] = i;
+            }
+
+            var rootIndex = postorder.Length - 1;
+
+            TreeNode BuildTree(int l, int r)
+            {
+                if (l > r)
+                {
+                    return null;
+                }
+
+                var root = new TreeNode(postorder[rootIndex--]);
+                root.right = BuildTree(indexDict[root.val] + 1, r);
+                root.left = BuildTree(l, indexDict[root.val] - 1);
+                return root;
+            }
+
+            return BuildTree(0, rootIndex) ?? Dfs(0, inorder.Length - 1, 0, postorder.Length - 1);
         }
 
         #endregion
@@ -3006,6 +3027,121 @@ namespace leetcode
             }
 
             return false;
+        }
+
+        #endregion
+
+        #region 1288. 删除被覆盖区间
+
+        //https://leetcode-cn.com/problems/remove-covered-intervals/
+        public int RemoveCoveredIntervals(int[][] intervals)
+        {
+            if (intervals.Length <= 1)
+            {
+                return 0;
+            }
+
+            Array.Sort(intervals, Comparer<int[]>.Create((a, b) =>
+            {
+                var cmp = a[0] - b[0];
+                return cmp == 0 ? b[1] - a[1] : cmp;
+            }));
+            int i = 1, j = 0, count = 0;
+            while (i < intervals.Length)
+            {
+                int[] prev = intervals[j], cur = intervals[i];
+                if (cur[0] >= prev[0] && cur[1] <= prev[1])
+                {
+                    count++;
+                }
+                else
+                {
+                    j = i;
+                }
+
+                i++;
+            }
+
+            return intervals.Length - count;
+        }
+
+        #endregion
+
+        #region 986. 区间列表的交集
+
+        //https://leetcode-cn.com/problems/interval-list-intersections/
+        public int[][] IntervalIntersection(int[][] a, int[][] b)
+        {
+            var result = new List<int[]>();
+            int i = 0, j = 0;
+            while (i < a.Length && j < b.Length)
+            {
+                int[] arrA = a[i], arrB = b[j];
+                if (arrA[0] <= arrB[1] && arrA[1] >= arrB[0])
+                {
+                    //交集<=集合数，只可能在最大起点和最小终点
+                    result.Add(new[] {Math.Max(arrA[0], arrB[0]), Math.Min(arrA[1], arrB[1])});
+                }
+
+                //保留大的区间
+                if (arrA[1] < arrB[1])
+                {
+                    i++;
+                }
+                else
+                {
+                    j++;
+                }
+            }
+
+            return result.ToArray();
+        }
+
+        #endregion
+
+        #region 752. 打开转盘锁
+
+        //https://leetcode-cn.com/problems/open-the-lock/
+        public int OpenLock(string[] deadends, string target)
+        {
+            var set = new HashSet<string>(deadends);
+            if (set.Contains(target) || set.Contains("0000"))
+            {
+                return -1;
+            }
+
+            var queue = new Queue<string>();
+            queue.Enqueue("0000");
+            var step = 0;
+            while (queue.Count > 0)
+            {
+                for (int i = 0, c = queue.Count; i < c; i++)
+                {
+                    var start = queue.Dequeue();
+                    if (start == target)
+                    {
+                        return step;
+                    }
+
+                    for (var j = 0; j < start.Length; j++)
+                    {
+                        for (int s = -1; s < 2; s += 2)
+                        {
+                            var next = start.ToArray();
+                            next[j] = (char) ((next[j] - '0' + s + 10) % 10 + '0');
+                            var str = new string(next);
+                            if (set.Add(str))
+                            {
+                                queue.Enqueue(str);
+                            }
+                        }
+                    }
+                }
+
+                step++;
+            }
+
+            return -1;
         }
 
         #endregion
