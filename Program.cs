@@ -2355,9 +2355,10 @@ namespace leetcode
 
         #endregion
 
-        #region 面试题68 - II. 二叉树的最近公共祖先/面试题 04.08. 首个共同祖先
+        #region 面试题68 - II. 二叉树的最近公共祖先/面试题 04.08. 首个共同祖先/236. 二叉树的最近公共祖先
 
         //https://leetcode-cn.com/problems/er-cha-shu-de-zui-jin-gong-gong-zu-xian-lcof/
+        //https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/
 
         public bool FindChild(TreeNode root, TreeNode child)
         {
@@ -2392,7 +2393,7 @@ namespace leetcode
             TreeNode node = LowestCommonAncestorII(root.right, p, q);
             if (node == null)
             {
-                node = LowestCommonAncestorII(root.right, p, q);
+                node = LowestCommonAncestorII(root.left, p, q);
             }
 
             if (node != null)
@@ -2403,6 +2404,30 @@ namespace leetcode
             //该二叉树非二叉搜索树，无法判断节点分布在哪个子树，需要分别在左右子树进行搜索
             //如果左右子树分布搜索都没有，说明分布在左右子树，此时由该根节点搜索两个节点            
             return FindChild(root, p) && FindChild(root, q) ? root : null;
+        }
+
+        public TreeNode LowestCommonAncestorOn(TreeNode root, TreeNode p, TreeNode q)
+        {
+            while (true)
+            {
+                if (root == null)
+                {
+                    return null;
+                }
+
+                if (root == p || root == q)
+                {
+                    return root;
+                }
+
+                TreeNode left = LowestCommonAncestorOn(root.left, p, q), right = LowestCommonAncestorOn(root.right, p, q);
+                if (left != null && right != null)
+                {
+                    return root;
+                }
+
+                root = left ?? right;
+            }
         }
 
         #endregion
@@ -8438,44 +8463,6 @@ namespace leetcode
                 start++;
                 end--;
             }
-        }
-
-        #endregion
-
-        #region 416. 分割等和子集
-
-        //https://leetcode-cn.com/problems/partition-equal-subset-sum/
-        bool CanPartition(int index, int[] nums, int prevSum, int sum)
-        {
-            if (index <= 0 || prevSum < 0 || sum < 0)
-            {
-                return false;
-            }
-
-            if (prevSum == 0 || sum == 0)
-            {
-                return true;
-            }
-
-            return CanPartition(index - 1, nums, prevSum - nums[index], sum) ||
-                   CanPartition(index - 1, nums, prevSum, sum - nums[index]);
-        }
-
-        public bool CanPartition(int[] nums)
-        {
-            if (nums.Length <= 1)
-            {
-                return false;
-            }
-
-            var sum = nums.Sum();
-            if (sum % 2 == 1)
-            {
-                return false;
-            }
-
-            Array.Sort(nums);
-            return CanPartition(nums.Length - 1, nums, sum / 2, sum / 2);
         }
 
         #endregion
