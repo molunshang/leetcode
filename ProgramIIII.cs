@@ -3194,6 +3194,7 @@ namespace leetcode
             {
                 return n == 1 ? 10 : 1;
             }
+
             var count = 9;
             for (int i = 1; i < n; i++)
             {
@@ -3201,6 +3202,54 @@ namespace leetcode
             }
 
             return count + CountNumbersWithUniqueDigits(n - 1);
+        }
+
+        #endregion
+
+        #region 650. 只有两个键的键盘
+
+        //https://leetcode-cn.com/problems/2-keys-keyboard/
+        public int MinSteps(int n)
+        {
+            var cache = new Dictionary<string, int>();
+
+            int Dfs(int num, int copy)
+            {
+                if (num >= n)
+                {
+                    return num == n ? 0 : int.MaxValue;
+                }
+
+                var key = num + "," + copy;
+                if (cache.TryGetValue(key, out var res))
+                {
+                    return res;
+                }
+
+                //copy
+                //paste
+                res = int.MaxValue;
+                if (copy > 0) //已经有复制，直接粘贴
+                {
+                    var step = Dfs(num + copy, copy);
+                    if (step != int.MaxValue)
+                    {
+                        res = step + 1;
+                    }
+                }
+
+                //复制粘贴
+                var s = Dfs(num + num, num);
+                if (s != int.MaxValue)
+                {
+                    res = Math.Min(res, s + 2);
+                }
+
+                cache[key] = res;
+                return res;
+            }
+
+            return Dfs(1, 0);
         }
 
         #endregion
