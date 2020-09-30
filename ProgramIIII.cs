@@ -700,7 +700,6 @@ namespace leetcode
             }
 
             var stack = new Stack<TreeNode>();
-            var visited = new HashSet<TreeNode>();
             while (root != null || stack.Count > 0)
             {
                 while (root != null)
@@ -709,16 +708,17 @@ namespace leetcode
                     root = root.left;
                 }
 
-                root = stack.Peek();
-                if (root.right == null || visited.Contains(root))
+                root = stack.Pop();
+                if (root == null)
                 {
-                    stack.Pop();
+                    root = stack.Pop();
                     result.Add(root.val);
                     root = null;
                 }
                 else
                 {
-                    visited.Add(root);
+                    stack.Push(root);
+                    stack.Push(null);
                     root = root.right;
                 }
             }
@@ -3250,6 +3250,81 @@ namespace leetcode
             }
 
             return Dfs(1, 0);
+        }
+
+        #endregion
+
+        #region 876. 链表的中间结点
+
+        //https://leetcode-cn.com/problems/middle-of-the-linked-list/
+        public ListNode MiddleNode(ListNode head)
+        {
+            if (head == null)
+            {
+                return null;
+            }
+
+            ListNode slow = head, fast = head;
+            while (fast != null && fast.next != null)
+            {
+                slow = slow.next;
+                fast = fast.next.next;
+            }
+
+            return slow;
+        }
+
+        #endregion
+
+        #region 445. 两数相加 II
+
+        //https://leetcode-cn.com/problems/add-two-numbers-ii/
+        public ListNode AddTwoNumbersII(ListNode l1, ListNode l2)
+        {
+            Stack<int> n1 = new Stack<int>(), n2 = new Stack<int>();
+            while (l1 != null || l2 != null)
+            {
+                if (l1 != null)
+                {
+                    n1.Push(l1.val);
+                    l1 = l1.next;
+                }
+
+                if (l2 != null)
+                {
+                    n2.Push(l2.val);
+                    l2 = l2.next;
+                }
+            }
+
+            ListNode newNode = null;
+            var num = 0;
+            while (n1.Count > 0 || n2.Count > 0)
+            {
+                if (n1.Count > 0)
+                {
+                    num += n1.Pop();
+                }
+
+                if (n2.Count > 0)
+                {
+                    num += n2.Pop();
+                }
+
+                var node = new ListNode(num) {next = newNode};
+                newNode = node;
+                if (node.val >= 10)
+                {
+                    node.val -= 10;
+                    num = 1;
+                }
+                else
+                {
+                    num = 0;
+                }
+            }
+
+            return num == 0 ? newNode : new ListNode(num) {next = newNode};
         }
 
         #endregion
