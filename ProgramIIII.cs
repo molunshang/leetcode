@@ -3328,5 +3328,39 @@ namespace leetcode
         }
 
         #endregion
+
+        #region LCP 19. 秋叶收藏集
+
+        //https://leetcode-cn.com/problems/UlBDOe/
+        public int MinimumOperations(string leaves)
+        {
+            //3种情况：0前面部分变成红色 1中间部分变成黄色 2后面部分变成红色
+            int prefixRed = leaves[0] == 'r' ? 0 : 1, middleYellow = int.MaxValue, suffixRed = int.MaxValue;
+            for (int i = 1; i < leaves.Length; i++)
+            {
+                int red = leaves[i] == 'r' ? 0 : 1, yellow = leaves[i] == 'y' ? 0 : 1;
+                if (i > 1)
+                {
+                    suffixRed = Math.Min(middleYellow, suffixRed) + red;//后面红色两种情况：前面是黄色或者前面已经变成红色
+                }
+                middleYellow = Math.Min(prefixRed, middleYellow) + yellow;//中间黄色两种情况：前面是红色或前面已经变成黄色
+                prefixRed += red;//前面部分变成红色只有一种情况
+            }
+
+            return suffixRed;
+        }
+
+        #endregion
+
+        #region 771. 宝石与石头
+
+        //https://leetcode-cn.com/problems/jewels-and-stones/
+        public int NumJewelsInStones(string J, string S)
+        {
+            var set = J.ToHashSet();
+            return S.Count(c => set.Contains(c));
+        }
+
+        #endregion
     }
 }
