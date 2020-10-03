@@ -3341,10 +3341,11 @@ namespace leetcode
                 int red = leaves[i] == 'r' ? 0 : 1, yellow = leaves[i] == 'y' ? 0 : 1;
                 if (i > 1)
                 {
-                    suffixRed = Math.Min(middleYellow, suffixRed) + red;//后面红色两种情况：前面是黄色或者前面已经变成红色
+                    suffixRed = Math.Min(middleYellow, suffixRed) + red; //后面红色两种情况：前面是黄色或者前面已经变成红色
                 }
-                middleYellow = Math.Min(prefixRed, middleYellow) + yellow;//中间黄色两种情况：前面是红色或前面已经变成黄色
-                prefixRed += red;//前面部分变成红色只有一种情况
+
+                middleYellow = Math.Min(prefixRed, middleYellow) + yellow; //中间黄色两种情况：前面是红色或前面已经变成黄色
+                prefixRed += red; //前面部分变成红色只有一种情况
             }
 
             return suffixRed;
@@ -3359,6 +3360,40 @@ namespace leetcode
         {
             var set = J.ToHashSet();
             return S.Count(c => set.Contains(c));
+        }
+
+        #endregion
+
+        #region 797. 所有可能的路径
+
+        //https://leetcode-cn.com/problems/all-paths-from-source-to-target/
+        public IList<IList<int>> AllPathsSourceTarget(int[][] graph)
+        {
+            var result = new List<IList<int>>();
+            var path = new List<int>();
+            var end = graph.Length - 1;
+
+            void Dfs(int node)
+            {
+                path.Add(node);
+                if (node == end)
+                {
+                    result.Add(path.ToArray());
+                }
+                else
+                {
+                    var next = graph[node];
+                    foreach (var n in next)
+                    {
+                        Dfs(n);
+                    }
+                }
+
+                path.RemoveAt(path.Count - 1);
+            }
+
+            Dfs(0);
+            return result;
         }
 
         #endregion
