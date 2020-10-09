@@ -145,5 +145,166 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 面试题 17.12. BiNode
+
+        //https://leetcode-cn.com/problems/binode-lcci/
+        public TreeNode ConvertBiNode(TreeNode root)
+        {
+            if (root == null)
+            {
+                return null;
+            }
+
+            var stack = new Stack<TreeNode>();
+            var result = new TreeNode(-1);
+            var head = result;
+            while (stack.Count > 0 || root != null)
+            {
+                while (root != null)
+                {
+                    stack.Push(root);
+                    root = root.left;
+                }
+
+                root = stack.Pop();
+                root.left = null;
+                head.right = root;
+                head = head.right;
+                root = root.right;
+            }
+
+            return result.right;
+        }
+
+        #endregion
+
+        #region 508. 出现次数最多的子树元素和
+
+        //https://leetcode-cn.com/problems/most-frequent-subtree-sum/
+        public int[] FindFrequentTreeSum(TreeNode root)
+        {
+            var counter = new Dictionary<int, int>();
+            var max = 0;
+
+            int TreeSum(TreeNode node)
+            {
+                if (node == null)
+                {
+                    return 0;
+                }
+
+                var sum = node.val + TreeSum(node.left) + TreeSum(node.right);
+                if (counter.TryGetValue(sum, out var count))
+                {
+                    count++;
+                }
+                else
+                {
+                    count = 1;
+                }
+
+                max = Math.Max(count, max);
+                counter[sum] = count;
+                return sum;
+            }
+
+            TreeSum(root);
+            return counter.Where(kv => kv.Value == max).Select(kv => kv.Key).ToArray();
+        }
+
+        #endregion
+
+        #region 589. N叉树的前序遍历
+
+        //https://leetcode-cn.com/problems/n-ary-tree-preorder-traversal/
+        public IList<int> Preorder(Node root)
+        {
+            var result = new List<int>();
+
+            void Dfs(Node node)
+            {
+                if (node == null)
+                {
+                    return;
+                }
+
+                result.Add(node.val);
+                if (node.children != null && node.children.Count > 0)
+                {
+                    foreach (var child in node.children)
+                    {
+                        Dfs(child);
+                    }
+                }
+            }
+
+            Dfs(root);
+            return result;
+        }
+
+        #endregion
+
+        #region 590. N叉树的后序遍历
+
+        //https://leetcode-cn.com/problems/n-ary-tree-postorder-traversal/
+        public IList<int> Postorder(Node root)
+        {
+            var result = new List<int>();
+
+            void Dfs(Node node)
+            {
+                if (node == null)
+                {
+                    return;
+                }
+
+                if (node.children != null && node.children.Count > 0)
+                {
+                    foreach (var child in node.children)
+                    {
+                        Dfs(child);
+                    }
+                }
+
+                result.Add(node.val);
+            }
+
+            Dfs(root);
+            return result;
+        }
+
+        #endregion
+
+        #region 513. 找树左下角的值
+
+        //https://leetcode-cn.com/problems/find-bottom-left-tree-value/
+        public int FindBottomLeftValue(TreeNode root)
+        {
+            var res = root.val;
+            var queue = new Queue<TreeNode>();
+            queue.Enqueue(root);
+            while (queue.Count > 0)
+            {
+                res = queue.Peek().val;
+                for (int i = 0, j = queue.Count; i < j; i++)
+                {
+                    root = queue.Dequeue();
+                    if (root.left != null)
+                    {
+                        queue.Enqueue(root.left);
+                    }
+
+                    if (root.right != null)
+                    {
+                        queue.Enqueue(root.right);
+                    }
+                }
+            }
+
+            return res;
+        }
+
+        #endregion
     }
 }
