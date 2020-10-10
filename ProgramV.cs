@@ -306,5 +306,33 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 645. 错误的集合
+
+        //https://leetcode-cn.com/problems/set-mismatch/
+        public int[] FindErrorNums(int[] nums)
+        {
+            var set = new HashSet<int>();
+            int duplicate = 0, miss = 0;
+            foreach (var num in nums)
+            {
+                if (!set.Add(num))
+                {
+                    duplicate = num;
+                }
+            }
+
+            for (var i = 1; i <= nums.Length; i++)
+            {
+                if (set.Contains(i)) 
+                    continue;
+                miss = i;
+                break;
+            }
+
+            return new[] {duplicate, miss};
+        }
+
+        #endregion
     }
 }
