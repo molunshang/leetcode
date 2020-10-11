@@ -3145,46 +3145,7 @@ namespace leetcode
         }
 
         #endregion
-
-
-        #region 416. 分割等和子集
-
-        //https://leetcode-cn.com/problems/partition-equal-subset-sum/
-        bool CanPartition(int index, int[] nums, int prevSum, int sum)
-        {
-            if (index < 0 || prevSum < 0 || sum < 0)
-            {
-                return false;
-            }
-
-            if (prevSum == 0 || sum == 0)
-            {
-                return true;
-            }
-
-            return CanPartition(index - 1, nums, prevSum - nums[index], sum) ||
-                   CanPartition(index - 1, nums, prevSum, sum - nums[index]);
-        }
-
-        public bool CanPartition(int[] nums)
-        {
-            if (nums.Length <= 1)
-            {
-                return false;
-            }
-
-            var sum = nums.Sum();
-            if (sum % 2 == 1)
-            {
-                return false;
-            }
-
-            Array.Sort(nums);
-            return CanPartition(nums.Length - 1, nums, sum / 2, sum / 2);
-        }
-
-        #endregion
-
+ 
         #region 357. 计算各个位数不同的数字个数
 
         //https://leetcode-cn.com/problems/count-numbers-with-unique-digits/

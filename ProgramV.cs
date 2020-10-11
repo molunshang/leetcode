@@ -324,15 +324,124 @@ namespace leetcode
 
             for (var i = 1; i <= nums.Length; i++)
             {
-                if (set.Contains(i)) 
+                if (set.Contains(i))
                     continue;
                 miss = i;
                 break;
             }
 
-            return new[] {duplicate, miss};
+            return new[] { duplicate, miss };
         }
 
         #endregion
+
+        #region 416. 分割等和子集
+
+        //https://leetcode-cn.com/problems/partition-equal-subset-sum/
+
+        public bool CanPartition(int[] nums)
+        {
+            if (nums.Length <= 1)
+            {
+                return false;
+            }
+            int sum = 0, max = int.MinValue;
+            foreach (var num in nums)
+            {
+                sum += num;
+                max = Math.Max(max, num);
+            }
+            if (sum % 2 == 1)
+            {
+                return false;
+            }
+            var target = sum / 2;
+            if (target < max)
+            {
+                return false;
+            }
+            //回溯
+            var cache = new Dictionary<string, bool>();
+            bool Dfs(int i, int prev)
+            {
+                if (prev <= 0 || i >= nums.Length)
+                {
+                    return prev == 0;
+                }
+                var key = i + "," + prev;
+                if (cache.TryGetValue(key, out var res))
+                {
+                    return res;
+                }
+                res = Dfs(i + 1, prev) || Dfs(i + 1, prev - nums[i]);
+                cache[key] = res;
+                return res;
+            }
+            //动态规划
+            bool Dp()
+            {
+
+                var flag = new bool[nums.Length, target + 1];
+                //任意区间不选择数字，结果是0
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    flag[i, 0] = true;
+                }
+                //只能选择1个，结果是nums[0]
+                flag[0, nums[0]] = true;
+                for (int i = 1; i <= target; i++)
+                {
+                    for (int j = 1; j < nums.Length; j++)
+                    {
+                        if (nums[j] > i)//不能选择
+                        {
+                            flag[j, i] = flag[j - 1, i];
+                        }
+                        else
+                        {
+                            flag[j, i] = flag[j - 1, i] || flag[j - 1, i - nums[j]];
+                        }
+                    }
+                }
+                return flag[nums.Length - 1, target];
+            }
+            return Dfs(0, target);
+        }
+
+        #endregion
+
+        #region 530. 二叉搜索树的最小绝对差
+        //https://leetcode-cn.com/problems/minimum-absolute-difference-in-bst/
+        public int GetMinimumDifference(TreeNode root)
+        {
+            if (root == null)
+            {
+                return 0;
+            }
+            int ans = int.MaxValue, prev = -1;
+            var stack = new Stack<TreeNode>();
+            while (root != null || stack.Count > 0)
+            {
+                while (root != null)
+                {
+                    stack.Push(root);
+                    root = root.left;
+                }
+                root = stack.Pop();
+                if (prev < 0)
+                {
+                    prev = root.val;
+                }
+                else
+                {
+                    ans = Math.Min(ans, root.val - prev);
+                    prev = root.val;
+                }
+                root = root.right;
+            }
+            return ans;
+        }
+        #endregion
+
     }
 }
