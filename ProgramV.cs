@@ -330,7 +330,7 @@ namespace leetcode
                 break;
             }
 
-            return new[] { duplicate, miss };
+            return new[] {duplicate, miss};
         }
 
         #endregion
@@ -345,55 +345,63 @@ namespace leetcode
             {
                 return false;
             }
+
             int sum = 0, max = int.MinValue;
             foreach (var num in nums)
             {
                 sum += num;
                 max = Math.Max(max, num);
             }
+
             if (sum % 2 == 1)
             {
                 return false;
             }
+
             var target = sum / 2;
             if (target < max)
             {
                 return false;
             }
+
             //回溯
             var cache = new Dictionary<string, bool>();
+
             bool Dfs(int i, int prev)
             {
                 if (prev <= 0 || i >= nums.Length)
                 {
                     return prev == 0;
                 }
+
                 var key = i + "," + prev;
                 if (cache.TryGetValue(key, out var res))
                 {
                     return res;
                 }
+
                 res = Dfs(i + 1, prev) || Dfs(i + 1, prev - nums[i]);
                 cache[key] = res;
                 return res;
             }
+
             //动态规划
             bool Dp()
             {
-
                 var flag = new bool[nums.Length, target + 1];
                 //任意区间不选择数字，结果是0
                 for (int i = 0; i < nums.Length; i++)
                 {
                     flag[i, 0] = true;
                 }
+
                 //只能选择1个，结果是nums[0]
                 flag[0, nums[0]] = true;
                 for (int i = 1; i <= target; i++)
                 {
                     for (int j = 1; j < nums.Length; j++)
                     {
-                        if (nums[j] > i)//不能选择
+                        if (nums[j] > i) //不能选择
                         {
                             flag[j, i] = flag[j - 1, i];
                         }
@@ -403,14 +411,17 @@ namespace leetcode
                         }
                     }
                 }
+
                 return flag[nums.Length - 1, target];
             }
+
             return Dfs(0, target);
         }
 
         #endregion
 
         #region 530. 二叉搜索树的最小绝对差
+
         //https://leetcode-cn.com/problems/minimum-absolute-difference-in-bst/
         public int GetMinimumDifference(TreeNode root)
         {
@@ -418,6 +429,7 @@ namespace leetcode
             {
                 return 0;
             }
+
             int ans = int.MaxValue, prev = -1;
             var stack = new Stack<TreeNode>();
             while (root != null || stack.Count > 0)
@@ -427,6 +439,7 @@ namespace leetcode
                     stack.Push(root);
                     root = root.left;
                 }
+
                 root = stack.Pop();
                 if (prev < 0)
                 {
@@ -437,11 +450,55 @@ namespace leetcode
                     ans = Math.Min(ans, root.val - prev);
                     prev = root.val;
                 }
+
                 root = root.right;
             }
+
             return ans;
         }
+
         #endregion
 
+        #region 532. 数组中的 k-diff 数对
+
+        //https://leetcode-cn.com/problems/k-diff-pairs-in-an-array/
+        class ArrayEqualityComparer : IEqualityComparer<int[]>
+        {
+            public bool Equals(int[] x, int[] y)
+            {
+                return x[0] == y[0] && x[1] == y[1];
+            }
+
+            public int GetHashCode(int[] obj)
+            {
+                return obj[0] << 16 | obj[1];
+            }
+        }
+
+
+        public int FindPairs(int[] nums, int k)
+        {
+            var set = new HashSet<int>();
+            var numSet = new HashSet<int[]>(new ArrayEqualityComparer());
+            foreach (var num in nums)
+            {
+                int t1 = num + k, t2 = num - k;
+                if (set.Contains(t1))
+                {
+                    numSet.Add(new[] {num, t1});
+                }
+
+                if (set.Contains(t2))
+                {
+                    numSet.Add(new[] {t2, num});
+                }
+
+                set.Add(num);
+            }
+
+            return numSet.Count;
+        }
+
+        #endregion
     }
 }
