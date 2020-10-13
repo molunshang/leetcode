@@ -500,5 +500,79 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 652. 寻找重复的子树
+
+        //https://leetcode-cn.com/problems/find-duplicate-subtrees/
+        public IList<TreeNode> FindDuplicateSubtrees(TreeNode root)
+        {
+            var res = new List<TreeNode>();
+            if (root == null)
+            {
+                return res;
+            }
+
+            var cache = new Dictionary<string, int>();
+
+            string Dfs(TreeNode node)
+            {
+                if (node == null)
+                {
+                    return "#";
+                }
+
+                var left = Dfs(node.left);
+                var right = Dfs(node.right);
+                var tree = left + "," + right + "," + node.val;
+                if (cache.TryGetValue(tree, out var count) && count == 1)
+                {
+                    res.Add(node);
+                }
+
+                cache[tree] = count + 1;
+                return tree;
+            }
+
+            Dfs(root);
+            return res;
+        }
+
+        #endregion
+
+        #region 606. 根据二叉树创建字符串
+
+        //https://leetcode-cn.com/problems/construct-string-from-binary-tree/
+        public string Tree2str(TreeNode t)
+        {
+            var sub = new StringBuilder();
+
+            void Dfs(TreeNode node)
+            {
+                if (node == null)
+                {
+                    return;
+                }
+
+                sub.Append(node.val);
+                if (node.left != null || node.right != null)
+                {
+                    sub.Append('(');
+                    Dfs(node.left);
+                    sub.Append(')');
+                }
+
+                if (node.right != null)
+                {
+                    sub.Append('(');
+                    Dfs(node.right);
+                    sub.Append(')');
+                }
+            }
+
+            Dfs(t);
+            return sub.ToString();
+        }
+
+        #endregion
     }
 }
