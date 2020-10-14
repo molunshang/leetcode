@@ -574,5 +574,87 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 115. 不同的子序列
+
+        //https://leetcode-cn.com/problems/distinct-subsequences/
+        public int NumDistinct(string s, string t)
+        {
+            var cache = new int?[s.Length, t.Length];
+
+            int Dfs(int i, int j)
+            {
+                if (j >= t.Length)
+                {
+                    return 1;
+                }
+
+                if (i >= s.Length)
+                {
+                    return 0;
+                }
+
+                if (cache[i, j].HasValue)
+                {
+                    return cache[i, j].Value;
+                }
+
+                var count = 0;
+                if (s[i] == t[j])
+                {
+                    count += Dfs(i + 1, j + 1);
+                }
+
+                count += Dfs(i + 1, j);
+                cache[i, j] = count;
+                return count;
+            }
+
+            return Dfs(0, 0);
+        }
+
+        #endregion
+
+        #region 403. 青蛙过河
+
+        //https://leetcode-cn.com/problems/frog-jump/
+        public bool CanCross(int[] stones)
+        {
+            var cache = new Dictionary<string, bool>();
+
+            bool Can(int i, int k)
+            {
+                if (i == stones.Length - 1)
+                {
+                    return true;
+                }
+
+                var key = i + "," + k;
+                if (cache.TryGetValue(key, out var flag))
+                {
+                    return flag;
+                }
+
+                for (int j = i + 1; j < stones.Length; j++)
+                {
+                    var gap = stones[j] - stones[i];
+                    if (gap >= k - 1 && gap <= k + 1)
+                    {
+                        if (Can(j, gap))
+                        {
+                            flag = true;
+                            break;
+                        }
+                    }
+                }
+
+                cache[key] = flag;
+                return flag;
+            }
+
+            return Can(0, 0);
+        }
+
+        #endregion
     }
 }
