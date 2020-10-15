@@ -656,5 +656,53 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 856. 括号的分数
+
+        //https://leetcode-cn.com/problems/score-of-parentheses/
+        public int ScoreOfParentheses(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return 0;
+            }
+
+            var stack = new Stack<int>();
+            foreach (var ch in s)
+            {
+                if (ch == '(')
+                {
+                    stack.Push(0);
+                }
+                else
+                {
+                    var top = stack.Pop();
+                    if (top == 0)
+                    {
+                        stack.Push(1);
+                    }
+                    else
+                    {
+                        var num = top;
+                        while (stack.TryPop(out top) && top != 0)
+                        {
+                            num += top;
+                        }
+
+                        stack.Push(num * 2);
+                    }
+                }
+            }
+
+            var result = 0;
+            while (stack.TryPop(out var n))
+            {
+                result += n;
+            }
+
+            return result;
+        }
+
+        #endregion
     }
 }
