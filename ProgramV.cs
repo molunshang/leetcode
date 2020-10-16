@@ -704,5 +704,172 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 377. 组合总和 Ⅳ
+
+        //https://leetcode-cn.com/problems/combination-sum-iv/
+        public int CombinationSum4(int[] nums, int target)
+        {
+            var cache = new Dictionary<int, int>();
+
+            int Helper(int num)
+            {
+                if (num <= 0)
+                {
+                    return num == 0 ? 1 : 0;
+                }
+
+                if (cache.TryGetValue(num, out var count))
+                {
+                    return count;
+                }
+
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    count += Helper(num - nums[i]);
+                }
+
+                cache[num] = count;
+                return count;
+            }
+
+            return Helper(target);
+        }
+
+        #endregion
+
+        #region 1475. 商品折扣后的最终价格
+
+        //https://leetcode-cn.com/problems/final-prices-with-a-special-discount-in-a-shop/
+        public int[] FinalPrices(int[] prices)
+        {
+            var vals = new int[prices.Length];
+
+            //暴力解
+            void Force()
+            {
+                for (int i = 0; i < prices.Length; i++)
+                {
+                    var price = prices[i];
+                    for (int j = i + 1; j < prices.Length; j++)
+                    {
+                        if (price < prices[j]) continue;
+                        price -= prices[j];
+                        break;
+                    }
+
+                    vals[i] = price;
+                }
+            }
+
+            void ByStack()
+            {
+                var stack = new Stack<int>();
+                for (int i = 0; i < prices.Length; i++)
+                {
+                    while (stack.TryPeek(out var j) && prices[j] >= prices[i])
+                    {
+                        vals[stack.Peek()] = prices[stack.Pop()] - prices[i];
+                    }
+
+                    stack.Push(i);
+                }
+
+                while (stack.TryPop(out var i))
+                {
+                    vals[i] = prices[i];
+                }
+            }
+
+            return vals;
+        }
+
+        #endregion
+
+        #region 914. 卡牌分组
+
+        //https://leetcode-cn.com/problems/x-of-a-kind-in-a-deck-of-cards/
+        public bool HasGroupsSizeX(int[] deck)
+        {
+            int Gcd(int x, int y)
+            {
+                while (true)
+                {
+                    if (x == 0)
+                    {
+                        return y;
+                    }
+
+                    var x1 = x;
+                    x = y % x;
+                    y = x1;
+                }
+            }
+
+            var dict = deck.GroupBy(d => d).ToDictionary(g => g.Key, g => g.Count());
+            if (dict.Count == 1)
+            {
+                return dict.First().Value > 1;
+            }
+
+            var gcd = dict.Aggregate(-1, (current, kv) => current == -1 ? kv.Value : Gcd(current, kv.Value));
+            return gcd > 1;
+        }
+
+        #endregion
+
+        #region 1177. 构建回文串检测
+
+        //https://leetcode-cn.com/problems/can-make-palindrome-from-substring/
+        public IList<bool> CanMakePaliQueries(string s, int[][] queries)
+        {
+            if (string.IsNullOrEmpty(s) || queries.Length <= 0)
+            {
+                return new bool[0];
+            }
+
+            var diffs = new int[s.Length][];
+            for (var i = 0; i < s.Length; i++)
+            {
+                diffs[i] = new int[26];
+                if (i != 0)
+                {
+                    Array.Copy(diffs[i - 1], diffs[i], 26);
+                }
+
+                diffs[i][s[i] - 'a']++;
+            }
+
+
+            bool Diff(int l, int r, int size)
+            {
+                if (r - l <= size)
+                {
+                    return true;
+                }
+                var diff = 0;
+                for (int i = 0; i < 26; i++)
+                {
+                    var count = l == 0 ? diffs[r][i] : diffs[r][i] - diffs[l - 1][i];
+                    if (count % 2 == 1)
+                    {
+                        diff++;
+                    }
+                }
+
+                return diff <= size * 2 + 1;
+            }
+
+            var result = new bool[queries.Length];
+            for (var i = 0; i < queries.Length; i++)
+            {
+                int l = queries[i][0], r = queries[i][1], size = queries[i][2];
+                result[i] = Diff(l, r, size);
+            }
+
+            return result;
+        }
+
+        #endregion
     }
 }

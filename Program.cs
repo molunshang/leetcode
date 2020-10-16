@@ -32,6 +32,8 @@ namespace leetcode
         {
             //[[],[],[],[]]
             //
+            program.CanMakePaliQueries("rkzavgdmdgt",
+                JsonConvert.DeserializeObject<int[][]>("[[5,8,0],[7,9,1],[3,6,4],[5,5,1],[8,10,0],[3,9,5],[0,10,10],[6,8,3]]"));
             program.OpenLock(JsonConvert.DeserializeObject<string[]>("[\"0201\",\"0101\",\"0102\",\"1212\",\"2002\"]"),"0202");
             program.FindLongestSubarray(new[]
                 {"A", "1", "B", "C", "D", "2", "3", "4", "E", "5", "F", "G", "6", "7", "H", "I", "J", "K", "L", "M"});
