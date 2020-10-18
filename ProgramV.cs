@@ -330,7 +330,7 @@ namespace leetcode
                 break;
             }
 
-            return new[] {duplicate, miss};
+            return new[] { duplicate, miss };
         }
 
         #endregion
@@ -485,12 +485,12 @@ namespace leetcode
                 int t1 = num + k, t2 = num - k;
                 if (set.Contains(t1))
                 {
-                    numSet.Add(new[] {num, t1});
+                    numSet.Add(new[] { num, t1 });
                 }
 
                 if (set.Contains(t2))
                 {
-                    numSet.Add(new[] {t2, num});
+                    numSet.Add(new[] { t2, num });
                 }
 
                 set.Add(num);
@@ -870,6 +870,100 @@ namespace leetcode
             return result;
         }
 
+        #endregion
+
+        #region 52. N皇后 II
+
+        //https://leetcode-cn.com/problems/n-queens-ii/
+        public int TotalNQueens(int n)
+        {
+            var count = 0;
+            bool[] cols = new bool[n];
+            var flags = new bool[n, n];
+            bool Can(int x, int y)
+            {
+                //左上角
+                for (int i = x - 1, j = y - 1; i >= 0 && j >= 0; i--, j--)
+                {
+                    if (flags[i, j])
+                    {
+                        return false;
+                    }
+                }
+                //右上角
+                for (int i = x - 1, j = y + 1; i >= 0 && j < n; i--, j++)
+                {
+                    if (flags[i, j])
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            void Dfs(int row)
+            {
+                if (row >= n)
+                {
+                    count++;
+                    return;
+                }
+                for (int i = 0; i < n; i++)
+                {
+                    if (cols[i] || Can(row, i))
+                    {
+                        continue;
+                    }
+
+                    cols[i] = flags[row, i] = true;
+                    Dfs(row + 1);
+                    cols[i] = flags[row, i] = false;
+                }
+            }
+            Dfs(0);
+            return count;
+        }
+        #endregion
+
+        #region 844. 比较含退格的字符串
+        //https://leetcode-cn.com/problems/backspace-string-compare/
+        public bool BackspaceCompare(string S, string T)
+        {
+            Stack<char> ss = new Stack<char>(), ts = new Stack<char>();
+            for (int i = 0; i < S.Length; i++)
+            {
+                if (S[i] == '#')
+                {
+                    ss.TryPop(out _);
+                }
+                else
+                {
+                    ss.Push(S[i]);
+                }
+            }
+            for (int i = 0; i < T.Length; i++)
+            {
+                if (T[i] == '#')
+                {
+                    ts.TryPop(out _);
+                }
+                else
+                {
+                    ts.Push(T[i]);
+                }
+            }
+            if (ts.Count != ss.Count)
+            {
+                return false;
+            }
+            while (ts.Count > 0)
+            {
+                if (ts.Pop() != ss.Pop())
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
         #endregion
     }
 }

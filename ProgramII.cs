@@ -1397,45 +1397,6 @@ namespace leetcode
 
         #endregion
 
-        #region 52. N皇后 II
-
-        //https://leetcode-cn.com/problems/n-queens-ii/
-        int TotalNQueens(int row, int n, char[][] flags, int count)
-        {
-            if (row >= n)
-            {
-                return count + 1;
-            }
-
-            for (int i = 0; i < n; i++)
-            {
-                if (!CheckQueen(row, i, flags, n))
-                {
-                    continue;
-                }
-
-                flags[row][i] = 'Q';
-                count = TotalNQueens(row + 1, n, flags, count);
-                flags[row][i] = '.';
-            }
-
-            return count;
-        }
-
-        public int TotalNQueens(int n)
-        {
-            var flags = new char[n][];
-            for (int i = 0; i < n; i++)
-            {
-                flags[i] = new char[n];
-                Array.Fill(flags[i], '.');
-            }
-
-            return TotalNQueens(0, n, flags, 0);
-        }
-
-        #endregion
-
         #region 221. 最大正方形
 
         //https://leetcode-cn.com/problems/maximal-square/
