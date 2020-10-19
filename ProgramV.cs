@@ -330,7 +330,7 @@ namespace leetcode
                 break;
             }
 
-            return new[] { duplicate, miss };
+            return new[] {duplicate, miss};
         }
 
         #endregion
@@ -485,12 +485,12 @@ namespace leetcode
                 int t1 = num + k, t2 = num - k;
                 if (set.Contains(t1))
                 {
-                    numSet.Add(new[] { num, t1 });
+                    numSet.Add(new[] {num, t1});
                 }
 
                 if (set.Contains(t2))
                 {
-                    numSet.Add(new[] { t2, num });
+                    numSet.Add(new[] {t2, num});
                 }
 
                 set.Add(num);
@@ -847,6 +847,7 @@ namespace leetcode
                 {
                     return true;
                 }
+
                 var diff = 0;
                 for (int i = 0; i < 26; i++)
                 {
@@ -880,6 +881,7 @@ namespace leetcode
             var count = 0;
             bool[] cols = new bool[n];
             var flags = new bool[n, n];
+
             bool Can(int x, int y)
             {
                 //左上角
@@ -890,6 +892,7 @@ namespace leetcode
                         return false;
                     }
                 }
+
                 //右上角
                 for (int i = x - 1, j = y + 1; i >= 0 && j < n; i--, j++)
                 {
@@ -898,8 +901,10 @@ namespace leetcode
                         return false;
                     }
                 }
+
                 return true;
             }
+
             void Dfs(int row)
             {
                 if (row >= n)
@@ -907,6 +912,7 @@ namespace leetcode
                     count++;
                     return;
                 }
+
                 for (int i = 0; i < n; i++)
                 {
                     if (cols[i] || Can(row, i))
@@ -919,12 +925,15 @@ namespace leetcode
                     cols[i] = flags[row, i] = false;
                 }
             }
+
             Dfs(0);
             return count;
         }
+
         #endregion
 
         #region 844. 比较含退格的字符串
+
         //https://leetcode-cn.com/problems/backspace-string-compare/
         public bool BackspaceCompare(string S, string T)
         {
@@ -940,6 +949,7 @@ namespace leetcode
                     ss.Push(S[i]);
                 }
             }
+
             for (int i = 0; i < T.Length; i++)
             {
                 if (T[i] == '#')
@@ -951,10 +961,12 @@ namespace leetcode
                     ts.Push(T[i]);
                 }
             }
+
             if (ts.Count != ss.Count)
             {
                 return false;
             }
+
             while (ts.Count > 0)
             {
                 if (ts.Pop() != ss.Pop())
@@ -962,8 +974,78 @@ namespace leetcode
                     return false;
                 }
             }
+
             return true;
         }
+
+        #endregion
+
+        #region 310. 最小高度树
+
+        //https://leetcode-cn.com/problems/minimum-height-trees/
+        public IList<int> FindMinHeightTrees(int n, int[][] edges)
+        {
+            if (n == 1)
+            {
+                return new[] {0};
+            }
+
+            var graph = new Dictionary<int, List<int>>();
+            var degree = new int[n];
+            foreach (var edge in edges)
+            {
+                degree[edge[0]]++;
+                degree[edge[1]]++;
+                if (!graph.TryGetValue(edge[0], out var points))
+                {
+                    points = new List<int>();
+                    graph[edge[0]] = points;
+                }
+
+                points.Add(edge[1]);
+                if (!graph.TryGetValue(edge[1], out points))
+                {
+                    points = new List<int>();
+                    graph[edge[1]] = points;
+                }
+
+                points.Add(edge[0]);
+            }
+
+            var result = new List<int>();
+            var queue = new Queue<int>();
+            for (var i = 0; i < n; i++)
+            {
+                if (degree[i] == 1)
+                {
+                    queue.Enqueue(i);
+                }
+            }
+
+            while (queue.Count > 0)
+            {
+                result.Clear();
+                for (int s = 0, l = queue.Count; s < l; s++)
+                {
+                    var start = queue.Dequeue();
+                    result.Add(start);
+                    if (graph.TryGetValue(start, out var points))
+                    {
+                        foreach (var point in points)
+                        {
+                            degree[point]--;
+                            if (degree[point] == 1)
+                            {
+                                queue.Enqueue(point);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
         #endregion
     }
 }
