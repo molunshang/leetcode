@@ -330,7 +330,7 @@ namespace leetcode
                 break;
             }
 
-            return new[] {duplicate, miss};
+            return new[] { duplicate, miss };
         }
 
         #endregion
@@ -485,12 +485,12 @@ namespace leetcode
                 int t1 = num + k, t2 = num - k;
                 if (set.Contains(t1))
                 {
-                    numSet.Add(new[] {num, t1});
+                    numSet.Add(new[] { num, t1 });
                 }
 
                 if (set.Contains(t2))
                 {
-                    numSet.Add(new[] {t2, num});
+                    numSet.Add(new[] { t2, num });
                 }
 
                 set.Add(num);
@@ -987,7 +987,7 @@ namespace leetcode
         {
             if (n == 1)
             {
-                return new[] {0};
+                return new[] { 0 };
             }
 
             var graph = new Dictionary<int, List<int>>();
@@ -1046,6 +1046,40 @@ namespace leetcode
             return result;
         }
 
+        #endregion
+
+        #region 143. 重排链表
+        //https://leetcode-cn.com/problems/reorder-list/
+        public void ReorderList(ListNode head)
+        {
+            if (head == null || head.next == null)
+            {
+                return;
+            }
+            var list = new List<ListNode>();
+            var node = head;
+            while (node != null)
+            {
+                list.Add(node);
+                node = node.next;
+            }
+            int s = 0, e = list.Count - 1;
+            var prev = new ListNode(-1);
+            while (s <= e)
+            {
+                prev.next = list[s];
+                if (s > e)
+                {
+                    break;
+                }
+                prev = prev.next;
+                prev.next = list[e];
+                prev = prev.next;
+                s++;
+                e--;
+            }
+            prev.next = null;
+        }
         #endregion
     }
 }
