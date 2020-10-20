@@ -330,7 +330,7 @@ namespace leetcode
                 break;
             }
 
-            return new[] {duplicate, miss};
+            return new[] { duplicate, miss };
         }
 
         #endregion
@@ -485,12 +485,12 @@ namespace leetcode
                 int t1 = num + k, t2 = num - k;
                 if (set.Contains(t1))
                 {
-                    numSet.Add(new[] {num, t1});
+                    numSet.Add(new[] { num, t1 });
                 }
 
                 if (set.Contains(t2))
                 {
-                    numSet.Add(new[] {t2, num});
+                    numSet.Add(new[] { t2, num });
                 }
 
                 set.Add(num);
@@ -987,7 +987,7 @@ namespace leetcode
         {
             if (n == 1)
             {
-                return new[] {0};
+                return new[] { 0 };
             }
 
             var graph = new Dictionary<int, List<int>>();
@@ -1152,13 +1152,75 @@ namespace leetcode
                     //0 个 s[si]
                     return Dfs(si, pi + 2);
                 }
-                
+
                 return (s[si] == p[pi] || p[pi] == '.') && Dfs(si + 1, pi + 1);
             }
 
             return Dfs(0, 0);
         }
 
+        #endregion
+
+        #region 925. 长按键入
+        //https://leetcode-cn.com/problems/long-pressed-name/
+        public bool IsLongPressedName(string name, string typed)
+        {
+            bool Simple()
+            {
+                if (typed.Length < name.Length)
+                {
+                    return false;
+                }
+                int ni = 0, ti = 0;
+                while (ti < typed.Length)
+                {
+                    if (ni < name.Length && name[ni] == typed[ti])
+                    {
+                        ni++;
+                        ti++;
+                    }
+                    else if (ti > 0 && typed[ti] == typed[ti - 1])
+                    {
+                        ti++;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                return ni == name.Length;
+            }
+            if (string.IsNullOrEmpty(name))
+            {
+                return string.IsNullOrEmpty(typed);
+            }
+            if (string.IsNullOrEmpty(typed) || name.Length > typed.Length)
+            {
+                return false;
+            }
+            int i = 0, j = 0;
+            while (i < name.Length && j < typed.Length)
+            {
+                var count = 0;
+                var ch = name[i];
+                while (i < name.Length && name[i] == ch)
+                {
+                    count++;
+                    i++;
+                }
+                while (j < typed.Length && typed[j] == ch)
+                {
+                    count--;
+                    j++;
+                }
+                if (count > 0)
+                {
+                    return false;
+                }
+
+            }
+            return i == name.Length && j == typed.Length;
+        }
         #endregion
     }
 }
