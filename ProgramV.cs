@@ -330,7 +330,7 @@ namespace leetcode
                 break;
             }
 
-            return new[] { duplicate, miss };
+            return new[] {duplicate, miss};
         }
 
         #endregion
@@ -485,12 +485,12 @@ namespace leetcode
                 int t1 = num + k, t2 = num - k;
                 if (set.Contains(t1))
                 {
-                    numSet.Add(new[] { num, t1 });
+                    numSet.Add(new[] {num, t1});
                 }
 
                 if (set.Contains(t2))
                 {
-                    numSet.Add(new[] { t2, num });
+                    numSet.Add(new[] {t2, num});
                 }
 
                 set.Add(num);
@@ -987,7 +987,7 @@ namespace leetcode
         {
             if (n == 1)
             {
-                return new[] { 0 };
+                return new[] {0};
             }
 
             var graph = new Dictionary<int, List<int>>();
@@ -1049,6 +1049,7 @@ namespace leetcode
         #endregion
 
         #region 143. 重排链表
+
         //https://leetcode-cn.com/problems/reorder-list/
         public void ReorderList(ListNode head)
         {
@@ -1056,6 +1057,7 @@ namespace leetcode
             {
                 return;
             }
+
             var list = new List<ListNode>();
             var node = head;
             while (node != null)
@@ -1063,6 +1065,7 @@ namespace leetcode
                 list.Add(node);
                 node = node.next;
             }
+
             int s = 0, e = list.Count - 1;
             var prev = new ListNode(-1);
             while (s <= e)
@@ -1072,14 +1075,90 @@ namespace leetcode
                 {
                     break;
                 }
+
                 prev = prev.next;
                 prev.next = list[e];
                 prev = prev.next;
                 s++;
                 e--;
             }
+
             prev.next = null;
         }
+
+        #endregion
+
+        #region 剑指 Offer 19. 正则表达式匹配
+
+        //https://leetcode-cn.com/problems/zheng-ze-biao-da-shi-pi-pei-lcof/
+        public bool IsMatchOffer(string s, string p)
+        {
+            if (string.IsNullOrEmpty(p))
+            {
+                return string.IsNullOrEmpty(s);
+            }
+
+            if (string.IsNullOrEmpty(s))
+            {
+                return false;
+            }
+
+            bool Dfs(int si, int pi)
+            {
+                if (pi >= p.Length)
+                {
+                    return si >= s.Length;
+                }
+
+                if (si >= s.Length)
+                {
+                    if (p[pi] == '*')
+                    {
+                        pi++;
+                    }
+
+                    var count = 0;
+                    for (int i = pi; i < p.Length; i++)
+                    {
+                        if (p[i] == '*')
+                        {
+                            count++;
+                        }
+                        else
+                        {
+                            count--;
+                        }
+                    }
+
+                    return count == 0;
+                }
+                if (pi < p.Length - 1 && p[pi + 1] == '*')
+                {
+                    //1个或n个 s[si]
+                    for (int i = si; i < s.Length; i++)
+                    {
+                        if (s[i] == p[pi] || p[pi] == '.')
+                        {
+                            if (Dfs(i + 1, pi + 2))
+                            {
+                                return true;
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    //0 个 s[si]
+                    return Dfs(si, pi + 2);
+                }
+                
+                return (s[si] == p[pi] || p[pi] == '.') && Dfs(si + 1, pi + 1);
+            }
+
+            return Dfs(0, 0);
+        }
+
         #endregion
     }
 }

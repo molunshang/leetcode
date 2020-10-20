@@ -32,6 +32,7 @@ namespace leetcode
         {
             //[[],[],[],[]]
             //
+            program.IsMatchOffer("mississippi", "mis*is*p*.");
             program.FindMinHeightTrees(6, JsonConvert.DeserializeObject<int[][]>("[[0,1],[0,2],[0,3],[3,4],[4,5]]"));
             program.CanMakePaliQueries("rkzavgdmdgt",
                 JsonConvert.DeserializeObject<int[][]>("[[5,8,0],[7,9,1],[3,6,4],[5,5,1],[8,10,0],[3,9,5],[0,10,10],[6,8,3]]"));
