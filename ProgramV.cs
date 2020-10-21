@@ -330,7 +330,7 @@ namespace leetcode
                 break;
             }
 
-            return new[] { duplicate, miss };
+            return new[] {duplicate, miss};
         }
 
         #endregion
@@ -485,12 +485,12 @@ namespace leetcode
                 int t1 = num + k, t2 = num - k;
                 if (set.Contains(t1))
                 {
-                    numSet.Add(new[] { num, t1 });
+                    numSet.Add(new[] {num, t1});
                 }
 
                 if (set.Contains(t2))
                 {
-                    numSet.Add(new[] { t2, num });
+                    numSet.Add(new[] {t2, num});
                 }
 
                 set.Add(num);
@@ -987,7 +987,7 @@ namespace leetcode
         {
             if (n == 1)
             {
-                return new[] { 0 };
+                return new[] {0};
             }
 
             var graph = new Dictionary<int, List<int>>();
@@ -1132,6 +1132,7 @@ namespace leetcode
 
                     return count == 0;
                 }
+
                 if (pi < p.Length - 1 && p[pi + 1] == '*')
                 {
                     //1个或n个 s[si]
@@ -1149,6 +1150,7 @@ namespace leetcode
                             break;
                         }
                     }
+
                     //0 个 s[si]
                     return Dfs(si, pi + 2);
                 }
@@ -1162,6 +1164,7 @@ namespace leetcode
         #endregion
 
         #region 925. 长按键入
+
         //https://leetcode-cn.com/problems/long-pressed-name/
         public bool IsLongPressedName(string name, string typed)
         {
@@ -1171,6 +1174,7 @@ namespace leetcode
                 {
                     return false;
                 }
+
                 int ni = 0, ti = 0;
                 while (ti < typed.Length)
                 {
@@ -1188,16 +1192,20 @@ namespace leetcode
                         return false;
                     }
                 }
+
                 return ni == name.Length;
             }
+
             if (string.IsNullOrEmpty(name))
             {
                 return string.IsNullOrEmpty(typed);
             }
+
             if (string.IsNullOrEmpty(typed) || name.Length > typed.Length)
             {
                 return false;
             }
+
             int i = 0, j = 0;
             while (i < name.Length && j < typed.Length)
             {
@@ -1208,19 +1216,76 @@ namespace leetcode
                     count++;
                     i++;
                 }
+
                 while (j < typed.Length && typed[j] == ch)
                 {
                     count--;
                     j++;
                 }
+
                 if (count > 0)
                 {
                     return false;
                 }
-
             }
+
             return i == name.Length && j == typed.Length;
         }
+
+        #endregion
+
+        #region 659. 分割数组为连续子序列
+
+        //https://leetcode-cn.com/problems/split-array-into-consecutive-subsequences/
+        public bool IsPossible(int[] nums)
+        {
+            //贪心算法：尽可能的将当前数字添加到上一个序列中
+            var seq = new Dictionary<int, int>();
+            var count = nums.GroupBy(n => n).ToDictionary(g => g.Key, g => g.Count());
+            foreach (var num in nums)
+            {
+                if (count[num] == 0)
+                {
+                    continue;
+                }
+
+                int c, c1, c2;
+                if ((c = seq.GetValueOrDefault(num - 1)) > 0)
+                {
+                    seq[num - 1] = c - 1;
+                    if (seq.TryGetValue(num, out c))
+                    {
+                        seq[num] = c + 1;
+                    }
+                    else
+                    {
+                        seq[num] = 1;
+                    }
+                }
+                else if ((c1 = count.GetValueOrDefault(num + 1)) > 0 && (c2 = count.GetValueOrDefault(num + 2)) > 0)
+                {
+                    count[num + 1] = c1 - 1;
+                    count[num + 2] = c2 - 1;
+                    if (seq.TryGetValue(num + 2, out c))
+                    {
+                        seq[num + 2] = c + 1;
+                    }
+                    else
+                    {
+                        seq[num + 2] = 1;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+
+                count[num]--;
+            }
+
+            return true;
+        }
+
         #endregion
     }
 }
