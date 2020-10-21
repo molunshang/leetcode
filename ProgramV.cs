@@ -330,7 +330,7 @@ namespace leetcode
                 break;
             }
 
-            return new[] {duplicate, miss};
+            return new[] { duplicate, miss };
         }
 
         #endregion
@@ -485,12 +485,12 @@ namespace leetcode
                 int t1 = num + k, t2 = num - k;
                 if (set.Contains(t1))
                 {
-                    numSet.Add(new[] {num, t1});
+                    numSet.Add(new[] { num, t1 });
                 }
 
                 if (set.Contains(t2))
                 {
-                    numSet.Add(new[] {t2, num});
+                    numSet.Add(new[] { t2, num });
                 }
 
                 set.Add(num);
@@ -987,7 +987,7 @@ namespace leetcode
         {
             if (n == 1)
             {
-                return new[] {0};
+                return new[] { 0 };
             }
 
             var graph = new Dictionary<int, List<int>>();
@@ -1286,6 +1286,31 @@ namespace leetcode
             return true;
         }
 
+        #endregion
+
+        #region 763. 划分字母区间
+        //https://leetcode-cn.com/problems/partition-labels/
+        public IList<int> PartitionLabels(string s)
+        {
+            var indexs = new int[26];
+            for (int i = 0; i < s.Length; i++)
+            {
+                var c = s[i] - 'a';
+                indexs[c] = i;
+            }
+            var result = new List<int>();
+            for (int i = 0, l = 0, r = 0; i < s.Length; i++)
+            {
+                var c = s[i] - 'a';
+                r = Math.Max(r, indexs[c]);
+                if (i == r)
+                {
+                    result.Add(r - l + 1);
+                    l = i + 1;
+                }
+            }
+            return result;
+        }
         #endregion
     }
 }
