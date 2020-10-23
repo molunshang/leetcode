@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 
 namespace leetcode
@@ -330,7 +331,7 @@ namespace leetcode
                 break;
             }
 
-            return new[] { duplicate, miss };
+            return new[] {duplicate, miss};
         }
 
         #endregion
@@ -485,12 +486,12 @@ namespace leetcode
                 int t1 = num + k, t2 = num - k;
                 if (set.Contains(t1))
                 {
-                    numSet.Add(new[] { num, t1 });
+                    numSet.Add(new[] {num, t1});
                 }
 
                 if (set.Contains(t2))
                 {
-                    numSet.Add(new[] { t2, num });
+                    numSet.Add(new[] {t2, num});
                 }
 
                 set.Add(num);
@@ -987,7 +988,7 @@ namespace leetcode
         {
             if (n == 1)
             {
-                return new[] { 0 };
+                return new[] {0};
             }
 
             var graph = new Dictionary<int, List<int>>();
@@ -1289,6 +1290,7 @@ namespace leetcode
         #endregion
 
         #region 763. 划分字母区间
+
         //https://leetcode-cn.com/problems/partition-labels/
         public IList<int> PartitionLabels(string s)
         {
@@ -1298,6 +1300,7 @@ namespace leetcode
                 var c = s[i] - 'a';
                 indexs[c] = i;
             }
+
             var result = new List<int>();
             for (int i = 0, l = 0, r = 0; i < s.Length; i++)
             {
@@ -1309,8 +1312,112 @@ namespace leetcode
                     l = i + 1;
                 }
             }
+
             return result;
         }
+
+        #endregion
+
+        #region 57. 插入区间
+
+        //https://leetcode-cn.com/problems/insert-interval/
+        public int[][] Insert(int[][] intervals, int[] newInterval)
+        {
+            var result = new List<int[]>();
+            var add = false;
+            foreach (var interval in intervals)
+            {
+                if (interval[0] > newInterval[1])
+                {
+                    if (!add)
+                    {
+                        result.Add(newInterval);
+                        add = true;
+                    }
+
+                    result.Add(interval);
+                }
+                else if (interval[1] < newInterval[0])
+                {
+                    result.Add(interval);
+                }
+                else
+                {
+                    newInterval[0] = Math.Min(newInterval[0], interval[0]);
+                    newInterval[1] = Math.Max(newInterval[1], interval[1]);
+                    if (!add)
+                    {
+                        result.Add(newInterval);
+                        add = true;
+                    }
+                }
+            }
+
+            if (!add)
+            {
+                result.Add(newInterval);
+            }
+
+            return result.ToArray();
+        }
+
+        #endregion
+
+        #region 722. 删除注释
+
+        //https://leetcode-cn.com/problems/remove-comments/
+        public IList<string> RemoveComments(string[] source)
+        {
+            var result = new List<string>();
+            var line = new StringBuilder();
+            var skip = false;
+            foreach (var s in source)
+            {
+                for (var j = 0; j < s.Length; j++)
+                {
+                    if (!skip && s[j] == '/')
+                    {
+                        if (j < s.Length - 1)
+                        {
+                            if (s[j + 1] == '/')
+                            {
+                                break;
+                            }
+
+                            if (s[j + 1] == '*')
+                            {
+                                skip = true;
+                                j++;
+                            }
+                        }
+                    }
+                    else if (skip && s[j] == '*')
+                    {
+                        if (j < s.Length - 1 && s[j + 1] == '/')
+                        {
+                            skip = false;
+                            j++;
+                            continue;
+                        }
+                    }
+
+                    if (!skip)
+                    {
+                        line.Append(s[j]);
+                    }
+                }
+
+                if (!skip && line.Length > 0)
+                {
+                    result.Add(line.ToString());
+                    line.Clear();
+                }
+            }
+
+
+            return result;
+        }
+
         #endregion
     }
 }
