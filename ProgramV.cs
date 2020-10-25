@@ -1424,49 +1424,106 @@ namespace leetcode
         //https://leetcode-cn.com/problems/video-stitching/
         public int VideoStitching(int[][] clips, int t)
         {
-            Array.Sort(clips, Comparer<int[]>.Create((x, y) =>
+            int ByBackTrack()
             {
-                return x[1] == y[1] ? x[0] - y[0] : x[1] - y[1];
-            }));
-            var cache = new int[clips.Length, t + 1];
-            int Dfs(int i, int range)
-            {
-                if (i <= 0)
-                {
-                    return i == 0 && clips[i][0] == 0 && clips[i][1] >= range ? 1 : -1;
-                }
-                if (cache[i, range] != 0)
-                {
-                    return cache[i, range];
-                }
-                var res = int.MaxValue;
-                for (int j = i; j >= 0; j--)
-                {
-                    var clip = clips[j];
-                    if (clip[1] < range)
-                    {
-                        break;
-                    }
-                    if (clip[0] > range)
-                    {
-                        continue;
-                    }
-                    if (clip[0] == 0)
-                    {
-                        res = 1;
-                        break;
-                    }
-                    var n = Dfs(j - 1, clip[0]);
-                    if (n != -1)
-                    {
-                        res = Math.Min(res, n + 1);
-                    }
-                }
-                res = cache[i, range] = res == int.MaxValue ? -1 : res;
-                return res;
-            }
-            return Dfs(clips.Length - 1, t);
 
+                Array.Sort(clips, Comparer<int[]>.Create((x, y) =>
+                {
+                    return x[1] == y[1] ? x[0] - y[0] : x[1] - y[1];
+                }));
+                var cache = new int[clips.Length, t + 1];
+                int Dfs(int i, int range)
+                {
+                    if (i <= 0)
+                    {
+                        return i == 0 && clips[i][0] == 0 && clips[i][1] >= range ? 1 : -1;
+                    }
+                    if (cache[i, range] != 0)
+                    {
+                        return cache[i, range];
+                    }
+                    var res = int.MaxValue;
+                    for (int j = i; j >= 0; j--)
+                    {
+                        var clip = clips[j];
+                        if (clip[1] < range)
+                        {
+                            break;
+                        }
+                        if (clip[0] > range)
+                        {
+                            continue;
+                        }
+                        if (clip[0] == 0)
+                        {
+                            res = 1;
+                            break;
+                        }
+                        var n = Dfs(j - 1, clip[0]);
+                        if (n != -1)
+                        {
+                            res = Math.Min(res, n + 1);
+                        }
+                    }
+                    res = cache[i, range] = res == int.MaxValue ? -1 : res;
+                    return res;
+                }
+                return Dfs(clips.Length - 1, t);
+            }
+            //动态规划
+            int[] dp = new int[t + 1];
+            Array.Fill(dp, int.MaxValue - 1);
+            dp[0] = 0;
+            for (int i = 1; i <= t; i++)
+            {
+                foreach (var clip in clips)
+                {
+                    if (clip[0] < i && i <= clip[1])
+                    {
+                        dp[i] = Math.Min(dp[i], dp[clip[0]] + 1);
+                    }
+                }
+            }
+            return dp[t] > clips.Length ? -1 : dp[t];
+        }
+        #endregion
+
+        #region 845. 数组中的最长山脉
+        //https://leetcode-cn.com/problems/longest-mountain-in-array/
+        public int LongestMountain(int[] A)
+        {
+            var res = 0;
+            bool left = false, right = false;
+            for (int i = 1, j = 0; i < A.Length; i++)
+            {
+                if (A[i] > A[i - 1])
+                {
+                    left = true;
+                    if (right)
+                    {
+                        j = i - 1;
+                        right = false;
+                    }
+                }
+                else if (A[i] == A[i - 1])
+                {
+                    j = i;
+                    left = right = false;
+                }
+                else
+                {
+                    if (left)
+                    {
+                        res = Math.Max(res, i - j + 1);
+                        right = true;
+                    }
+                    else
+                    {
+                        j = i;
+                    }
+                }
+            }
+            return res;
         }
         #endregion
     }
