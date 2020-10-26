@@ -331,7 +331,7 @@ namespace leetcode
                 break;
             }
 
-            return new[] { duplicate, miss };
+            return new[] {duplicate, miss};
         }
 
         #endregion
@@ -486,12 +486,12 @@ namespace leetcode
                 int t1 = num + k, t2 = num - k;
                 if (set.Contains(t1))
                 {
-                    numSet.Add(new[] { num, t1 });
+                    numSet.Add(new[] {num, t1});
                 }
 
                 if (set.Contains(t2))
                 {
-                    numSet.Add(new[] { t2, num });
+                    numSet.Add(new[] {t2, num});
                 }
 
                 set.Add(num);
@@ -988,7 +988,7 @@ namespace leetcode
         {
             if (n == 1)
             {
-                return new[] { 0 };
+                return new[] {0};
             }
 
             var graph = new Dictionary<int, List<int>>();
@@ -1421,27 +1421,28 @@ namespace leetcode
         #endregion
 
         #region 1024. 视频拼接
+
         //https://leetcode-cn.com/problems/video-stitching/
         public int VideoStitching(int[][] clips, int t)
         {
             int ByBackTrack()
             {
-
-                Array.Sort(clips, Comparer<int[]>.Create((x, y) =>
-                {
-                    return x[1] == y[1] ? x[0] - y[0] : x[1] - y[1];
-                }));
+                Array.Sort(clips,
+                    Comparer<int[]>.Create((x, y) => { return x[1] == y[1] ? x[0] - y[0] : x[1] - y[1]; }));
                 var cache = new int[clips.Length, t + 1];
+
                 int Dfs(int i, int range)
                 {
                     if (i <= 0)
                     {
                         return i == 0 && clips[i][0] == 0 && clips[i][1] >= range ? 1 : -1;
                     }
+
                     if (cache[i, range] != 0)
                     {
                         return cache[i, range];
                     }
+
                     var res = int.MaxValue;
                     for (int j = i; j >= 0; j--)
                     {
@@ -1450,26 +1451,32 @@ namespace leetcode
                         {
                             break;
                         }
+
                         if (clip[0] > range)
                         {
                             continue;
                         }
+
                         if (clip[0] == 0)
                         {
                             res = 1;
                             break;
                         }
+
                         var n = Dfs(j - 1, clip[0]);
                         if (n != -1)
                         {
                             res = Math.Min(res, n + 1);
                         }
                     }
+
                     res = cache[i, range] = res == int.MaxValue ? -1 : res;
                     return res;
                 }
+
                 return Dfs(clips.Length - 1, t);
             }
+
             //动态规划
             int[] dp = new int[t + 1];
             Array.Fill(dp, int.MaxValue - 1);
@@ -1484,11 +1491,14 @@ namespace leetcode
                     }
                 }
             }
+
             return dp[t] > clips.Length ? -1 : dp[t];
         }
+
         #endregion
 
         #region 845. 数组中的最长山脉
+
         //https://leetcode-cn.com/problems/longest-mountain-in-array/
         public int LongestMountain(int[] A)
         {
@@ -1523,8 +1533,248 @@ namespace leetcode
                     }
                 }
             }
+
             return res;
         }
+
+        #endregion
+
+        #region 345. 反转字符串中的元音字母
+
+        //https://leetcode-cn.com/problems/reverse-vowels-of-a-string/
+        //元音 a、e、i、o、u
+        public string ReverseVowels(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return s;
+            }
+
+            var set = new HashSet<char>
+            {
+                'a', 'e', 'i', 'o', 'u',
+                'A', 'E', 'I', 'O', 'U'
+            };
+            var chars = new char[s.Length];
+            int l = 0, r = s.Length - 1;
+            while (l < r)
+            {
+                if (!set.Contains(s[l]))
+                {
+                    chars[l] = s[l];
+                    l++;
+                }
+                else if (!set.Contains(s[r]))
+                {
+                    chars[r] = s[r];
+                    r--;
+                }
+                else
+                {
+                    chars[l] = s[r];
+                    chars[r] = s[l];
+                    l++;
+                    r--;
+                }
+            }
+
+            if (l == r)
+            {
+                chars[l] = s[l];
+            }
+
+            return new string(chars);
+        }
+
+        #endregion
+
+        #region 383. 赎金信
+
+        //https://leetcode-cn.com/problems/ransom-note/
+        public bool CanConstruct(string ransomNote, string magazine)
+        {
+            if (string.IsNullOrEmpty(magazine))
+            {
+                return string.IsNullOrEmpty(ransomNote);
+            }
+
+            var dict = magazine.GroupBy(c => c).ToDictionary(g => g.Key, g => g.Count());
+            foreach (var ch in ransomNote)
+            {
+                if (!dict.TryGetValue(ch, out var count) || count <= 0)
+                {
+                    return false;
+                }
+
+                dict[ch] = count - 1;
+            }
+
+            return true;
+        }
+
+        #endregion
+
+
+        #region 434. 字符串中的单词数
+
+        //https://leetcode-cn.com/problems/number-of-segments-in-a-string/
+        public int CountSegments(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return 0;
+            }
+
+            var count = 0;
+            var flag = true;
+            foreach (var ch in s)
+            {
+                if (ch == ' ')
+                {
+                    flag = true;
+                    continue;
+                }
+
+                if (flag)
+                {
+                    count++;
+                    flag = false;
+                }
+            }
+
+            return count;
+        }
+
+        #endregion
+
+        #region 520. 检测大写字母
+
+        //https://leetcode-cn.com/problems/detect-capital/
+        public bool DetectCapitalUse(string word)
+        {
+            if (string.IsNullOrEmpty(word))
+            {
+                return true;
+            }
+
+            var count = 0;
+            foreach (var ch in word)
+            {
+                if (ch >= 'A' && ch <= 'Z')
+                {
+                    count++;
+                }
+            }
+
+            return word.Length == count || count == 0 || (count == 1 && 'A' <= word[0] && word[0] <= 'Z');
+        }
+
+        #endregion
+
+        #region 521. 最长特殊序列 Ⅰ
+
+        //https://leetcode-cn.com/problems/longest-uncommon-subsequence-i/
+        public int FindLUSlength(string a, string b)
+        {
+            if (a.Length != b.Length)
+            {
+                return Math.Max(a.Length, b.Length);
+            }
+
+            return a == b ? -1 : a.Length;
+        }
+
+        #endregion
+
+        #region 385. 迷你语法分析器
+
+        //todo 待完成
+        //https://leetcode-cn.com/problems/mini-parser/
+        public NestedInteger Deserialize(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return null;
+            }
+
+            var reader = new StringReader(s);
+
+            int ReadInt()
+            {
+                var numStr = new StringBuilder();
+                while (reader.Peek() > -1)
+                {
+                    var ch = (char) reader.Read();
+                    if (ch != '-' && !char.IsDigit(ch))
+                    {
+                        break;
+                    }
+
+                    numStr.Append(ch);
+                }
+
+                return int.Parse(numStr.ToString());
+            }
+
+            List<NestedInteger> ReadList()
+            {
+                var numStr = new StringBuilder();
+                var list = new List<NestedInteger>();
+                while (reader.Peek() > -1)
+                {
+                    var ch = (char) reader.Read();
+                    if (ch == '-' || char.IsDigit(ch))
+                    {
+                        numStr.Append(ch);
+                    }
+                    else
+                    {
+                        var num = new NestedInteger(int.Parse(numStr.ToString()));
+                        list.Add(num);
+                        numStr.Clear();
+                        if (ch == ']')
+                        {
+                            break;
+                        }
+
+                        if (ch == '[')
+                        {
+                            Read();
+                        }
+                    }
+                }
+
+                return list;
+                ;
+            }
+
+            NestedInteger Read()
+            {
+                var nestedInteger = new NestedInteger();
+                while (reader.Peek() > -1)
+                {
+                    //read int
+                    var ch = (char) reader.Peek();
+                    if (ch == '-' || char.IsDigit(ch))
+                    {
+                        nestedInteger.SetInteger(ReadInt());
+                    }
+                    else if (ch == '[')
+                    {
+                        var list = ReadList();
+                        foreach (var n in list)
+                        {
+                            nestedInteger.Add(Read());
+                        }
+                    }
+                }
+
+                return nestedInteger;
+            }
+
+            return ((char) reader.Peek()) == '[' ? Read() : new NestedInteger(ReadInt());
+        }
+
         #endregion
     }
 }
