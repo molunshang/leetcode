@@ -1776,5 +1776,30 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 144. 二叉树的前序遍历
+        //https://leetcode-cn.com/problems/binary-tree-preorder-traversal/
+        public IList<int> PreorderTraversal(TreeNode root)
+        {
+            if (root == null)
+            {
+                return new int[0];
+            }
+            var seq = new List<int>();
+            var stack = new Stack<TreeNode>();
+            while (root != null || stack.Count > 0)
+            {
+                while (root != null)
+                {
+                    seq.Add(root.val);
+                    stack.Push(root);
+                    root = root.left;
+                }
+                root = stack.Pop();
+                root = root.right;
+            }
+            return seq;
+        }
+        #endregion
     }
 }
