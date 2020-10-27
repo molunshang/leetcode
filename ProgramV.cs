@@ -331,7 +331,7 @@ namespace leetcode
                 break;
             }
 
-            return new[] {duplicate, miss};
+            return new[] { duplicate, miss };
         }
 
         #endregion
@@ -486,12 +486,12 @@ namespace leetcode
                 int t1 = num + k, t2 = num - k;
                 if (set.Contains(t1))
                 {
-                    numSet.Add(new[] {num, t1});
+                    numSet.Add(new[] { num, t1 });
                 }
 
                 if (set.Contains(t2))
                 {
-                    numSet.Add(new[] {t2, num});
+                    numSet.Add(new[] { t2, num });
                 }
 
                 set.Add(num);
@@ -988,7 +988,7 @@ namespace leetcode
         {
             if (n == 1)
             {
-                return new[] {0};
+                return new[] { 0 };
             }
 
             var graph = new Dictionary<int, List<int>>();
@@ -1704,7 +1704,7 @@ namespace leetcode
                 var numStr = new StringBuilder();
                 while (reader.Peek() > -1)
                 {
-                    var ch = (char) reader.Read();
+                    var ch = (char)reader.Read();
                     if (ch != '-' && !char.IsDigit(ch))
                     {
                         break;
@@ -1722,7 +1722,7 @@ namespace leetcode
                 var list = new List<NestedInteger>();
                 while (reader.Peek() > -1)
                 {
-                    var ch = (char) reader.Read();
+                    var ch = (char)reader.Read();
                     if (ch == '-' || char.IsDigit(ch))
                     {
                         numStr.Append(ch);
@@ -1754,7 +1754,7 @@ namespace leetcode
                 while (reader.Peek() > -1)
                 {
                     //read int
-                    var ch = (char) reader.Peek();
+                    var ch = (char)reader.Peek();
                     if (ch == '-' || char.IsDigit(ch))
                     {
                         nestedInteger.SetInteger(ReadInt());
@@ -1772,7 +1772,7 @@ namespace leetcode
                 return nestedInteger;
             }
 
-            return ((char) reader.Peek()) == '[' ? Read() : new NestedInteger(ReadInt());
+            return ((char)reader.Peek()) == '[' ? Read() : new NestedInteger(ReadInt());
         }
 
         #endregion
@@ -1799,6 +1799,39 @@ namespace leetcode
                 root = root.right;
             }
             return seq;
+        }
+        #endregion
+
+        #region 1207. 独一无二的出现次数
+        //https://leetcode-cn.com/problems/unique-number-of-occurrences/
+        public bool UniqueOccurrences(int[] arr)
+        {
+            var bucket = new Dictionary<int, int>();
+            foreach (var n in arr)
+            {
+                if (bucket.TryGetValue(n, out var c))
+                {
+                    c++;
+                }
+                else
+                {
+                    c = 1;
+                }
+                bucket[n] = c;
+            }
+            var set = new HashSet<int>();
+            foreach (var count in bucket.Values)
+            {
+                if (count == 0)
+                {
+                    continue;
+                }
+                if (!set.Add(count))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
         #endregion
     }
