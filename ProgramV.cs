@@ -2017,5 +2017,134 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 919. 完全二叉树插入器
+        //https://leetcode-cn.com/problems/complete-binary-tree-inserter/
+        class CBTInserter
+        {
+            private TreeNode _root;
+            private Queue<TreeNode> queue = new Queue<TreeNode>();
+            public CBTInserter(TreeNode root)
+            {
+                _root = root;
+                queue.Enqueue(root);
+                while (queue.Count > 0)
+                {
+                    var head = queue.Peek();
+                    if (head.left == null)
+                    {
+                        break;
+                    }
+                    queue.Enqueue(head.left);
+                    if (head.right == null)
+                    {
+                        break;
+                    }
+                    queue.Enqueue(head.right);
+                    queue.Dequeue();
+                }
+            }
+
+            public int Insert(int v)
+            {
+                var root = queue.Peek();
+                if (root.left == null)
+                {
+                    root.left = new TreeNode(v);
+                    queue.Enqueue(root.left);
+                }
+                else
+                {
+                    root.right = new TreeNode(v);
+                    queue.Enqueue(root.right);
+                    queue.Dequeue();
+                }
+                return root.val;
+            }
+
+            public TreeNode Get_root()
+            {
+                return _root;
+            }
+        }
+        #endregion
+
+        #region 463. 岛屿的周长
+        //https://leetcode-cn.com/problems/island-perimeter/
+        public int IslandPerimeter(int[][] grid)
+        {
+            var res = 0;
+            for (int i = 0; i < grid.Length; i++)
+            {
+                for (int j = 0; j < grid[i].Length; j++)
+                {
+                    if (grid[i][j] == 0)
+                    {
+                        continue;
+                    }
+                    //上
+                    if (i == 0 || grid[i - 1][j] == 0)
+                    {
+                        res++;
+                    }
+                    //下
+                    if (i == grid.Length - 1 || grid[i + 1][j] == 0)
+                    {
+                        res++;
+                    }
+                    //左
+                    if (j == 0 || grid[i][j - 1] == 0)
+                    {
+                        res++;
+                    }
+                    //右
+                    if (j == grid[i].Length - 1 || grid[i][j + 1] == 0)
+                    {
+                        res++;
+                    }
+                }
+            }
+            return res;
+        }
+        #endregion
+
+        #region 583. 两个字符串的删除操作
+        //https://leetcode-cn.com/problems/delete-operation-for-two-strings/
+        public int MinDistance(string word1, string word2)
+        {
+            var cache = new int[word1.Length, word2.Length];
+            int Dfs(int i, int j)
+            {
+                if (i >= word1.Length && j >= word2.Length)
+                {
+                    return 0;
+                }
+                if (i >= word1.Length)
+                {
+                    return word2.Length - j;
+                }
+                if (j >= word2.Length)
+                {
+                    return word1.Length - i;
+                }
+                if (cache[i, j] != 0)
+                {
+                    return cache[i, j];
+                }
+                var step = 0;
+                if (word1[i] == word2[j])
+                {
+                    step = Dfs(i + 1, j + 1);
+                }
+                else
+                {
+                    step = Math.Min(Dfs(i + 1, j), Dfs(i, j + 1)) + 1;
+                }
+                cache[i, j] = step;
+                return step;
+            }
+            return Dfs(0, 0);
+        }
+        #endregion
     }
 }

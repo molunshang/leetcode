@@ -18,7 +18,7 @@ namespace leetcode
         {
             if (array.Length <= 0)
             {
-                return new[] {-1, -1};
+                return new[] { -1, -1 };
             }
 
             //1 5 3 7
@@ -45,7 +45,7 @@ namespace leetcode
                 }
             }
 
-            return new[] {left, right};
+            return new[] { left, right };
         }
 
         #endregion
@@ -68,7 +68,7 @@ namespace leetcode
                 var step = i == 5 || i == 7 ? 4 : 3;
                 while (step != 0)
                 {
-                    chars.Add((char) ('a' + j));
+                    chars.Add((char)('a' + j));
                     j++;
                     step--;
                 }
@@ -1167,7 +1167,7 @@ namespace leetcode
         {
             //大  找到1和高于1位的0交换 后面的1排到最后
             //小 找到0和高于0位的1交换 后面的1排到最前
-            var res = new int[] {-1, -1};
+            var res = new int[] { -1, -1 };
             int val = num, flagBit = -1, bit = 0, oneSize = 0;
             while (val != 0)
             {
@@ -1286,7 +1286,7 @@ namespace leetcode
                 }
 
                 visited[x, y] = true;
-                path.Add(new[] {x, y});
+                path.Add(new[] { x, y });
                 if (x == targetX && y == targetY)
                 {
                     return true;
@@ -1305,7 +1305,7 @@ namespace leetcode
             IList<IList<int>> Dp()
             {
                 var paths = new IList<IList<int>>[obstacleGrid.Length, obstacleGrid[0].Length];
-                paths[0, 0] = new IList<int>[] {new[] {0, 0}};
+                paths[0, 0] = new IList<int>[] { new[] { 0, 0 } };
                 for (int i = 0; i <= targetX; i++)
                 {
                     for (int j = 0; j <= targetY; j++)
@@ -1325,7 +1325,7 @@ namespace leetcode
                             {
                                 if (paths[i, j - 1].Count > 0)
                                 {
-                                    var newPath = new List<IList<int>>(paths[i, j - 1]) {new[] {i, j}};
+                                    var newPath = new List<IList<int>>(paths[i, j - 1]) { new[] { i, j } };
                                     paths[i, j] = newPath;
                                 }
                                 else
@@ -1336,7 +1336,7 @@ namespace leetcode
                             else if (j == 0)
                             {
                                 paths[i, j] = paths[i - 1, j].Count > 0
-                                    ? new List<IList<int>>(paths[i - 1, j]) {new[] {i, j}}
+                                    ? new List<IList<int>>(paths[i - 1, j]) { new[] { i, j } }
                                     : paths[i - 1, j];
                             }
                             else
@@ -1347,17 +1347,17 @@ namespace leetcode
                                 }
                                 else if (paths[i - 1, j].Count <= 0)
                                 {
-                                    paths[i, j] = new List<IList<int>>(paths[i, j - 1]) {new[] {i, j}};
+                                    paths[i, j] = new List<IList<int>>(paths[i, j - 1]) { new[] { i, j } };
                                 }
                                 else if (paths[i, j - 1].Count <= 0)
                                 {
-                                    paths[i, j] = new List<IList<int>>(paths[i - 1, j]) {new[] {i, j}};
+                                    paths[i, j] = new List<IList<int>>(paths[i - 1, j]) { new[] { i, j } };
                                 }
                                 else
                                 {
                                     paths[i, j] = new List<IList<int>>(paths[i - 1, j].Count > paths[i, j - 1].Count
                                         ? paths[i, j - 1]
-                                        : paths[i - 1, j]) {new[] {i, j}};
+                                        : paths[i - 1, j]) { new[] { i, j } };
                                 }
                             }
                         }
@@ -1513,12 +1513,12 @@ namespace leetcode
 
             if (confilct < 0)
             {
-                return new[] {edges[cycle][0], edges[cycle][1]};
+                return new[] { edges[cycle][0], edges[cycle][1] };
             }
 
             return cycle < 0
-                ? new[] {edges[confilct][0], edges[confilct][1]}
-                : new[] {parents[edges[confilct][1]], edges[confilct][1]};
+                ? new[] { edges[confilct][0], edges[confilct][1] }
+                : new[] { parents[edges[confilct][1]], edges[confilct][1] };
         }
 
         #endregion
@@ -2324,7 +2324,7 @@ namespace leetcode
             {
                 if (node == null)
                 {
-                    return new[] {int.MaxValue / 2, 0, 0};
+                    return new[] { int.MaxValue / 2, 0, 0 };
                 }
 
                 var left = Dfs(node.left);
@@ -2391,7 +2391,7 @@ namespace leetcode
             //0xaaaaaaaa 奇数位全为1数
             //0x55555555 偶数位全为1数
             //&操作保留奇数位和偶数位，同时偶数位左移和奇数位右移得到最后结果
-            return (int) (((num & 0xaaaaaaaa) >> 1) | ((num & 0x55555555) << 1));
+            return (int)(((num & 0xaaaaaaaa) >> 1) | ((num & 0x55555555) << 1));
         }
 
         #endregion
@@ -3080,7 +3080,7 @@ namespace leetcode
                 if (arrA[0] <= arrB[1] && arrA[1] >= arrB[0])
                 {
                     //交集<=集合数，只可能在最大起点和最小终点
-                    result.Add(new[] {Math.Max(arrA[0], arrB[0]), Math.Min(arrA[1], arrB[1])});
+                    result.Add(new[] { Math.Max(arrA[0], arrB[0]), Math.Min(arrA[1], arrB[1]) });
                 }
 
                 //保留大的区间
@@ -3128,7 +3128,7 @@ namespace leetcode
                         for (int s = -1; s < 2; s += 2)
                         {
                             var next = start.ToArray();
-                            next[j] = (char) ((next[j] - '0' + s + 10) % 10 + '0');
+                            next[j] = (char)((next[j] - '0' + s + 10) % 10 + '0');
                             var str = new string(next);
                             if (set.Add(str))
                             {
@@ -3145,7 +3145,7 @@ namespace leetcode
         }
 
         #endregion
- 
+
         #region 357. 计算各个位数不同的数字个数
 
         //https://leetcode-cn.com/problems/count-numbers-with-unique-digits/
@@ -3272,7 +3272,7 @@ namespace leetcode
                     num += n2.Pop();
                 }
 
-                var node = new ListNode(num) {next = newNode};
+                var node = new ListNode(num) { next = newNode };
                 newNode = node;
                 if (node.val >= 10)
                 {
@@ -3285,7 +3285,7 @@ namespace leetcode
                 }
             }
 
-            return num == 0 ? newNode : new ListNode(num) {next = newNode};
+            return num == 0 ? newNode : new ListNode(num) { next = newNode };
         }
 
         #endregion
@@ -3358,6 +3358,6 @@ namespace leetcode
         }
 
         #endregion
-        
+
     }
 }
