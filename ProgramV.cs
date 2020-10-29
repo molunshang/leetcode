@@ -1928,6 +1928,91 @@ namespace leetcode
             {
                 res += n;
             }
+
+            return res;
+        }
+
+        #endregion
+
+        #region 1496. 判断路径是否相交
+
+        //https://leetcode-cn.com/problems/path-crossing/
+        public bool IsPathCrossing(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                return false;
+            }
+
+            //'N'、'S'、'E' 或者 'W'
+            var visited = new HashSet<string>();
+            int x = 0, y = 0;
+            visited.Add(x + "," + y);
+            foreach (var t in path)
+            {
+                switch (t)
+                {
+                    case 'N':
+                        x++;
+                        break;
+                    case 'S':
+                        x--;
+                        break;
+                    case 'E':
+                        y++;
+                        break;
+                    case 'W':
+                        y--;
+                        break;
+                }
+
+                if (!visited.Add(x + "," + y))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        #endregion
+
+        #region 931. 下降路径最小和
+
+        //https://leetcode-cn.com/problems/minimum-falling-path-sum/
+        public int MinFallingPathSum(int[][] a)
+        {
+            var dp = new int[a.Length, a[0].Length];
+            var res = int.MaxValue;
+            for (var i = 0; i < a.Length; i++)
+            {
+                for (var j = 0; j < a[i].Length; j++)
+                {
+                    if (i == 0)
+                    {
+                        dp[i, j] = a[i][j];
+                    }
+                    else if (j == 0)
+                    {
+                        dp[i, j] = (a[i].Length == 1 ? dp[i - 1, j] : Math.Min(dp[i - 1, j], dp[i - 1, j + 1])) +
+                                   a[i][j];
+                    }
+                    else if (j == a[i].Length - 1)
+                    {
+                        dp[i, j] = Math.Min(dp[i - 1, j], dp[i - 1, j - 1]) + a[i][j];
+                    }
+                    else
+                    {
+                        dp[i, j] = Math.Min(Math.Min(dp[i - 1, j], dp[i - 1, j - 1]), dp[i - 1, j + 1]) + a[i][j];
+                    }
+
+                    if (i == a.Length - 1)
+                    {
+                        res = Math.Min(res, dp[i, j]);
+                    }
+                }
+            }
+
             return res;
         }
 
