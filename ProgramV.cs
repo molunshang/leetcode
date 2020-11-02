@@ -331,7 +331,7 @@ namespace leetcode
                 break;
             }
 
-            return new[] { duplicate, miss };
+            return new[] {duplicate, miss};
         }
 
         #endregion
@@ -486,12 +486,12 @@ namespace leetcode
                 int t1 = num + k, t2 = num - k;
                 if (set.Contains(t1))
                 {
-                    numSet.Add(new[] { num, t1 });
+                    numSet.Add(new[] {num, t1});
                 }
 
                 if (set.Contains(t2))
                 {
-                    numSet.Add(new[] { t2, num });
+                    numSet.Add(new[] {t2, num});
                 }
 
                 set.Add(num);
@@ -988,7 +988,7 @@ namespace leetcode
         {
             if (n == 1)
             {
-                return new[] { 0 };
+                return new[] {0};
             }
 
             var graph = new Dictionary<int, List<int>>();
@@ -2149,7 +2149,7 @@ namespace leetcode
                 while (reader.Peek() > -1)
                 {
                     //read int
-                    var ch = (char)reader.Read();
+                    var ch = (char) reader.Read();
                     switch (ch)
                     {
                         case ']':
@@ -2158,25 +2158,28 @@ namespace leetcode
                             nestedInteger.Add(Read());
                             break;
                         case '[':
-                            if (']' == (char)reader.Peek())
+                            if (']' == (char) reader.Peek())
                             {
                                 reader.Read();
                                 return nestedInteger;
                             }
+
                             nestedInteger.Add(Read());
                             break;
                         default:
                             numStr.Append(ch);
                             while (reader.Peek() > -1)
                             {
-                                ch = (char)reader.Peek();
+                                ch = (char) reader.Peek();
                                 if (ch != '-' && !char.IsDigit(ch))
                                 {
                                     break;
                                 }
+
                                 numStr.Append(ch);
                                 reader.Read();
                             }
+
                             nestedInteger.SetInteger(int.Parse(numStr.ToString()));
                             numStr.Clear();
                             return nestedInteger;
@@ -2185,22 +2188,24 @@ namespace leetcode
 
                 return nestedInteger;
             }
+
             return Read();
         }
 
         #endregion
 
         #region 381. O(1) 时间插入、删除和获取随机元素 - 允许重复
+
         //https://leetcode-cn.com/problems/insert-delete-getrandom-o1-duplicates-allowed/
         public class RandomizedCollection
         {
             private List<int> data = new List<int>();
             private Dictionary<int, ISet<int>> indexDict = new Dictionary<int, ISet<int>>();
             private Random random = new Random();
+
             /** Initialize your data structure here. */
             public RandomizedCollection()
             {
-
             }
 
             /** Inserts a value to the collection. Returns true if the collection did not already contain the specified element. */
@@ -2212,6 +2217,7 @@ namespace leetcode
                     index = new HashSet<int>();
                     indexDict[val] = index;
                 }
+
                 index.Add(data.Count);
                 data.Add(val);
                 return !flag;
@@ -2224,6 +2230,7 @@ namespace leetcode
                 {
                     return false;
                 }
+
                 var lastIndex = data.Count - 1;
                 var last = data[lastIndex];
                 var lastIndexs = indexDict[last];
@@ -2237,8 +2244,10 @@ namespace leetcode
                     {
                         indexDict.Remove(val);
                     }
+
                     return true;
                 }
+
                 lastIndexs.Add(rmIndex);
                 lastIndexs.Remove(lastIndex);
                 if (lastIndexs.Count <= 0)
@@ -2260,9 +2269,34 @@ namespace leetcode
             /** Get a random element from the collection. */
             public int GetRandom()
             {
-                return data[(int)(random.NextDouble() * data.Count)];
+                return data[(int) (random.NextDouble() * data.Count)];
             }
         }
+
+        #endregion
+
+        #region 930. 和相同的二元子数组
+
+        //https://leetcode-cn.com/problems/binary-subarrays-with-sum/
+        public int NumSubarraysWithSum(int[] A, int S)
+        {
+            var prefixDict = new Dictionary<int, int>();
+            var prefixs = new int[A.Length + 1];
+            for (int i = 0; i < A.Length; ++i)
+            {
+                prefixs[i + 1] = prefixs[i] + A[i];
+            }
+
+            var ans = 0;
+            foreach (var x in prefixs)
+            {
+                ans += prefixDict.GetValueOrDefault(x, 0);
+                prefixDict[x + S] = prefixDict.GetValueOrDefault(x + S, 0) + 1;
+            }
+
+            return ans;
+        }
+
         #endregion
     }
 }
