@@ -331,7 +331,7 @@ namespace leetcode
                 break;
             }
 
-            return new[] { duplicate, miss };
+            return new[] {duplicate, miss};
         }
 
         #endregion
@@ -486,12 +486,12 @@ namespace leetcode
                 int t1 = num + k, t2 = num - k;
                 if (set.Contains(t1))
                 {
-                    numSet.Add(new[] { num, t1 });
+                    numSet.Add(new[] {num, t1});
                 }
 
                 if (set.Contains(t2))
                 {
-                    numSet.Add(new[] { t2, num });
+                    numSet.Add(new[] {t2, num});
                 }
 
                 set.Add(num);
@@ -988,7 +988,7 @@ namespace leetcode
         {
             if (n == 1)
             {
-                return new[] { 0 };
+                return new[] {0};
             }
 
             var graph = new Dictionary<int, List<int>>();
@@ -2149,7 +2149,7 @@ namespace leetcode
                 while (reader.Peek() > -1)
                 {
                     //read int
-                    var ch = (char)reader.Read();
+                    var ch = (char) reader.Read();
                     switch (ch)
                     {
                         case ']':
@@ -2158,7 +2158,7 @@ namespace leetcode
                             nestedInteger.Add(Read());
                             break;
                         case '[':
-                            if (']' == (char)reader.Peek())
+                            if (']' == (char) reader.Peek())
                             {
                                 reader.Read();
                                 return nestedInteger;
@@ -2170,7 +2170,7 @@ namespace leetcode
                             numStr.Append(ch);
                             while (reader.Peek() > -1)
                             {
-                                ch = (char)reader.Peek();
+                                ch = (char) reader.Peek();
                                 if (ch != '-' && !char.IsDigit(ch))
                                 {
                                     break;
@@ -2269,7 +2269,7 @@ namespace leetcode
             /** Get a random element from the collection. */
             public int GetRandom()
             {
-                return data[(int)(random.NextDouble() * data.Count)];
+                return data[(int) (random.NextDouble() * data.Count)];
             }
         }
 
@@ -2301,6 +2301,7 @@ namespace leetcode
         #endregion
 
         #region 941. 有效的山脉数组
+
         //https://leetcode-cn.com/problems/valid-mountain-array/
         public bool ValidMountainArray(int[] A)
         {
@@ -2308,6 +2309,7 @@ namespace leetcode
             {
                 return false;
             }
+
             int s = 0, e = A.Length - 1;
             while (s < e)
             {
@@ -2315,41 +2317,74 @@ namespace leetcode
                 {
                     return false;
                 }
+
                 if (A[s] > A[s + 1])
                 {
                     break;
                 }
+
                 s++;
             }
+
             if (s == 0 || s == e)
             {
                 return false;
             }
+
             while (s < e)
             {
                 if (A[s] <= A[s + 1])
                 {
                     return false;
                 }
+
                 s++;
             }
+
             return true;
         }
+
         #endregion
 
 
         #region 523. 连续的子数组和
+
         //https://leetcode-cn.com/problems/continuous-subarray-sum/
         public bool CheckSubarraySum(int[] nums, int k)
         {
-            var sum = 0;
-            for (int i = 0, j = 0; i < nums.Length; i++)
+            if (nums.Length < 2)
             {
-                //todo 待完成
+                return false;
             }
+
+            var sums = new int[nums.Length + 1];
+            for (var i = 0; i < nums.Length; i++)
+            {
+                sums[i + 1] = sums[i] + nums[i];
+            }
+
+            for (int l = 2; l <= nums.Length; l++)
+            {
+                for (int i = 0, j = i + l; i < sums.Length - l; i++, j++)
+                {
+                    var sum = sums[j] - sums[i];
+                    if (k == 0)
+                    {
+                        if (sum == 0)
+                        {
+                            return true;
+                        }
+                    }
+                    else if (sum % k == 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+
             return false;
         }
-        #endregion
 
+        #endregion
     }
 }

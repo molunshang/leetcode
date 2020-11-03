@@ -32,6 +32,7 @@ namespace leetcode
         {
             //[[],[],[],[]]
             //
+            program.CheckSubarraySum(new[] {0, 0}, 0);
             program.Deserialize("[123,456,[788,799,833],[[]],10,[]]");
             program.VideoStitching(JsonConvert.DeserializeObject<int[][]>("[[0,2],[4,6],[8,10],[1,9],[1,5],[5,9]]"),10);
             program.IsMatchOffer("mississippi", "mis*is*p*.");
