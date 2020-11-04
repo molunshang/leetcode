@@ -8249,60 +8249,61 @@ namespace leetcode
         //https://leetcode-cn.com/problems/word-ladder/solution/dan-ci-jie-long-by-leetcode/
         public int LadderLength(string beginWord, string endWord, IList<string> wordList)
         {
-            var dict = new Dictionary<string, IList<string>>();
+            if (beginWord == endWord)
+            {
+                return 0;
+            }
+            var dict = new Dictionary<string, List<string>>();
+            var exists = false;
             foreach (var word in wordList)
             {
+                exists = exists || word == endWord;
                 for (int i = 0; i < word.Length; i++)
                 {
                     var key = word.Substring(0, i) + "*" + word.Substring(i + 1);
-                    if (!dict.TryGetValue(key, out var items))
+                    if (!dict.TryGetValue(key, out var words))
                     {
-                        items = new List<string>();
-                        dict[key] = items;
+                        words = new List<string>();
+                        dict[key] = words;
                     }
-
-                    items.Add(word);
+                    words.Add(word);
                 }
             }
-
-            var visited = new HashSet<string>();
-            var step = 0;
+            if (!exists)
+            {
+                return 0;
+            }
             var queue = new Queue<string>();
             queue.Enqueue(beginWord);
+            var visited = new HashSet<string>();
+            var step = 0;
             while (queue.Count > 0)
             {
-                var size = queue.Count;
                 step++;
-                while (size > 0)
+                for (int s = 0, l = queue.Count; s < l; s++)
                 {
-                    size--;
                     var word = queue.Dequeue();
-                    if (!visited.Add(word))
-                    {
-                        continue;
-                    }
-
                     if (word == endWord)
                     {
                         return step;
                     }
-
+                    if (!visited.Add(word))
+                    {
+                        continue;
+                    }
                     for (int i = 0; i < word.Length; i++)
                     {
                         var key = word.Substring(0, i) + "*" + word.Substring(i + 1);
-                        if (!dict.TryGetValue(key, out var items))
+                        if (dict.TryGetValue(key, out var words))
                         {
-                            continue;
-                        }
-
-                        foreach (var next in items)
-                        {
-                            queue.Enqueue(next);
+                            foreach (var item in words)
+                            {
+                                queue.Enqueue(item);
+                            }
                         }
                     }
                 }
             }
-
             return 0;
         }
 
