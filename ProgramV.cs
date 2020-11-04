@@ -331,7 +331,7 @@ namespace leetcode
                 break;
             }
 
-            return new[] { duplicate, miss };
+            return new[] {duplicate, miss};
         }
 
         #endregion
@@ -486,12 +486,12 @@ namespace leetcode
                 int t1 = num + k, t2 = num - k;
                 if (set.Contains(t1))
                 {
-                    numSet.Add(new[] { num, t1 });
+                    numSet.Add(new[] {num, t1});
                 }
 
                 if (set.Contains(t2))
                 {
-                    numSet.Add(new[] { t2, num });
+                    numSet.Add(new[] {t2, num});
                 }
 
                 set.Add(num);
@@ -988,7 +988,7 @@ namespace leetcode
         {
             if (n == 1)
             {
-                return new[] { 0 };
+                return new[] {0};
             }
 
             var graph = new Dictionary<int, List<int>>();
@@ -2149,7 +2149,7 @@ namespace leetcode
                 while (reader.Peek() > -1)
                 {
                     //read int
-                    var ch = (char)reader.Read();
+                    var ch = (char) reader.Read();
                     switch (ch)
                     {
                         case ']':
@@ -2158,7 +2158,7 @@ namespace leetcode
                             nestedInteger.Add(Read());
                             break;
                         case '[':
-                            if (']' == (char)reader.Peek())
+                            if (']' == (char) reader.Peek())
                             {
                                 reader.Read();
                                 return nestedInteger;
@@ -2170,7 +2170,7 @@ namespace leetcode
                             numStr.Append(ch);
                             while (reader.Peek() > -1)
                             {
-                                ch = (char)reader.Peek();
+                                ch = (char) reader.Peek();
                                 if (ch != '-' && !char.IsDigit(ch))
                                 {
                                     break;
@@ -2269,7 +2269,7 @@ namespace leetcode
             /** Get a random element from the collection. */
             public int GetRandom()
             {
-                return data[(int)(random.NextDouble() * data.Count)];
+                return data[(int) (random.NextDouble() * data.Count)];
             }
         }
 
@@ -2388,14 +2388,53 @@ namespace leetcode
         #endregion
 
         #region 450. 删除二叉搜索树中的节点
+
         //https://leetcode-cn.com/problems/delete-node-in-a-bst/
         public TreeNode DeleteNode(TreeNode root, int key)
         {
-            //todo 待完成
-            throw new NotImplementedException();
+            if (root == null)
+            {
+                return null;
+            }
+
+            if (root.val > key)
+            {
+                root.left = DeleteNode(root.left, key);
+            }
+            else if (root.val < key)
+            {
+                root.right = DeleteNode(root.right, key);
+            }
+            else
+            {
+                if (root.left == null && root.right == null)
+                {
+                    return null;
+                }
+
+                if (root.left == null)
+                {
+                    return root.right;
+                }
+
+                if (root.right == null)
+                {
+                    return root.left;
+                }
+
+                var swap = root.right;
+                while (swap.left != null)
+                {
+                    swap = swap.left;
+                }
+
+                root.val = swap.val;
+                root.right = DeleteNode(root.right, swap.val);
+            }
+
+            return root;
         }
 
         #endregion
-
     }
 }
