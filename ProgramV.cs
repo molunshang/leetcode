@@ -331,7 +331,7 @@ namespace leetcode
                 break;
             }
 
-            return new[] { duplicate, miss };
+            return new[] {duplicate, miss};
         }
 
         #endregion
@@ -486,12 +486,12 @@ namespace leetcode
                 int t1 = num + k, t2 = num - k;
                 if (set.Contains(t1))
                 {
-                    numSet.Add(new[] { num, t1 });
+                    numSet.Add(new[] {num, t1});
                 }
 
                 if (set.Contains(t2))
                 {
-                    numSet.Add(new[] { t2, num });
+                    numSet.Add(new[] {t2, num});
                 }
 
                 set.Add(num);
@@ -988,7 +988,7 @@ namespace leetcode
         {
             if (n == 1)
             {
-                return new[] { 0 };
+                return new[] {0};
             }
 
             var graph = new Dictionary<int, List<int>>();
@@ -2149,7 +2149,7 @@ namespace leetcode
                 while (reader.Peek() > -1)
                 {
                     //read int
-                    var ch = (char)reader.Read();
+                    var ch = (char) reader.Read();
                     switch (ch)
                     {
                         case ']':
@@ -2158,7 +2158,7 @@ namespace leetcode
                             nestedInteger.Add(Read());
                             break;
                         case '[':
-                            if (']' == (char)reader.Peek())
+                            if (']' == (char) reader.Peek())
                             {
                                 reader.Read();
                                 return nestedInteger;
@@ -2170,7 +2170,7 @@ namespace leetcode
                             numStr.Append(ch);
                             while (reader.Peek() > -1)
                             {
-                                ch = (char)reader.Peek();
+                                ch = (char) reader.Peek();
                                 if (ch != '-' && !char.IsDigit(ch))
                                 {
                                     break;
@@ -2269,7 +2269,7 @@ namespace leetcode
             /** Get a random element from the collection. */
             public int GetRandom()
             {
-                return data[(int)(random.NextDouble() * data.Count)];
+                return data[(int) (random.NextDouble() * data.Count)];
             }
         }
 
@@ -2438,6 +2438,7 @@ namespace leetcode
         #endregion
 
         #region 559. N叉树的最大深度
+
         //https://leetcode-cn.com/problems/maximum-depth-of-n-ary-tree/
         public int MaxDepth(Node root)
         {
@@ -2445,16 +2446,20 @@ namespace leetcode
             {
                 return 0;
             }
+
             var max = 0;
             foreach (var node in root.children)
             {
                 max = Math.Max(max, MaxDepth(node));
             }
+
             return max + 1;
         }
+
         #endregion
 
         #region 515. 在每个树行中找最大值
+
         //https://leetcode-cn.com/problems/find-largest-value-in-each-tree-row/
         public IList<int> LargestValues(TreeNode root)
         {
@@ -2462,6 +2467,7 @@ namespace leetcode
             {
                 return new int[0];
             }
+
             var result = new List<int>();
             var queue = new Queue<TreeNode>();
             queue.Enqueue(root);
@@ -2476,18 +2482,23 @@ namespace leetcode
                     {
                         queue.Enqueue(root.left);
                     }
+
                     if (root.right != null)
                     {
                         queue.Enqueue(root.right);
                     }
                 }
+
                 result.Add(max);
             }
+
             return result;
         }
+
         #endregion
 
         #region 563. 二叉树的坡度
+
         //https://leetcode-cn.com/problems/binary-tree-tilt/
         public int FindTilt(TreeNode root)
         {
@@ -2500,12 +2511,91 @@ namespace leetcode
                     res[0] = left[0] + right[0] + Math.Abs(left[1] - right[1]);
                     res[1] = node.val + left[1] + right[1];
                 }
+
                 return res;
             }
+
             var arr = Dfs(root);
             return arr[0];
         }
+
         #endregion
 
+        #region 653. 两数之和 IV - 输入 BST
+
+        //https://leetcode-cn.com/problems/two-sum-iv-input-is-a-bst/
+        public bool FindTarget(TreeNode root, int k)
+        {
+            var list = new List<int>();
+
+            void Dfs(TreeNode node)
+            {
+                while (true)
+                {
+                    if (node == null)
+                    {
+                        return;
+                    }
+
+                    Dfs(node.left);
+                    list.Add(node.val);
+                    node = node.right;
+                }
+            }
+
+            Dfs(root);
+            int l = 0, r = list.Count - 1;
+            while (l < r)
+            {
+                var sum = list[l] + list[r];
+                if (sum == k)
+                {
+                    return true;
+                }
+
+                if (sum < k)
+                {
+                    l++;
+                }
+                else
+                {
+                    r--;
+                }
+            }
+
+            return false;
+        }
+
+        #endregion
+
+        #region 654. 最大二叉树
+
+        //https://leetcode-cn.com/problems/maximum-binary-tree/
+        public TreeNode ConstructMaximumBinaryTree(int[] nums)
+        {
+            TreeNode BuildTree(int l, int r)
+            {
+                if (l >= r)
+                {
+                    return l == r ? new TreeNode(nums[l]) : null;
+                }
+
+                int rootVal = int.MinValue, index = -1;
+                for (int i = l; i <= r; i++)
+                {
+                    if (nums[i] > rootVal)
+                    {
+                        rootVal = nums[i];
+                        index = i;
+                    }
+                }
+
+                return new TreeNode(rootVal) {left = BuildTree(l, index - 1), right = BuildTree(index + 1, r)};
+            }
+
+            return BuildTree(0, nums.Length - 1);
+        }
+
+        #endregion
     }
 }
