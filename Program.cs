@@ -510,63 +510,36 @@ namespace leetcode
         }
 
         #region 1356. 根据数字二进制下 1 的数目排序
-
         //https://leetcode-cn.com/problems/sort-integers-by-the-number-of-1-bits/
-        //1356. 根据数字二进制下 1 的数目排序
-        static int CountOne(int num)
+        public int[] SortByBits(int[] arr)
         {
-            var size = 0;
-            while (num != 0)
+            int BitCount(int n)
             {
-                if ((num & 1) == 1)
+                var count = 0;
+                while (n != 0)
                 {
-                    size++;
+                    n = n & (n - 1);
+                    count++;
                 }
-
-                num >>= 1;
+                return count;
             }
-
-            return size;
-        }
-
-        public static int[] SortByBits(int[] arr)
-        {
-            var indexs = new int[arr.Length];
-            for (int i = 0; i < arr.Length; i++)
+            var cache = new Dictionary<int, int>();
+            Array.Sort(arr, Comparer<int>.Create((a, b) =>
             {
-                indexs[i] = CountOne(arr[i]);
-            }
-
-            var flag = true;
-            for (int i = 0; i < arr.Length - 1; i++)
-            {
-                for (int j = 0; j < arr.Length - i - 1; j++)
+                if (!cache.TryGetValue(a, out var ac))
                 {
-                    if (indexs[j] == indexs[j + 1])
-                    {
-                        if (arr[j] > arr[j + 1])
-                        {
-                            Swap(arr, j, j + 1);
-                            flag = false;
-                        }
-                    }
-                    else if (indexs[j] > indexs[j + 1])
-                    {
-                        Swap(indexs, j, j + 1);
-                        Swap(arr, j, j + 1);
-                        flag = false;
-                    }
+                    ac = BitCount(a);
+                    cache[a] = ac;
                 }
-
-                if (flag)
+                if (!cache.TryGetValue(b, out var bc))
                 {
-                    break;
+                    bc = BitCount(b);
+                    cache[b] = bc;
                 }
-            }
-
+                return ac == bc ? a - b : ac - bc;
+            }));
             return arr;
         }
-
         #endregion
 
         #region 1122. 数组的相对排序
