@@ -331,7 +331,7 @@ namespace leetcode
                 break;
             }
 
-            return new[] { duplicate, miss };
+            return new[] {duplicate, miss};
         }
 
         #endregion
@@ -486,12 +486,12 @@ namespace leetcode
                 int t1 = num + k, t2 = num - k;
                 if (set.Contains(t1))
                 {
-                    numSet.Add(new[] { num, t1 });
+                    numSet.Add(new[] {num, t1});
                 }
 
                 if (set.Contains(t2))
                 {
-                    numSet.Add(new[] { t2, num });
+                    numSet.Add(new[] {t2, num});
                 }
 
                 set.Add(num);
@@ -988,7 +988,7 @@ namespace leetcode
         {
             if (n == 1)
             {
-                return new[] { 0 };
+                return new[] {0};
             }
 
             var graph = new Dictionary<int, List<int>>();
@@ -2149,7 +2149,7 @@ namespace leetcode
                 while (reader.Peek() > -1)
                 {
                     //read int
-                    var ch = (char)reader.Read();
+                    var ch = (char) reader.Read();
                     switch (ch)
                     {
                         case ']':
@@ -2158,7 +2158,7 @@ namespace leetcode
                             nestedInteger.Add(Read());
                             break;
                         case '[':
-                            if (']' == (char)reader.Peek())
+                            if (']' == (char) reader.Peek())
                             {
                                 reader.Read();
                                 return nestedInteger;
@@ -2170,7 +2170,7 @@ namespace leetcode
                             numStr.Append(ch);
                             while (reader.Peek() > -1)
                             {
-                                ch = (char)reader.Peek();
+                                ch = (char) reader.Peek();
                                 if (ch != '-' && !char.IsDigit(ch))
                                 {
                                     break;
@@ -2269,7 +2269,7 @@ namespace leetcode
             /** Get a random element from the collection. */
             public int GetRandom()
             {
-                return data[(int)(random.NextDouble() * data.Count)];
+                return data[(int) (random.NextDouble() * data.Count)];
             }
         }
 
@@ -2590,7 +2590,7 @@ namespace leetcode
                     }
                 }
 
-                return new TreeNode(rootVal) { left = BuildTree(l, index - 1), right = BuildTree(index + 1, r) };
+                return new TreeNode(rootVal) {left = BuildTree(l, index - 1), right = BuildTree(index + 1, r)};
             }
 
             return BuildTree(0, nums.Length - 1);
@@ -2598,6 +2598,52 @@ namespace leetcode
 
         #endregion
 
+        #region 662. 二叉树最大宽度
 
+        //https://leetcode-cn.com/problems/maximum-width-of-binary-tree/
+        //利用完全二叉树特性
+        public int WidthOfBinaryTree(TreeNode root)
+        {
+            if (root == null)
+            {
+                return 0;
+            }
+
+            var width = 0;
+            var queue = new Queue<Tuple<TreeNode, int>>();
+            queue.Enqueue(new Tuple<TreeNode, int>(root, 0));
+            while (queue.Count > 0)
+            {
+                int left = -1, right = -1;
+                for (int i = 0, j = queue.Count; i < j; i++)
+                {
+                    var item = queue.Dequeue();
+                    if (left == -1)
+                    {
+                        left = item.Item2;
+                    }
+
+                    root = item.Item1;
+                    if (root.left != null)
+                    {
+                        queue.Enqueue(new Tuple<TreeNode, int>(root.left, item.Item2 * 2));
+                    }
+
+                    if (root.right != null)
+                    {
+                        queue.Enqueue(new Tuple<TreeNode, int>(root.right, item.Item2 * 2 + 1));
+                    }
+
+                    right = item.Item2;
+                }
+
+
+                width = Math.Max(width, right - left + 1);
+            }
+
+            return width;
+        }
+
+        #endregion
     }
 }
