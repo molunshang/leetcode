@@ -2763,5 +2763,23 @@ namespace leetcode
             return Dfs(0, bricks, ladders);
         }
         #endregion
+
+        #region 973. 最接近原点的 K 个点
+        //https://leetcode-cn.com/problems/k-closest-points-to-origin/
+        public int[][] KClosest(int[][] points, int K)
+        {
+            Array.Sort(points, Comparer<int[]>.Create((a, b) =>
+            {
+                int n1 = a[0] * a[0] + a[1] * a[1], n2 = b[0] * b[0] + b[1] * b[1];
+                return n1 - n2;
+            }));
+            var res = new int[K][];
+            for (int i = 0; i < res.Length; i++)
+            {
+                res[i] = points[i];
+            }
+            return res;
+        }
+        #endregion
     }
 }
