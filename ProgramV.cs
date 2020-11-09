@@ -2760,7 +2760,45 @@ namespace leetcode
                 }
                 return res;
             }
-            return Dfs(0, bricks, ladders);
+            var heap = new SortedDictionary<int, int>();
+            for (int i = 1; i < heights.Length; i++)
+            {
+                if (heights[i] <= heights[i - 1])
+                {
+                    continue;
+                }
+                var diff = heights[i] - heights[i - 1];
+                if (heap.TryGetValue(diff, out var count))
+                {
+                    count++;
+                }
+                else
+                {
+                    count = 1;
+                }
+                heap[diff] = count;
+                ladders--;
+                if (ladders < 0)
+                {
+                    var min = heap.First();
+                    diff = min.Key;
+                    bricks -= diff;
+                    if (bricks < 0)
+                    {
+                        return i - 1;
+                    }
+                    if (min.Value == 1)
+                    {
+                        heap.Remove(min.Key);
+                    }
+                    else
+                    {
+                        heap[min.Key] = min.Value - 1;
+                    }
+                    ladders++;
+                }
+            }
+            return heights.Length - 1;
         }
         #endregion
 
@@ -2781,5 +2819,6 @@ namespace leetcode
             return res;
         }
         #endregion
+
     }
 }
