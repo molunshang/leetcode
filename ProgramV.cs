@@ -2820,5 +2820,101 @@ namespace leetcode
         }
         #endregion
 
+        #region 703. 数据流中的第 K 大元素
+        //https://leetcode-cn.com/problems/kth-largest-element-in-a-stream/
+        public class KthLargest
+        {
+            private int _count;
+            private int _k;
+            private SortedDictionary<int, int> dict = new SortedDictionary<int, int>();
+            public KthLargest(int k, int[] nums)
+            {
+                _k = k;
+                foreach (var n in nums)
+                {
+                    Add(n);
+                }
+            }
+
+            public int Add(int val)
+            {
+                if (_count == _k)
+                {
+                    var head = dict.First();
+                    if (head.Key >= val)
+                    {
+                        return head.Key;
+                    }
+                }
+                if (dict.TryGetValue(val, out var count))
+                {
+                    count++;
+                }
+                else
+                {
+                    count = 1;
+                }
+                dict[val] = count;
+                if (_count == _k)
+                {
+                    var head = dict.First();
+                    if (head.Value == 1)
+                    {
+                        dict.Remove(head.Key);
+                    }
+                    else
+                    {
+                        dict[head.Key] = head.Value - 1;
+                    }
+                }
+                else
+                {
+                    _count++;
+                }
+                return dict.First().Key;
+            }
+        }
+        #endregion
+
+        #region 514. 自由之路
+        //https://leetcode-cn.com/problems/freedom-trail/
+        public int FindRotateSteps(string ring, string key)
+        {
+            //var visited = new HashSet<int>();
+            //int Dfs(int i, int j)
+            //{
+            //    if (j >= key.Length)
+            //    {
+            //        return 0;
+            //    }
+            //    if (!visited.Add(i))
+            //    {
+            //        return int.MaxValue;
+            //    }
+            //    var ri = i;
+            //    if (i < 0)
+            //    {
+            //        i = ring.Length - 1;
+            //    }
+            //    else if (i >= ring.Length)
+            //    {
+            //        i = 0;
+            //    }
+            //    var step = 0;
+            //    if (ring[i] == key[j])
+            //    {
+            //        step = Math.Min(Dfs(i - 1, j + 1), Dfs(i + 1, j + 1)) + 2;
+            //    }
+            //    else
+            //    {
+            //        step = Math.Min(Dfs(i - 1, j), Dfs(i + 1, j)) + 1;
+            //    }
+            //    visited.Remove(i);
+            //    return step;
+            //}
+            //return Dfs(0, 0);
+            throw new NotImplementedException();
+        }
+        #endregion
     }
 }
