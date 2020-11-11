@@ -331,7 +331,7 @@ namespace leetcode
                 break;
             }
 
-            return new[] { duplicate, miss };
+            return new[] {duplicate, miss};
         }
 
         #endregion
@@ -486,12 +486,12 @@ namespace leetcode
                 int t1 = num + k, t2 = num - k;
                 if (set.Contains(t1))
                 {
-                    numSet.Add(new[] { num, t1 });
+                    numSet.Add(new[] {num, t1});
                 }
 
                 if (set.Contains(t2))
                 {
-                    numSet.Add(new[] { t2, num });
+                    numSet.Add(new[] {t2, num});
                 }
 
                 set.Add(num);
@@ -988,7 +988,7 @@ namespace leetcode
         {
             if (n == 1)
             {
-                return new[] { 0 };
+                return new[] {0};
             }
 
             var graph = new Dictionary<int, List<int>>();
@@ -2149,7 +2149,7 @@ namespace leetcode
                 while (reader.Peek() > -1)
                 {
                     //read int
-                    var ch = (char)reader.Read();
+                    var ch = (char) reader.Read();
                     switch (ch)
                     {
                         case ']':
@@ -2158,7 +2158,7 @@ namespace leetcode
                             nestedInteger.Add(Read());
                             break;
                         case '[':
-                            if (']' == (char)reader.Peek())
+                            if (']' == (char) reader.Peek())
                             {
                                 reader.Read();
                                 return nestedInteger;
@@ -2170,7 +2170,7 @@ namespace leetcode
                             numStr.Append(ch);
                             while (reader.Peek() > -1)
                             {
-                                ch = (char)reader.Peek();
+                                ch = (char) reader.Peek();
                                 if (ch != '-' && !char.IsDigit(ch))
                                 {
                                     break;
@@ -2269,7 +2269,7 @@ namespace leetcode
             /** Get a random element from the collection. */
             public int GetRandom()
             {
-                return data[(int)(random.NextDouble() * data.Count)];
+                return data[(int) (random.NextDouble() * data.Count)];
             }
         }
 
@@ -2590,7 +2590,7 @@ namespace leetcode
                     }
                 }
 
-                return new TreeNode(rootVal) { left = BuildTree(l, index - 1), right = BuildTree(index + 1, r) };
+                return new TreeNode(rootVal) {left = BuildTree(l, index - 1), right = BuildTree(index + 1, r)};
             }
 
             return BuildTree(0, nums.Length - 1);
@@ -2647,6 +2647,7 @@ namespace leetcode
         #endregion
 
         #region 327. 区间和的个数
+
         //https://leetcode-cn.com/problems/count-of-range-sum/
         public int CountRangeSum(int[] nums, int lower, int upper)
         {
@@ -2662,6 +2663,7 @@ namespace leetcode
                 {
                     return 0;
                 }
+
                 var mid = (left + right) / 2;
                 int lc = MergeCount(left, mid), rc = MergeCount(mid + 1, right);
                 var res = lc + rc;
@@ -2674,10 +2676,12 @@ namespace leetcode
                     {
                         l++;
                     }
+
                     while (r <= right && ranges[r] - ranges[i] <= upper)
                     {
                         r++;
                     }
+
                     res += r - l;
                     i++;
                 }
@@ -2690,30 +2694,33 @@ namespace leetcode
                 {
                     if (p1 > mid)
                     {
-                        sorted[p++] = (int)ranges[p2++];
+                        sorted[p++] = (int) ranges[p2++];
                     }
                     else if (p2 > right)
                     {
-                        sorted[p++] = (int)ranges[p1++];
+                        sorted[p++] = (int) ranges[p1++];
                     }
                     else
                     {
                         if (ranges[p1] < ranges[p2])
                         {
-                            sorted[p++] = (int)ranges[p1++];
+                            sorted[p++] = (int) ranges[p1++];
                         }
                         else
                         {
-                            sorted[p++] = (int)ranges[p2++];
+                            sorted[p++] = (int) ranges[p2++];
                         }
                     }
                 }
+
                 for (int j = 0; j < sorted.Length; j++)
                 {
                     ranges[left + j] = sorted[j];
                 }
+
                 return res;
             }
+
             var count = 0;
             for (int l = 1; l <= nums.Length; l++)
             {
@@ -2726,11 +2733,14 @@ namespace leetcode
                     }
                 }
             }
+
             return count;
         }
+
         #endregion
 
         #region 1642. 可以到达的最远建筑
+
         //https://leetcode-cn.com/problems/furthest-building-you-can-reach/
         public int FurthestBuilding(int[] heights, int bricks, int ladders)
         {
@@ -2740,6 +2750,7 @@ namespace leetcode
                 {
                     return i;
                 }
+
                 var res = 0;
                 if (heights[i] >= heights[i + 1])
                 {
@@ -2752,14 +2763,17 @@ namespace leetcode
                     {
                         res = Math.Max(res, Dfs(i + 1, b, l - 1));
                     }
+
                     var diff = heights[i + 1] - heights[i];
                     if (res < heights.Length - 1 && b >= diff)
                     {
                         res = Dfs(i + 1, b - diff, l);
                     }
                 }
+
                 return res;
             }
+
             var heap = new SortedDictionary<int, int>();
             for (int i = 1; i < heights.Length; i++)
             {
@@ -2767,6 +2781,7 @@ namespace leetcode
                 {
                     continue;
                 }
+
                 var diff = heights[i] - heights[i - 1];
                 if (heap.TryGetValue(diff, out var count))
                 {
@@ -2776,6 +2791,7 @@ namespace leetcode
                 {
                     count = 1;
                 }
+
                 heap[diff] = count;
                 ladders--;
                 if (ladders < 0)
@@ -2787,6 +2803,7 @@ namespace leetcode
                     {
                         return i - 1;
                     }
+
                     if (min.Value == 1)
                     {
                         heap.Remove(min.Key);
@@ -2795,14 +2812,18 @@ namespace leetcode
                     {
                         heap[min.Key] = min.Value - 1;
                     }
+
                     ladders++;
                 }
             }
+
             return heights.Length - 1;
         }
+
         #endregion
 
         #region 973. 最接近原点的 K 个点
+
         //https://leetcode-cn.com/problems/k-closest-points-to-origin/
         public int[][] KClosest(int[][] points, int K)
         {
@@ -2816,105 +2837,156 @@ namespace leetcode
             {
                 res[i] = points[i];
             }
+
             return res;
         }
-        #endregion
 
-        #region 703. 数据流中的第 K 大元素
-        //https://leetcode-cn.com/problems/kth-largest-element-in-a-stream/
-        public class KthLargest
-        {
-            private int _count;
-            private int _k;
-            private SortedDictionary<int, int> dict = new SortedDictionary<int, int>();
-            public KthLargest(int k, int[] nums)
-            {
-                _k = k;
-                foreach (var n in nums)
-                {
-                    Add(n);
-                }
-            }
-
-            public int Add(int val)
-            {
-                if (_count == _k)
-                {
-                    var head = dict.First();
-                    if (head.Key >= val)
-                    {
-                        return head.Key;
-                    }
-                }
-                if (dict.TryGetValue(val, out var count))
-                {
-                    count++;
-                }
-                else
-                {
-                    count = 1;
-                }
-                dict[val] = count;
-                if (_count == _k)
-                {
-                    var head = dict.First();
-                    if (head.Value == 1)
-                    {
-                        dict.Remove(head.Key);
-                    }
-                    else
-                    {
-                        dict[head.Key] = head.Value - 1;
-                    }
-                }
-                else
-                {
-                    _count++;
-                }
-                return dict.First().Key;
-            }
-        }
         #endregion
 
         #region 514. 自由之路
+
         //https://leetcode-cn.com/problems/freedom-trail/
         public int FindRotateSteps(string ring, string key)
         {
-            //var visited = new HashSet<int>();
-            //int Dfs(int i, int j)
-            //{
-            //    if (j >= key.Length)
-            //    {
-            //        return 0;
-            //    }
-            //    if (!visited.Add(i))
-            //    {
-            //        return int.MaxValue;
-            //    }
-            //    var ri = i;
-            //    if (i < 0)
-            //    {
-            //        i = ring.Length - 1;
-            //    }
-            //    else if (i >= ring.Length)
-            //    {
-            //        i = 0;
-            //    }
-            //    var step = 0;
-            //    if (ring[i] == key[j])
-            //    {
-            //        step = Math.Min(Dfs(i - 1, j + 1), Dfs(i + 1, j + 1)) + 2;
-            //    }
-            //    else
-            //    {
-            //        step = Math.Min(Dfs(i - 1, j), Dfs(i + 1, j)) + 1;
-            //    }
-            //    visited.Remove(i);
-            //    return step;
-            //}
-            //return Dfs(0, 0);
-            throw new NotImplementedException();
+            var positions = new List<int>[26];
+            for (var i = 0; i < ring.Length; i++)
+            {
+                var p = ring[i] - 'a';
+                var pos = positions[p];
+                if (pos == null)
+                {
+                    pos = new List<int>();
+                    positions[p] = pos;
+                }
+
+                pos.Add(i);
+            }
+
+            var dp = new int[key.Length, ring.Length];
+            var res = int.MaxValue;
+            for (var i = 0; i < key.Length; i++)
+            {
+                var pos = positions[key[i] - 'a'];
+                if (i == 0)
+                {
+                    foreach (var po in pos)
+                    {
+                        dp[i, po] = Math.Min(po, ring.Length - po) + 1;
+                    }
+                }
+                else
+                {
+                    var prePos = positions[key[i - 1] - 'a'];
+                    foreach (var po in pos)
+                    {
+                        dp[i, po] = int.MaxValue;
+                        foreach (var p in prePos)
+                        {
+                            dp[i, po] = Math.Min(dp[i, po],
+                                dp[i - 1, p] + Math.Min(Math.Abs(po - p), ring.Length - Math.Abs(po - p)) + 1);
+                        }
+
+                        if (i == key.Length - 1)
+                        {
+                            res = Math.Min(res, dp[i, po]);
+                        }
+                    }
+                }
+            }
+
+            return res;
         }
+
+        #endregion
+
+        #region 766. 托普利茨矩阵
+
+        //https://leetcode-cn.com/problems/toeplitz-matrix/
+        public bool IsToeplitzMatrix(int[][] matrix)
+        {
+            for (var i = 1; i < matrix.Length; i++)
+            {
+                for (var j = 0; j < matrix[i].Length; j++)
+                {
+                    if (j == 0)
+                    {
+                        continue;
+                    }
+
+                    if (matrix[i][j] != matrix[i - 1][j - 1])
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        #endregion
+
+        #region 769. 最多能完成排序的块
+
+        //https://leetcode-cn.com/problems/max-chunks-to-make-sorted/
+        public int MaxChunksToSorted(int[] arr)
+        {
+            //todo 未完成
+            bool Can(int i, int s, int e)
+            {
+                var cur = i;
+                while (cur >= s)
+                {
+                    if (arr[cur] > arr[i])
+                    {
+                        return false;
+                    }
+
+                    cur--;
+                }
+
+                cur = i;
+                while (cur <= e)
+                {
+                    if (arr[cur] < arr[i])
+                    {
+                        return false;
+                    }
+
+                    cur++;
+                }
+
+                return true;
+            }
+
+            var cache =new int[arr.Length, arr.Length];
+            int Split(int s, int e)
+            {
+                if (s >= e)
+                {
+                    return s == e ? 1 : 0;
+                }
+
+                if (cache[s, e] != 0)
+                {
+                    return cache[s, e];
+                }
+                var res = 1;
+                for (int i = s; i <= e; i++)
+                {
+                    if (Can(i, s, e))
+                    {
+                        int left = Split(s, i - 1), right = Split(i + 1, e);
+                        res = Math.Max(res, left + right + 1);
+                    }
+                }
+
+                cache[s, e] = res;
+                return res;
+            }
+
+            return Split(0, arr.Length - 1);
+        }
+
         #endregion
     }
 }
