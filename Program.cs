@@ -30,6 +30,7 @@ namespace leetcode
 
         static void Main(string[] args)
         {
+            program.MaxChunksToSorted(new[] {1, 0, 2, 3, 4});
             program.FindRotateSteps("godding", "godding");
             program.FurthestBuilding(new[] { 4, 2, 7, 6, 9, 14, 12 }, 5, 1);
             program.CheckSubarraySum(new[] {0, 0}, 0);

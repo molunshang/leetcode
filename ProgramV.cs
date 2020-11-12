@@ -2930,61 +2930,54 @@ namespace leetcode
         //https://leetcode-cn.com/problems/max-chunks-to-make-sorted/
         public int MaxChunksToSorted(int[] arr)
         {
-            //todo 未完成
-            bool Can(int i, int s, int e)
+            int count = 0, max = int.MinValue;
+            for (var i = 0; i < arr.Length; i++)
             {
-                var cur = i;
-                while (cur >= s)
+                max = Math.Max(max, arr[i]);
+                if (max == i)
                 {
-                    if (arr[cur] > arr[i])
-                    {
-                        return false;
-                    }
-
-                    cur--;
+                    count++;
                 }
-
-                cur = i;
-                while (cur <= e)
-                {
-                    if (arr[cur] < arr[i])
-                    {
-                        return false;
-                    }
-
-                    cur++;
-                }
-
-                return true;
             }
 
-            var cache =new int[arr.Length, arr.Length];
-            int Split(int s, int e)
+            return count;
+        }
+
+        #endregion
+
+        #region 1539. 第 k 个缺失的正整数
+
+        //https://leetcode-cn.com/problems/kth-missing-positive-number/
+        public int FindKthPositive(int[] arr, int k)
+        {
+            var res = 1;
+            foreach (var num in arr)
             {
-                if (s >= e)
+                while (res < num)
                 {
-                    return s == e ? 1 : 0;
-                }
-
-                if (cache[s, e] != 0)
-                {
-                    return cache[s, e];
-                }
-                var res = 1;
-                for (int i = s; i <= e; i++)
-                {
-                    if (Can(i, s, e))
+                    k--;
+                    if (k == 0)
                     {
-                        int left = Split(s, i - 1), right = Split(i + 1, e);
-                        res = Math.Max(res, left + right + 1);
+                        return res;
                     }
-                }
 
-                cache[s, e] = res;
-                return res;
+                    res++;
+                }
+                res++;
             }
 
-            return Split(0, arr.Length - 1);
+            while (k != 0)
+            {
+                k--;
+                if (k == 0)
+                {
+                    break;
+                }
+
+                res++;
+            }
+
+            return res;
         }
 
         #endregion
