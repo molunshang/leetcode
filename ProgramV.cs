@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
+using System.Threading;
 
 namespace leetcode
 {
@@ -331,7 +332,7 @@ namespace leetcode
                 break;
             }
 
-            return new[] {duplicate, miss};
+            return new[] { duplicate, miss };
         }
 
         #endregion
@@ -486,12 +487,12 @@ namespace leetcode
                 int t1 = num + k, t2 = num - k;
                 if (set.Contains(t1))
                 {
-                    numSet.Add(new[] {num, t1});
+                    numSet.Add(new[] { num, t1 });
                 }
 
                 if (set.Contains(t2))
                 {
-                    numSet.Add(new[] {t2, num});
+                    numSet.Add(new[] { t2, num });
                 }
 
                 set.Add(num);
@@ -988,7 +989,7 @@ namespace leetcode
         {
             if (n == 1)
             {
-                return new[] {0};
+                return new[] { 0 };
             }
 
             var graph = new Dictionary<int, List<int>>();
@@ -2149,7 +2150,7 @@ namespace leetcode
                 while (reader.Peek() > -1)
                 {
                     //read int
-                    var ch = (char) reader.Read();
+                    var ch = (char)reader.Read();
                     switch (ch)
                     {
                         case ']':
@@ -2158,7 +2159,7 @@ namespace leetcode
                             nestedInteger.Add(Read());
                             break;
                         case '[':
-                            if (']' == (char) reader.Peek())
+                            if (']' == (char)reader.Peek())
                             {
                                 reader.Read();
                                 return nestedInteger;
@@ -2170,7 +2171,7 @@ namespace leetcode
                             numStr.Append(ch);
                             while (reader.Peek() > -1)
                             {
-                                ch = (char) reader.Peek();
+                                ch = (char)reader.Peek();
                                 if (ch != '-' && !char.IsDigit(ch))
                                 {
                                     break;
@@ -2269,7 +2270,7 @@ namespace leetcode
             /** Get a random element from the collection. */
             public int GetRandom()
             {
-                return data[(int) (random.NextDouble() * data.Count)];
+                return data[(int)(random.NextDouble() * data.Count)];
             }
         }
 
@@ -2590,7 +2591,7 @@ namespace leetcode
                     }
                 }
 
-                return new TreeNode(rootVal) {left = BuildTree(l, index - 1), right = BuildTree(index + 1, r)};
+                return new TreeNode(rootVal) { left = BuildTree(l, index - 1), right = BuildTree(index + 1, r) };
             }
 
             return BuildTree(0, nums.Length - 1);
@@ -2694,21 +2695,21 @@ namespace leetcode
                 {
                     if (p1 > mid)
                     {
-                        sorted[p++] = (int) ranges[p2++];
+                        sorted[p++] = (int)ranges[p2++];
                     }
                     else if (p2 > right)
                     {
-                        sorted[p++] = (int) ranges[p1++];
+                        sorted[p++] = (int)ranges[p1++];
                     }
                     else
                     {
                         if (ranges[p1] < ranges[p2])
                         {
-                            sorted[p++] = (int) ranges[p1++];
+                            sorted[p++] = (int)ranges[p1++];
                         }
                         else
                         {
-                            sorted[p++] = (int) ranges[p2++];
+                            sorted[p++] = (int)ranges[p2++];
                         }
                     }
                 }
@@ -2981,5 +2982,178 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 面试题 17.09. 第 k 个数
+        //https://leetcode-cn.com/problems/get-kth-magic-number-lcci/
+        public int GetKthMagicNumber(int k)
+        {
+            var seqs = new int[k];
+            seqs[0] = 1;
+            int n3 = 0, n5 = 0, n7 = 0;
+            for (int i = 1; i < k; i++)
+            {
+                seqs[i] = Math.Min(seqs[n3] * 3, Math.Min(seqs[n5] * 5, seqs[n7] * 7));
+                while (seqs[i] >= seqs[n3] * 3)
+                {
+                    n3++;
+                }
+                while (seqs[i] >= seqs[n5] * 5)
+                {
+                    n5++;
+                }
+                while (seqs[i] >= seqs[n7] * 7)
+                {
+                    n7++;
+                }
+            }
+            return seqs[k - 1];
+        }
+        #endregion
+
+        #region 面试题 16.02. 单词频率
+        //https://leetcode-cn.com/problems/words-frequency-lcci/
+        public class WordsFrequency
+        {
+            private Dictionary<string, int> dict;
+            public WordsFrequency(string[] book)
+            {
+                dict = book.GroupBy(s => s).ToDictionary(g => g.Key, g => g.Count());
+            }
+
+            public int Get(string word)
+            {
+                return dict.TryGetValue(word, out var count) ? count : 0;
+            }
+        }
+        #endregion
+
+        #region 面试题 16.20. T9键盘
+        //https://leetcode-cn.com/problems/t9-lcci/
+        public IList<string> GetValidT9Words(string num, string[] words)
+        {
+            var dict = new Dictionary<char, char[]>();
+            var ch = 'a';
+            for (int i = 2; i < 10; i++)
+            {
+                var chars = i == 7 || i == 9 ? new char[4] : new char[3];
+                for (int j = 0; j < chars.Length; j++)
+                {
+                    chars[j] = ch;
+                    ch++;
+                }
+                dict[(char)('0' + i)] = chars;
+            }
+            var check = new char[num.Length][];
+            for (int i = 0; i < num.Length; i++)
+            {
+                check[i] = dict[num[i]];
+            }
+            var result = new List<string>();
+            foreach (var word in words)
+            {
+                if (num.Length != word.Length)
+                {
+                    continue;
+                }
+                var add = true;
+                for (int i = 0; i < check.Length; i++)
+                {
+                    if (!check[i].Contains(word[i]))
+                    {
+                        add = false;
+                        break;
+                    }
+                }
+                if (add)
+                {
+                    result.Add(word);
+                }
+            }
+            return result;
+        }
+        #endregion
+
+        #region 1117. H2O 生成
+        //https://leetcode-cn.com/problems/building-h2o/
+        public class H2O
+        {
+            private int hCount = 2;
+            private object locker = new object();
+            public H2O()
+            {
+
+            }
+
+            public void Hydrogen(Action releaseHydrogen)
+            {
+                Monitor.Enter(locker);
+                while (hCount == 0)
+                {
+                    Monitor.Wait(locker);
+                }
+                releaseHydrogen();
+                hCount--;
+                Monitor.PulseAll(locker);
+                Monitor.Exit(locker);
+                // releaseHydrogen() outputs "H". Do not change or remove this line.
+            }
+
+            public void Oxygen(Action releaseOxygen)
+            {
+                // releaseOxygen() outputs "O". Do not change or remove this line.
+                Monitor.Enter(locker);
+                while (hCount != 0)
+                {
+                    Monitor.Wait(locker);
+                }
+                releaseOxygen();
+                hCount = 2;
+                Monitor.PulseAll(locker);
+                Monitor.Exit(locker);
+            }
+        }
+        #endregion
+
+        #region 402. 移掉K位数字
+        //https://leetcode-cn.com/problems/remove-k-digits/
+        public string RemoveKdigits(string num, int k)
+        {
+            if (k <= 0)
+            {
+                return num;
+            }
+            if (num.Length <= k)
+            {
+                return "0";
+            }
+            var stack = new Stack<char>();
+            foreach (var ch in num)
+            {
+                while (k > 0 && stack.Count > 0 && stack.Peek() > ch)
+                {
+                    stack.Pop();
+                    k--;
+                }
+                stack.Push(ch);
+            }
+            while (k > 0)
+            {
+                k--;
+                stack.Pop();
+            }
+            var chars = new char[stack.Count];
+            var start = chars.Length;
+            for (int i = chars.Length - 1; i >= 0; i--)
+            {
+                chars[i] = stack.Pop();
+                if (chars[i] != '0')
+                {
+                    start = i;
+                }
+            }
+            return start == chars.Length ? "0" : new string(chars, start, chars.Length - start);
+        }
+        #endregion
+
     }
 }
