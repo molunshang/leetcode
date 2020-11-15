@@ -3155,5 +3155,21 @@ namespace leetcode
         }
         #endregion
 
+        #region 406. 根据身高重建队列
+        //https://leetcode-cn.com/problems/queue-reconstruction-by-height/
+        public int[][] ReconstructQueue(int[][] people)
+        {
+            Array.Sort(people, Comparer<int[]>.Create((a, b) =>
+            {
+                return a[0] == b[0] ? a[1] - b[1] : b[0] - a[0];
+            }));
+            var result = new List<int[]>();
+            foreach (var p in people)
+            {
+                result.Insert(p[1], p);
+            }
+            return result.ToArray();
+        }
+        #endregion
     }
 }
