@@ -3171,5 +3171,46 @@ namespace leetcode
             return result.ToArray();
         }
         #endregion
+
+        #region 902. 最大为 N 的数字组合
+        //https://leetcode-cn.com/problems/numbers-at-most-n-given-digit-set/
+        public int AtMostNGivenDigitSet(string[] digits, int n)
+        {
+            int Dfs(StringBuilder sb)
+            {
+                var key = sb.ToString();
+                var res = 0;
+                if (key.Length > 0)
+                {
+                    if (int.TryParse(key, out var num))
+                    {
+                        if (num > n)
+                        {
+                            return 0;
+                        }
+                        res = 1;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+                for (int i = 0; i < digits.Length; i++)
+                {
+                    sb.Append(digits[i]);
+                    var count = Dfs(sb);
+                    sb.Remove(sb.Length - 1, 1);
+                    res += count;
+                    if (count == 0)
+                    {
+                        break;
+                    }
+                }
+                return res;
+            }
+            return Dfs(new StringBuilder());
+        }
+        #endregion
+
     }
 }
