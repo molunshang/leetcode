@@ -725,7 +725,7 @@ namespace leetcode
                         continue;
                     }
 
-                    board[x][y] = (char) (i + '1');
+                    board[x][y] = (char)(i + '1');
                     rows[x, i] = true;
                     cols[y, i] = true;
                     flag[i] = true;
@@ -2597,7 +2597,20 @@ namespace leetcode
 
             return -1;
         }
-
+        public int CanCompleteCircuitON(int[] gas, int[] cost)
+        {
+            int index = -1, spare = 0, min = int.MaxValue;
+            for (int i = 0; i < gas.Length; i++)
+            {
+                spare += gas[i] - cost[i];
+                if (spare < min)
+                {
+                    min = spare;
+                    index = i;
+                }
+            }
+            return spare < 0 ? -1 : (index + 1) % gas.Length;
+        }
         #endregion
 
         #region 212. 单词搜索 II

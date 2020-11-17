@@ -332,7 +332,7 @@ namespace leetcode
                 break;
             }
 
-            return new[] {duplicate, miss};
+            return new[] { duplicate, miss };
         }
 
         #endregion
@@ -487,12 +487,12 @@ namespace leetcode
                 int t1 = num + k, t2 = num - k;
                 if (set.Contains(t1))
                 {
-                    numSet.Add(new[] {num, t1});
+                    numSet.Add(new[] { num, t1 });
                 }
 
                 if (set.Contains(t2))
                 {
-                    numSet.Add(new[] {t2, num});
+                    numSet.Add(new[] { t2, num });
                 }
 
                 set.Add(num);
@@ -989,7 +989,7 @@ namespace leetcode
         {
             if (n == 1)
             {
-                return new[] {0};
+                return new[] { 0 };
             }
 
             var graph = new Dictionary<int, List<int>>();
@@ -2150,7 +2150,7 @@ namespace leetcode
                 while (reader.Peek() > -1)
                 {
                     //read int
-                    var ch = (char) reader.Read();
+                    var ch = (char)reader.Read();
                     switch (ch)
                     {
                         case ']':
@@ -2159,7 +2159,7 @@ namespace leetcode
                             nestedInteger.Add(Read());
                             break;
                         case '[':
-                            if (']' == (char) reader.Peek())
+                            if (']' == (char)reader.Peek())
                             {
                                 reader.Read();
                                 return nestedInteger;
@@ -2171,7 +2171,7 @@ namespace leetcode
                             numStr.Append(ch);
                             while (reader.Peek() > -1)
                             {
-                                ch = (char) reader.Peek();
+                                ch = (char)reader.Peek();
                                 if (ch != '-' && !char.IsDigit(ch))
                                 {
                                     break;
@@ -2270,7 +2270,7 @@ namespace leetcode
             /** Get a random element from the collection. */
             public int GetRandom()
             {
-                return data[(int) (random.NextDouble() * data.Count)];
+                return data[(int)(random.NextDouble() * data.Count)];
             }
         }
 
@@ -2591,7 +2591,7 @@ namespace leetcode
                     }
                 }
 
-                return new TreeNode(rootVal) {left = BuildTree(l, index - 1), right = BuildTree(index + 1, r)};
+                return new TreeNode(rootVal) { left = BuildTree(l, index - 1), right = BuildTree(index + 1, r) };
             }
 
             return BuildTree(0, nums.Length - 1);
@@ -2695,21 +2695,21 @@ namespace leetcode
                 {
                     if (p1 > mid)
                     {
-                        sorted[p++] = (int) ranges[p2++];
+                        sorted[p++] = (int)ranges[p2++];
                     }
                     else if (p2 > right)
                     {
-                        sorted[p++] = (int) ranges[p1++];
+                        sorted[p++] = (int)ranges[p1++];
                     }
                     else
                     {
                         if (ranges[p1] < ranges[p2])
                         {
-                            sorted[p++] = (int) ranges[p1++];
+                            sorted[p++] = (int)ranges[p1++];
                         }
                         else
                         {
-                            sorted[p++] = (int) ranges[p2++];
+                            sorted[p++] = (int)ranges[p2++];
                         }
                     }
                 }
@@ -3052,7 +3052,7 @@ namespace leetcode
                     ch++;
                 }
 
-                dict[(char) ('0' + i)] = chars;
+                dict[(char)('0' + i)] = chars;
             }
 
             var check = new char[num.Length][];
