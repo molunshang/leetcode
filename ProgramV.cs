@@ -332,7 +332,7 @@ namespace leetcode
                 break;
             }
 
-            return new[] { duplicate, miss };
+            return new[] {duplicate, miss};
         }
 
         #endregion
@@ -487,12 +487,12 @@ namespace leetcode
                 int t1 = num + k, t2 = num - k;
                 if (set.Contains(t1))
                 {
-                    numSet.Add(new[] { num, t1 });
+                    numSet.Add(new[] {num, t1});
                 }
 
                 if (set.Contains(t2))
                 {
-                    numSet.Add(new[] { t2, num });
+                    numSet.Add(new[] {t2, num});
                 }
 
                 set.Add(num);
@@ -989,7 +989,7 @@ namespace leetcode
         {
             if (n == 1)
             {
-                return new[] { 0 };
+                return new[] {0};
             }
 
             var graph = new Dictionary<int, List<int>>();
@@ -2150,7 +2150,7 @@ namespace leetcode
                 while (reader.Peek() > -1)
                 {
                     //read int
-                    var ch = (char)reader.Read();
+                    var ch = (char) reader.Read();
                     switch (ch)
                     {
                         case ']':
@@ -2159,7 +2159,7 @@ namespace leetcode
                             nestedInteger.Add(Read());
                             break;
                         case '[':
-                            if (']' == (char)reader.Peek())
+                            if (']' == (char) reader.Peek())
                             {
                                 reader.Read();
                                 return nestedInteger;
@@ -2171,7 +2171,7 @@ namespace leetcode
                             numStr.Append(ch);
                             while (reader.Peek() > -1)
                             {
-                                ch = (char)reader.Peek();
+                                ch = (char) reader.Peek();
                                 if (ch != '-' && !char.IsDigit(ch))
                                 {
                                     break;
@@ -2270,7 +2270,7 @@ namespace leetcode
             /** Get a random element from the collection. */
             public int GetRandom()
             {
-                return data[(int)(random.NextDouble() * data.Count)];
+                return data[(int) (random.NextDouble() * data.Count)];
             }
         }
 
@@ -2591,7 +2591,7 @@ namespace leetcode
                     }
                 }
 
-                return new TreeNode(rootVal) { left = BuildTree(l, index - 1), right = BuildTree(index + 1, r) };
+                return new TreeNode(rootVal) {left = BuildTree(l, index - 1), right = BuildTree(index + 1, r)};
             }
 
             return BuildTree(0, nums.Length - 1);
@@ -2695,21 +2695,21 @@ namespace leetcode
                 {
                     if (p1 > mid)
                     {
-                        sorted[p++] = (int)ranges[p2++];
+                        sorted[p++] = (int) ranges[p2++];
                     }
                     else if (p2 > right)
                     {
-                        sorted[p++] = (int)ranges[p1++];
+                        sorted[p++] = (int) ranges[p1++];
                     }
                     else
                     {
                         if (ranges[p1] < ranges[p2])
                         {
-                            sorted[p++] = (int)ranges[p1++];
+                            sorted[p++] = (int) ranges[p1++];
                         }
                         else
                         {
-                            sorted[p++] = (int)ranges[p2++];
+                            sorted[p++] = (int) ranges[p2++];
                         }
                     }
                 }
@@ -2964,6 +2964,7 @@ namespace leetcode
 
                     res++;
                 }
+
                 res++;
             }
 
@@ -2984,6 +2985,7 @@ namespace leetcode
         #endregion
 
         #region 面试题 17.09. 第 k 个数
+
         //https://leetcode-cn.com/problems/get-kth-magic-number-lcci/
         public int GetKthMagicNumber(int k)
         {
@@ -2997,24 +2999,30 @@ namespace leetcode
                 {
                     n3++;
                 }
+
                 while (seqs[i] >= seqs[n5] * 5)
                 {
                     n5++;
                 }
+
                 while (seqs[i] >= seqs[n7] * 7)
                 {
                     n7++;
                 }
             }
+
             return seqs[k - 1];
         }
+
         #endregion
 
         #region 面试题 16.02. 单词频率
+
         //https://leetcode-cn.com/problems/words-frequency-lcci/
         public class WordsFrequency
         {
             private Dictionary<string, int> dict;
+
             public WordsFrequency(string[] book)
             {
                 dict = book.GroupBy(s => s).ToDictionary(g => g.Key, g => g.Count());
@@ -3025,9 +3033,11 @@ namespace leetcode
                 return dict.TryGetValue(word, out var count) ? count : 0;
             }
         }
+
         #endregion
 
         #region 面试题 16.20. T9键盘
+
         //https://leetcode-cn.com/problems/t9-lcci/
         public IList<string> GetValidT9Words(string num, string[] words)
         {
@@ -3041,13 +3051,16 @@ namespace leetcode
                     chars[j] = ch;
                     ch++;
                 }
-                dict[(char)('0' + i)] = chars;
+
+                dict[(char) ('0' + i)] = chars;
             }
+
             var check = new char[num.Length][];
             for (int i = 0; i < num.Length; i++)
             {
                 check[i] = dict[num[i]];
             }
+
             var result = new List<string>();
             foreach (var word in words)
             {
@@ -3055,6 +3068,7 @@ namespace leetcode
                 {
                     continue;
                 }
+
                 var add = true;
                 for (int i = 0; i < check.Length; i++)
                 {
@@ -3064,24 +3078,28 @@ namespace leetcode
                         break;
                     }
                 }
+
                 if (add)
                 {
                     result.Add(word);
                 }
             }
+
             return result;
         }
+
         #endregion
 
         #region 1117. H2O 生成
+
         //https://leetcode-cn.com/problems/building-h2o/
         public class H2O
         {
             private int hCount = 2;
             private object locker = new object();
+
             public H2O()
             {
-
             }
 
             public void Hydrogen(Action releaseHydrogen)
@@ -3091,6 +3109,7 @@ namespace leetcode
                 {
                     Monitor.Wait(locker);
                 }
+
                 releaseHydrogen();
                 hCount--;
                 Monitor.PulseAll(locker);
@@ -3106,15 +3125,18 @@ namespace leetcode
                 {
                     Monitor.Wait(locker);
                 }
+
                 releaseOxygen();
                 hCount = 2;
                 Monitor.PulseAll(locker);
                 Monitor.Exit(locker);
             }
         }
+
         #endregion
 
         #region 402. 移掉K位数字
+
         //https://leetcode-cn.com/problems/remove-k-digits/
         public string RemoveKdigits(string num, int k)
         {
@@ -3122,10 +3144,12 @@ namespace leetcode
             {
                 return num;
             }
+
             if (num.Length <= k)
             {
                 return "0";
             }
+
             var stack = new Stack<char>();
             foreach (var ch in num)
             {
@@ -3134,13 +3158,16 @@ namespace leetcode
                     stack.Pop();
                     k--;
                 }
+
                 stack.Push(ch);
             }
+
             while (k > 0)
             {
                 k--;
                 stack.Pop();
             }
+
             var chars = new char[stack.Count];
             var start = chars.Length;
             for (int i = chars.Length - 1; i >= 0; i--)
@@ -3151,28 +3178,31 @@ namespace leetcode
                     start = i;
                 }
             }
+
             return start == chars.Length ? "0" : new string(chars, start, chars.Length - start);
         }
+
         #endregion
 
         #region 406. 根据身高重建队列
+
         //https://leetcode-cn.com/problems/queue-reconstruction-by-height/
         public int[][] ReconstructQueue(int[][] people)
         {
-            Array.Sort(people, Comparer<int[]>.Create((a, b) =>
-            {
-                return a[0] == b[0] ? a[1] - b[1] : b[0] - a[0];
-            }));
+            Array.Sort(people, Comparer<int[]>.Create((a, b) => { return a[0] == b[0] ? a[1] - b[1] : b[0] - a[0]; }));
             var result = new List<int[]>();
             foreach (var p in people)
             {
                 result.Insert(p[1], p);
             }
+
             return result.ToArray();
         }
+
         #endregion
 
         #region 902. 最大为 N 的数字组合
+
         //https://leetcode-cn.com/problems/numbers-at-most-n-given-digit-set/
         public int AtMostNGivenDigitSet(string[] digits, int n)
         {
@@ -3188,6 +3218,7 @@ namespace leetcode
                         {
                             return 0;
                         }
+
                         res = 1;
                     }
                     else
@@ -3195,6 +3226,7 @@ namespace leetcode
                         return 0;
                     }
                 }
+
                 for (int i = 0; i < digits.Length; i++)
                 {
                     sb.Append(digits[i]);
@@ -3206,11 +3238,88 @@ namespace leetcode
                         break;
                     }
                 }
+
                 return res;
             }
+
             return Dfs(new StringBuilder());
         }
+
         #endregion
 
+        #region 814. 二叉树剪枝
+
+        //https://leetcode-cn.com/problems/binary-tree-pruning/
+        public TreeNode PruneTree(TreeNode root)
+        {
+            if (root == null)
+            {
+                return null;
+            }
+
+            root.left = PruneTree(root.left);
+            root.right = PruneTree(root.right);
+            if (root.val == 0 && root.left == null && root.right == null)
+            {
+                return null;
+            }
+
+            return root;
+        }
+
+        #endregion
+
+        #region 945. 使数组唯一的最小增量
+
+        //https://leetcode-cn.com/problems/minimum-increment-to-make-array-unique/
+        public int MinIncrementForUnique(int[] A)
+        {
+            Array.Sort(A);
+            var count = 0;
+            for (int i = 1; i < A.Length; i++)
+            {
+                if (A[i] > A[i - 1])
+                {
+                    continue;
+                }
+
+                count += A[i - 1] - A[i] + 1;
+                A[i] = A[i - 1] + 1;
+            }
+
+            return count;
+        }
+
+        #endregion
+
+        #region 905. 按奇偶排序数组
+
+        //https://leetcode-cn.com/problems/sort-array-by-parity/
+        public int[] SortArrayByParity(int[] a)
+        {
+            int i = 0, j = a.Length - 1;
+            while (i < j)
+            {
+                while (i < j && a[i] % 2 == 0)
+                {
+                    i++;
+                }
+
+                while (i < j && a[j] % 2 == 1)
+                {
+                    j--;
+                }
+
+                if (i != j)
+                {
+                    var tmp = a[i];
+                    a[i] = a[j];
+                    a[j] = tmp;
+                }
+            }
+            return a;
+        }
+
+        #endregion
     }
 }
