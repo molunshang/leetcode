@@ -254,18 +254,6 @@ namespace leetcode
 
         #endregion
 
-        #region 1201. 丑数 III
-
-        //https://leetcode-cn.com/problems/ugly-number-iii/
-        //二分查找（最大公约数/最大公倍数）
-        //解题思路 https://leetcode-cn.com/problems/ugly-number-iii/solution/er-fen-fa-si-lu-pou-xi-by-alfeim/
-        public int NthUglyNumber(int n, int a, int b, int c)
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
-
         #region 454. 四数相加 II
 
         //https://leetcode-cn.com/problems/4sum-ii/

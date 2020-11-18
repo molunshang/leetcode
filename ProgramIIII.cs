@@ -2190,22 +2190,6 @@ namespace leetcode
 
         #endregion
 
-        #region 222. 完全二叉树的节点个数
-
-        //https://leetcode-cn.com/problems/count-complete-tree-nodes/
-        public int CountNodes(TreeNode root)
-        {
-            //todo 二分计算二叉树节点
-            if (root == null)
-            {
-                return 0;
-            }
-
-            return CountNodes(root.left) + CountNodes(root.right) + 1;
-        }
-
-        #endregion
-
         #region 700. 二叉搜索树中的搜索
 
         //https://leetcode-cn.com/problems/search-in-a-binary-search-tree/

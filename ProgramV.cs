@@ -332,7 +332,7 @@ namespace leetcode
                 break;
             }
 
-            return new[] { duplicate, miss };
+            return new[] {duplicate, miss};
         }
 
         #endregion
@@ -487,12 +487,12 @@ namespace leetcode
                 int t1 = num + k, t2 = num - k;
                 if (set.Contains(t1))
                 {
-                    numSet.Add(new[] { num, t1 });
+                    numSet.Add(new[] {num, t1});
                 }
 
                 if (set.Contains(t2))
                 {
-                    numSet.Add(new[] { t2, num });
+                    numSet.Add(new[] {t2, num});
                 }
 
                 set.Add(num);
@@ -989,7 +989,7 @@ namespace leetcode
         {
             if (n == 1)
             {
-                return new[] { 0 };
+                return new[] {0};
             }
 
             var graph = new Dictionary<int, List<int>>();
@@ -2150,7 +2150,7 @@ namespace leetcode
                 while (reader.Peek() > -1)
                 {
                     //read int
-                    var ch = (char)reader.Read();
+                    var ch = (char) reader.Read();
                     switch (ch)
                     {
                         case ']':
@@ -2159,7 +2159,7 @@ namespace leetcode
                             nestedInteger.Add(Read());
                             break;
                         case '[':
-                            if (']' == (char)reader.Peek())
+                            if (']' == (char) reader.Peek())
                             {
                                 reader.Read();
                                 return nestedInteger;
@@ -2171,7 +2171,7 @@ namespace leetcode
                             numStr.Append(ch);
                             while (reader.Peek() > -1)
                             {
-                                ch = (char)reader.Peek();
+                                ch = (char) reader.Peek();
                                 if (ch != '-' && !char.IsDigit(ch))
                                 {
                                     break;
@@ -2270,7 +2270,7 @@ namespace leetcode
             /** Get a random element from the collection. */
             public int GetRandom()
             {
-                return data[(int)(random.NextDouble() * data.Count)];
+                return data[(int) (random.NextDouble() * data.Count)];
             }
         }
 
@@ -2591,7 +2591,7 @@ namespace leetcode
                     }
                 }
 
-                return new TreeNode(rootVal) { left = BuildTree(l, index - 1), right = BuildTree(index + 1, r) };
+                return new TreeNode(rootVal) {left = BuildTree(l, index - 1), right = BuildTree(index + 1, r)};
             }
 
             return BuildTree(0, nums.Length - 1);
@@ -2695,21 +2695,21 @@ namespace leetcode
                 {
                     if (p1 > mid)
                     {
-                        sorted[p++] = (int)ranges[p2++];
+                        sorted[p++] = (int) ranges[p2++];
                     }
                     else if (p2 > right)
                     {
-                        sorted[p++] = (int)ranges[p1++];
+                        sorted[p++] = (int) ranges[p1++];
                     }
                     else
                     {
                         if (ranges[p1] < ranges[p2])
                         {
-                            sorted[p++] = (int)ranges[p1++];
+                            sorted[p++] = (int) ranges[p1++];
                         }
                         else
                         {
-                            sorted[p++] = (int)ranges[p2++];
+                            sorted[p++] = (int) ranges[p2++];
                         }
                     }
                 }
@@ -3052,7 +3052,7 @@ namespace leetcode
                     ch++;
                 }
 
-                dict[(char)('0' + i)] = chars;
+                dict[(char) ('0' + i)] = chars;
             }
 
             var check = new char[num.Length][];
@@ -3317,7 +3317,90 @@ namespace leetcode
                     a[j] = tmp;
                 }
             }
+
             return a;
+        }
+
+        #endregion
+
+        #region 1201. 丑数 III
+
+        //https://leetcode-cn.com/problems/ugly-number-iii/
+        //二分查找（最大公约数/最小公倍数）
+        //解题思路 https://leetcode-cn.com/problems/ugly-number-iii/solution/er-fen-fa-si-lu-pou-xi-by-alfeim/
+        public int NthUglyNumber(int n, int a, int b, int c)
+        {
+            //最大公约数
+            int Gcd(int n1, int n2)
+            {
+                if (n1 < n2)
+                {
+                    var tmp = n1;
+                    n1 = n2;
+                    n2 = tmp;
+                }
+
+                if (n2 == 0)
+                {
+                    return 0;
+                }
+
+                while (n1 > n2)
+                {
+                    var tmp = n1 % n2;
+                    if (tmp == 0)
+                    {
+                        return n2;
+                    }
+
+                    n1 = n2;
+                    n2 = tmp;
+                }
+
+                return n2;
+            }
+
+            //最小公倍数
+            long Mcm(long n1, long n2)
+            {
+                var gcd = Gcd((int)n1, (int)n2);
+                return n1 * n2 / gcd;
+            }
+
+            int l = Math.Min(a, Math.Min(b, c)), r = 2 * (int) Math.Pow(10, 9);
+            long ab = Mcm(a, b), ac = Mcm(a, c), bc = Mcm(b, c), abc = Mcm(a, bc);
+            while (l <= r)
+            {
+                var m = l + (r - l) / 2;
+                var count = m / a + m / b + m / c - m / ab - m / ac - m / bc + m / abc;
+                if (count >= n)
+                {
+                    r = m - 1;
+                }
+                else
+                {
+                    l = m + 1;
+                }
+            }
+
+            return l;
+        }
+
+        #endregion
+
+
+        #region 222. 完全二叉树的节点个数
+
+        //https://leetcode-cn.com/problems/count-complete-tree-nodes/
+        public int CountNodes(TreeNode root)
+        {
+            //todo 二分计算二叉树节点
+            if (root == null)
+            {
+                return 0;
+            }
+
+            return CountNodes(root.left) + CountNodes(root.right) + 1;
         }
 
         #endregion

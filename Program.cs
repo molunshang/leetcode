@@ -31,6 +31,7 @@ namespace leetcode
 
         static void Main(string[] args)
         {
+            program.NthUglyNumber(1000000000, 2, 168079517, 403313907);
             program.GetValidT9Words("8733", new[] { "tree", "used" });
             program.MaxChunksToSorted(new[] { 1, 0, 2, 3, 4 });
             program.FindRotateSteps("godding", "godding");
