@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 //面试题 03.06. 动物收容所

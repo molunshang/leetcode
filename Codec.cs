@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Text;
-using System.Xml;
 
 //https://leetcode-cn.com/problems/serialize-and-deserialize-bst/
 //449. 序列化和反序列化二叉搜索树

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 //面试题 03.05. 栈排序
