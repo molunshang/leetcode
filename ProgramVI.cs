@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace leetcode
 {
@@ -62,5 +63,61 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 493. 翻转对
+        //https://leetcode-cn.com/problems/reverse-pairs/
+        public int ReversePairsII(int[] nums)
+        {
+            if (nums.Length < 2)
+            {
+                return 0;
+            }
+            var sorted = new int[nums.Length];
+            int MergeSortPair(int l, int r)
+            {
+                if (l >= r)
+                {
+                    return 0;
+                }
+                var m = (l + r) / 2;
+                var lcount = MergeSortPair(l, m);
+                var rcount = MergeSortPair(m + 1, r);
+                var count = lcount + rcount;
+
+                for (int j = l, k = m + 1; j <= m; j++)
+                {
+                    while (k <= r && nums[j] > 2L * nums[k])
+                    {
+                        k++;
+                    }
+                    count += k - m - 1;
+                }
+                int i = 0, lp = l, rp = m + 1;
+                while (lp <= m && rp <= r)
+                {
+                    if (nums[lp] <= nums[rp])
+                    {
+                        sorted[i++] = nums[lp++];
+                    }
+                    else
+                    {
+                        sorted[i++] = nums[rp++];
+                    }
+                }
+                while (lp <= m)
+                {
+                    sorted[i++] = nums[lp++];
+                }
+                while (rp <= r)
+                {
+                    sorted[i++] = nums[rp++];
+                }
+                Array.Copy(sorted, 0, nums, l, r - l + 1);
+                return count;
+            }
+            return MergeSortPair(0, nums.Length - 1);
+        }
+        #endregion
+
     }
 }

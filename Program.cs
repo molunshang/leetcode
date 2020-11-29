@@ -7261,12 +7261,21 @@ namespace leetcode
             {
                 return head;
             }
-
             var half = FindHalf(head);
             var node1 = SortList(head);
             var node2 = SortList(half);
-            var newNode = new ListNode(-1);
-            var node = newNode;
+            ListNode newHead;
+            if (node1.val <= node2.val)
+            {
+                newHead = node1;
+                node1 = node1.next;
+            }
+            else
+            {
+                newHead = node2;
+                node2 = node2.next;
+            }
+            var node = newHead;
             while (node1 != null && node2 != null)
             {
                 if (node1.val <= node2.val)
@@ -7279,21 +7288,17 @@ namespace leetcode
                     node.next = node2;
                     node2 = node2.next;
                 }
-
                 node = node.next;
             }
-
             if (node1 != null)
             {
                 node.next = node1;
             }
-
             if (node2 != null)
             {
                 node.next = node2;
             }
-
-            return newNode.next;
+            return newHead;
         }
 
         #endregion
