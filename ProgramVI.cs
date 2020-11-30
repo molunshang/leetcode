@@ -65,6 +65,7 @@ namespace leetcode
         #endregion
 
         #region 493. 翻转对
+
         //https://leetcode-cn.com/problems/reverse-pairs/
         public int ReversePairsII(int[] nums)
         {
@@ -72,13 +73,16 @@ namespace leetcode
             {
                 return 0;
             }
+
             var sorted = new int[nums.Length];
+
             int MergeSortPair(int l, int r)
             {
                 if (l >= r)
                 {
                     return 0;
                 }
+
                 var m = (l + r) / 2;
                 var lcount = MergeSortPair(l, m);
                 var rcount = MergeSortPair(m + 1, r);
@@ -90,8 +94,10 @@ namespace leetcode
                     {
                         k++;
                     }
+
                     count += k - m - 1;
                 }
+
                 int i = 0, lp = l, rp = m + 1;
                 while (lp <= m && rp <= r)
                 {
@@ -104,20 +110,78 @@ namespace leetcode
                         sorted[i++] = nums[rp++];
                     }
                 }
+
                 while (lp <= m)
                 {
                     sorted[i++] = nums[lp++];
                 }
+
                 while (rp <= r)
                 {
                     sorted[i++] = nums[rp++];
                 }
+
                 Array.Copy(sorted, 0, nums, l, r - l + 1);
                 return count;
             }
+
             return MergeSortPair(0, nums.Length - 1);
         }
+
         #endregion
 
+        #region 面试题 10.03. 搜索旋转数组
+
+        //https://leetcode-cn.com/problems/search-rotate-array-lcci/
+        public int SearchI(int[] arr, int target)
+        {
+            int l = 0, r = arr.Length - 1;
+            while (l <= r)
+            {
+                if (arr[l] == target)
+                {
+                    return l;
+                }
+
+                var m = (l + r) / 2;
+                if (arr[m] == target)
+                {
+                    r = m - 1;
+                }
+                else if (arr[l] < arr[m])
+                {
+                    //[l,m]有序
+                    if (arr[l] < target && target < arr[m])
+                    {
+                        r = m - 1;
+                    }
+                    else
+                    {
+                        l = m + 1;
+                    }
+                }
+                else if (arr[l] > arr[m])
+                {
+                    //[m,r]有序
+                    if (target > arr[m] && target <= arr[r])
+                    {
+                        l = m + 1;
+                    }
+                    else
+                    {
+                        r = m - 1;
+                    }
+                }
+                else
+                {
+                    //无法判断哪部分有序
+                    l++;
+                }
+            }
+
+            return l >= arr.Length || arr[l] != target ? -1 : l;
+        }
+
+        #endregion
     }
 }
