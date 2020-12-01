@@ -183,5 +183,105 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 274. H 指数
+        //https://leetcode-cn.com/problems/h-index/
+        public int HIndex(int[] citations)
+        {
+            if (citations.Length <= 0)
+            {
+                return 0;
+            }
+            Array.Sort(citations);
+            for (int i = 0; i < citations.Length; i++)
+            {
+                if (citations[i] >= citations.Length - i)
+                {
+                    return citations.Length - i;
+                }
+            }
+            return citations.Length;
+        }
+
+        public int HIndexOn(int[] citations)
+        {
+            var refs = new int[citations.Length + 1];
+            for (int i = 0; i < citations.Length; i++)
+            {
+                refs[Math.Min(citations[i], citations.Length)]++;
+            }
+            var h = citations.Length;
+            for (int i = refs[h]; i < h; i += refs[h])
+            {
+                h--;
+            }
+            return h;
+        }
+        #endregion
+
+        #region 321. 拼接最大数
+        //https://leetcode-cn.com/problems/create-maximum-number/
+        public int[] MaxNumber(int[] nums1, int[] nums2, int k)
+        {
+            int[] Max(int[] arr1, int[] arr2)
+            {
+                if (arr1.Length > arr2.Length)
+                {
+                    return arr1;
+                }
+                if (arr1.Length < arr2.Length)
+                {
+                    return arr2;
+                }
+                for (int i = 0; i < arr1.Length; i++)
+                {
+                    if (arr1[i] > arr2[i])
+                    {
+                        return arr1;
+                    }
+                    if (arr1[i] < arr2[i])
+                    {
+                        return arr2;
+                    }
+                }
+                return arr1;
+            }
+            var cache = new Dictionary<string, int[]>();
+
+            int[] Dfs(int i, int j, int count)
+            {
+                if (count <= 0)
+                {
+                    return new int[0];
+                }
+                var key = i + "," + j + "," + count;
+                if (cache.TryGetValue(key, out var result))
+                {
+                    return result;
+                }
+                result = new int[0];
+                for (int i1 = i; i1 < nums1.Length; i1++)
+                {
+                    var tmp = Dfs(i1 + 1, j, count - 1);
+                    var tmp1 = new int[tmp.Length + 1];
+                    tmp1[0] = nums1[i1];
+                    Array.Copy(tmp, 0, tmp1, 1, tmp.Length);
+                    result = Max(result, tmp1);
+                }
+                for (int j1 = j; j1 < nums2.Length; j1++)
+                {
+                    var tmp = Dfs(i, j1 + 1, count - 1);
+                    var tmp2 = new int[tmp.Length + 1];
+                    tmp2[0] = nums2[j1];
+                    Array.Copy(tmp, 0, tmp2, 1, tmp.Length);
+                    result = Max(result, tmp2);
+                }
+                cache[key] = result;
+                return result;
+            }
+            var res = Dfs(0, 0, k);
+            return res;
+        }
+        #endregion
     }
 }
