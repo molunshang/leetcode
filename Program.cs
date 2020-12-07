@@ -27,7 +27,7 @@ namespace leetcode
 
         static void Main(string[] args)
         {
-            program.MaxNumber(new int[0], new[] { 1}, 1);
+            program.MatrixScore(JsonConvert.DeserializeObject<int[][]>("[[1,0,1,1],[1,0,1,0],[1,1,0,0]]"));
             program.SearchI(new[] { 12, 20, -21, -21, -19, -14, -11, -8, -8, -8, -6, -6, -4, -4, 0, 1, 5, 5, 6, 11, 11, 12 }, -8);
             program.NthUglyNumber(1000000000, 2, 168079517, 403313907);
             program.GetValidT9Words("8733", new[] { "tree", "used" });

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace leetcode
@@ -308,7 +309,7 @@ namespace leetcode
                 int index = -1, leave = arr.Length - n;
                 foreach (var num in arr)
                 {
-                    while (index > -1 && seq[index] < num && leave > 0)//leave表示可丢弃个数，必须取够n个数，当leave==0时必须取数，无论大小
+                    while (index > -1 && seq[index] < num && leave > 0) //leave表示可丢弃个数，必须取够n个数，当leave==0时必须取数，无论大小
                     {
                         index--;
                         leave--;
@@ -388,6 +389,58 @@ namespace leetcode
             }
 
             return res;
+        }
+
+        #endregion
+
+        #region 861. 翻转矩阵后的得分
+
+        //https://leetcode-cn.com/problems/score-after-flipping-matrix/
+        public int MatrixScore(int[][] A)
+        {
+            if (A.Length <= 0)
+            {
+                return 0;
+            }
+
+            var col = A[0].Length;
+            for (int i = 0; i < col; i++)
+            {
+                if (i == 0)
+                {
+                    foreach (var ints in A)
+                    {
+                        if (ints[i] != 0) continue;
+                        for (var j = 0; j < ints.Length; j++)
+                        {
+                            ints[j] = ints[j] ^ 1;
+                        }
+                    }
+                }
+                else
+                {
+                    var zeros = A.Count(ints => ints[i] == 0);
+                    if (zeros <= (A.Length - zeros)) continue;
+                    foreach (var cols in A)
+                    {
+                        cols[i] = cols[i] ^ 1;
+                    }
+                }
+            }
+
+            var score = 0;
+            foreach (var ints in A)
+            {
+                var num = 0;
+                for (int i = ints.Length - 1, j = 0; i >= 0; i--, j++)
+                {
+                    num |= ints[j] << i;
+                }
+
+                score += num;
+            }
+
+            return score;
         }
 
         #endregion
