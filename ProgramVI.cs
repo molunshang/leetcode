@@ -444,5 +444,113 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 842. 将数组拆分成斐波那契序列
+
+        //https://leetcode-cn.com/problems/split-array-into-fibonacci-sequence/
+        public IList<int> SplitIntoFibonacci(string s)
+        {
+            var seq = new List<int>();
+            if (string.IsNullOrEmpty(s) || s.Length < 3)
+            {
+                return seq;
+            }
+
+            bool Back(int i, int min)
+            {
+                if (i >= s.Length)
+                {
+                    return seq.Count > 2;
+                }
+
+                for (int len = seq.Count < 2 ? 1 : min, limit = s.Length - i; len <= limit; len++)
+                {
+                    if (s[i] == '0' && len > 1 || (i + len) > s.Length)
+                    {
+                        break;
+                    }
+
+                    var str = s.Substring(i, len);
+                    if (!int.TryParse(str, out var n))
+                    {
+                        break;
+                    }
+
+                    if (seq.Count < 2 || n == seq[seq.Count - 1] + seq[seq.Count - 2])
+                    {
+                        seq.Add(n);
+                        if (Back(i + len, len))
+                        {
+                            return true;
+                        }
+
+                        seq.RemoveAt(seq.Count - 1);
+                    }
+                    else if (n > seq[seq.Count - 1] + seq[seq.Count - 2])
+                    {
+                        break;
+                    }
+                }
+
+                return false;
+            }
+
+            Back(0, 1);
+            return seq;
+        }
+
+        #endregion
+
+        #region 306. 累加数
+
+        //https://leetcode-cn.com/problems/additive-number/
+        public bool IsAdditiveNumber(string num)
+        {
+            if (string.IsNullOrEmpty(num) || num.Length < 3)
+            {
+                return false;
+            }
+
+            bool BackTrace(int i, long prev1, long prev2, int count)
+            {
+                if (i >= num.Length)
+                {
+                    return count > 2;
+                }
+
+                for (int l = 1, limit = num.Length - i; l <= limit; l++)
+                {
+                    if (l > 1 && num[i] == '0')
+                    {
+                        break;
+                    }
+
+                    var str = num.Substring(i, l);
+                    if (!long.TryParse(str, out var cur))
+                    {
+                        break;
+                    }
+
+                    var sum = prev1 + prev2;
+                    if (count < 2 || cur == sum)
+                    {
+                        if (BackTrace(i + l, prev2, cur, count + 1))
+                        {
+                            return true;
+                        }
+                    }
+                    else if (cur > sum)
+                    {
+                        break;
+                    }
+                }
+
+                return false;
+            }
+
+            return BackTrace(0, 0, 0, 0);
+        }
+
+        #endregion
     }
 }
