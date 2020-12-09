@@ -27,6 +27,7 @@ namespace leetcode
 
         static void Main(string[] args)
         {
+            program.NumFactoredBinaryTrees(new[] { 2, 4, 5, 10 });
             program.SplitIntoFibonacci("1320581321313221264343965566089105744171833277577");
             program.MatrixScore(JsonConvert.DeserializeObject<int[][]>("[[1,0,1,1],[1,0,1,0],[1,1,0,0]]"));
             program.SearchI(new[] { 12, 20, -21, -21, -19, -14, -11, -8, -8, -8, -6, -6, -4, -4, 0, 1, 5, 5, 6, 11, 11, 12 }, -8);

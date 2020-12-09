@@ -559,32 +559,35 @@ namespace leetcode
         public int NumFactoredBinaryTrees(int[] a)
         {
             var set = a.ToHashSet();
-            int MakeTree(int root)
+            var cache = new Dictionary<int, long>();
+            long TreeCount(int root)
             {
-                //todo 未完成
-                var num = 1;
+                if (cache.TryGetValue(root, out var num))
+                {
+                    return num;
+                }
+                num = 1;
                 foreach (var n in a)
                 {
                     var m = root / n;
-                    if (!set.Contains(m))
+                    if (root % n != 0 || !set.Contains(m))
                     {
                         continue;
                     }
 
-                    int left = MakeTree(n), right = MakeTree(m);
-                    num += left * right;
+                    long left = TreeCount(n), right = TreeCount(m);
+                    num = (num + left * right) % 1000000007;
                 }
-
+                cache[root] = num;
                 return num;
             }
 
-            var count = 0;
+            long count = 0;
             foreach (var root in a)
             {
-                count += MakeTree(root);
+                count += TreeCount(root);
             }
-
-            return count;
+            return (int)(count % 1000000007);
         }
 
         #endregion
