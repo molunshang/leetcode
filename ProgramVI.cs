@@ -552,5 +552,41 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 823. 带因子的二叉树
+
+        //https://leetcode-cn.com/problems/binary-trees-with-factors/
+        public int NumFactoredBinaryTrees(int[] a)
+        {
+            var set = a.ToHashSet();
+            int MakeTree(int root)
+            {
+                //todo 未完成
+                var num = 1;
+                foreach (var n in a)
+                {
+                    var m = root / n;
+                    if (!set.Contains(m))
+                    {
+                        continue;
+                    }
+
+                    int left = MakeTree(n), right = MakeTree(m);
+                    num += left * right;
+                }
+
+                return num;
+            }
+
+            var count = 0;
+            foreach (var root in a)
+            {
+                count += MakeTree(root);
+            }
+
+            return count;
+        }
+
+        #endregion
     }
 }
