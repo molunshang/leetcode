@@ -582,12 +582,52 @@ namespace leetcode
                 return num;
             }
 
-            long count = 0;
-            foreach (var root in a)
-            {
-                count += TreeCount(root);
-            }
+            var count = a.Sum(TreeCount);
             return (int)(count % 1000000007);
+        }
+
+        #endregion
+
+        #region 860. 柠檬水找零
+
+        //https://leetcode-cn.com/problems/lemonade-change/
+        public bool LemonadeChange(int[] bills)
+        {
+            var balance = new int[3];
+            foreach (var bill in bills)
+            {
+                switch (bill)
+                {
+                    case 5:
+                        balance[0]++;
+                        break;
+                    case 10:
+                        balance[1]++;
+                        if (balance[0] <= 0)
+                        {
+                            return false;
+                        }
+                        balance[0]--;
+                        break;
+                    case 20:
+                        balance[2]++;
+                        var num = 3;
+                        if (balance[1] > 0)
+                        {
+                            balance[1]--;
+                            num -= 2;
+                        }
+
+                        if (balance[0] < num)
+                        {
+                            return false;
+                        }
+
+                        balance[0] -= num;
+                        break;
+                }
+            }
+            return true;
         }
 
         #endregion
