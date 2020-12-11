@@ -27,6 +27,7 @@ namespace leetcode
 
         static void Main(string[] args)
         {
+            program.PredictPartyVictory("DRRDRDRDRDDRDRDR");
             program.NumFactoredBinaryTrees(new[] { 2, 4, 5, 10 });
             program.SplitIntoFibonacci("1320581321313221264343965566089105744171833277577");
             program.MatrixScore(JsonConvert.DeserializeObject<int[][]>("[[1,0,1,1],[1,0,1,0],[1,1,0,0]]"));

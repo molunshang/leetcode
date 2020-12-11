@@ -560,12 +560,14 @@ namespace leetcode
         {
             var set = a.ToHashSet();
             var cache = new Dictionary<int, long>();
+
             long TreeCount(int root)
             {
                 if (cache.TryGetValue(root, out var num))
                 {
                     return num;
                 }
+
                 num = 1;
                 foreach (var n in a)
                 {
@@ -578,12 +580,13 @@ namespace leetcode
                     long left = TreeCount(n), right = TreeCount(m);
                     num = (num + left * right) % 1000000007;
                 }
+
                 cache[root] = num;
                 return num;
             }
 
             var count = a.Sum(TreeCount);
-            return (int)(count % 1000000007);
+            return (int) (count % 1000000007);
         }
 
         #endregion
@@ -607,6 +610,7 @@ namespace leetcode
                         {
                             return false;
                         }
+
                         balance[0]--;
                         break;
                     case 20:
@@ -627,7 +631,99 @@ namespace leetcode
                         break;
                 }
             }
+
             return true;
+        }
+
+        #endregion
+
+        #region 649. Dota2 参议院
+
+        //https://leetcode-cn.com/problems/dota2-senate/
+        public string PredictPartyVictory(string senate)
+        {
+            LinkedList<int> rQueue = new LinkedList<int>(), dQueue = new LinkedList<int>();
+            for (var i = 0; i < senate.Length; i++)
+            {
+                var ch = senate[i];
+                if (ch == 'R')
+                {
+                    rQueue.AddLast(i);
+                }
+                else
+                {
+                    dQueue.AddLast(i);
+                }
+            }
+
+            var index = 0;
+            var forbid = new bool[senate.Length];
+            while (rQueue.Count > 0 && dQueue.Count > 0)
+            {
+                index %= senate.Length;
+                if (!forbid[index])
+                {
+                    var ch = senate[index];
+                    var queue = ch == 'R' ? dQueue : rQueue;
+                    var node = queue.First;
+                    while (node != null)
+                    {
+                        if (index < node.Value)
+                        {
+                            forbid[node.Value] = true;
+                            queue.Remove(node);
+                            break;
+                        }
+
+                        if (node.Next == null)
+                        {
+                            node = queue.First;
+                            forbid[node.Value] = true;
+                            queue.Remove(node);
+                            break;
+                        }
+
+                        node = node.Next;
+                    }
+                }
+
+                index++;
+            }
+
+            return rQueue.Count > 0 ? "Radiant" : "Dire";
+        }
+
+        public string PredictPartyVictoryByLeetcode(string senate)
+        {
+            Queue<int> rQueue = new Queue<int>(), dQueue = new Queue<int>();
+            for (var i = 0; i < senate.Length; i++)
+            {
+                var ch = senate[i];
+                if (ch == 'R')
+                {
+                    rQueue.Enqueue(i);
+                }
+                else
+                {
+                    dQueue.Enqueue(i);
+                }
+            }
+
+            while (rQueue.Count > 0 && dQueue.Count > 0)
+            {
+                //d要先于r投票，可以将r投出去，d可以在下一轮继续投票
+                int r = rQueue.Dequeue(), d = dQueue.Dequeue();
+                if (r > d)
+                {
+                    dQueue.Enqueue(d + senate.Length);
+                }
+                else
+                {
+                    rQueue.Enqueue(r + senate.Length);
+                }
+            }
+
+            return rQueue.Count > 0 ? "Radiant" : "Dire";
         }
 
         #endregion
