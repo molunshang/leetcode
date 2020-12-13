@@ -586,7 +586,7 @@ namespace leetcode
             }
 
             var count = a.Sum(TreeCount);
-            return (int) (count % 1000000007);
+            return (int)(count % 1000000007);
         }
 
         #endregion
@@ -726,6 +726,31 @@ namespace leetcode
             return rQueue.Count > 0 ? "Radiant" : "Dire";
         }
 
+        #endregion
+
+        #region 376. 摆动序列
+        //https://leetcode-cn.com/problems/wiggle-subsequence/
+        //根据leetcode题解解答
+        public int WiggleMaxLength(int[] nums)
+        {
+            if (nums.Length < 3)
+            {
+                return nums.Length;
+            }
+            int up = 1, down = 1;
+            for (int i = 1; i < nums.Length; i++)
+            {
+                if (nums[i] > nums[i - 1])
+                {
+                    up = Math.Max(up, down + 1);
+                }
+                else if (nums[i] < nums[i - 1])
+                {
+                    down = Math.Max(down, up + 1);
+                }
+            }
+            return Math.Max(up, down);
+        }
         #endregion
     }
 }
