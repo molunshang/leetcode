@@ -752,5 +752,51 @@ namespace leetcode
             return Math.Max(up, down);
         }
         #endregion
+
+        #region 541. 反转字符串 II
+        //https://leetcode-cn.com/problems/reverse-string-ii/
+        public string ReverseStr(string s, int k)
+        {
+            var arr = s.ToCharArray();
+            for (int i = 0, step = k * 2; i < arr.Length; i += step)
+            {
+                int l = i, r = Math.Min(i + k, arr.Length) - 1;
+                while (l < r)
+                {
+                    var tmp = arr[l];
+                    arr[l] = arr[r];
+                    arr[r] = tmp;
+                    l++;
+                    r--;
+                }
+            }
+            return new string(arr);
+        }
+        #endregion
+
+        #region 551. 学生出勤记录 I
+        //https://leetcode-cn.com/problems/student-attendance-record-i/
+        public bool CheckRecord(string s)
+        {
+            int a = 0, l = 0;
+            for (int i = 0; i < s.Length && a < 2 && l < 3; i++)
+            {
+                if (s[i] == 'A')
+                {
+                    a++;
+                    l = 0;
+                }
+                else if (s[i] == 'L')
+                {
+                    l++;
+                }
+                else
+                {
+                    l = 0;
+                }
+            }
+            return a < 2 && l < 3;
+        }
+        #endregion
     }
 }
