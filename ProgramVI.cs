@@ -586,7 +586,7 @@ namespace leetcode
             }
 
             var count = a.Sum(TreeCount);
-            return (int)(count % 1000000007);
+            return (int) (count % 1000000007);
         }
 
         #endregion
@@ -729,6 +729,7 @@ namespace leetcode
         #endregion
 
         #region 376. 摆动序列
+
         //https://leetcode-cn.com/problems/wiggle-subsequence/
         //根据leetcode题解解答
         public int WiggleMaxLength(int[] nums)
@@ -737,6 +738,7 @@ namespace leetcode
             {
                 return nums.Length;
             }
+
             int up = 1, down = 1;
             for (int i = 1; i < nums.Length; i++)
             {
@@ -749,11 +751,14 @@ namespace leetcode
                     down = Math.Max(down, up + 1);
                 }
             }
+
             return Math.Max(up, down);
         }
+
         #endregion
 
         #region 541. 反转字符串 II
+
         //https://leetcode-cn.com/problems/reverse-string-ii/
         public string ReverseStr(string s, int k)
         {
@@ -770,11 +775,14 @@ namespace leetcode
                     r--;
                 }
             }
+
             return new string(arr);
         }
+
         #endregion
 
         #region 551. 学生出勤记录 I
+
         //https://leetcode-cn.com/problems/student-attendance-record-i/
         public bool CheckRecord(string s)
         {
@@ -795,8 +803,81 @@ namespace leetcode
                     l = 0;
                 }
             }
+
             return a < 2 && l < 3;
         }
+
+        #endregion
+
+        #region 738. 单调递增的数字
+
+        //https://leetcode-cn.com/problems/monotone-increasing-digits/
+        public int MonotoneIncreasingDigits(int n)
+        {
+            var nums = new List<int>();
+            while (n != 0)
+            {
+                nums.Add(n % 10);
+                n /= 10;
+            }
+
+            var seq = new List<int>();
+            for (int i = nums.Count - 1; i > -1 && seq.Count < nums.Count; i--)
+            {
+                var last = seq.Count - 1;
+                if (seq.Count <= 0 || seq[last] <= nums[i])
+                {
+                    seq.Add(nums[i]);
+                }
+                else
+                {
+                    //判断是否可以缩小，缩小则后面所有都填9
+                    //333
+                    while (seq.Count > 1 && seq[last] <= seq[last - 1])
+                    {
+                        seq.RemoveAt(last);
+                        last--;
+                    }
+
+                    seq[last]--;
+                    while (seq.Count < nums.Count)
+                    {
+                        seq.Add(9);
+                    }
+                }
+            }
+
+            return seq.Aggregate(0, (current, bit) => current * 10 + bit);
+        }
+
+        #endregion
+
+        #region 609. 在系统中查找重复文件
+
+        //https://leetcode-cn.com/problems/find-duplicate-file-in-system/
+        public IList<IList<string>> FindDuplicate(string[] paths)
+        {
+            var dict = new Dictionary<string, IList<string>>();
+            foreach (var path in paths)
+            {
+                var subs = path.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                var dir = subs[0];
+                for (var i = 1; i < subs.Length; i++)
+                {
+                    int s = subs[i].IndexOf('('), e = subs[i].IndexOf(')');
+                    var content = subs[i].Substring(s + 1, e - s - 1);
+                    if (!dict.TryGetValue(content, out var items))
+                    {
+                        dict[content] = items = new List<string>();
+                    }
+
+                    items.Add(dir + "/" + subs[i].Substring(0,s));
+                }
+            }
+
+            return dict.Values.Where(it => it.Count > 1).ToArray();
+        }
+
         #endregion
     }
 }
