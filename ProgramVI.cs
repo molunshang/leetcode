@@ -586,7 +586,7 @@ namespace leetcode
             }
 
             var count = a.Sum(TreeCount);
-            return (int) (count % 1000000007);
+            return (int)(count % 1000000007);
         }
 
         #endregion
@@ -871,7 +871,7 @@ namespace leetcode
                         dict[content] = items = new List<string>();
                     }
 
-                    items.Add(dir + "/" + subs[i].Substring(0,s));
+                    items.Add(dir + "/" + subs[i].Substring(0, s));
                 }
             }
 
@@ -883,7 +883,7 @@ namespace leetcode
         #region 290. 单词规律
 
         //https://leetcode-cn.com/problems/word-pattern/
-        public bool WordPattern(string pattern, string s) 
+        public bool WordPattern(string pattern, string s)
         {
             if (string.IsNullOrEmpty(pattern))
             {
@@ -922,6 +922,27 @@ namespace leetcode
             return true;
         }
 
+        #endregion
+
+        #region 806. 写字符串需要的行数
+        //https://leetcode-cn.com/problems/number-of-lines-to-write-string/
+        public int[] NumberOfLines(int[] widths, string s)
+        {
+            var res = new[] { 1, 0 };
+            var leave = 100;
+            foreach (var ch in s)
+            {
+                var w = widths[ch - 'a'];
+                if (leave < w)
+                {
+                    res[0]++;
+                    leave = 100;
+                }
+                leave -= w;
+            }
+            res[1] = 100 - leave;
+            return res;
+        }
         #endregion
     }
 }
