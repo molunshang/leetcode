@@ -879,5 +879,49 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 290. 单词规律
+
+        //https://leetcode-cn.com/problems/word-pattern/
+        public bool WordPattern(string pattern, string s) 
+        {
+            if (string.IsNullOrEmpty(pattern))
+            {
+                return string.IsNullOrEmpty(s);
+            }
+
+            var strs = s.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            if (strs.Length != pattern.Length)
+            {
+                return false;
+            }
+            var dict = new Dictionary<string, char>();
+            var flag = new bool[26];
+            for (var i = 0; i < strs.Length; i++)
+            {
+                var ch = pattern[i];
+                var subStr = strs[i];
+                if (dict.TryGetValue(subStr, out var val))
+                {
+                    if (ch != val)
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (flag[ch - 'a'])
+                    {
+                        return false;
+                    }
+                    dict[subStr] = ch;
+                    flag[ch - 'a'] = true;
+                }
+            }
+
+            return true;
+        }
+
+        #endregion
     }
 }
