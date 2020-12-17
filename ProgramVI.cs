@@ -586,7 +586,7 @@ namespace leetcode
             }
 
             var count = a.Sum(TreeCount);
-            return (int) (count % 1000000007);
+            return (int)(count % 1000000007);
         }
 
         #endregion
@@ -931,7 +931,7 @@ namespace leetcode
         //https://leetcode-cn.com/problems/number-of-lines-to-write-string/
         public int[] NumberOfLines(int[] widths, string s)
         {
-            var res = new[] {1, 0};
+            var res = new[] { 1, 0 };
             var leave = 100;
             foreach (var ch in s)
             {
@@ -999,6 +999,23 @@ namespace leetcode
             }
 
             return sell;
+        }
+        #endregion
+
+        #region 389. 找不同
+        //https://leetcode-cn.com/problems/find-the-difference/
+        public char FindTheDifference(string s, string t)
+        {
+            var dict = s.GroupBy(c => c).ToDictionary(g => g.Key, g => g.Count());
+            foreach (var ch in t)
+            {
+                if (!dict.TryGetValue(ch, out var count) || count == 0)
+                {
+                    return ch;
+                }
+                dict[ch] = count - 1;
+            }
+            return t[t.Length - 1];
         }
         #endregion
     }
