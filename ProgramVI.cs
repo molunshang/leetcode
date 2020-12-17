@@ -586,7 +586,7 @@ namespace leetcode
             }
 
             var count = a.Sum(TreeCount);
-            return (int)(count % 1000000007);
+            return (int) (count % 1000000007);
         }
 
         #endregion
@@ -895,6 +895,7 @@ namespace leetcode
             {
                 return false;
             }
+
             var dict = new Dictionary<string, char>();
             var flag = new bool[26];
             for (var i = 0; i < strs.Length; i++)
@@ -914,6 +915,7 @@ namespace leetcode
                     {
                         return false;
                     }
+
                     dict[subStr] = ch;
                     flag[ch - 'a'] = true;
                 }
@@ -925,10 +927,11 @@ namespace leetcode
         #endregion
 
         #region 806. 写字符串需要的行数
+
         //https://leetcode-cn.com/problems/number-of-lines-to-write-string/
         public int[] NumberOfLines(int[] widths, string s)
         {
-            var res = new[] { 1, 0 };
+            var res = new[] {1, 0};
             var leave = 100;
             foreach (var ch in s)
             {
@@ -938,10 +941,64 @@ namespace leetcode
                     res[0]++;
                     leave = 100;
                 }
+
                 leave -= w;
             }
+
             res[1] = 100 - leave;
             return res;
+        }
+
+        #endregion
+
+        #region 714. 买卖股票的最佳时机含手续费
+
+        //https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/
+        public int MaxProfit(int[] prices, int fee)
+        {
+            //超时
+            var cache = new Dictionary<string, int>();
+
+            int Profit(int i, int balance)
+            {
+                if (i >= prices.Length)
+                {
+                    return 0;
+                }
+
+                var key = i + "," + balance;
+                if (cache.TryGetValue(key, out var p))
+                {
+                    return p;
+                }
+
+                if (balance == 0) //可以买
+                {
+                    p = Profit(i + 1, prices[i]);
+                }
+                else if (prices[i] > balance) //可以卖
+                {
+                    p = Math.Max(p, Profit(i + 1, 0) + (prices[i] - balance - fee));
+                }
+
+                p = Math.Max(p, Profit(i + 1, balance));
+                cache[key] = p;
+                return p;
+            }
+
+            return Profit(0, 0);
+        }
+
+        public int MaxProfitByLeetCodeDp(int[] prices, int fee)
+        {
+            int sell = 0, buy = -prices[0];
+            for (int i = 1; i < prices.Length; i++)
+            {
+                sell = Math.Max(sell, buy + prices[i] - fee);
+                buy = Math.Max(buy, sell - prices[i]);
+            }
+
+            return sell;
         }
         #endregion
     }
