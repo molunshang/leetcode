@@ -381,27 +381,6 @@ namespace leetcode
 
         #endregion
 
-        #region 746. 使用最小花费爬楼梯
-
-        //https://leetcode-cn.com/problems/min-cost-climbing-stairs/
-        public int MinCostClimbingStairs(int[] cost)
-        {
-            if (cost.Length <= 2)
-            {
-                return cost.Length == 2 ? Math.Min(cost[0], cost[1]) : cost[0];
-            }
-
-            var dp = new int[cost.Length + 1];
-            for (int i = 2; i < dp.Length; i++)
-            {
-                dp[i] = Math.Min(dp[i - 1] + cost[i - 1], dp[i - 2] + cost[i - 2]);
-            }
-
-            return dp[cost.Length];
-        }
-
-        #endregion
-
         #region 152. 乘积最大子数组
 
         //https://leetcode-cn.com/problems/maximum-product-subarray/

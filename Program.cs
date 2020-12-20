@@ -8432,7 +8432,7 @@ namespace leetcode
             }
         }
 
-        public void RotateSpaceO1(int[][] matrix)
+        public void RotateSpaceZero(int[][] matrix)
         {
             if (matrix == null || matrix.Length <= 0)
             {
@@ -8454,6 +8454,30 @@ namespace leetcode
 
                 start++;
                 end--;
+            }
+        }
+
+        public void RotateBySelf(int[][] matrix)
+        {
+            void Rotate(int i)
+            {
+                for (int s = i, e = matrix[0].Length - i - 1, j = 0; s < e; s++, j++)
+                {
+                    var mv = matrix[i][s];
+                    var tmp = matrix[s][e];
+                    matrix[s][e] = mv;
+                    mv = tmp;
+                    tmp = matrix[e][e - j];
+                    matrix[e][e - j] = mv;
+                    mv = tmp;
+                    tmp = matrix[e - j][i];
+                    matrix[e - j][i] = mv;
+                    matrix[i][s] = tmp;
+                }
+            }
+            for (int i = 0; i < matrix[0].Length / 2; i++)
+            {
+                Rotate(i);
             }
         }
 

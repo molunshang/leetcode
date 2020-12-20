@@ -1018,5 +1018,54 @@ namespace leetcode
             return t[t.Length - 1];
         }
         #endregion
+
+        #region 1081. 不同字符的最小子序列
+        //https://leetcode-cn.com/problems/smallest-subsequence-of-distinct-characters/
+        public string SmallestSubsequence(string s)
+        {
+            var dict = new Dictionary<char, int>();
+            for (int i = 0; i < s.Length; i++)
+            {
+                dict[s[i]] = i;
+            }
+            var stack = new Stack<char>();
+            var set = new HashSet<char>();
+            for (int i = 0; i < s.Length; i++)
+            {
+                var ch = s[i];
+                if (set.Contains(ch))
+                {
+                    continue;
+                }
+                while (stack.TryPeek(out var top) && top > ch && dict[top] > i)
+                {
+                    set.Remove(stack.Pop());
+                }
+                stack.Push(ch);
+                set.Add(ch);
+            }
+            var chars = new char[stack.Count];
+            for (int i = chars.Length - 1; i >= 0; i--)
+            {
+                chars[i] = stack.Pop();
+            }
+            return new string(chars);
+        }
+        #endregion
+
+        #region 746. 使用最小花费爬楼梯
+        //https://leetcode-cn.com/problems/min-cost-climbing-stairs/
+        public int MinCostClimbingStairs(int[] cost)
+        {
+            int i1 = 0, i2 = 0;
+            for (int i = 2; i <= cost.Length; i++)
+            {
+                var next = Math.Min(i1 + cost[i - 1], i2 + cost[i - 2]);
+                i2 = i1;
+                i1 = next;
+            }
+            return i1;
+        }
+        #endregion
     }
 }
