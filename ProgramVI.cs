@@ -586,7 +586,7 @@ namespace leetcode
             }
 
             var count = a.Sum(TreeCount);
-            return (int)(count % 1000000007);
+            return (int) (count % 1000000007);
         }
 
         #endregion
@@ -931,7 +931,7 @@ namespace leetcode
         //https://leetcode-cn.com/problems/number-of-lines-to-write-string/
         public int[] NumberOfLines(int[] widths, string s)
         {
-            var res = new[] { 1, 0 };
+            var res = new[] {1, 0};
             var leave = 100;
             foreach (var ch in s)
             {
@@ -1000,9 +1000,11 @@ namespace leetcode
 
             return sell;
         }
+
         #endregion
 
         #region 389. 找不同
+
         //https://leetcode-cn.com/problems/find-the-difference/
         public char FindTheDifference(string s, string t)
         {
@@ -1013,13 +1015,17 @@ namespace leetcode
                 {
                     return ch;
                 }
+
                 dict[ch] = count - 1;
             }
+
             return t[t.Length - 1];
         }
+
         #endregion
 
         #region 1081. 不同字符的最小子序列
+
         //https://leetcode-cn.com/problems/smallest-subsequence-of-distinct-characters/
         public string SmallestSubsequence(string s)
         {
@@ -1028,6 +1034,7 @@ namespace leetcode
             {
                 dict[s[i]] = i;
             }
+
             var stack = new Stack<char>();
             var set = new HashSet<char>();
             for (int i = 0; i < s.Length; i++)
@@ -1037,23 +1044,29 @@ namespace leetcode
                 {
                     continue;
                 }
+
                 while (stack.TryPeek(out var top) && top > ch && dict[top] > i)
                 {
                     set.Remove(stack.Pop());
                 }
+
                 stack.Push(ch);
                 set.Add(ch);
             }
+
             var chars = new char[stack.Count];
             for (int i = chars.Length - 1; i >= 0; i--)
             {
                 chars[i] = stack.Pop();
             }
+
             return new string(chars);
         }
+
         #endregion
 
         #region 746. 使用最小花费爬楼梯
+
         //https://leetcode-cn.com/problems/min-cost-climbing-stairs/
         public int MinCostClimbingStairs(int[] cost)
         {
@@ -1064,8 +1077,116 @@ namespace leetcode
                 i2 = i1;
                 i1 = next;
             }
+
             return i1;
         }
+
+        #endregion
+
+        #region 135. 分发糖果
+
+        //https://leetcode-cn.com/problems/candy/
+        //暴力解超时
+        public int Candy(int[] ratings)
+        {
+            if (ratings.Length < 2)
+            {
+                return ratings.Length == 1 ? 1 : 0;
+            }
+
+            var num = 0;
+            var cache = new bool?[ratings.Length, ratings.Length + 1];
+
+            bool Loop(int index, int candy)
+            {
+                if (index >= ratings.Length)
+                {
+                    return true;
+                }
+
+                if (cache[index, candy].HasValue)
+                {
+                    return cache[index, candy].Value;
+                }
+
+                int s, e;
+
+                if (ratings[index] > ratings[index - 1])
+                {
+                    s = candy + 1;
+                    e = candy + (ratings.Length - index);
+                }
+                else if (ratings[index] < ratings[index - 1])
+                {
+                    s = 1;
+                    e = candy - 1;
+                }
+                else
+                {
+                    s = 1;
+                    e = candy;
+                    ;
+                }
+
+                for (int i = s; i <= e; i++)
+                {
+                    if (Loop(index + 1, i))
+                    {
+                        num += i;
+                        cache[index, candy] = true;
+                        return true;
+                    }
+                }
+
+                cache[index, candy] = false;
+                return false;
+            }
+
+            for (int i = 1; i <= ratings.Length; i++)
+            {
+                if (Loop(1, i))
+                {
+                    num += i;
+                    break;
+                }
+            }
+
+            return num;
+        }
+
+        public int CandyByLeetcode(int[] ratings)
+        {
+            var dp = new int[ratings.Length];
+            for (var i = 0; i < ratings.Length; i++)
+            {
+                if (i > 0 && ratings[i] > ratings[i - 1])
+                {
+                    dp[i] = dp[i - 1] + 1;
+                }
+                else
+                {
+                    dp[i] = 1;
+                }
+            }
+
+            int num = 0, right = 1;
+            for (int i = ratings.Length - 1; i >= 0; i--)
+            {
+                if (i < ratings.Length - 1 && ratings[i] > ratings[i + 1])
+                {
+                    right++;
+                }
+                else
+                {
+                    right = 1;
+                }
+
+                num += Math.Max(dp[i], right);
+            }
+
+            return num;
+        }
+
         #endregion
     }
 }

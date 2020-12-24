@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -27,25 +28,28 @@ namespace leetcode
 
         static void Main(string[] args)
         {
-            program.MaxProfit(new[] {927,2681,3050,134,451,2556,3620,1791,2890,4668,1018,3840,4199,3172,76,3868,3464,3366,4898,4466,3509,2857,1816,505,409,2450,33,1819,2588,3608,672,2607,354,663,911,3105,4972,1338,4978,1433,1254,1013,582,3273,2600,4593,3445,170,585,2265,4108,4709,694,541,2736,2219,2997,2664,3570,4749,2882,4100,1991,3805,3831,4400,1633,2522,2695,3531,2224,3703,351,2282,1589,36,3642,4009,1997,3622,4376,2172,3369,421,4761,3453,2122,1720,1396,539,4998,4722,1808,4049,4503,3094,3121,3770,223,1480,2655,4264,401,3841,917,1536,673,767,4284,3429,2918,4602,3888,1138,2088,4001,2771,581,3863,3562,3626,4149,1506,1471,3219,4468,3446,2887,4530,4100,512,856,1421,3210,2889,3965,4397,2698,4000,2736,3767,375,4702,2950,3657,319,2649,2926,2560,2977,729,2202,3542,4683,2396,3324,4546,898,4986,2946,1043,4413,2337,2922,1644,3802,2785,4046,2252,1646,583,3444,2721,471,1192,2025,1099,3270,1453,1938,206,2312,4853,3480,1732,1035,4970,740,939,4696,2908,3307,347,2322,3930,2835,1714,2317,177,2479,3493,488,1912,1815,3695,3036,466,702,1106,2514,2065,613,2907,4588,1553,1249,196,3441,3428,32,2746,733,2953,185,4820,1753,407,2259,2436,4227,2799,3151,4837,299,3751,1837,3586,2905,914,505,500,292,2217,2152,3045,3044,3971,3652,3068,3080,920,239,4856,3033,3970,1544,590,2590,719,2828,815,2428,985,637,438,3900,2396,2159,2372,633,1239,2980,4460,2615,2027,4573,2175,1394,2205,4155,263,3089,307,3114,2133,1911,4410,3026,3219,1004,1597,295,3567,3230,3104,2626,3698,969,4468,2980,4022,2307,830,511,4661,257,4259,2892,2315,491,2013,3621,2899,3712,2813,890,4703,1306,3401,3036,2519,4498,3581,2521,3876,4552,3660,4533,2974,4626,2526,2174,1173,2369,1409,3618,4165,4435,2751,4625,1302,4509,95,4847,3640,637,757,3488,1326,3551,82,3610,1358,4891,1353,729,701,1523,2477,1726,1681,3089,4370}, 2);
             program.PredictPartyVictory("DRRDRDRDRDDRDRDR");
-            program.NumFactoredBinaryTrees(new[] { 2, 4, 5, 10 });
+            program.NumFactoredBinaryTrees(new[] {2, 4, 5, 10});
             program.SplitIntoFibonacci("1320581321313221264343965566089105744171833277577");
             program.MatrixScore(JsonConvert.DeserializeObject<int[][]>("[[1,0,1,1],[1,0,1,0],[1,1,0,0]]"));
-            program.SearchI(new[] { 12, 20, -21, -21, -19, -14, -11, -8, -8, -8, -6, -6, -4, -4, 0, 1, 5, 5, 6, 11, 11, 12 }, -8);
+            program.SearchI(
+                new[] {12, 20, -21, -21, -19, -14, -11, -8, -8, -8, -6, -6, -4, -4, 0, 1, 5, 5, 6, 11, 11, 12}, -8);
             program.NthUglyNumber(1000000000, 2, 168079517, 403313907);
-            program.GetValidT9Words("8733", new[] { "tree", "used" });
-            program.MaxChunksToSorted(new[] { 1, 0, 2, 3, 4 });
+            program.GetValidT9Words("8733", new[] {"tree", "used"});
+            program.MaxChunksToSorted(new[] {1, 0, 2, 3, 4});
             program.FindRotateSteps("godding", "godding");
-            program.FurthestBuilding(new[] { 4, 2, 7, 6, 9, 14, 12 }, 5, 1);
-            program.CheckSubarraySum(new[] { 0, 0 }, 0);
+            program.FurthestBuilding(new[] {4, 2, 7, 6, 9, 14, 12}, 5, 1);
+            program.CheckSubarraySum(new[] {0, 0}, 0);
             program.Deserialize("[123,456,[788,799,833],[[]],10,[]]");
-            program.VideoStitching(JsonConvert.DeserializeObject<int[][]>("[[0,2],[4,6],[8,10],[1,9],[1,5],[5,9]]"), 10);
+            program.VideoStitching(JsonConvert.DeserializeObject<int[][]>("[[0,2],[4,6],[8,10],[1,9],[1,5],[5,9]]"),
+                10);
             program.IsMatchOffer("mississippi", "mis*is*p*.");
             program.FindMinHeightTrees(6, JsonConvert.DeserializeObject<int[][]>("[[0,1],[0,2],[0,3],[3,4],[4,5]]"));
             program.CanMakePaliQueries("rkzavgdmdgt",
-                JsonConvert.DeserializeObject<int[][]>("[[5,8,0],[7,9,1],[3,6,4],[5,5,1],[8,10,0],[3,9,5],[0,10,10],[6,8,3]]"));
-            program.OpenLock(JsonConvert.DeserializeObject<string[]>("[\"0201\",\"0101\",\"0102\",\"1212\",\"2002\"]"), "0202");
+                JsonConvert.DeserializeObject<int[][]>(
+                    "[[5,8,0],[7,9,1],[3,6,4],[5,5,1],[8,10,0],[3,9,5],[0,10,10],[6,8,3]]"));
+            program.OpenLock(JsonConvert.DeserializeObject<string[]>("[\"0201\",\"0101\",\"0102\",\"1212\",\"2002\"]"),
+                "0202");
             program.FindLongestSubarray(new[]
                 {"A", "1", "B", "C", "D", "2", "3", "4", "E", "5", "F", "G", "6", "7", "H", "I", "J", "K", "L", "M"});
             var test = new TreeNode(0);
@@ -53,21 +57,21 @@ namespace leetcode
             test.left.left = new TreeNode(0);
             test.left.right = new TreeNode(0);
             program.MinCameraCover(test);
-            program.MctFromLeafValues(new[] { 6, 2, 4 });
+            program.MctFromLeafValues(new[] {6, 2, 4});
             program.BasicCalculate("5-(4+1)");
-            program.FindNumberOfLIS(new[] { 2, 2, 2, 2, 2, 3, 8, 7 });
+            program.FindNumberOfLIS(new[] {2, 2, 2, 2, 2, 3, 8, 7});
             program.FindItinerary(
                 JsonConvert.DeserializeObject<IList<IList<string>>>(
                     @"[[""JFK"",""KUL""],[""JFK"",""NRT""],[""NRT"",""JFK""]]"));
             program.MinStickers(
-                new[] { "slave", "doctor", "kept", "insect", "an", "window", "she", "range", "post", "guide" },
+                new[] {"slave", "doctor", "kept", "insect", "an", "window", "she", "range", "post", "guide"},
                 "supportclose");
             program.RemoveStones(JsonConvert.DeserializeObject<int[][]>("[[0,0],[0,2],[1,1],[2,0],[2,2]]"));
             program.RangeBitwiseAnd(5, 6);
             program.CountEval("0&0&0&1^1|0", 1);
-            program.RemoveBoxes(new[] { 1, 3, 2, 2, 2, 3, 4, 3, 1 });
+            program.RemoveBoxes(new[] {1, 3, 2, 2, 2, 3, 4, 3, 1});
             program.IsPerfectSquare(2147395600);
-            program.FindClosestElements(new[] { 1, 10, 15, 25, 35, 45, 50, 59 }, 1, 30);
+            program.FindClosestElements(new[] {1, 10, 15, 25, 35, 45, 50, 59}, 1, 30);
             program.RestoreIpAddresses("25525511135");
             var root = new TreeNode(1);
             root.left = new TreeNode(3);
@@ -80,15 +84,15 @@ namespace leetcode
             program.Flatten(root);
             program.SmallestRange(
                 JsonConvert.DeserializeObject<int[][]>("[[4, 10, 15, 24, 26],[0, 9, 12, 20],[5, 18, 22, 30]]"));
-            Console.WriteLine(program.MinimalSteps(new[] { "S#O", "M..", "M.T" }));
-            program.SplitArray(new[] { 7, 2, 5, 10, 8, 1 }, 2);
-            program.KthGrammar(30, (int)Math.Pow(2, 29) - 1);
-            program.WiggleSort(new[] { 4, 5, 5, 6 });
+            Console.WriteLine(program.MinimalSteps(new[] {"S#O", "M..", "M.T"}));
+            program.SplitArray(new[] {7, 2, 5, 10, 8, 1}, 2);
+            program.KthGrammar(30, (int) Math.Pow(2, 29) - 1);
+            program.WiggleSort(new[] {4, 5, 5, 6});
             program.LongestIncreasingPath(JsonConvert.DeserializeObject<int[][]>("[[7,8,9],[9,7,6],[7,2,3]]"));
             program.CalculateMinimumHP(JsonConvert.DeserializeObject<int[][]>("[[-2,-3,3],[-5,-10,1],[10,30,-5]]"));
             program.CalculateMinimumHP(
                 JsonConvert.DeserializeObject<int[][]>("[[-5,-10,1],[-2,-3,3],[10,30,-5],[-5,-10,1],[10,30,-5]]"));
-            program.CountSmaller(new[] { 5, 2, 6, 1, 1, 1, 2 }).PrintArray();
+            program.CountSmaller(new[] {5, 2, 6, 1, 1, 1, 2}).PrintArray();
             program.Respace(
                 new[]
                 {
@@ -97,9 +101,9 @@ namespace leetcode
                     "pspkr", "tdkkktdsrkzpzpuzvszzzzdjj", "zk", "pqkjkzpvdpktzskdkvzjkkj", "sr",
                     "zqjkzksvkvvrsjrjkkjkztrpuzrqrqvvpkutqkrrqpzu"
                 }, "rkktkruzsjkrzqqzkvdzqrzpkrukdqrqjzkrqrzzkkrr");
-            program.MaxSumDivThree(new[] { 3, 6, 5, 1, 8 });
+            program.MaxSumDivThree(new[] {3, 6, 5, 1, 8});
             program.Calculate("1+2*5/3+6/4*2");
-            program.FindOrder(6, new[] { new[] { 1, 2 }, new[] { 3, 0 }, new[] { 4, 2 }, new[] { 3, 5 } });
+            program.FindOrder(6, new[] {new[] {1, 2}, new[] {3, 0}, new[] {4, 2}, new[] {3, 5}});
             program.Solve(JsonConvert.DeserializeObject<char[][]>(
                 "[['O','X','O','O','O','X'],['O','O','X','X','X','O'],['X','X','X','X','X','O'],['O','O','O','O','X','X'],['X','X','O','O','X','O'],['O','O','X','X','X','X']]"));
             Console.WriteLine(program.LeastInterval(
@@ -115,10 +119,10 @@ namespace leetcode
             var chars = JsonConvert.DeserializeObject<char[][]>(
                 "[['1','1','1','1','0'],['1','1','0','1','0'],['1','1','0','0','0'],['0','0','0','0','0']]");
             program.NumIslands(chars);
-            program.FindTargetSumWays(new[] { 1, 1, 1, 1, 1 }, 3);
-            program.LengthOfLIS(new[] { 10, 9, 2, 5, 3, 4 });
+            program.FindTargetSumWays(new[] {1, 1, 1, 1, 1}, 3);
+            program.LengthOfLIS(new[] {10, 9, 2, 5, 3, 4});
             program.LongestValidParentheses("(()()");
-            program.FindBestValue(new[] { 4, 9, 3 }, 10);
+            program.FindBestValue(new[] {4, 9, 3}, 10);
             var node = new ListNode(1);
             node.next = new ListNode(2);
             node.next.next = new ListNode(3);
@@ -132,8 +136,8 @@ namespace leetcode
                 new[] {1, 2, 3, 4, 5}, new[] {6, 7, 8, 9, 10}, new[] {11, 12, 13, 14, 15}, new[] {16, 17, 18, 19, 20},
                 new[] {21, 22, 23, 24, 25}
             });
-            program.MinFlips(new[] { new[] { 1, 1, 1 }, new[] { 1, 0, 1 }, new[] { 0, 0, 0 } });
-            Console.WriteLine(program.WordBreakI("aaaaaaa", new[] { "aaaa", "aaa" }));
+            program.MinFlips(new[] {new[] {1, 1, 1}, new[] {1, 0, 1}, new[] {0, 0, 0}});
+            Console.WriteLine(program.WordBreakI("aaaaaaa", new[] {"aaaa", "aaa"}));
 
 
             program.GenerateMatrix(3);
@@ -146,23 +150,23 @@ namespace leetcode
             program.IsValidBST(t);
             Console.WriteLine(program.EquationsPossible(new[]
                 {"a!=i", "g==k", "k==j", "k!=i", "c!=e", "a!=e", "k!=a", "a!=g", "g!=c"}));
-            Console.WriteLine(program.EquationsPossible(new[] { "b==b", "b==e", "e==c", "d!=e" }));
-            Console.WriteLine(program.EquationsPossible(new[] { "a==b", "b!=c", "c==a" }));
-            Console.WriteLine(program.EquationsPossible(new[] { "c==c", "b==d", "x!=z" }));
+            Console.WriteLine(program.EquationsPossible(new[] {"b==b", "b==e", "e==c", "d!=e"}));
+            Console.WriteLine(program.EquationsPossible(new[] {"a==b", "b!=c", "c==a"}));
+            Console.WriteLine(program.EquationsPossible(new[] {"c==c", "b==d", "x!=z"}));
 
-            program.FindLadders("a", "c", new[] { "a", "b", "c" });
-            program.FindLadders("hit", "cog", new[] { "hot", "dot", "dog", "lot", "log", "cog" });
-            program.WordBreak("pineapplepenapple", new[] { "apple", "pen", "applepen", "pine", "pineapple" });
-            program.Subsets(new[] { 1, 2, 3 });
-            program.Permute(new[] { 1, 2, 3 });
+            program.FindLadders("a", "c", new[] {"a", "b", "c"});
+            program.FindLadders("hit", "cog", new[] {"hot", "dot", "dog", "lot", "log", "cog"});
+            program.WordBreak("pineapplepenapple", new[] {"apple", "pen", "applepen", "pine", "pineapple"});
+            program.Subsets(new[] {1, 2, 3});
+            program.Permute(new[] {1, 2, 3});
             program.LetterCombinations("234");
             for (int i = 0; i < 10; i++)
             {
-                Console.WriteLine(i + "," + program.SearchRotate(new[] { 3, 1 }, i));
+                Console.WriteLine(i + "," + program.SearchRotate(new[] {3, 1}, i));
             }
 
-            Console.WriteLine(program.FindUnsortedSubarray(new[] { 1, 3, 3, 3, 2, 2, 2, 5, 8 }));
-            solution.ConstructArr(new[] { 1, 2, 3, 4, 5, 10 }).PrintArray();
+            Console.WriteLine(program.FindUnsortedSubarray(new[] {1, 3, 3, 3, 2, 2, 2, 5, 8}));
+            solution.ConstructArr(new[] {1, 2, 3, 4, 5, 10}).PrintArray();
             //4,2,5,1,3
 
             var codec = new Codec();
@@ -179,7 +183,7 @@ namespace leetcode
             Console.WriteLine(cache.Get(3));
             Console.WriteLine(cache.Get(4));
             Console.WriteLine(
-                new Program().ReversePairs1(new[] { 7, 5, 6, 4, 1, 10 }));
+                new Program().ReversePairs1(new[] {7, 5, 6, 4, 1, 10}));
         }
 
         #region 面试题63. 股票的最大利润
@@ -516,6 +520,7 @@ namespace leetcode
         }
 
         #region 1356. 根据数字二进制下 1 的数目排序
+
         //https://leetcode-cn.com/problems/sort-integers-by-the-number-of-1-bits/
         public int[] SortByBits(int[] arr)
         {
@@ -527,8 +532,10 @@ namespace leetcode
                     n = n & (n - 1);
                     count++;
                 }
+
                 return count;
             }
+
             var cache = new Dictionary<int, int>();
             Array.Sort(arr, Comparer<int>.Create((a, b) =>
             {
@@ -537,15 +544,18 @@ namespace leetcode
                     ac = BitCount(a);
                     cache[a] = ac;
                 }
+
                 if (!cache.TryGetValue(b, out var bc))
                 {
                     bc = BitCount(b);
                     cache[b] = bc;
                 }
+
                 return ac == bc ? a - b : ac - bc;
             }));
             return arr;
         }
+
         #endregion
 
         #region 1122. 数组的相对排序
@@ -558,6 +568,7 @@ namespace leetcode
             {
                 buckets[num]++;
             }
+
             var i = 0;
             for (int j = 0; j < arr2.Length; j++)
             {
@@ -566,19 +577,23 @@ namespace leetcode
                 {
                     arr1[i++] = n;
                 }
+
                 buckets[n] = 0;
             }
+
             for (int j = 0; j < buckets.Length; j++)
             {
                 if (buckets[j] == 0)
                 {
                     continue;
                 }
+
                 for (int k = 0; k < buckets[j]; k++)
                 {
                     arr1[i++] = j;
                 }
             }
+
             return arr1;
         }
 
@@ -656,7 +671,7 @@ namespace leetcode
             {
                 for (int c = 0; c < C; c++)
                 {
-                    result[i++] = new[] { r, c };
+                    result[i++] = new[] {r, c};
                 }
             }
 
@@ -786,7 +801,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char)(i + 'a'));
+                        result.Append((char) (i + 'a'));
                         chars[i]--;
                     }
 
@@ -801,7 +816,7 @@ namespace leetcode
                             continue;
                         }
 
-                        result.Append((char)(i + 'a'));
+                        result.Append((char) (i + 'a'));
                         chars[i]--;
                     }
 
@@ -1150,7 +1165,7 @@ namespace leetcode
                 return null;
             }
 
-            return new TreeNode(root.val) { left = MirrorTree(root.right), right = MirrorTree(root.left) };
+            return new TreeNode(root.val) {left = MirrorTree(root.right), right = MirrorTree(root.left)};
         }
 
         #endregion
@@ -1861,7 +1876,7 @@ namespace leetcode
                 var index = Find(nums, num);
                 if (index != -1)
                 {
-                    return new[] { nums[i], nums[index] };
+                    return new[] {nums[i], nums[index]};
                 }
             }
 
@@ -1878,7 +1893,7 @@ namespace leetcode
                 var num = target - nums[i];
                 if (set.Contains(num))
                 {
-                    return new[] { nums[i], num };
+                    return new[] {nums[i], num};
                 }
             }
 
@@ -1894,7 +1909,7 @@ namespace leetcode
                 var num = nums[start] + nums[end];
                 if (num == target)
                 {
-                    return new[] { nums[start], nums[end] };
+                    return new[] {nums[start], nums[end]};
                 }
 
                 if (num > target)
@@ -2405,7 +2420,8 @@ namespace leetcode
                     return root;
                 }
 
-                TreeNode left = LowestCommonAncestorOn(root.left, p, q), right = LowestCommonAncestorOn(root.right, p, q);
+                TreeNode left = LowestCommonAncestorOn(root.left, p, q),
+                    right = LowestCommonAncestorOn(root.right, p, q);
                 if (left != null && right != null)
                 {
                     return root;
@@ -2678,7 +2694,7 @@ namespace leetcode
                 set.Add(n);
                 while (n > 0)
                 {
-                    num += (int)Math.Pow(n % 10, 2);
+                    num += (int) Math.Pow(n % 10, 2);
                     n /= 10;
                 }
 
@@ -3030,7 +3046,7 @@ namespace leetcode
                 }
             }
 
-            return (int)num;
+            return (int) num;
         }
 
         #endregion
@@ -3275,7 +3291,7 @@ namespace leetcode
         public int SubarraySum(int[] nums, int k)
         {
             int sum = 0, count = 0;
-            var dic = new Dictionary<int, int> { { 0, 1 } };
+            var dic = new Dictionary<int, int> {{0, 1}};
             foreach (var n in nums)
             {
                 sum += n;
@@ -3467,7 +3483,7 @@ namespace leetcode
             var max = 0;
             for (int i = 0; i < s.Length; i++)
             {
-                var set = new Dictionary<char, int> { { 'a', 0 }, { 'e', 0 }, { 'i', 0 }, { 'o', 0 }, { 'u', 0 } };
+                var set = new Dictionary<char, int> {{'a', 0}, {'e', 0}, {'i', 0}, {'o', 0}, {'u', 0}};
                 for (int j = i; j < s.Length; j++)
                 {
                     if (set.TryGetValue(s[j], out var size))
@@ -3994,7 +4010,7 @@ namespace leetcode
             var dict = new Dictionary<string, char>();
             for (int i = 0; i < 26; i++)
             {
-                dict[i.ToString()] = (char)('a' + i);
+                dict[i.ToString()] = (char) ('a' + i);
             }
 
             var strNum = num.ToString();
@@ -4177,7 +4193,7 @@ namespace leetcode
         {
             if (nums == null || nums.Length <= 0)
             {
-                return new[] { -1, -1 };
+                return new[] {-1, -1};
             }
 
             int start = 0, end = nums.Length - 1;
@@ -4197,7 +4213,7 @@ namespace leetcode
             //如果target存在，start==end时一定是target，此时满足条件start+1,end不变，故只需要判断nums[end]即可知target是否存在
             if (end < 0 || nums[end] != target)
             {
-                return new[] { -1, -1 };
+                return new[] {-1, -1};
             }
 
             var rIndex = end;
@@ -4215,7 +4231,7 @@ namespace leetcode
                 }
             }
 
-            return new[] { start, rIndex };
+            return new[] {start, rIndex};
         }
 
         #endregion
@@ -4375,14 +4391,14 @@ namespace leetcode
             {
                 if (n >= start && n <= end)
                 {
-                    int count = (int)(n - start), index = count % len;
+                    int count = (int) (n - start), index = count % len;
                     var num = (number + (count / len)).ToString();
                     return num[index] - '0';
                 }
 
                 len++;
                 start = end + 1;
-                end = 9 * (long)Math.Pow(10, len - 1) * len + end;
+                end = 9 * (long) Math.Pow(10, len - 1) * len + end;
                 number *= 10;
             }
         }
@@ -5195,7 +5211,7 @@ namespace leetcode
                     var num = nums[i] + nums[start] + nums[end];
                     if (num == 0)
                     {
-                        result.Add(new[] { nums[i], nums[start], nums[end] });
+                        result.Add(new[] {nums[i], nums[start], nums[end]});
                         while (start < end && nums[start] == nums[start + 1])
                         {
                             start++;
@@ -5827,7 +5843,7 @@ namespace leetcode
             var dict = new Dictionary<string, char>();
             for (int i = 1; i <= 26; i++)
             {
-                dict.Add(i.ToString(), (char)('A' + i - 1));
+                dict.Add(i.ToString(), (char) ('A' + i - 1));
             }
 
             var strs = new HashSet<string>();
@@ -6005,7 +6021,7 @@ namespace leetcode
                 return result;
             }
 
-            result.Add(new[] { 1 });
+            result.Add(new[] {1});
             for (int i = 1; i < numRows; i++)
             {
                 var prev = result[i - 1];
@@ -6185,8 +6201,8 @@ namespace leetcode
                 not = new Dictionary<char, ISet<char>>();
             for (int i = 0; i < 26; i++)
             {
-                equals[(char)('a' + i)] = new HashSet<char>();
-                not[(char)('a' + i)] = new HashSet<char>();
+                equals[(char) ('a' + i)] = new HashSet<char>();
+                not[(char) ('a' + i)] = new HashSet<char>();
             }
 
             foreach (var equation in equations)
@@ -6520,7 +6536,7 @@ namespace leetcode
                     plus = false;
                 }
 
-                result[index--] = (char)(one + '0');
+                result[index--] = (char) (one + '0');
             }
 
             if (plus)
@@ -6583,7 +6599,7 @@ namespace leetcode
 
             public int CompareTo(object obj)
             {
-                return ((Item)obj).Count - Count;
+                return ((Item) obj).Count - Count;
             }
         }
 
@@ -6594,7 +6610,7 @@ namespace leetcode
             {
                 if (!dict.ContainsKey(ch))
                 {
-                    dict[ch] = new Item() { Char = ch, Count = 1 };
+                    dict[ch] = new Item() {Char = ch, Count = 1};
                 }
                 else
                 {
@@ -6947,7 +6963,7 @@ namespace leetcode
             for (int i = 0; i < s.Length; i++)
             {
                 var num = s[i] - 'A' + 1;
-                res += (num * (int)Math.Pow(26, s.Length - i - 1));
+                res += (num * (int) Math.Pow(26, s.Length - i - 1));
             }
 
             return res;
@@ -7267,6 +7283,7 @@ namespace leetcode
             {
                 return head;
             }
+
             var half = FindHalf(head);
             var node1 = SortList(head);
             var node2 = SortList(half);
@@ -7281,6 +7298,7 @@ namespace leetcode
                 newHead = node2;
                 node2 = node2.next;
             }
+
             var node = newHead;
             while (node1 != null && node2 != null)
             {
@@ -7294,16 +7312,20 @@ namespace leetcode
                     node.next = node2;
                     node2 = node2.next;
                 }
+
                 node = node.next;
             }
+
             if (node1 != null)
             {
                 node.next = node1;
             }
+
             if (node2 != null)
             {
                 node.next = node2;
             }
+
             return newHead;
         }
 
@@ -8238,6 +8260,7 @@ namespace leetcode
             {
                 return 0;
             }
+
             var dict = new Dictionary<string, List<string>>();
             var exists = false;
             foreach (var word in wordList)
@@ -8251,13 +8274,16 @@ namespace leetcode
                         words = new List<string>();
                         dict[key] = words;
                     }
+
                     words.Add(word);
                 }
             }
+
             if (!exists)
             {
                 return 0;
             }
+
             var queue = new Queue<string>();
             queue.Enqueue(beginWord);
             var visited = new HashSet<string>();
@@ -8272,10 +8298,12 @@ namespace leetcode
                     {
                         return step;
                     }
+
                     if (!visited.Add(word))
                     {
                         continue;
                     }
+
                     for (int i = 0; i < word.Length; i++)
                     {
                         var key = word.Substring(0, i) + "*" + word.Substring(i + 1);
@@ -8289,6 +8317,7 @@ namespace leetcode
                     }
                 }
             }
+
             return 0;
         }
 
@@ -8475,6 +8504,7 @@ namespace leetcode
                     matrix[i][s] = tmp;
                 }
             }
+
             for (int i = 0; i < matrix[0].Length / 2; i++)
             {
                 Rotate(i);
@@ -8928,8 +8958,8 @@ namespace leetcode
         //https://leetcode-cn.com/problems/integer-to-roman/
         public string IntToRoman(int num)
         {
-            var nums = new[] { 1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000 };
-            var romans = new[] { "I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M" };
+            var nums = new[] {1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000};
+            var romans = new[] {"I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M"};
             var intStr = new StringBuilder();
             for (int i = nums.Length - 1; i >= 0 && num != 0; i--)
             {
@@ -9005,7 +9035,7 @@ namespace leetcode
             var chars = new char[26];
             for (int i = 1; i < chars.Length; i++)
             {
-                chars[i] = (char)('A' + i - 1);
+                chars[i] = (char) ('A' + i - 1);
             }
 
             chars[0] = 'Z';
