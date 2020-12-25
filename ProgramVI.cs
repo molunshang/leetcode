@@ -1188,5 +1188,28 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 455. 分发饼干
+
+        //https://leetcode-cn.com/problems/assign-cookies/
+        public int FindContentChildren(int[] g, int[] s)
+        {
+            Array.Sort(g);
+            Array.Sort(s);
+            int num = 0, i = 0, j = 0;
+            while (i < g.Length && j < s.Length)
+            {
+                if (s[j] >= g[i])
+                {
+                    num++;
+                    i++;
+                }
+                j++;
+            }
+
+            return num;
+        }
+
+        #endregion
     }
 }
