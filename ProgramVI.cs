@@ -1204,10 +1204,52 @@ namespace leetcode
                     num++;
                     i++;
                 }
+
                 j++;
             }
 
             return num;
+        }
+
+        #endregion
+
+        #region 188. 买卖股票的最佳时机 IV
+
+        //https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iv/
+        public int MaxProfit(int k, int[] prices)
+        {
+            if (prices.Length <= 0 || k <= 0)
+            {
+                return 0;
+            }
+
+            //0卖 1买
+            //一次买入卖出算1次完整交易，当k*2大于prices的长度时实际就无法约束交易次数
+            k = Math.Min(k, prices.Length / 2);
+            var dp = new int[prices.Length, k + 1, 2];
+            dp[0, 0, 0] = 0;
+            dp[0, 0, 1] = -prices[0];
+            for (int i = 1; i <= k; i++)
+            {
+                dp[0, i, 0] = dp[0, i, 1] = int.MinValue / 2;
+            }
+
+            var max = 0;
+            for (var i = 1; i < prices.Length; i++)
+            {
+                // buy[i][0] = Math.max(buy[i - 1][0], sell[i - 1][0] - prices[i]);
+                dp[i, 0, 1] = Math.Max(dp[i - 1, 0, 1], dp[i - 1, 0, 0] - prices[i]);
+                for (int j = 1; j <= k; j++)
+                {
+                    // sell[i][j] = Math.max(sell[i - 1][j], buy[i - 1][j - 1] + prices[i]);
+                    dp[i, j, 0] = Math.Max(dp[i - 1, j, 0], dp[i - 1, j - 1, 1] + prices[i]);
+                    // buy[i][j] = Math.max(buy[i - 1][j], sell[i - 1][j] - prices[i]);
+                    dp[i, j, 1] = Math.Max(dp[i - 1, j, 1], dp[i - 1, j, 0] - prices[i]);
+                    max = Math.Max(max, dp[i, j, 0]);
+                }
+            }
+
+            return max;
         }
 
         #endregion
