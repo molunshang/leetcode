@@ -1253,5 +1253,32 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 330. 按要求补齐数组
+
+        //https://leetcode-cn.com/problems/patching-array/
+        public int MinPatches(int[] nums, int n)
+        {
+            //根据leetcode题解解决
+            long x = 1;
+            int fill = 0, i = 0;
+            while (x <= n)
+            {
+                if (i < nums.Length && nums[i] <= x)
+                {
+                    x += nums[i];
+                    i++;
+                }
+                else
+                {
+                    x *= 2;
+                    fill++;
+                }
+            }
+
+            return fill;
+        }
+
+        #endregion
     }
 }
