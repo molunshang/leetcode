@@ -1280,5 +1280,30 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 1046. 最后一块石头的重量
+
+        //https://leetcode-cn.com/problems/last-stone-weight/
+        public int LastStoneWeight(int[] stones)
+        {
+            var list = new List<int>(stones);
+            list.Sort();
+            while (list.Count > 1)
+            {
+                int x = list[list.Count - 1], y = list[list.Count - 2];
+                list.RemoveAt(list.Count - 1);
+                list.RemoveAt(list.Count - 1);
+                if (x != y)
+                {
+                    var stone = x - y;
+                    var index = list.BinarySearch(stone);
+                    list.Insert(index < 0 ? ~index : index, stone);
+                }
+            }
+
+            return list.Count <= 0 ? 0 : list[0];
+        }
+
+        #endregion
     }
 }
