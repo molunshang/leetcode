@@ -6325,47 +6325,28 @@ namespace leetcode
         //https://leetcode-cn.com/problems/partition-list/
         public ListNode Partition(ListNode head, int x)
         {
-            ListNode prev = null, next = null, prevRoot = null, nextRoot = null;
+            if (head == null || head.next == null)
+            {
+                return head;
+            }
+            ListNode small = new ListNode(-1), big = new ListNode(-1);
+            ListNode smallHead = small, bigHead = big;
             while (head != null)
             {
                 if (head.val >= x)
                 {
-                    if (nextRoot == null)
-                    {
-                        next = nextRoot = new ListNode(head.val);
-                    }
-                    else
-                    {
-                        next.next = new ListNode(head.val);
-                        next = next.next;
-                    }
+                    big.next = head;
+                    big = big.next;
                 }
                 else
                 {
-                    if (prevRoot == null)
-                    {
-                        prevRoot = prev = new ListNode(head.val);
-                    }
-                    else
-                    {
-                        prev.next = new ListNode(head.val);
-                        prev = prev.next;
-                    }
+                    small.next = head;
+                    small = small.next;
                 }
-
                 head = head.next;
             }
-
-            if (prev != null)
-            {
-                prev.next = nextRoot;
-            }
-            else
-            {
-                return nextRoot;
-            }
-
-            return prevRoot;
+            small.next = bigHead.next;
+            return smallHead.next;
         }
 
         #endregion

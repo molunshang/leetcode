@@ -586,7 +586,7 @@ namespace leetcode
             }
 
             var count = a.Sum(TreeCount);
-            return (int) (count % 1000000007);
+            return (int)(count % 1000000007);
         }
 
         #endregion
@@ -931,7 +931,7 @@ namespace leetcode
         //https://leetcode-cn.com/problems/number-of-lines-to-write-string/
         public int[] NumberOfLines(int[] widths, string s)
         {
-            var res = new[] {1, 0};
+            var res = new[] { 1, 0 };
             var leave = 100;
             foreach (var ch in s)
             {
@@ -1305,5 +1305,78 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 605. 种花问题
+        //https://leetcode-cn.com/problems/can-place-flowers/
+        public bool CanPlaceFlowers(int[] flowerbed, int n)
+        {
+            bool Dfs(int index, int count)
+            {
+                if (index >= flowerbed.Length)
+                {
+                    return count <= 0;
+                }
+                if (flowerbed[index] == 1)
+                {
+                    if (index > 0 && flowerbed[index - 1] == 1)
+                    {
+                        return false;
+                    }
+                    return count <= 0 || Dfs(index + 1, count);
+                }
+                else if (count <= 0)
+                {
+                    return true;
+                }
+                if (index == 0 || flowerbed[index - 1] == 0)
+                {
+                    flowerbed[index] = 1;
+                    if (Dfs(index + 1, count - 1))
+                    {
+                        return true;
+                    }
+                    flowerbed[index] = 0;
+                }
+                return Dfs(index + 1, count);
+            }
+            return Dfs(0, n);
+        }
+
+        public bool CanPlaceFlowersByLeetcode(int[] flowerbed, int n)
+        {
+            int count = 0;
+            int m = flowerbed.Length;
+            int prev = -1;
+            for (int i = 0; i < m; i++)
+            {
+                if (flowerbed[i] == 1)
+                {
+                    if (prev < 0)
+                    {
+                        count += i / 2;
+                    }
+                    else
+                    {
+                        count += (i - prev - 2) / 2;
+                    }
+                    if (count >= n)
+                    {
+                        return true;
+                    }
+                    prev = i;
+                }
+            }
+            if (prev < 0)
+            {
+                count += (m + 1) / 2;
+            }
+            else
+            {
+                count += (m - prev - 1) / 2;
+            }
+            return count >= n;
+        }
+        #endregion
+
     }
 }
