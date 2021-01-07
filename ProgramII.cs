@@ -2863,48 +2863,6 @@ namespace leetcode
 
         #endregion
 
-        #region 547. 朋友圈
-
-        //https://leetcode-cn.com/problems/friend-circles/
-        void FindCircleNum(int n, int[][] m, ISet<int> friends)
-        {
-            if (!friends.Add(n))
-            {
-                return;
-            }
-
-            for (int i = 0; i < m[n].Length; i++)
-            {
-                if (m[n][i] == 0)
-                {
-                    continue;
-                }
-
-                FindCircleNum(i, m, friends);
-            }
-        }
-
-        public int FindCircleNum(int[][] m)
-        {
-            var n = m.Length;
-            var res = 0;
-            var friends = new HashSet<int>();
-            for (int i = 0; i < n; i++)
-            {
-                if (friends.Contains(i))
-                {
-                    continue;
-                }
-
-                FindCircleNum(i, m, friends);
-                res++;
-            }
-
-            return res;
-        }
-
-        #endregion
-
         #region 1002. 查找常用字符
 
         //https://leetcode-cn.com/problems/find-common-characters/

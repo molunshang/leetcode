@@ -586,7 +586,7 @@ namespace leetcode
             }
 
             var count = a.Sum(TreeCount);
-            return (int)(count % 1000000007);
+            return (int) (count % 1000000007);
         }
 
         #endregion
@@ -931,7 +931,7 @@ namespace leetcode
         //https://leetcode-cn.com/problems/number-of-lines-to-write-string/
         public int[] NumberOfLines(int[] widths, string s)
         {
-            var res = new[] { 1, 0 };
+            var res = new[] {1, 0};
             var leave = 100;
             foreach (var ch in s)
             {
@@ -1307,6 +1307,7 @@ namespace leetcode
         #endregion
 
         #region 605. 种花问题
+
         //https://leetcode-cn.com/problems/can-place-flowers/
         public bool CanPlaceFlowers(int[] flowerbed, int n)
         {
@@ -1316,18 +1317,22 @@ namespace leetcode
                 {
                     return count <= 0;
                 }
+
                 if (flowerbed[index] == 1)
                 {
                     if (index > 0 && flowerbed[index - 1] == 1)
                     {
                         return false;
                     }
+
                     return count <= 0 || Dfs(index + 1, count);
                 }
-                else if (count <= 0)
+
+                if (count <= 0)
                 {
                     return true;
                 }
+
                 if (index == 0 || flowerbed[index - 1] == 0)
                 {
                     flowerbed[index] = 1;
@@ -1335,10 +1340,13 @@ namespace leetcode
                     {
                         return true;
                     }
+
                     flowerbed[index] = 0;
                 }
+
                 return Dfs(index + 1, count);
             }
+
             return Dfs(0, n);
         }
 
@@ -1359,13 +1367,16 @@ namespace leetcode
                     {
                         count += (i - prev - 2) / 2;
                     }
+
                     if (count >= n)
                     {
                         return true;
                     }
+
                     prev = i;
                 }
             }
+
             if (prev < 0)
             {
                 count += (m + 1) / 2;
@@ -1374,9 +1385,94 @@ namespace leetcode
             {
                 count += (m - prev - 1) / 2;
             }
+
             return count >= n;
         }
+
         #endregion
 
+        #region 547. 省份数量
+
+        //https://leetcode-cn.com/problems/number-of-provinces/
+        public int FindCircleNum(int[][] isConnected)
+        {
+            var count = 0;
+            var visited = new HashSet<int>();
+            var queue = new Queue<int>();
+            for (var i = 0; i < isConnected.Length; i++)
+            {
+                if (visited.Contains(i))
+                {
+                    continue;
+                }
+
+                queue.Enqueue(i);
+                while (queue.TryDequeue(out var j))
+                {
+                    if (!visited.Add(j))
+                    {
+                        continue;
+                    }
+
+                    for (int k = 0; k < isConnected[j].Length; k++)
+                    {
+                        if (isConnected[j][k] == 1)
+                        {
+                            queue.Enqueue(k);
+                        }
+                    }
+                }
+
+                count++;
+            }
+
+            return count;
+        }
+
+        #endregion
+
+        #region 735. 行星碰撞
+
+        //https://leetcode-cn.com/problems/asteroid-collision/
+        public int[] AsteroidCollision(int[] asteroids)
+        {
+            var stack = new Stack<int>();
+            for (var i = 0; i < asteroids.Length; i++)
+            {
+                var n = asteroids[i];
+                while (stack.TryPeek(out var top) && n < 0 && top > 0)
+                {
+                    var abs = Math.Abs(n);
+                    if (abs > top)
+                    {
+                        stack.Pop();
+                    }
+                    else if (abs == top)
+                    {
+                        stack.Pop();
+                        n = 0;
+                    }
+                    else
+                    {
+                        n = 0;
+                    }
+                }
+
+                if (n != 0)
+                {
+                    stack.Push(n);
+                }
+            }
+
+            var res = new int[stack.Count];
+            for (int i = res.Length - 1; i >= 0; i--)
+            {
+                res[i] = stack.Pop();
+            }
+
+            return res;
+        }
+
+        #endregion
     }
 }
