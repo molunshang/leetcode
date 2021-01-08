@@ -1474,5 +1474,79 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 1297. 子串的最大出现次数
+
+        //https://leetcode-cn.com/problems/maximum-number-of-occurrences-of-a-substring/
+        public int MaxFreq(string s, int maxLetters, int minSize, int maxSize)
+        {
+            var res = 0;
+            var dict = new Dictionary<string, int>();
+            var charSet = new HashSet<char>();
+            //maxSize能够达到题目的最优解，minSize一定也能达到，因此只要考虑minSize即可
+            for (int i = 0; i <= s.Length - minSize; i++)
+            {
+                var str = s.Substring(i, minSize);
+                foreach (var ch in str)
+                {
+                    charSet.Add(ch);
+                    if (charSet.Count > maxLetters)
+                    {
+                        break;
+                    }
+                }
+
+                if (charSet.Count <= maxLetters)
+                {
+                    dict.TryGetValue(str, out var count);
+                    count++;
+                    dict[str] = count;
+                    res = Math.Max(res, count);
+                }
+
+                charSet.Clear();
+            }
+
+            return res;
+        }
+
+        #endregion
+
+        #region 958. 二叉树的完全性检验
+
+        //https://leetcode-cn.com/problems/check-completeness-of-a-binary-tree/
+        public bool IsCompleteTree(TreeNode root)
+        {
+            if (root == null)
+            {
+                return true;
+            }
+
+            var queue = new Queue<TreeNode>();
+            queue.Enqueue(root);
+            while (queue.Count > 0)
+            {
+                root = queue.Dequeue();
+                if (root == null)
+                {
+                    while (queue.TryDequeue(out root))
+                    {
+                        if (root != null)
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else
+                {
+                    queue.Enqueue(root.left);
+                    queue.Enqueue(root.right);
+                }
+            }
+
+            return true;
+        }
+
+        #endregion
     }
 }
