@@ -586,7 +586,7 @@ namespace leetcode
             }
 
             var count = a.Sum(TreeCount);
-            return (int) (count % 1000000007);
+            return (int)(count % 1000000007);
         }
 
         #endregion
@@ -931,7 +931,7 @@ namespace leetcode
         //https://leetcode-cn.com/problems/number-of-lines-to-write-string/
         public int[] NumberOfLines(int[] widths, string s)
         {
-            var res = new[] {1, 0};
+            var res = new[] { 1, 0 };
             var leave = 100;
             foreach (var ch in s)
             {
@@ -1547,6 +1547,36 @@ namespace leetcode
             return true;
         }
 
+        #endregion
+
+        #region 228. 汇总区间
+        //https://leetcode-cn.com/problems/summary-ranges/
+        public IList<string> SummaryRanges(int[] nums)
+        {
+            if (nums.Length <= 0)
+            {
+                return new string[0];
+            }
+            var result = new List<string>();
+            for (int i = 0, s = 0, k = 0; i <= nums.Length; i++, k++)
+            {
+                if ((i != nums.Length) && nums[i] == nums[s] + k)
+                {
+                    continue;
+                }
+                if (nums[s] == nums[i - 1])
+                {
+                    result.Add(nums[s].ToString());
+                }
+                else
+                {
+                    result.Add(nums[s] + "->" + nums[i - 1]);
+                }
+                k = 0;
+                s = i;
+            }
+            return result;
+        }
         #endregion
     }
 }
