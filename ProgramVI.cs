@@ -1578,5 +1578,63 @@ namespace leetcode
             return result;
         }
         #endregion
+
+        #region 1202. 交换字符串中的元素
+        //https://leetcode-cn.com/problems/smallest-string-with-swaps/
+        public string SmallestStringWithSwaps(string s, IList<IList<int>> pairs)
+        {
+            var chars = s.ToCharArray();
+            var graph = new Dictionary<int, IList<int>>();
+            foreach (var pair in pairs)
+            {
+                if (!graph.TryGetValue(pair[0], out var next))
+                {
+                    graph[pair[0]] = next = new List<int>();
+                }
+                next.Add(pair[1]);
+                if (!graph.TryGetValue(pair[1], out next))
+                {
+                    graph[pair[1]] = next = new List<int>();
+                }
+                next.Add(pair[0]);
+            }
+            var queue = new Queue<int>();
+            var visited = new HashSet<int>();
+            var paths = new List<int>();
+            var seqs = new List<char>();
+            foreach (var pair in pairs)
+            {
+                if (visited.Contains(pair[0]))
+                {
+                    continue;
+                }
+                queue.Enqueue(pair[0]);
+                while (queue.TryDequeue(out var i))
+                {
+                    if (!visited.Add(i))
+                    {
+                        continue;
+                    }
+                    paths.Add(i);
+                    seqs.Add(chars[i]);
+                    var nexts = graph[i];
+                    //acdb
+                    foreach (var n in nexts)
+                    {
+                        queue.Enqueue(n);
+                    }
+                }
+                paths.Sort();
+                seqs.Sort();
+                for (int i = 0; i < paths.Count; i++)
+                {
+                    chars[paths[i]] = seqs[i];
+                }
+                paths.Clear();
+                seqs.Clear();
+            }
+            return new string(chars);
+        }
+        #endregion
     }
 }
