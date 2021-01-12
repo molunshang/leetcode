@@ -1636,5 +1636,177 @@ namespace leetcode
             return new string(chars);
         }
         #endregion
+
+        #region 1203. 项目管理
+        //https://leetcode-cn.com/problems/sort-items-by-groups-respecting-dependencies/
+        public int[] SortItems(int n, int m, int[] group, IList<IList<int>> beforeItems)
+        {
+            throw new NotImplementedException();
+            var visited = new HashSet<int>();
+            var queue = new Queue<int>();
+            var seqs = new IList<int>[m + 1];
+            for (int i = 0; i < n; i++)
+            {
+                if (visited.Contains(i))
+                {
+                    continue;
+                }
+                queue.Enqueue(i);
+                while (queue.TryDequeue(out var p))
+                {
+                    if (!visited.Add(p))
+                    {
+                        continue;
+                    }
+                    var g = group[p] == -1 ? m : group[p];
+                    var seq = seqs[g];
+                    if (seq == null)
+                    {
+                        seqs[g] = seq = new List<int>();
+                    }
+                    seq.Add(p);
+                    var before = beforeItems[p];
+                    foreach (var b in before)
+                    {
+                        if (b == i)
+                        {
+                            return new int[0];
+                        }
+                        queue.Enqueue(b);
+                    }
+                }
+            }
+            var result = new int[n];
+            foreach (var seq in seqs)
+            {
+                for (int i = seq.Count - 1; i >= 0; i--)
+                {
+                    result[--n] = seq[i];
+                }
+            }
+            return result;
+        }
+
+        public int[] SortItemsByLeetCode(int n, int m, int[] group, IList<IList<int>> beforeItems)
+        {
+            IList<int> TopologicalSort(IList<int>[] adj, int[] inDegree, int count)
+            {
+                var seq = new List<int>();
+                var queue = new Queue<int>();
+                for (int i = 0; i < count; i++)
+                {
+                    if (inDegree[i] == 0)
+                    {
+                        queue.Enqueue(i);
+                    }
+                }
+
+                while (queue.TryDequeue(out var front))
+                {
+                    seq.Add(front);
+                    foreach (int successor in adj[front])
+                    {
+                        inDegree[successor]--;
+                        if (inDegree[successor] == 0)
+                        {
+                            queue.Enqueue(successor);
+                        }
+                    }
+                }
+
+                if (seq.Count == count)
+                {
+                    return seq;
+                }
+                return new int[0];
+            }
+            // 第 1 步：数据预处理，给没有归属于一个组的项目编上组号
+            for (int i = 0; i < group.Length; i++)
+            {
+                if (group[i] == -1)
+                {
+                    group[i] = m;
+                    m++;
+                }
+            }
+
+            // 第 2 步：实例化组和项目的邻接表
+            var groupAdj = new IList<int>[m];
+            var itemAdj = new IList<int>[n];
+            for (int i = 0; i < m; i++)
+            {
+                groupAdj[i] = new List<int>();
+            }
+            for (int i = 0; i < n; i++)
+            {
+                itemAdj[i] = new List<int>();
+            }
+
+            // 第 3 步：建图和统计入度数组
+            int[] groupsIndegree = new int[m];
+            int[] itemsIndegree = new int[n];
+
+            int len = group.Length;
+            for (int i = 0; i < len; i++)
+            {
+                int currentGroup = group[i];
+                foreach (int beforeItem in beforeItems[i])
+                {
+                    int beforeGroup = group[beforeItem];
+                    if (beforeGroup != currentGroup)
+                    {
+                        groupAdj[beforeGroup].Add(currentGroup);
+                        groupsIndegree[currentGroup]++;
+                    }
+                }
+            }
+
+            for (int i = 0; i < n; i++)
+            {
+                foreach (var item in beforeItems[i])
+                {
+                    itemAdj[item].Add(i);
+                    itemsIndegree[i]++;
+                }
+            }
+
+            // 第 4 步：得到组和项目的拓扑排序结果
+            IList<int> groupsList = TopologicalSort(groupAdj, groupsIndegree, m);
+            if (groupsList.Count == 0)
+            {
+                return new int[0];
+            }
+            IList<int> itemsList = TopologicalSort(itemAdj, itemsIndegree, n);
+            if (itemsList.Count == 0)
+            {
+                return new int[0];
+            }
+
+            // 第 5 步：根据项目的拓扑排序结果，项目到组的多对一关系，建立组到项目的一对多关系
+            // key：组，value：在同一组的项目列表
+            var groups2Items = new Dictionary<int, IList<int>>();
+            foreach (var item in itemsList)
+            {
+                if (!groups2Items.TryGetValue(group[item], out var items))
+                {
+                    groups2Items[group[item]] = items = new List<int>();
+                }
+                items.Add(item);
+            }
+
+            // 第 6 步：把组的拓扑排序结果替换成为项目的拓扑排序结果
+            var res = new List<int>();
+            foreach (var groupId in groupsList)
+            {
+                if (groups2Items.TryGetValue(groupId, out var items))
+                {
+                    res.AddRange(items);
+                }
+            }
+            return res.ToArray();
+        }
+
+
+        #endregion
     }
 }
