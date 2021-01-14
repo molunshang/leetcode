@@ -1808,5 +1808,20 @@ namespace leetcode
 
 
         #endregion
+
+        #region 1018. 可被 5 整除的二进制前缀
+        //https://leetcode-cn.com/problems/binary-prefix-divisible-by-5/
+        public IList<bool> PrefixesDivBy5(int[] A)
+        {
+            var result = new bool[A.Length];
+            var end = 0;
+            for (int i = 0; i < A.Length; i++)
+            {
+                end = (end * 2 + A[i]) % 5;
+                result[i] = end == 0;
+            }
+            return result;
+        }
+        #endregion
     }
 }
