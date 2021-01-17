@@ -1823,5 +1823,74 @@ namespace leetcode
             return result;
         }
         #endregion
+
+        #region 803. 打砖块
+        //https://leetcode-cn.com/problems/bricks-falling-when-hit/
+        public int[] HitBricks(int[][] grid, int[][] hits)
+        {
+            int m = grid.Length, n = grid[0].Length;
+            int Dfs(int x, int y)
+            {
+                if (x >= m || y >= n || x < 0 || y < 0)
+                {
+                    return 0;
+                }
+                if (grid[x][y] == 1)
+                {
+                    grid[x][y] = 2;
+                    return 1 + Dfs(x + 1, y) + Dfs(x - 1, y) + Dfs(x, y + 1) + Dfs(x, y - 1);
+                }
+                return 0;
+            }
+
+            bool Is(int x, int y)
+            {
+                if (x == 0)
+                {
+                    return true;
+                }
+                if (x + 1 < m && grid[x + 1][y] == 2)
+                {
+                    return true;
+                }
+                if (x - 1 > -1 && grid[x - 1][y] == 2)
+                {
+                    return true;
+                }
+                if (y + 1 < n && grid[x][y + 1] == 2)
+                {
+                    return true;
+                }
+                if (y - 1 > -1 && grid[x][y - 1] == 2)
+                {
+                    return true;
+                }
+                return false;
+            }
+            for (int i = 0; i < hits.Length; i++)
+            {
+                var hit = hits[i];
+                int px = hit[0], py = hit[1];
+                grid[px][py] -= 1;
+            }
+            for (int i = 0; i < n; i++)
+            {
+                Dfs(0, i);
+            }
+            var result = new int[hits.Length];
+            for (int i = hits.Length - 1; i >= 0; i--)
+            {
+                var hit = hits[i];
+                int px = hit[0], py = hit[1];
+                grid[px][py] += 1;
+                if (grid[px][py] == 0 || !Is(px, py))
+                {
+                    continue;
+                }
+                result[i] = Dfs(px, py) - 1;
+            }
+            return result;
+        }
+        #endregion
     }
 }
