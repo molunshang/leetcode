@@ -1892,5 +1892,30 @@ namespace leetcode
             return result;
         }
         #endregion
+
+        #region 674. 最长连续递增序列
+        //https://leetcode-cn.com/problems/longest-continuous-increasing-subsequence/
+        public int FindLengthOfLCIS(int[] nums)
+        {
+            if (nums.Length <= 1)
+            {
+                return nums.Length;
+            }
+            int res = 1, len = 1;
+            for (int i = 1; i < nums.Length; i++)
+            {
+                if (nums[i] > nums[i - 1])
+                {
+                    len++;
+                }
+                else
+                {
+                    res = Math.Max(res, len);
+                    len = 1;
+                }
+            }
+            return Math.Max(res, len);
+        }
+        #endregion
     }
 }
