@@ -1917,5 +1917,95 @@ namespace leetcode
             return Math.Max(res, len);
         }
         #endregion
+
+        #region 1584. 连接所有点的最小费用
+        //https://leetcode-cn.com/problems/min-cost-to-connect-all-points/
+        class Edge : IComparable<Edge>
+        {
+            public int X;
+            public int Y;
+            public int Length;
+            public Edge(int x, int y, int len)
+            {
+                X = x;
+                Y = y;
+                Length = len;
+            }
+
+
+            public int CompareTo(Edge other)
+            {
+                return Length - other.Length;
+            }
+        }
+
+        class DisJoinUnionSet
+        {
+            private int[] rank;
+            private int[] set;
+            public DisJoinUnionSet(int n)
+            {
+                rank = new int[n];
+                Array.Fill(rank, 1);
+                set = new int[n];
+                for (int i = 0; i < n; i++)
+                {
+                    set[i] = i;
+                }
+            }
+
+            public int Find(int n)
+            {
+                return set[n] == n ? n : (set[n] = Find(set[n]));
+            }
+
+            public bool Union(int x, int y)
+            {
+                int fx = Find(x), fy = Find(y);
+                if (fx == fy)
+                {
+                    return false;
+                }
+                if (rank[fx] < rank[fy])
+                {
+                    var tmp = fx;
+                    fx = fy;
+                    fy = tmp;
+                }
+                rank[fx] += rank[fy];
+                set[fy] = fx;
+                return true;
+            }
+        }
+        public int MinCostConnectPoints(int[][] points)
+        {
+            var edges = new List<Edge>();
+            for (int i = 0; i < points.Length; i++)
+            {
+                for (int j = i + 1; j < points.Length; j++)
+                {
+                    edges.Add(new Edge(i, j, Math.Abs(points[i][0] - points[j][0]) + Math.Abs(points[i][1] - points[j][1])));
+                }
+            }
+            edges.Sort();
+            int result = 0, n = 1;
+            var unionSet = new DisJoinUnionSet(points.Length);
+            for (int i = 0; i < edges.Count; i++)
+            {
+                var edge = edges[i];
+                if (!unionSet.Union(edge.X, edge.Y))
+                {
+                    continue;
+                }
+                result += edge.Length;
+                n++;
+                if (n == points.Length)
+                {
+                    break;
+                }
+            }
+            return result;
+        }
+        #endregion
     }
 }
