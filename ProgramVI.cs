@@ -2007,5 +2007,19 @@ namespace leetcode
             return result;
         }
         #endregion
+
+        #region 628. 三个数的最大乘积
+        //https://leetcode-cn.com/problems/maximum-product-of-three-numbers/
+        public int MaximumProduct(int[] nums)
+        {
+            Array.Sort(nums);
+            var last = nums.Length - 1;
+            if (nums.Length == 3 || nums[last] <= 0 || nums[0] >= 0)
+            {
+                return nums[last] * nums[last - 1] * nums[last - 2];
+            }
+            return Math.Max(nums[0] * nums[1] * nums[last], nums[last] * nums[last - 1] * nums[last - 2]);
+        }
+        #endregion
     }
 }
