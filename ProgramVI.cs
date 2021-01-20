@@ -586,7 +586,7 @@ namespace leetcode
             }
 
             var count = a.Sum(TreeCount);
-            return (int)(count % 1000000007);
+            return (int) (count % 1000000007);
         }
 
         #endregion
@@ -931,7 +931,7 @@ namespace leetcode
         //https://leetcode-cn.com/problems/number-of-lines-to-write-string/
         public int[] NumberOfLines(int[] widths, string s)
         {
-            var res = new[] { 1, 0 };
+            var res = new[] {1, 0};
             var leave = 100;
             foreach (var ch in s)
             {
@@ -1550,6 +1550,7 @@ namespace leetcode
         #endregion
 
         #region 228. 汇总区间
+
         //https://leetcode-cn.com/problems/summary-ranges/
         public IList<string> SummaryRanges(int[] nums)
         {
@@ -1557,6 +1558,7 @@ namespace leetcode
             {
                 return new string[0];
             }
+
             var result = new List<string>();
             for (int i = 0, s = 0, k = 0; i <= nums.Length; i++, k++)
             {
@@ -1564,6 +1566,7 @@ namespace leetcode
                 {
                     continue;
                 }
+
                 if (nums[s] == nums[i - 1])
                 {
                     result.Add(nums[s].ToString());
@@ -1572,14 +1575,18 @@ namespace leetcode
                 {
                     result.Add(nums[s] + "->" + nums[i - 1]);
                 }
+
                 k = 0;
                 s = i;
             }
+
             return result;
         }
+
         #endregion
 
         #region 1202. 交换字符串中的元素
+
         //https://leetcode-cn.com/problems/smallest-string-with-swaps/
         public string SmallestStringWithSwaps(string s, IList<IList<int>> pairs)
         {
@@ -1591,13 +1598,16 @@ namespace leetcode
                 {
                     graph[pair[0]] = next = new List<int>();
                 }
+
                 next.Add(pair[1]);
                 if (!graph.TryGetValue(pair[1], out next))
                 {
                     graph[pair[1]] = next = new List<int>();
                 }
+
                 next.Add(pair[0]);
             }
+
             var queue = new Queue<int>();
             var visited = new HashSet<int>();
             var paths = new List<int>();
@@ -1608,6 +1618,7 @@ namespace leetcode
                 {
                     continue;
                 }
+
                 queue.Enqueue(pair[0]);
                 while (queue.TryDequeue(out var i))
                 {
@@ -1615,6 +1626,7 @@ namespace leetcode
                     {
                         continue;
                     }
+
                     paths.Add(i);
                     seqs.Add(chars[i]);
                     var nexts = graph[i];
@@ -1624,20 +1636,25 @@ namespace leetcode
                         queue.Enqueue(n);
                     }
                 }
+
                 paths.Sort();
                 seqs.Sort();
                 for (int i = 0; i < paths.Count; i++)
                 {
                     chars[paths[i]] = seqs[i];
                 }
+
                 paths.Clear();
                 seqs.Clear();
             }
+
             return new string(chars);
         }
+
         #endregion
 
         #region 1203. 项目管理
+
         //https://leetcode-cn.com/problems/sort-items-by-groups-respecting-dependencies/
         public int[] SortItems(int n, int m, int[] group, IList<IList<int>> beforeItems)
         {
@@ -1651,6 +1668,7 @@ namespace leetcode
                 {
                     continue;
                 }
+
                 queue.Enqueue(i);
                 while (queue.TryDequeue(out var p))
                 {
@@ -1658,12 +1676,14 @@ namespace leetcode
                     {
                         continue;
                     }
+
                     var g = group[p] == -1 ? m : group[p];
                     var seq = seqs[g];
                     if (seq == null)
                     {
                         seqs[g] = seq = new List<int>();
                     }
+
                     seq.Add(p);
                     var before = beforeItems[p];
                     foreach (var b in before)
@@ -1672,10 +1692,12 @@ namespace leetcode
                         {
                             return new int[0];
                         }
+
                         queue.Enqueue(b);
                     }
                 }
             }
+
             var result = new int[n];
             foreach (var seq in seqs)
             {
@@ -1684,6 +1706,7 @@ namespace leetcode
                     result[--n] = seq[i];
                 }
             }
+
             return result;
         }
 
@@ -1718,8 +1741,10 @@ namespace leetcode
                 {
                     return seq;
                 }
+
                 return new int[0];
             }
+
             // 第 1 步：数据预处理，给没有归属于一个组的项目编上组号
             for (int i = 0; i < group.Length; i++)
             {
@@ -1737,6 +1762,7 @@ namespace leetcode
             {
                 groupAdj[i] = new List<int>();
             }
+
             for (int i = 0; i < n; i++)
             {
                 itemAdj[i] = new List<int>();
@@ -1776,6 +1802,7 @@ namespace leetcode
             {
                 return new int[0];
             }
+
             IList<int> itemsList = TopologicalSort(itemAdj, itemsIndegree, n);
             if (itemsList.Count == 0)
             {
@@ -1791,6 +1818,7 @@ namespace leetcode
                 {
                     groups2Items[group[item]] = items = new List<int>();
                 }
+
                 items.Add(item);
             }
 
@@ -1803,13 +1831,14 @@ namespace leetcode
                     res.AddRange(items);
                 }
             }
+
             return res.ToArray();
         }
-
 
         #endregion
 
         #region 1018. 可被 5 整除的二进制前缀
+
         //https://leetcode-cn.com/problems/binary-prefix-divisible-by-5/
         public IList<bool> PrefixesDivBy5(int[] A)
         {
@@ -1820,26 +1849,32 @@ namespace leetcode
                 end = (end * 2 + A[i]) % 5;
                 result[i] = end == 0;
             }
+
             return result;
         }
+
         #endregion
 
         #region 803. 打砖块
+
         //https://leetcode-cn.com/problems/bricks-falling-when-hit/
         public int[] HitBricks(int[][] grid, int[][] hits)
         {
             int m = grid.Length, n = grid[0].Length;
+
             int Dfs(int x, int y)
             {
                 if (x >= m || y >= n || x < 0 || y < 0)
                 {
                     return 0;
                 }
+
                 if (grid[x][y] == 1)
                 {
                     grid[x][y] = 2;
                     return 1 + Dfs(x + 1, y) + Dfs(x - 1, y) + Dfs(x, y + 1) + Dfs(x, y - 1);
                 }
+
                 return 0;
             }
 
@@ -1849,34 +1884,42 @@ namespace leetcode
                 {
                     return true;
                 }
+
                 if (x + 1 < m && grid[x + 1][y] == 2)
                 {
                     return true;
                 }
+
                 if (x - 1 > -1 && grid[x - 1][y] == 2)
                 {
                     return true;
                 }
+
                 if (y + 1 < n && grid[x][y + 1] == 2)
                 {
                     return true;
                 }
+
                 if (y - 1 > -1 && grid[x][y - 1] == 2)
                 {
                     return true;
                 }
+
                 return false;
             }
+
             for (int i = 0; i < hits.Length; i++)
             {
                 var hit = hits[i];
                 int px = hit[0], py = hit[1];
                 grid[px][py] -= 1;
             }
+
             for (int i = 0; i < n; i++)
             {
                 Dfs(0, i);
             }
+
             var result = new int[hits.Length];
             for (int i = hits.Length - 1; i >= 0; i--)
             {
@@ -1887,13 +1930,17 @@ namespace leetcode
                 {
                     continue;
                 }
+
                 result[i] = Dfs(px, py) - 1;
             }
+
             return result;
         }
+
         #endregion
 
         #region 674. 最长连续递增序列
+
         //https://leetcode-cn.com/problems/longest-continuous-increasing-subsequence/
         public int FindLengthOfLCIS(int[] nums)
         {
@@ -1901,6 +1948,7 @@ namespace leetcode
             {
                 return nums.Length;
             }
+
             int res = 1, len = 1;
             for (int i = 1; i < nums.Length; i++)
             {
@@ -1914,17 +1962,21 @@ namespace leetcode
                     len = 1;
                 }
             }
+
             return Math.Max(res, len);
         }
+
         #endregion
 
         #region 1584. 连接所有点的最小费用
+
         //https://leetcode-cn.com/problems/min-cost-to-connect-all-points/
         class Edge : IComparable<Edge>
         {
             public int X;
             public int Y;
             public int Length;
+
             public Edge(int x, int y, int len)
             {
                 X = x;
@@ -1943,6 +1995,7 @@ namespace leetcode
         {
             private int[] rank;
             private int[] set;
+
             public DisJoinUnionSet(int n)
             {
                 rank = new int[n];
@@ -1966,17 +2019,20 @@ namespace leetcode
                 {
                     return false;
                 }
+
                 if (rank[fx] < rank[fy])
                 {
                     var tmp = fx;
                     fx = fy;
                     fy = tmp;
                 }
+
                 rank[fx] += rank[fy];
                 set[fy] = fx;
                 return true;
             }
         }
+
         public int MinCostConnectPoints(int[][] points)
         {
             var edges = new List<Edge>();
@@ -1984,9 +2040,11 @@ namespace leetcode
             {
                 for (int j = i + 1; j < points.Length; j++)
                 {
-                    edges.Add(new Edge(i, j, Math.Abs(points[i][0] - points[j][0]) + Math.Abs(points[i][1] - points[j][1])));
+                    edges.Add(new Edge(i, j,
+                        Math.Abs(points[i][0] - points[j][0]) + Math.Abs(points[i][1] - points[j][1])));
                 }
             }
+
             edges.Sort();
             int result = 0, n = 1;
             var unionSet = new DisJoinUnionSet(points.Length);
@@ -1997,6 +2055,7 @@ namespace leetcode
                 {
                     continue;
                 }
+
                 result += edge.Length;
                 n++;
                 if (n == points.Length)
@@ -2004,11 +2063,14 @@ namespace leetcode
                     break;
                 }
             }
+
             return result;
         }
+
         #endregion
 
         #region 628. 三个数的最大乘积
+
         //https://leetcode-cn.com/problems/maximum-product-of-three-numbers/
         public int MaximumProduct(int[] nums)
         {
@@ -2018,8 +2080,84 @@ namespace leetcode
             {
                 return nums[last] * nums[last - 1] * nums[last - 2];
             }
+
             return Math.Max(nums[0] * nums[1] * nums[last], nums[last] * nums[last - 1] * nums[last - 2]);
         }
+
+        #endregion
+
+        #region 面试题 17.07. 婴儿名字
+
+        //https://leetcode-cn.com/problems/baby-names-lcci/
+        public string[] TrulyMostPopular(string[] names, string[] synonyms)
+        {
+            var nameDict = new Dictionary<string, int>();
+            foreach (var name in names)
+            {
+                var index = name.IndexOf('(');
+                nameDict.Add(name.Substring(0, index), int.Parse(name.Substring(index + 1, name.Length - index - 2)));
+            }
+
+            var indexDict = new Dictionary<string, ISet<string>>();
+            foreach (var synonym in synonyms)
+            {
+                var items = synonym.Substring(1, synonym.Length - 2).Split(',');
+                if (!indexDict.TryGetValue(items[0], out var set))
+                {
+                    set = indexDict[items[0]] = new HashSet<string>();
+                }
+
+                set.Add(items[1]);
+
+                if (!indexDict.TryGetValue(items[1], out set))
+                {
+                    set = indexDict[items[1]] = new HashSet<string>();
+                }
+
+                set.Add(items[0]);
+            }
+
+            var result = new List<string>();
+            var visited = new HashSet<string>();
+            var queue = new Queue<string>();
+            foreach (var kv in nameDict)
+            {
+                if (visited.Contains(kv.Key))
+                {
+                    continue;
+                }
+                queue.Enqueue(kv.Key);
+                var minName = string.Empty;
+                var num = 0;
+                while (queue.TryDequeue(out var name))
+                {
+                    if (!visited.Add(name))
+                    {
+                        continue;
+                    }
+
+                    if (minName == string.Empty || minName.CompareTo(name) > 0)
+                    {
+                        minName = name;
+                    }
+
+                    num += nameDict.GetValueOrDefault(name, 0);
+                    if (indexDict.TryGetValue(name, out var others))
+                    {
+                        foreach (var other in others)
+                        {
+                            queue.Enqueue(other);
+                        }
+                    }
+                }
+
+                result.Add($"{minName}({num})");
+            }
+
+
+            return result.ToArray();
+        }
+
         #endregion
     }
 }
