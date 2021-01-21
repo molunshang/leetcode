@@ -586,7 +586,7 @@ namespace leetcode
             }
 
             var count = a.Sum(TreeCount);
-            return (int) (count % 1000000007);
+            return (int)(count % 1000000007);
         }
 
         #endregion
@@ -931,7 +931,7 @@ namespace leetcode
         //https://leetcode-cn.com/problems/number-of-lines-to-write-string/
         public int[] NumberOfLines(int[] widths, string s)
         {
-            var res = new[] {1, 0};
+            var res = new[] { 1, 0 };
             var leave = 100;
             foreach (var ch in s)
             {
@@ -2158,6 +2158,72 @@ namespace leetcode
             return result.ToArray();
         }
 
+        #endregion
+
+        #region 1489. 找到最小生成树里的关键边和伪关键边
+        //https://leetcode-cn.com/problems/find-critical-and-pseudo-critical-edges-in-minimum-spanning-tree/
+        //力扣解法：最小生成树+每条边遍历校验
+        public IList<IList<int>> FindCriticalAndPseudoCriticalEdges(int n, int[][] edges)
+        {
+            var dict = new Dictionary<int[], int>();
+            for (int i = 0; i < edges.Length; i++)
+            {
+                dict[edges[i]] = i;
+            }
+            Array.Sort(edges, Comparer<int[]>.Create((a, b) => a[2] - b[2]));
+            var mst = new HashSet<int>();
+            var uf = new UnionFind(n);
+            var val = 0;
+            for (var i = 0; i < edges.Length; i++)
+            {
+                var edge = edges[i];
+                if (!uf.Union(edge[0], edge[1]))
+                {
+                    continue;
+                }
+                val += edge[2];
+                mst.Add(i);
+                if (mst.Count == n - 1)
+                {
+                    break;
+                }
+            }
+            IList<int> highs = new List<int>(), lows = new List<int>();
+            for (var i = 0; i < edges.Length; i++)
+            {
+                uf = new UnionFind(n);
+                int curVal = 0, count = 1;
+                if (!mst.Contains(i))
+                {
+                    uf.Union(edges[i][0], edges[i][1]);
+                    curVal += edges[i][2];
+                    count++;
+                }
+                for (int j = 0; j < edges.Length && count < n; j++)
+                {
+                    if (i == j)
+                    {
+                        continue;
+                    }
+                    var edge = edges[j];
+                    if (!uf.Union(edge[0], edge[1]))
+                    {
+                        continue;
+                    }
+                    curVal += edge[2];
+                    count++;
+                }
+                if (mst.Contains(i) && (curVal > val || count < n))
+                {
+                    highs.Add(dict[edges[i]]);
+                }
+                else if (curVal == val && count == n)
+                {
+                    lows.Add(dict[edges[i]]);
+                }
+            }
+            return new[] { highs, lows };
+        }
         #endregion
     }
 }
