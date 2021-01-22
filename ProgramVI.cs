@@ -586,7 +586,7 @@ namespace leetcode
             }
 
             var count = a.Sum(TreeCount);
-            return (int)(count % 1000000007);
+            return (int) (count % 1000000007);
         }
 
         #endregion
@@ -931,7 +931,7 @@ namespace leetcode
         //https://leetcode-cn.com/problems/number-of-lines-to-write-string/
         public int[] NumberOfLines(int[] widths, string s)
         {
-            var res = new[] { 1, 0 };
+            var res = new[] {1, 0};
             var leave = 100;
             foreach (var ch in s)
             {
@@ -2120,12 +2120,8 @@ namespace leetcode
             var result = new List<string>();
             var visited = new HashSet<string>();
             var queue = new Queue<string>();
-            foreach (var kv in nameDict)
+            foreach (var kv in nameDict.Where(kv => !visited.Contains(kv.Key)))
             {
-                if (visited.Contains(kv.Key))
-                {
-                    continue;
-                }
                 queue.Enqueue(kv.Key);
                 var minName = string.Empty;
                 var num = 0;
@@ -2161,6 +2157,7 @@ namespace leetcode
         #endregion
 
         #region 1489. 找到最小生成树里的关键边和伪关键边
+
         //https://leetcode-cn.com/problems/find-critical-and-pseudo-critical-edges-in-minimum-spanning-tree/
         //力扣解法：最小生成树+每条边遍历校验
         public IList<IList<int>> FindCriticalAndPseudoCriticalEdges(int n, int[][] edges)
@@ -2170,6 +2167,7 @@ namespace leetcode
             {
                 dict[edges[i]] = i;
             }
+
             Array.Sort(edges, Comparer<int[]>.Create((a, b) => a[2] - b[2]));
             var mst = new HashSet<int>();
             var uf = new UnionFind(n);
@@ -2181,6 +2179,7 @@ namespace leetcode
                 {
                     continue;
                 }
+
                 val += edge[2];
                 mst.Add(i);
                 if (mst.Count == n - 1)
@@ -2188,6 +2187,7 @@ namespace leetcode
                     break;
                 }
             }
+
             IList<int> highs = new List<int>(), lows = new List<int>();
             for (var i = 0; i < edges.Length; i++)
             {
@@ -2199,20 +2199,24 @@ namespace leetcode
                     curVal += edges[i][2];
                     count++;
                 }
+
                 for (int j = 0; j < edges.Length && count < n; j++)
                 {
                     if (i == j)
                     {
                         continue;
                     }
+
                     var edge = edges[j];
                     if (!uf.Union(edge[0], edge[1]))
                     {
                         continue;
                     }
+
                     curVal += edge[2];
                     count++;
                 }
+
                 if (mst.Contains(i) && (curVal > val || count < n))
                 {
                     highs.Add(dict[edges[i]]);
@@ -2222,8 +2226,55 @@ namespace leetcode
                     lows.Add(dict[edges[i]]);
                 }
             }
-            return new[] { highs, lows };
+
+            return new[] {highs, lows};
         }
+
+        #endregion
+
+        #region 989. 数组形式的整数加法
+
+        //https://leetcode-cn.com/problems/add-to-array-form-of-integer/
+        public IList<int> AddToArrayForm(int[] a, int k)
+        {
+            if (k == 0)
+            {
+                return a;
+            }
+
+            var stack = new Stack<int>();
+            int bit = 0, index = a.Length - 1;
+            while (index > -1 || k > 0)
+            {
+                var num = bit;
+                if (index > -1)
+                {
+                    num += a[index--];
+                }
+                if (k > 0)
+                {
+                    num += (k % 10);
+                    k /= 10;
+                }
+
+                bit = num / 10;
+                num %= 10;
+                stack.Push(num);
+            }
+
+            if (bit > 0)
+            {
+                stack.Push(bit);
+            }
+            var result = new int[stack.Count];
+            for (int i = 0; i < result.Length; i++)
+            {
+                result[i] = stack.Pop();
+            }
+
+            return result;
+        }
+
         #endregion
     }
 }
