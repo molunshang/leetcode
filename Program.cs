@@ -28,6 +28,7 @@ namespace leetcode
 
         static void Main(string[] args)
         {
+            program.RegionsBySlashes(JsonConvert.DeserializeObject<string[]>(File.ReadAllText(@"G:\data.txt")));
             program.FindCriticalAndPseudoCriticalEdges(5, JsonConvert.DeserializeObject<int[][]>("[[0, 1, 1],[1,2,1],[2,3,2],[0,3,2],[0,4,3],[3,4,3],[1,4,6]]"));
             program.PredictPartyVictory("DRRDRDRDRDDRDRDR");
             program.NumFactoredBinaryTrees(new[] { 2, 4, 5, 10 });

@@ -8,8 +8,11 @@ namespace leetcode
     {
         private int[] nodes;
         private int[] rank;
+
+        public int Count { get; private set; }
         public UnionFind(int n)
         {
+            Count = n;
             nodes = new int[n];
             rank = new int[n];
             for (int i = 0; i < n; i++)
@@ -45,6 +48,7 @@ namespace leetcode
             {
                 nodes[fy] = fx;
             }
+            Count--;
             return true;
         }
     }
