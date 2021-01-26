@@ -586,7 +586,7 @@ namespace leetcode
             }
 
             var count = a.Sum(TreeCount);
-            return (int)(count % 1000000007);
+            return (int) (count % 1000000007);
         }
 
         #endregion
@@ -931,7 +931,7 @@ namespace leetcode
         //https://leetcode-cn.com/problems/number-of-lines-to-write-string/
         public int[] NumberOfLines(int[] widths, string s)
         {
-            var res = new[] { 1, 0 };
+            var res = new[] {1, 0};
             var leave = 100;
             foreach (var ch in s)
             {
@@ -2227,7 +2227,7 @@ namespace leetcode
                 }
             }
 
-            return new[] { highs, lows };
+            return new[] {highs, lows};
         }
 
         #endregion
@@ -2251,6 +2251,7 @@ namespace leetcode
                 {
                     num += a[index--];
                 }
+
                 if (k > 0)
                 {
                     num += (k % 10);
@@ -2266,6 +2267,7 @@ namespace leetcode
             {
                 stack.Push(bit);
             }
+
             var result = new int[stack.Count];
             for (int i = 0; i < result.Length; i++)
             {
@@ -2278,6 +2280,7 @@ namespace leetcode
         #endregion
 
         #region 1319. 连通网络的操作次数
+
         //https://leetcode-cn.com/problems/number-of-operations-to-make-network-connected/
         public int MakeConnected(int n, int[][] connections)
         {
@@ -2286,6 +2289,7 @@ namespace leetcode
             {
                 return -1;
             }
+
             var uf = new UnionFind(n);
             foreach (var con in connections)
             {
@@ -2295,11 +2299,14 @@ namespace leetcode
                     edges--;
                 }
             }
+
             return edges;
         }
+
         #endregion
 
         #region 959. 由斜杠划分区域
+
         //https://leetcode-cn.com/problems/regions-cut-by-slashes/
         //力扣题解：每个字符位划分为4个单元格，通过并查集连接，剩余的节点数极为划分出的区域
         public int RegionsBySlashes(string[] grid)
@@ -2329,18 +2336,45 @@ namespace leetcode
                             uf.Union(k + 3, k + 2);
                             break;
                     }
+
                     if (i + 1 < grid.Length)
                     {
                         uf.Union(k + 3, ((i + 1) * c + j) * 4 + 1);
                     }
+
                     if (j + 1 < str.Length)
                     {
                         uf.Union(k + 2, (i * c + j + 1) * 4);
                     }
                 }
             }
+
             return uf.Count;
         }
+
+        #endregion
+
+        #region 1128. 等价多米诺骨牌对的数量
+
+        //https://leetcode-cn.com/problems/number-of-equivalent-domino-pairs/
+        public int NumEquivDominoPairs(int[][] dominoes)
+        {
+            var pair = 0;
+            var dict = new Dictionary<int, int>();
+            for (int i = dominoes.Length - 1; i >= 0; i--)
+            {
+                var domino = dominoes[i];
+                var key = domino[0] > domino[1] ? domino[0] * 10 + domino[1] : domino[1] * 10 + domino[0];
+                if (dict.TryGetValue(key, out var count))
+                {
+                    pair += count;
+                }
+
+                dict[key] = count + 1;
+            }
+            return pair;
+        }
+
         #endregion
     }
 }
