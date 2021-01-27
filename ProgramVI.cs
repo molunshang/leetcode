@@ -586,7 +586,7 @@ namespace leetcode
             }
 
             var count = a.Sum(TreeCount);
-            return (int) (count % 1000000007);
+            return (int)(count % 1000000007);
         }
 
         #endregion
@@ -931,7 +931,7 @@ namespace leetcode
         //https://leetcode-cn.com/problems/number-of-lines-to-write-string/
         public int[] NumberOfLines(int[] widths, string s)
         {
-            var res = new[] {1, 0};
+            var res = new[] { 1, 0 };
             var leave = 100;
             foreach (var ch in s)
             {
@@ -2227,7 +2227,7 @@ namespace leetcode
                 }
             }
 
-            return new[] {highs, lows};
+            return new[] { highs, lows };
         }
 
         #endregion
@@ -2375,6 +2375,58 @@ namespace leetcode
             return pair;
         }
 
+        #endregion
+
+        #region 1579. 保证图可完全遍历
+        //https://leetcode-cn.com/problems/remove-max-number-of-edges-to-keep-graph-fully-traversable/
+        public int MaxNumEdgesToRemove(int n, int[][] edges)
+        {
+            UnionFind ua = new UnionFind(n), ub = new UnionFind(n);
+            var num = 0;
+            foreach (var edge in edges)
+            {
+                edge[1]--;
+                edge[2]--;
+            }
+            foreach (var edge in edges)
+            {
+                if (edge[0] != 3)
+                {
+                    continue;
+                }
+                if (ua.Union(edge[1], edge[2]))
+                {
+                    ub.Union(edge[1], edge[2]);
+                }
+                else
+                {
+                    num++;
+                }
+            }
+            foreach (var edge in edges)
+            {
+                if (edge[0] == 1)
+                {
+                    if (!ua.Union(edge[1], edge[2]))
+                    {
+                        num++;
+                    }
+                }
+                else if (edge[0] == 2)
+                {
+                    if (!ub.Union(edge[1], edge[2]))
+                    {
+                        num++;
+                    }
+                }
+            }
+            if (ua.Count != 1 || ub.Count != 1)
+            {
+                return -1;
+            }
+            return num;
+
+        }
         #endregion
     }
 }
