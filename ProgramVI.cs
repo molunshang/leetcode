@@ -586,7 +586,7 @@ namespace leetcode
             }
 
             var count = a.Sum(TreeCount);
-            return (int)(count % 1000000007);
+            return (int) (count % 1000000007);
         }
 
         #endregion
@@ -931,7 +931,7 @@ namespace leetcode
         //https://leetcode-cn.com/problems/number-of-lines-to-write-string/
         public int[] NumberOfLines(int[] widths, string s)
         {
-            var res = new[] { 1, 0 };
+            var res = new[] {1, 0};
             var leave = 100;
             foreach (var ch in s)
             {
@@ -2227,7 +2227,7 @@ namespace leetcode
                 }
             }
 
-            return new[] { highs, lows };
+            return new[] {highs, lows};
         }
 
         #endregion
@@ -2372,12 +2372,14 @@ namespace leetcode
 
                 dict[key] = count + 1;
             }
+
             return pair;
         }
 
         #endregion
 
         #region 1579. 保证图可完全遍历
+
         //https://leetcode-cn.com/problems/remove-max-number-of-edges-to-keep-graph-fully-traversable/
         public int MaxNumEdgesToRemove(int n, int[][] edges)
         {
@@ -2388,12 +2390,14 @@ namespace leetcode
                 edge[1]--;
                 edge[2]--;
             }
+
             foreach (var edge in edges)
             {
                 if (edge[0] != 3)
                 {
                     continue;
                 }
+
                 if (ua.Union(edge[1], edge[2]))
                 {
                     ub.Union(edge[1], edge[2]);
@@ -2403,6 +2407,7 @@ namespace leetcode
                     num++;
                 }
             }
+
             foreach (var edge in edges)
             {
                 if (edge[0] == 1)
@@ -2420,13 +2425,124 @@ namespace leetcode
                     }
                 }
             }
+
             if (ua.Count != 1 || ub.Count != 1)
             {
                 return -1;
             }
-            return num;
 
+            return num;
         }
+
+        #endregion
+
+        #region 1631. 最小体力消耗路径
+
+        //https://leetcode-cn.com/problems/path-with-minimum-effort/
+
+        public int MinimumEffortPath(int[][] heights)
+        {
+            int rows = heights.Length, cols = heights[0].Length;
+            var dp = new int[rows, cols];
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    dp[i, j] = int.MaxValue;
+                }
+            }
+            var visited = new bool[rows, cols];
+            var steps = new[] {new[] {1, 0}, new[] {-1, 0}, new[] {0, 1}, new[] {0, -1}};
+            var queue = new Queue<int[]>();
+            queue.Enqueue(new[] {0, 0});
+            dp[0, 0] = 0;
+            while (queue.TryDequeue(out var p))
+            {
+                int x = p[0], y = p[1];
+                if (visited[x, y])
+                {
+                    continue;
+                }
+
+                visited[x, y] = true;
+                foreach (var s in steps)
+                {
+                    int tx = x + s[0], ty = y + s[1];
+                    if (tx < 0 || tx >= rows || ty < 0 || ty >= cols)
+                    {
+                        continue;
+                    }
+                    var h = Math.Max(dp[x, y], Math.Abs(heights[x][y] - heights[tx][ty]));
+                    if (h >= dp[tx, ty])
+                    {
+                        continue;
+                    }
+
+                    dp[tx, ty] = h;
+                    queue.Enqueue(new[] {tx, ty});
+                }
+            }
+            return dp[rows - 1, cols - 1];
+        }
+
+        #region 暴力解超时
+        public int MinimumEffortPathForce(int[][] heights)
+        {
+            if (heights.Length <= 0)
+            {
+                return 0;
+            }
+
+            int rows = heights.Length, cols = heights[0].Length;
+            var dp = new int[rows, cols];
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    dp[i, j] = int.MaxValue;
+                }
+            }
+
+            var visited = new bool[rows, cols];
+            var steps = new[] {new[] {1, 0}, new[] {-1, 0}, new[] {0, 1}, new[] {0, -1}};
+
+            int Dfs(int x, int y)
+            {
+                visited[x, y] = true;
+                var path = int.MaxValue;
+                if (x == rows - 1 && y == cols - 1)
+                {
+                    path = 0;
+                }
+                else
+                {
+                    foreach (var i in steps)
+                    {
+                        int tx = x + i[0], ty = y + i[1];
+                        if (tx < 0 || tx >= rows || ty < 0 || ty >= cols || visited[tx, ty])
+                        {
+                            continue;
+                        }
+                        var tp = Dfs(tx, ty);
+                        if (tp < 0)
+                        {
+                            continue;
+                        }
+
+                        path = Math.Min(path, Math.Max(tp, Math.Abs(heights[x][y] - heights[tx][ty])));
+                    }
+                }
+
+                dp[x, y] = Math.Min(path, dp[x, y]);
+                visited[x, y] = false;
+                return dp[x, y];
+            }
+
+            Dfs(0, 0);
+            return dp[0, 0];
+        }
+
+        #endregion
         #endregion
     }
 }
