@@ -2451,6 +2451,7 @@ namespace leetcode
                     dp[i, j] = int.MaxValue;
                 }
             }
+
             var visited = new bool[rows, cols];
             var steps = new[] {new[] {1, 0}, new[] {-1, 0}, new[] {0, 1}, new[] {0, -1}};
             var queue = new Queue<int[]>();
@@ -2472,6 +2473,7 @@ namespace leetcode
                     {
                         continue;
                     }
+
                     var h = Math.Max(dp[x, y], Math.Abs(heights[x][y] - heights[tx][ty]));
                     if (h >= dp[tx, ty])
                     {
@@ -2482,10 +2484,12 @@ namespace leetcode
                     queue.Enqueue(new[] {tx, ty});
                 }
             }
+
             return dp[rows - 1, cols - 1];
         }
 
         #region 暴力解超时
+
         public int MinimumEffortPathForce(int[][] heights)
         {
             if (heights.Length <= 0)
@@ -2523,6 +2527,7 @@ namespace leetcode
                         {
                             continue;
                         }
+
                         var tp = Dfs(tx, ty);
                         if (tp < 0)
                         {
@@ -2543,6 +2548,117 @@ namespace leetcode
         }
 
         #endregion
+
+        #endregion
+
+        #region 888. 公平的糖果棒交换
+
+        //https://leetcode-cn.com/problems/fair-candy-swap/
+        public int[] FairCandySwap(int[] A, int[] B)
+        {
+            var set = new HashSet<int>();
+            int sumA = A.Sum(),
+                sum = (sumA + B.Sum(n =>
+                {
+                    set.Add(n);
+                    return n;
+                })) / 2;
+            var ans = new int[2];
+            foreach (var i in A)
+            {
+                var target = sum - (sumA - i);
+                if (set.Contains(target))
+                {
+                    ans[0] = i;
+                    ans[1] = target;
+                    break;
+                }
+            }
+
+            return ans;
+        }
+
+        #endregion
+
+        #region 839. 相似字符串组
+
+        //https://leetcode-cn.com/problems/similar-string-groups/
+        public int NumSimilarGroups(string[] strs)
+        {
+            bool IsSimilar(string s1, string s2)
+            {
+                var diff = 0;
+                for (var i = 0; i < s1.Length && diff <= 2; i++)
+                {
+                    if (s1[i] != s2[i])
+                    {
+                        diff++;
+                    }
+                }
+
+                return diff <= 2;
+            }
+
+            var uf = new UnionFind(strs.Length);
+            for (var i = 0; i < strs.Length; i++)
+            {
+                for (int j = i + 1; j < strs.Length; j++)
+                {
+                    if (IsSimilar(strs[i], strs[j]))
+                    {
+                        uf.Union(i, j);
+                    }
+                }
+            }
+
+            return uf.Count;
+        }
+
+        #endregion
+
+        #region 778. 水位上升的泳池中游泳
+
+        //https://leetcode-cn.com/problems/swim-in-rising-water/
+        public int SwimInWater(int[][] grid)
+        {
+            var n = grid.Length;
+            var index = new int[n * n];
+            var point = 0;
+            foreach (var ints in grid)
+            {
+                foreach (var i in ints)
+                {
+                    index[i] = point++;
+                }
+            }
+
+            var ans = 0;
+            var uf = new UnionFind(index.Length);
+            var steps = new[] {new[] {1, 0}, new[] {-1, 0}, new[] {0, 1}, new[] {0, -1}};
+            for (var i = 0; i < index.Length; i++)
+            {
+                int x = index[i] / n, y = index[i] % n;
+                foreach (var step in steps)
+                {
+                    int nx = x + step[0], ny = y + step[1];
+                    if (nx < 0 || nx >= n || ny < 0 || ny >= n || grid[nx][ny] > i)
+                    {
+                        continue;
+                    }
+
+                    uf.Union(index[i], nx * n + ny);
+                }
+
+                if (uf.IsConnect(0, index.Length - 1))
+                {
+                    ans = i;
+                    break;
+                }
+            }
+
+            return ans;
+        }
+
         #endregion
     }
 }

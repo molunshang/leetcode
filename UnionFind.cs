@@ -51,5 +51,10 @@ namespace leetcode
             Count--;
             return true;
         }
+
+        public bool IsConnect(int x, int y)
+        {
+            return Find(x) == Find(y);
+        }
     }
 }
