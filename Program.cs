@@ -28,6 +28,7 @@ namespace leetcode
 
         static void Main(string[] args)
         {
+            program.CharacterReplacement("AABABBACCCCCCCCCCCCCCDDDDDDDDDDDDDDDDDDDDDD", 11);
             program.MinimumEffortPath(JsonConvert.DeserializeObject<int[][]>("[[4,3,4,10,5,5,9,2],[10,8,2,10,9,7,5,6],[5,8,10,10,10,7,4,2],[5,1,3,1,1,3,1,9],[6,4,10,6,10,9,4,6]]"));
             program.FindCriticalAndPseudoCriticalEdges(5, JsonConvert.DeserializeObject<int[][]>("[[0, 1, 1],[1,2,1],[2,3,2],[0,3,2],[0,4,3],[3,4,3],[1,4,6]]"));
             program.PredictPartyVictory("DRRDRDRDRDDRDRDR");

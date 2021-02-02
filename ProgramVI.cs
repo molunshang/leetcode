@@ -2660,5 +2660,136 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 424. 替换后的最长重复字符
+
+        //https://leetcode-cn.com/problems/longest-repeating-character-replacement/
+        public int CharacterReplacement(string s, int k)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return 0;
+            }
+
+            if (s.Length <= k)
+            {
+                return k;
+            }
+
+            var list = new List<int[]>();
+            for (int i = 0, j = 0; i < s.Length; i++)
+            {
+                if (s[i] == s[j] && i != s.Length - 1)
+                {
+                    continue;
+                }
+
+                list.Add(s[i] == s[j] ? new[] {s[j], i - j + 1} : new[] {s[j], i - j});
+                j = i;
+            }
+
+            int ans = 0, c = k;
+            int cur = list[0][0], len = list[0][1];
+            for (int i = 1, j = 1; i < list.Count; i++)
+            {
+                if (cur == list[i][0])
+                {
+                    len += list[i][1];
+                }
+                else if (list[i][1] <= c)
+                {
+                    len += list[i][1];
+                    c -= list[i][1];
+                }
+                else
+                {
+                    ans = Math.Max(ans, len + c);
+                    i = j++;
+                    cur = list[i][0];
+                    len = list[i][1];
+                    c = k;
+                }
+            }
+
+            ans = Math.Max(ans, len + Math.Min(c, s.Length - len));
+            return ans;
+        }
+
+        public int CharacterReplacementBySelf(string s, int k)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return 0;
+            }
+
+            if (s.Length <= k)
+            {
+                return k;
+            }
+
+            int ans = 0, len = 0, c = k;
+            var cur = s[0];
+            for (int i = 0, j = 0; i < s.Length; i++)
+            {
+                if (cur == s[i] || c > 0)
+                {
+                    len++;
+                    if (cur != s[i])
+                    {
+                        if (c == k)
+                        {
+                            j = i;
+                        }
+
+                        c--;
+                    }
+
+                    continue;
+                }
+
+                ans = Math.Max(ans, len);
+                i = k <= 0 ? i : j;
+                c = k;
+                cur = s[i];
+                len = 1;
+            }
+
+            ans = Math.Max(ans, len + Math.Min(c, s.Length - len));
+            return ans;
+        }
+
+        //力扣题解：滑动窗口（整个字串中的不同字符个数不能超过k）
+        public int CharacterReplacementByLeetcode(string s, int k)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return 0;
+            }
+
+            if (s.Length <= k)
+            {
+                return k;
+            }
+
+            var bucket = new int[26];
+            int l = 0, r = 0, maxChar = 0;
+            while (r < s.Length)
+            {
+                var ch = s[r] - 'A';
+                maxChar = Math.Max(maxChar, ++bucket[ch]);
+                if ((r - l + 1) - maxChar > k)
+                {
+                    ch = s[l] - 'A';
+                    bucket[ch]--;
+                    l++;
+                }
+
+                r++;
+            }
+
+            return r - l;
+        }
+
+        #endregion
     }
 }
