@@ -2791,5 +2791,27 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 643. 子数组最大平均数 I
+
+        //https://leetcode-cn.com/problems/maximum-average-subarray-i/
+        public double FindMaxAverage(int[] nums, int k)
+        {
+            var sum = 0;
+            for (int i = 0; i < k; i++)
+            {
+                sum += nums[i];
+            }
+
+            for (int i = k, tmp = sum; i < nums.Length; i++)
+            {
+                tmp = tmp + nums[i] - nums[i - k];
+                sum = Math.Max(sum, tmp);
+            }
+
+            return sum * 1.0d / k;
+        }
+
+        #endregion
     }
 }
