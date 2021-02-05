@@ -2813,5 +2813,28 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 1208. 尽可能使字符串相等
+
+        //https://leetcode-cn.com/problems/get-equal-substrings-within-budget/
+        public int EqualSubstring(string s, string t, int maxCost)
+        {
+            int ans = 0, len = s.Length;
+            for (int i = 0, j = 0; i < len; i++)
+            {
+                maxCost -= Math.Abs(s[i] - t[i]);
+                while (maxCost < 0)
+                {
+                    maxCost += Math.Abs(s[j] - t[j]);
+                    j++;
+                }
+
+                ans = Math.Max(ans, i - j + 1);
+            }
+
+            return ans;
+        }
+
+        #endregion
     }
 }
