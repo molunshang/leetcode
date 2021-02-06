@@ -586,7 +586,7 @@ namespace leetcode
             }
 
             var count = a.Sum(TreeCount);
-            return (int) (count % 1000000007);
+            return (int)(count % 1000000007);
         }
 
         #endregion
@@ -931,7 +931,7 @@ namespace leetcode
         //https://leetcode-cn.com/problems/number-of-lines-to-write-string/
         public int[] NumberOfLines(int[] widths, string s)
         {
-            var res = new[] {1, 0};
+            var res = new[] { 1, 0 };
             var leave = 100;
             foreach (var ch in s)
             {
@@ -2227,7 +2227,7 @@ namespace leetcode
                 }
             }
 
-            return new[] {highs, lows};
+            return new[] { highs, lows };
         }
 
         #endregion
@@ -2453,9 +2453,9 @@ namespace leetcode
             }
 
             var visited = new bool[rows, cols];
-            var steps = new[] {new[] {1, 0}, new[] {-1, 0}, new[] {0, 1}, new[] {0, -1}};
+            var steps = new[] { new[] { 1, 0 }, new[] { -1, 0 }, new[] { 0, 1 }, new[] { 0, -1 } };
             var queue = new Queue<int[]>();
-            queue.Enqueue(new[] {0, 0});
+            queue.Enqueue(new[] { 0, 0 });
             dp[0, 0] = 0;
             while (queue.TryDequeue(out var p))
             {
@@ -2481,7 +2481,7 @@ namespace leetcode
                     }
 
                     dp[tx, ty] = h;
-                    queue.Enqueue(new[] {tx, ty});
+                    queue.Enqueue(new[] { tx, ty });
                 }
             }
 
@@ -2508,7 +2508,7 @@ namespace leetcode
             }
 
             var visited = new bool[rows, cols];
-            var steps = new[] {new[] {1, 0}, new[] {-1, 0}, new[] {0, 1}, new[] {0, -1}};
+            var steps = new[] { new[] { 1, 0 }, new[] { -1, 0 }, new[] { 0, 1 }, new[] { 0, -1 } };
 
             int Dfs(int x, int y)
             {
@@ -2634,7 +2634,7 @@ namespace leetcode
 
             var ans = 0;
             var uf = new UnionFind(index.Length);
-            var steps = new[] {new[] {1, 0}, new[] {-1, 0}, new[] {0, 1}, new[] {0, -1}};
+            var steps = new[] { new[] { 1, 0 }, new[] { -1, 0 }, new[] { 0, 1 }, new[] { 0, -1 } };
             for (var i = 0; i < index.Length; i++)
             {
                 int x = index[i] / n, y = index[i] % n;
@@ -2684,7 +2684,7 @@ namespace leetcode
                     continue;
                 }
 
-                list.Add(s[i] == s[j] ? new[] {s[j], i - j + 1} : new[] {s[j], i - j});
+                list.Add(s[i] == s[j] ? new[] { s[j], i - j + 1 } : new[] { s[j], i - j });
                 j = i;
             }
 
@@ -2835,6 +2835,74 @@ namespace leetcode
             return ans;
         }
 
+        #endregion
+
+        #region 1423. 可获得的最大点数
+        //https://leetcode-cn.com/problems/maximum-points-you-can-obtain-from-cards/
+        public int MaxScore(int[] cardPoints, int k)
+        {
+            var cache = new Dictionary<string, int>();
+            int Score(int l, int r, int c)
+            {
+                if (l > r || c <= 0)
+                {
+                    return 0;
+                }
+                var key = l + "," + r;
+                if (cache.TryGetValue(key, out var n))
+                {
+                    return n;
+                }
+                n = Math.Max(Score(l + 1, r, c - 1) + cardPoints[l], Score(l, r - 1, c - 1) + cardPoints[r]);
+                cache[key] = n;
+                return n;
+            }
+            return Score(0, cardPoints.Length - 1, k);
+        }
+
+        public int MaxScoreByLeetCode(int[] cardPoints, int k)
+        {
+            var w = cardPoints.Length - k;
+            var prefix = 0;
+            for (int i = 0; i < w; i++)
+            {
+                prefix += cardPoints[i];
+            }
+            int min = prefix, sum = prefix;
+            for (int i = w; i < cardPoints.Length; i++)
+            {
+                sum += cardPoints[i];
+                prefix = prefix - cardPoints[i - w] + cardPoints[i];
+                min = Math.Min(prefix, min);
+            }
+            return sum - min;
+        }
+        #endregion
+
+        #region 665. 非递减数列
+        //https://leetcode-cn.com/problems/non-decreasing-array/
+        public bool CheckPossibility(int[] nums)
+        {
+            var flag = true;
+            for (int i = 1; i < nums.Length; i++)
+            {
+                if (nums[i] >= nums[i - 1])
+                {
+                    continue;
+                }
+                if (flag)
+                {
+                    flag = false;
+                    if (i > 1 && nums[i] < nums[i - 2])
+                    {
+                        nums[i] = nums[i - 1];
+                    }
+                    continue;
+                }
+                return false;
+            }
+            return true;
+        }
         #endregion
     }
 }
