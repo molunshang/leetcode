@@ -2904,5 +2904,150 @@ namespace leetcode
             return true;
         }
         #endregion
+
+        #region 978. 最长湍流子数组
+        //https://leetcode-cn.com/problems/longest-turbulent-subarray/
+        //暴力超时
+        public int MaxTurbulenceSize(int[] arr)
+        {
+            var ans = 0;
+            var dp = new bool[arr.Length, arr.Length, 2];
+            for (int l = 1; l <= arr.Length; l++)
+            {
+                for (int i = 0, j = l - 1; j < arr.Length; i++, j++)
+                {
+                    if (l == 1)
+                    {
+                        dp[i, j, 0] = dp[i, j, 1] = true;
+                    }
+                    else if (l == 2)
+                    {
+                        dp[i, j, 0] = i % 2 == 0 ? arr[i] < arr[i + 1] : arr[i] > arr[i + 1];
+                        dp[i, j, 1] = i % 2 != 0 ? arr[i] < arr[i + 1] : arr[i] > arr[i + 1];
+                    }
+                    else
+                    {
+                        //dp[i, j, 0] = dp[i + 1, j - 1, 0];
+                        //dp[i, j, 1] = dp[i + 1, j - 1, 1];
+                        //0 第一种情况
+                        //1 第二种情况
+                        if (i % 2 == 0)
+                        {
+                            //i为偶数
+                            if (arr[i] < arr[i + 1])
+                            {
+                                dp[i, j - 1, 0] = dp[i + 1, j - 1, 0];
+                            }
+                            else if (arr[i] > arr[i + 1])
+                            {
+                                dp[i, j - 1, 1] = dp[i + 1, j - 1, 1];
+                            }
+                        }
+                        else
+                        {
+                            //i为奇数
+                            if (arr[i] < arr[i + 1])
+                            {
+                                dp[i, j - 1, 1] = dp[i + 1, j - 1, 1];
+                            }
+                            else if (arr[i] > arr[i + 1])
+                            {
+                                dp[i, j - 1, 0] = dp[i + 1, j - 1, 0];
+                            }
+                        }
+                        if (j % 2 == 0)
+                        {
+                            //j为偶数(j-1为奇数)
+                            if (arr[j] > arr[j - 1])
+                            {
+                                dp[i + 1, j, 1] = dp[i + 1, j - 1, 1];
+                            }
+                            else if (arr[j] < arr[j - 1])
+                            {
+                                dp[i + 1, j, 0] = dp[i + 1, j - 1, 0];
+                            }
+                        }
+                        else
+                        {
+                            //j为奇数（j-1为偶数）
+                            if (arr[j] < arr[j - 1])
+                            {
+                                dp[i + 1, j, 1] = dp[i + 1, j - 1, 1];
+                            }
+                            else if (arr[j] > arr[j - 1])
+                            {
+                                dp[i + 1, j, 0] = dp[i + 1, j - 1, 0];
+                            }
+                        }
+                        dp[i, j, 0] = dp[i + 1, j - 1, 0] && dp[i, j - 1, 0] && dp[i + 1, j, 0];
+                        dp[i, j, 1] = dp[i + 1, j - 1, 1] && dp[i, j - 1, 1] && dp[i + 1, j, 1];
+                    }
+                    if (dp[i, j, 0] || dp[i, j, 1])
+                    {
+                        ans = Math.Max(ans, l);
+                    }
+                }
+            }
+            return ans;
+        }
+        //力扣动态规划
+        public int MaxTurbulenceSizeByLeetcodeDp(int[] arr)
+        {
+            var ans = 0;
+            int dp0 = 1, dp1 = 1;
+            for (int i = 1; i < arr.Length; i++)
+            {
+                if (arr[i - 1] > arr[i])
+                {
+                    dp0 = dp1 + 1;
+                    dp1 = 1;
+                }
+                else if (arr[i - 1] < arr[i])
+                {
+                    dp1 = dp0 + 1;
+                    dp0 = 1;
+                }
+                else
+                {
+                    dp0 = dp1 = 1;
+                }
+                ans = Math.Max(ans, Math.Max(dp0, dp1));
+            }
+            return ans;
+        }
+        //力扣滑动窗口
+        public int MaxTurbulenceSizeByLeetcodeSlideWindow(int[] arr)
+        {
+            int ans = 1, l = 0, r = 0;
+            while (r < arr.Length - 1)
+            {
+                if (l == r)
+                {
+                    if (arr[l] == arr[l + 1])
+                    {
+                        l++;
+                    }
+                    r++;
+                }
+                else
+                {
+                    if (arr[r + 1] > arr[r] && arr[r] < arr[r - 1])
+                    {
+                        r++;
+                    }
+                    else if (arr[r + 1] < arr[r] && arr[r] > arr[r - 1])
+                    {
+                        r++;
+                    }
+                    else
+                    {
+                        l = r;
+                    }
+                }
+                ans = Math.Max(ans, r - l + 1);
+            }
+            return ans;
+        }
+        #endregion
     }
 }
