@@ -586,7 +586,7 @@ namespace leetcode
             }
 
             var count = a.Sum(TreeCount);
-            return (int)(count % 1000000007);
+            return (int) (count % 1000000007);
         }
 
         #endregion
@@ -931,7 +931,7 @@ namespace leetcode
         //https://leetcode-cn.com/problems/number-of-lines-to-write-string/
         public int[] NumberOfLines(int[] widths, string s)
         {
-            var res = new[] { 1, 0 };
+            var res = new[] {1, 0};
             var leave = 100;
             foreach (var ch in s)
             {
@@ -2227,7 +2227,7 @@ namespace leetcode
                 }
             }
 
-            return new[] { highs, lows };
+            return new[] {highs, lows};
         }
 
         #endregion
@@ -2453,9 +2453,9 @@ namespace leetcode
             }
 
             var visited = new bool[rows, cols];
-            var steps = new[] { new[] { 1, 0 }, new[] { -1, 0 }, new[] { 0, 1 }, new[] { 0, -1 } };
+            var steps = new[] {new[] {1, 0}, new[] {-1, 0}, new[] {0, 1}, new[] {0, -1}};
             var queue = new Queue<int[]>();
-            queue.Enqueue(new[] { 0, 0 });
+            queue.Enqueue(new[] {0, 0});
             dp[0, 0] = 0;
             while (queue.TryDequeue(out var p))
             {
@@ -2481,7 +2481,7 @@ namespace leetcode
                     }
 
                     dp[tx, ty] = h;
-                    queue.Enqueue(new[] { tx, ty });
+                    queue.Enqueue(new[] {tx, ty});
                 }
             }
 
@@ -2508,7 +2508,7 @@ namespace leetcode
             }
 
             var visited = new bool[rows, cols];
-            var steps = new[] { new[] { 1, 0 }, new[] { -1, 0 }, new[] { 0, 1 }, new[] { 0, -1 } };
+            var steps = new[] {new[] {1, 0}, new[] {-1, 0}, new[] {0, 1}, new[] {0, -1}};
 
             int Dfs(int x, int y)
             {
@@ -2634,7 +2634,7 @@ namespace leetcode
 
             var ans = 0;
             var uf = new UnionFind(index.Length);
-            var steps = new[] { new[] { 1, 0 }, new[] { -1, 0 }, new[] { 0, 1 }, new[] { 0, -1 } };
+            var steps = new[] {new[] {1, 0}, new[] {-1, 0}, new[] {0, 1}, new[] {0, -1}};
             for (var i = 0; i < index.Length; i++)
             {
                 int x = index[i] / n, y = index[i] % n;
@@ -2684,7 +2684,7 @@ namespace leetcode
                     continue;
                 }
 
-                list.Add(s[i] == s[j] ? new[] { s[j], i - j + 1 } : new[] { s[j], i - j });
+                list.Add(s[i] == s[j] ? new[] {s[j], i - j + 1} : new[] {s[j], i - j});
                 j = i;
             }
 
@@ -2838,25 +2838,30 @@ namespace leetcode
         #endregion
 
         #region 1423. 可获得的最大点数
+
         //https://leetcode-cn.com/problems/maximum-points-you-can-obtain-from-cards/
         public int MaxScore(int[] cardPoints, int k)
         {
             var cache = new Dictionary<string, int>();
+
             int Score(int l, int r, int c)
             {
                 if (l > r || c <= 0)
                 {
                     return 0;
                 }
+
                 var key = l + "," + r;
                 if (cache.TryGetValue(key, out var n))
                 {
                     return n;
                 }
+
                 n = Math.Max(Score(l + 1, r, c - 1) + cardPoints[l], Score(l, r - 1, c - 1) + cardPoints[r]);
                 cache[key] = n;
                 return n;
             }
+
             return Score(0, cardPoints.Length - 1, k);
         }
 
@@ -2868,6 +2873,7 @@ namespace leetcode
             {
                 prefix += cardPoints[i];
             }
+
             int min = prefix, sum = prefix;
             for (int i = w; i < cardPoints.Length; i++)
             {
@@ -2875,11 +2881,14 @@ namespace leetcode
                 prefix = prefix - cardPoints[i - w] + cardPoints[i];
                 min = Math.Min(prefix, min);
             }
+
             return sum - min;
         }
+
         #endregion
 
         #region 665. 非递减数列
+
         //https://leetcode-cn.com/problems/non-decreasing-array/
         public bool CheckPossibility(int[] nums)
         {
@@ -2890,6 +2899,7 @@ namespace leetcode
                 {
                     continue;
                 }
+
                 if (flag)
                 {
                     flag = false;
@@ -2897,15 +2907,20 @@ namespace leetcode
                     {
                         nums[i] = nums[i - 1];
                     }
+
                     continue;
                 }
+
                 return false;
             }
+
             return true;
         }
+
         #endregion
 
         #region 978. 最长湍流子数组
+
         //https://leetcode-cn.com/problems/longest-turbulent-subarray/
         //暴力超时
         public int MaxTurbulenceSize(int[] arr)
@@ -2955,6 +2970,7 @@ namespace leetcode
                                 dp[i, j - 1, 0] = dp[i + 1, j - 1, 0];
                             }
                         }
+
                         if (j % 2 == 0)
                         {
                             //j为偶数(j-1为奇数)
@@ -2979,17 +2995,21 @@ namespace leetcode
                                 dp[i + 1, j, 0] = dp[i + 1, j - 1, 0];
                             }
                         }
+
                         dp[i, j, 0] = dp[i + 1, j - 1, 0] && dp[i, j - 1, 0] && dp[i + 1, j, 0];
                         dp[i, j, 1] = dp[i + 1, j - 1, 1] && dp[i, j - 1, 1] && dp[i + 1, j, 1];
                     }
+
                     if (dp[i, j, 0] || dp[i, j, 1])
                     {
                         ans = Math.Max(ans, l);
                     }
                 }
             }
+
             return ans;
         }
+
         //力扣动态规划
         public int MaxTurbulenceSizeByLeetcodeDp(int[] arr)
         {
@@ -3011,10 +3031,13 @@ namespace leetcode
                 {
                     dp0 = dp1 = 1;
                 }
+
                 ans = Math.Max(ans, Math.Max(dp0, dp1));
             }
+
             return ans;
         }
+
         //力扣滑动窗口
         public int MaxTurbulenceSizeByLeetcodeSlideWindow(int[] arr)
         {
@@ -3027,6 +3050,7 @@ namespace leetcode
                     {
                         l++;
                     }
+
                     r++;
                 }
                 else
@@ -3044,10 +3068,97 @@ namespace leetcode
                         l = r;
                     }
                 }
+
                 ans = Math.Max(ans, r - l + 1);
             }
+
             return ans;
         }
+
+        #endregion
+
+        #region 992. K 个不同整数的子数组
+
+        //https://leetcode-cn.com/problems/subarrays-with-k-different-integers/
+        public int SubarraysWithKDistinct(int[] a, int k)
+        {
+            var ans = 0;
+            var dict = new Dictionary<int, int>();
+            for (int i = 0, j = 0; i < a.Length; i++)
+            {
+                var right = a[i];
+                if (!dict.TryGetValue(right, out var c))
+                {
+                    c = 0;
+                }
+
+                dict[right] = c + 1;
+                if (dict.Count <= k)
+                {
+                    if (dict.Count == k)
+                    {
+                        ans++;
+                    }
+
+                    continue;
+                }
+
+                //count>k
+                if (c == 0) //新添加不符合的
+                {
+                    dict.Remove(right);
+                    while (true)
+                    {
+                        var left = a[j];
+                        c = dict[left];
+                        if (c == 1)
+                        {
+                            dict.Remove(left);
+                        }
+                        else
+                        {
+                            dict[left] = c - 1;
+                        }
+
+                        j++;
+                        if (dict.Count == k)
+                        {
+                            ans++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    dict[right] = 1;
+                    ans++;
+                }
+                else
+                {
+                    while (dict.Count > k)
+                    {
+                        var left = a[j];
+                        c = dict[left];
+                        if (c == 1)
+                        {
+                            dict.Remove(left);
+                        }
+                        else
+                        {
+                            dict[left] = c - 1;
+                        }
+
+                        j++;
+                    }
+
+                    ans++;
+                }
+            }
+
+            return ans;
+        }
+
         #endregion
     }
 }
