@@ -3009,6 +3009,49 @@ namespace leetcode
             return false;
         }
 
+        public bool CheckInclusionOptimize(string s1, string s2)
+        {
+            if (s1.Length > s2.Length)
+            {
+                return false;
+            }
+            var dict = new int[26];
+            var count = 0;
+            foreach (var ch in s1)
+            {
+                var c = ch - 'a';
+                if (dict[c] == 0)
+                {
+                    count++;
+                }
+                dict[c]++;
+            }
+            for (int i = 0, j = 0; i < s2.Length; i++)
+            {
+                var right = s2[i] - 'a';
+                dict[right]--;
+                if (dict[right] == 0)
+                {
+                    count--;
+                }
+                if (count == 0)
+                {
+                    return true;
+                }
+                while (dict[right] < 0 && j <= i)
+                {
+                    var left = s2[j] - 'a';
+                    dict[left]++;
+                    if (dict[left] == 1)
+                    {
+                        count++;
+                    }
+                    j++;
+                }
+            }
+            return false;
+        }
+
         #endregion
 
         #region 1288. 删除被覆盖区间
