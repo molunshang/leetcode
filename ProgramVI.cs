@@ -586,7 +586,7 @@ namespace leetcode
             }
 
             var count = a.Sum(TreeCount);
-            return (int)(count % 1000000007);
+            return (int) (count % 1000000007);
         }
 
         #endregion
@@ -931,7 +931,7 @@ namespace leetcode
         //https://leetcode-cn.com/problems/number-of-lines-to-write-string/
         public int[] NumberOfLines(int[] widths, string s)
         {
-            var res = new[] { 1, 0 };
+            var res = new[] {1, 0};
             var leave = 100;
             foreach (var ch in s)
             {
@@ -2227,7 +2227,7 @@ namespace leetcode
                 }
             }
 
-            return new[] { highs, lows };
+            return new[] {highs, lows};
         }
 
         #endregion
@@ -2453,9 +2453,9 @@ namespace leetcode
             }
 
             var visited = new bool[rows, cols];
-            var steps = new[] { new[] { 1, 0 }, new[] { -1, 0 }, new[] { 0, 1 }, new[] { 0, -1 } };
+            var steps = new[] {new[] {1, 0}, new[] {-1, 0}, new[] {0, 1}, new[] {0, -1}};
             var queue = new Queue<int[]>();
-            queue.Enqueue(new[] { 0, 0 });
+            queue.Enqueue(new[] {0, 0});
             dp[0, 0] = 0;
             while (queue.TryDequeue(out var p))
             {
@@ -2481,7 +2481,7 @@ namespace leetcode
                     }
 
                     dp[tx, ty] = h;
-                    queue.Enqueue(new[] { tx, ty });
+                    queue.Enqueue(new[] {tx, ty});
                 }
             }
 
@@ -2508,7 +2508,7 @@ namespace leetcode
             }
 
             var visited = new bool[rows, cols];
-            var steps = new[] { new[] { 1, 0 }, new[] { -1, 0 }, new[] { 0, 1 }, new[] { 0, -1 } };
+            var steps = new[] {new[] {1, 0}, new[] {-1, 0}, new[] {0, 1}, new[] {0, -1}};
 
             int Dfs(int x, int y)
             {
@@ -2634,7 +2634,7 @@ namespace leetcode
 
             var ans = 0;
             var uf = new UnionFind(index.Length);
-            var steps = new[] { new[] { 1, 0 }, new[] { -1, 0 }, new[] { 0, 1 }, new[] { 0, -1 } };
+            var steps = new[] {new[] {1, 0}, new[] {-1, 0}, new[] {0, 1}, new[] {0, -1}};
             for (var i = 0; i < index.Length; i++)
             {
                 int x = index[i] / n, y = index[i] % n;
@@ -2684,7 +2684,7 @@ namespace leetcode
                     continue;
                 }
 
-                list.Add(s[i] == s[j] ? new[] { s[j], i - j + 1 } : new[] { s[j], i - j });
+                list.Add(s[i] == s[j] ? new[] {s[j], i - j + 1} : new[] {s[j], i - j});
                 j = i;
             }
 
@@ -3078,6 +3078,7 @@ namespace leetcode
         #endregion
 
         #region 992. K 个不同整数的子数组（待完成）
+
         //todo 待完成
         //https://leetcode-cn.com/problems/subarrays-with-k-different-integers/
         public int SubarraysWithKDistinct(int[] a, int k)
@@ -3163,6 +3164,7 @@ namespace leetcode
         #endregion
 
         #region 765. 情侣牵手
+
         //https://leetcode-cn.com/problems/couples-holding-hands/
         public int MinSwapsCouples(int[] row)
         {
@@ -3176,14 +3178,17 @@ namespace leetcode
                     {
                         grap[l] = points = new List<int>();
                     }
+
                     points.Add(r);
                     if (!grap.TryGetValue(r, out points))
                     {
                         grap[r] = points = new List<int>();
                     }
+
                     points.Add(l);
                 }
             }
+
             var queue = new Queue<int>();
             var visited = new HashSet<int>();
             var ans = 0;
@@ -3193,6 +3198,7 @@ namespace leetcode
                 {
                     continue;
                 }
+
                 queue.Enqueue(i);
                 var count = 0;
                 while (queue.TryDequeue(out var point))
@@ -3201,6 +3207,7 @@ namespace leetcode
                     {
                         continue;
                     }
+
                     count++;
                     if (grap.TryGetValue(point, out var points))
                     {
@@ -3210,37 +3217,79 @@ namespace leetcode
                         }
                     }
                 }
+
                 ans += count - 1;
             }
+
             return ans;
         }
+
         #endregion
 
         #region 995. K 连续位的最小翻转次数
+
         //https://leetcode-cn.com/problems/minimum-number-of-k-consecutive-bit-flips/
         //力扣题解
-        public int MinKBitFlips(int[] A, int K)
+        public int MinKBitFlips(int[] a, int k)
         {
             var queue = new Queue<int>();
             var count = 0;
-            for (int i = 0; i < A.Length; i++)
+            for (int i = 0; i < a.Length; i++)
             {
-                if (queue.Count > 0 && queue.Peek() < i - K + 1)
+                if (queue.Count > 0 && queue.Peek() < i - k + 1)
                 {
                     queue.Dequeue();
                 }
-                if (queue.Count % 2 == A[i])
+
+                if (queue.Count % 2 == a[i])
                 {
-                    if (i + K > A.Length)
+                    if (i + k > a.Length)
                     {
                         return -1;
                     }
+
                     queue.Enqueue(i);
                     count++;
                 }
             }
+
             return count;
         }
+
+        #endregion
+
+        #region 1004. 最大连续1的个数 III
+
+        //https://leetcode-cn.com/problems/max-consecutive-ones-iii/
+        public int LongestOnes(int[] a, int k)
+        {
+            int ans = 0, fast = 0, slow = 0;
+            while (fast < a.Length)
+            {
+                if (a[fast] == 1 || k > 0)
+                {
+                    if (a[fast] == 0)
+                    {
+                        k--;
+                    }
+                }
+                else
+                {
+                    ans = Math.Max(ans, fast - slow);
+                    while (slow < fast && a[slow] == 1)
+                    {
+                        slow++;
+                    }
+                    slow++;
+                }
+
+                fast++;
+            }
+
+            ans = Math.Max(fast - slow, ans);
+            return ans;
+        }
+
         #endregion
     }
 }
