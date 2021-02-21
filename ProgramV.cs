@@ -2903,13 +2903,8 @@ namespace leetcode
         {
             for (var i = 1; i < matrix.Length; i++)
             {
-                for (var j = 0; j < matrix[i].Length; j++)
+                for (var j = 1; j < matrix[i].Length; j++)
                 {
-                    if (j == 0)
-                    {
-                        continue;
-                    }
-
                     if (matrix[i][j] != matrix[i - 1][j - 1])
                     {
                         return false;

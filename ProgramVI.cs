@@ -586,7 +586,7 @@ namespace leetcode
             }
 
             var count = a.Sum(TreeCount);
-            return (int) (count % 1000000007);
+            return (int)(count % 1000000007);
         }
 
         #endregion
@@ -931,7 +931,7 @@ namespace leetcode
         //https://leetcode-cn.com/problems/number-of-lines-to-write-string/
         public int[] NumberOfLines(int[] widths, string s)
         {
-            var res = new[] {1, 0};
+            var res = new[] { 1, 0 };
             var leave = 100;
             foreach (var ch in s)
             {
@@ -2227,7 +2227,7 @@ namespace leetcode
                 }
             }
 
-            return new[] {highs, lows};
+            return new[] { highs, lows };
         }
 
         #endregion
@@ -2453,9 +2453,9 @@ namespace leetcode
             }
 
             var visited = new bool[rows, cols];
-            var steps = new[] {new[] {1, 0}, new[] {-1, 0}, new[] {0, 1}, new[] {0, -1}};
+            var steps = new[] { new[] { 1, 0 }, new[] { -1, 0 }, new[] { 0, 1 }, new[] { 0, -1 } };
             var queue = new Queue<int[]>();
-            queue.Enqueue(new[] {0, 0});
+            queue.Enqueue(new[] { 0, 0 });
             dp[0, 0] = 0;
             while (queue.TryDequeue(out var p))
             {
@@ -2481,7 +2481,7 @@ namespace leetcode
                     }
 
                     dp[tx, ty] = h;
-                    queue.Enqueue(new[] {tx, ty});
+                    queue.Enqueue(new[] { tx, ty });
                 }
             }
 
@@ -2508,7 +2508,7 @@ namespace leetcode
             }
 
             var visited = new bool[rows, cols];
-            var steps = new[] {new[] {1, 0}, new[] {-1, 0}, new[] {0, 1}, new[] {0, -1}};
+            var steps = new[] { new[] { 1, 0 }, new[] { -1, 0 }, new[] { 0, 1 }, new[] { 0, -1 } };
 
             int Dfs(int x, int y)
             {
@@ -2634,7 +2634,7 @@ namespace leetcode
 
             var ans = 0;
             var uf = new UnionFind(index.Length);
-            var steps = new[] {new[] {1, 0}, new[] {-1, 0}, new[] {0, 1}, new[] {0, -1}};
+            var steps = new[] { new[] { 1, 0 }, new[] { -1, 0 }, new[] { 0, 1 }, new[] { 0, -1 } };
             for (var i = 0; i < index.Length; i++)
             {
                 int x = index[i] / n, y = index[i] % n;
@@ -2684,7 +2684,7 @@ namespace leetcode
                     continue;
                 }
 
-                list.Add(s[i] == s[j] ? new[] {s[j], i - j + 1} : new[] {s[j], i - j});
+                list.Add(s[i] == s[j] ? new[] { s[j], i - j + 1 } : new[] { s[j], i - j });
                 j = i;
             }
 
@@ -3290,6 +3290,86 @@ namespace leetcode
             return ans;
         }
 
+        #endregion
+
+        #region 697. 数组的度
+        //https://leetcode-cn.com/problems/degree-of-an-array/
+        public int FindShortestSubArray(int[] nums)
+        {
+            int degree = 0, len = int.MaxValue;
+            var dict = new Dictionary<int, int>();
+            var index = new Dictionary<int, int>();
+            for (var i = 0; i < nums.Length; i++)
+            {
+                var n = nums[i];
+                if (dict.TryGetValue(n, out var c))
+                {
+                    c++;
+                }
+                else
+                {
+                    c = 1;
+                    index[n] = i;
+                }
+                dict[n] = c;
+                if (c > degree)
+                {
+                    len = i - index[n] + 1;
+                    degree = c;
+                }
+                else if (c == degree)
+                {
+                    len = Math.Min(len, i - index[n] + 1);
+                }
+            }
+            return len;
+        }
+        #endregion
+
+        #region 1438. 绝对差不超过限制的最长连续子数组
+        //https://leetcode-cn.com/problems/longest-continuous-subarray-with-absolute-diff-less-than-or-equal-to-limit/
+        public int LongestSubarray(int[] nums, int limit)
+        {
+            var seq = new Queue<int>();
+            LinkedList<int> min = new LinkedList<int>(), max = new LinkedList<int>();
+            void Enqueue(int n)
+            {
+                seq.Enqueue(n);
+                while (max.Count > 0 && max.Last.Value < n)
+                {
+                    max.RemoveLast();
+                }
+                max.AddLast(n);
+                while (min.Count > 0 && min.Last.Value > n)
+                {
+                    min.RemoveLast();
+                }
+                min.AddLast(n);
+            }
+
+            void Dequeue()
+            {
+                if (!seq.TryDequeue(out var n))
+                {
+                    return;
+                }
+                if (n == min.First.Value)
+                    min.RemoveFirst();
+                if (n == max.First.Value)
+                    max.RemoveFirst();
+            }
+            var ans = 0;
+            foreach (var num in nums)
+            {
+                Enqueue(num);
+                while (max.First.Value - min.First.Value > limit)
+                {
+                    Dequeue();
+                }
+                ans = Math.Max(ans, seq.Count);
+            }
+            return ans;
+        }
         #endregion
     }
 }
