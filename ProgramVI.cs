@@ -586,7 +586,7 @@ namespace leetcode
             }
 
             var count = a.Sum(TreeCount);
-            return (int) (count % 1000000007);
+            return (int)(count % 1000000007);
         }
 
         #endregion
@@ -931,7 +931,7 @@ namespace leetcode
         //https://leetcode-cn.com/problems/number-of-lines-to-write-string/
         public int[] NumberOfLines(int[] widths, string s)
         {
-            var res = new[] {1, 0};
+            var res = new[] { 1, 0 };
             var leave = 100;
             foreach (var ch in s)
             {
@@ -2227,7 +2227,7 @@ namespace leetcode
                 }
             }
 
-            return new[] {highs, lows};
+            return new[] { highs, lows };
         }
 
         #endregion
@@ -2453,9 +2453,9 @@ namespace leetcode
             }
 
             var visited = new bool[rows, cols];
-            var steps = new[] {new[] {1, 0}, new[] {-1, 0}, new[] {0, 1}, new[] {0, -1}};
+            var steps = new[] { new[] { 1, 0 }, new[] { -1, 0 }, new[] { 0, 1 }, new[] { 0, -1 } };
             var queue = new Queue<int[]>();
-            queue.Enqueue(new[] {0, 0});
+            queue.Enqueue(new[] { 0, 0 });
             dp[0, 0] = 0;
             while (queue.TryDequeue(out var p))
             {
@@ -2481,7 +2481,7 @@ namespace leetcode
                     }
 
                     dp[tx, ty] = h;
-                    queue.Enqueue(new[] {tx, ty});
+                    queue.Enqueue(new[] { tx, ty });
                 }
             }
 
@@ -2508,7 +2508,7 @@ namespace leetcode
             }
 
             var visited = new bool[rows, cols];
-            var steps = new[] {new[] {1, 0}, new[] {-1, 0}, new[] {0, 1}, new[] {0, -1}};
+            var steps = new[] { new[] { 1, 0 }, new[] { -1, 0 }, new[] { 0, 1 }, new[] { 0, -1 } };
 
             int Dfs(int x, int y)
             {
@@ -2634,7 +2634,7 @@ namespace leetcode
 
             var ans = 0;
             var uf = new UnionFind(index.Length);
-            var steps = new[] {new[] {1, 0}, new[] {-1, 0}, new[] {0, 1}, new[] {0, -1}};
+            var steps = new[] { new[] { 1, 0 }, new[] { -1, 0 }, new[] { 0, 1 }, new[] { 0, -1 } };
             for (var i = 0; i < index.Length; i++)
             {
                 int x = index[i] / n, y = index[i] % n;
@@ -2684,7 +2684,7 @@ namespace leetcode
                     continue;
                 }
 
-                list.Add(s[i] == s[j] ? new[] {s[j], i - j + 1} : new[] {s[j], i - j});
+                list.Add(s[i] == s[j] ? new[] { s[j], i - j + 1 } : new[] { s[j], i - j });
                 j = i;
             }
 
@@ -3411,6 +3411,30 @@ namespace leetcode
             return maxSeq + total;
         }
 
+        #endregion
+
+        #region 832. 翻转图像
+        //https://leetcode-cn.com/problems/flipping-an-image/
+        public int[][] FlipAndInvertImage(int[][] a)
+        {
+            foreach (var items in a)
+            {
+                int l = 0, r = items.Length - 1;
+                while (l < r)
+                {
+                    var tmp = items[l];
+                    items[l] = items[r] ^ 1;
+                    items[r] = tmp ^ 1;
+                    l++;
+                    r--;
+                }
+                if (l == r)
+                {
+                    items[l] = items[l] ^ 1;
+                }
+            }
+            return a;
+        }
         #endregion
     }
 }
