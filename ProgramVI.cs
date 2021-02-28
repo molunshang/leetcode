@@ -586,7 +586,7 @@ namespace leetcode
             }
 
             var count = a.Sum(TreeCount);
-            return (int) (count % 1000000007);
+            return (int)(count % 1000000007);
         }
 
         #endregion
@@ -931,7 +931,7 @@ namespace leetcode
         //https://leetcode-cn.com/problems/number-of-lines-to-write-string/
         public int[] NumberOfLines(int[] widths, string s)
         {
-            var res = new[] {1, 0};
+            var res = new[] { 1, 0 };
             var leave = 100;
             foreach (var ch in s)
             {
@@ -2227,7 +2227,7 @@ namespace leetcode
                 }
             }
 
-            return new[] {highs, lows};
+            return new[] { highs, lows };
         }
 
         #endregion
@@ -2453,9 +2453,9 @@ namespace leetcode
             }
 
             var visited = new bool[rows, cols];
-            var steps = new[] {new[] {1, 0}, new[] {-1, 0}, new[] {0, 1}, new[] {0, -1}};
+            var steps = new[] { new[] { 1, 0 }, new[] { -1, 0 }, new[] { 0, 1 }, new[] { 0, -1 } };
             var queue = new Queue<int[]>();
-            queue.Enqueue(new[] {0, 0});
+            queue.Enqueue(new[] { 0, 0 });
             dp[0, 0] = 0;
             while (queue.TryDequeue(out var p))
             {
@@ -2481,7 +2481,7 @@ namespace leetcode
                     }
 
                     dp[tx, ty] = h;
-                    queue.Enqueue(new[] {tx, ty});
+                    queue.Enqueue(new[] { tx, ty });
                 }
             }
 
@@ -2508,7 +2508,7 @@ namespace leetcode
             }
 
             var visited = new bool[rows, cols];
-            var steps = new[] {new[] {1, 0}, new[] {-1, 0}, new[] {0, 1}, new[] {0, -1}};
+            var steps = new[] { new[] { 1, 0 }, new[] { -1, 0 }, new[] { 0, 1 }, new[] { 0, -1 } };
 
             int Dfs(int x, int y)
             {
@@ -2634,7 +2634,7 @@ namespace leetcode
 
             var ans = 0;
             var uf = new UnionFind(index.Length);
-            var steps = new[] {new[] {1, 0}, new[] {-1, 0}, new[] {0, 1}, new[] {0, -1}};
+            var steps = new[] { new[] { 1, 0 }, new[] { -1, 0 }, new[] { 0, 1 }, new[] { 0, -1 } };
             for (var i = 0; i < index.Length; i++)
             {
                 int x = index[i] / n, y = index[i] % n;
@@ -2684,7 +2684,7 @@ namespace leetcode
                     continue;
                 }
 
-                list.Add(s[i] == s[j] ? new[] {s[j], i - j + 1} : new[] {s[j], i - j});
+                list.Add(s[i] == s[j] ? new[] { s[j], i - j + 1 } : new[] { s[j], i - j });
                 j = i;
             }
 
@@ -3469,6 +3469,30 @@ namespace leetcode
             return res;
         }
 
+        #endregion
+
+        #region 896. 单调数列
+        //https://leetcode-cn.com/problems/monotonic-array/
+        public bool IsMonotonic(int[] a)
+        {
+            Func<int, int, bool> cmp = (x, y) => x >= y;
+            if (a[0] == a[a.Length - 1])
+            {
+                cmp = (x, y) => x == y;
+            }
+            else if (a[0] < a[a.Length - 1])
+            {
+                cmp = (x, y) => x <= y;
+            }
+            for (int i = 1; i < a.Length; i++)
+            {
+                if (!cmp(a[i-1], a[i]))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
         #endregion
     }
 }
