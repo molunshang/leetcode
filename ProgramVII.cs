@@ -22,6 +22,7 @@ namespace leetcode
                 {
                     return;
                 }
+
                 int m = matrix.Length, n = matrix[0].Length;
                 prefixSums = new int[m, n];
                 for (int i = 0; i < m; i++)
@@ -41,6 +42,7 @@ namespace leetcode
                 {
                     return 0;
                 }
+
                 var sum = 0;
                 for (int i = row1; i <= row2; i++)
                 {
@@ -49,6 +51,41 @@ namespace leetcode
 
                 return sum;
             }
+        }
+
+        #endregion
+
+        #region 354. 俄罗斯套娃信封问题
+
+        //https://leetcode-cn.com/problems/russian-doll-envelopes/
+        public int MaxEnvelopes(int[][] envelopes)
+        {
+            if (envelopes.Length < 2)
+            {
+                return envelopes.Length;
+            }
+
+            Array.Sort(envelopes, Comparer<int[]>.Create((a, b) => a[0] == b[0] ? a[1] - b[1] : a[0] - b[0]));
+            var dp = new int[envelopes.Length];
+            dp[0] = 1;
+            var ans = 1;
+            for (int i = 1; i < dp.Length; i++)
+            {
+                var count = 0;
+                var big = envelopes[i];
+                for (int j = 0; j < i; j++)
+                {
+                    if (envelopes[j][0] < big[0] && envelopes[j][1] < big[1])
+                    {
+                        count = Math.Max(count, dp[j]);
+                    }
+                }
+
+                dp[i] = count + 1;
+                ans = Math.Max(ans, dp[i]);
+            }
+
+            return ans;
         }
 
         #endregion
