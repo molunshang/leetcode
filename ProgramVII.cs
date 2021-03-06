@@ -89,5 +89,25 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 503. 下一个更大元素 II
+        //https://leetcode-cn.com/problems/next-greater-element-ii/
+        public int[] NextGreaterElements(int[] nums)
+        {
+            var res = new int[nums.Length];
+            Array.Fill(res, -1);
+            var stack = new Stack<int>();
+            for (int i = 0, n = nums.Length; i < nums.Length * 2 - 1; i++)
+            {
+                var num = nums[i % n];
+                while (stack.TryPeek(out var j) && nums[j] < num)
+                {
+                    res[stack.Pop()] = num;
+                }
+                stack.Push(i % n);
+            }
+            return res;
+        }
+        #endregion
     }
 }
