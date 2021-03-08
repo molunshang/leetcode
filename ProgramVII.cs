@@ -91,6 +91,7 @@ namespace leetcode
         #endregion
 
         #region 503. 下一个更大元素 II
+
         //https://leetcode-cn.com/problems/next-greater-element-ii/
         public int[] NextGreaterElements(int[] nums)
         {
@@ -104,10 +105,64 @@ namespace leetcode
                 {
                     res[stack.Pop()] = num;
                 }
+
                 stack.Push(i % n);
             }
+
             return res;
         }
+
+        #endregion
+
+        #region 132. 分割回文串 II
+
+        //https://leetcode-cn.com/problems/palindrome-partitioning-ii/
+        public int MinCut(string s)
+        {
+            var dp = new bool[s.Length, s.Length];
+            for (int l = 1; l <= s.Length; l++)
+            {
+                for (int i = 0, j = i + l - 1; j < s.Length; i++, j++)
+                {
+                    switch (l)
+                    {
+                        case 1:
+                            dp[i, j] = true;
+                            break;
+                        case 2:
+                            dp[i, j] = s[i] == s[j];
+                            break;
+                        default:
+                            dp[i, j] = s[i] == s[j] && dp[i + 1, j - 1];
+                            break;
+                    }
+                }
+            }
+
+            var ans = new int[s.Length];
+            //判断以i结尾的字符串分割次数
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (dp[0, i])
+                {
+                    ans[i] = 0;
+                }
+                else
+                {
+                    ans[i] = int.MaxValue;
+                    for (int j = 0; j < i; j++)
+                    {
+                        if (dp[j + 1, i])
+                        {
+                            ans[i] = Math.Min(ans[i], ans[j] + 1);
+                        }
+                    }
+                }
+            }
+
+            return ans[s.Length - 1];
+        }
+
         #endregion
     }
 }
