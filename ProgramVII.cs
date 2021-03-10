@@ -164,5 +164,33 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 1047. 删除字符串中的所有相邻重复项
+
+        //https://leetcode-cn.com/problems/remove-all-adjacent-duplicates-in-string/
+        public string RemoveDuplicates(string s)
+        {
+            var stack = new Stack<char>();
+            foreach (var ch in s)
+            {
+                if (stack.TryPeek(out var h) && h == ch)
+                {
+                    stack.Pop();
+                    continue;
+                }
+
+                stack.Push(ch);
+            }
+
+            var chars = new char[stack.Count];
+            for (int i = chars.Length - 1; i >= 0; i--)
+            {
+                chars[i] = stack.Pop();
+            }
+
+            return new string(chars);
+        }
+
+        #endregion
     }
 }
