@@ -28,7 +28,7 @@ namespace leetcode
 
         static void Main(string[] args)
         {
-            program.MinCut("aab");
+            program.IsValidSerialization("9,3,4,#,#,1,#,#,2,#,6,#,#");
             program.MaxSatisfied(new[] {7,8,8,6}, new[] {0,1,0,1}, 3);
             program.MaxTurbulenceSize(JsonConvert.DeserializeObject<int[]>("[2,0,2,4,2,5,0,1,2,3]"));
             program.MinimumEffortPath(JsonConvert.DeserializeObject<int[][]>("[[4,3,4,10,5,5,9,2],[10,8,2,10,9,7,5,6],[5,8,10,10,10,7,4,2],[5,1,3,1,1,3,1,9],[6,4,10,6,10,9,4,6]]"));

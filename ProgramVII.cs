@@ -192,5 +192,84 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 331. 验证二叉树的前序序列化
+
+        //https://leetcode-cn.com/problems/verify-preorder-serialization-of-a-binary-tree/
+        public bool IsValidSerialization(string preorder)
+        {
+            if (!preorder.EndsWith("#"))
+            {
+                return false;
+            }
+
+            var arr = preorder.Split(',');
+            var stack = new Stack<string>();
+            for (int i = 0; i < arr.Length; i++)
+            {
+                var str = arr[i];
+                if (str == "#")
+                {
+                    if (stack.TryPop(out _))
+                    {
+                        //最后一个栈能弹出说明格式有问题
+                        if (i == arr.Length - 1)
+                        {
+                            return false;
+                        }
+                    }
+                    else if (i != arr.Length - 1) //最后一个栈应该已经空了
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    stack.Push(str);
+                }
+            }
+
+            return stack.Count <= 0;
+        }
+
+        public bool IsValidSerializationByLeetcode(string preorder)
+        {
+            if (!preorder.EndsWith("#"))
+            {
+                return false;
+            }
+
+            var slots = 1;
+            for (int i = 0; i < preorder.Length; i++)
+            {
+                if (slots == 0)
+                {
+                    return false;
+                }
+
+                if (preorder[i] == ',')
+                {
+                    continue;
+                }
+
+                if (preorder[i] == '#')
+                {
+                    slots--;
+                }
+                else
+                {
+                    while (i < preorder.Length - 1 && char.IsDigit(preorder[i + 1]))
+                    {
+                        i++;
+                    }
+
+                    slots++;
+                }
+            }
+
+            return slots == 0;
+        }
+
+        #endregion
     }
 }
