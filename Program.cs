@@ -29,7 +29,7 @@ namespace leetcode
         static void Main(string[] args)
         {
             program.IsValidSerialization("9,3,4,#,#,1,#,#,2,#,6,#,#");
-            program.MaxSatisfied(new[] {7,8,8,6}, new[] {0,1,0,1}, 3);
+            program.MaxSatisfied(new[] { 7, 8, 8, 6 }, new[] { 0, 1, 0, 1 }, 3);
             program.MaxTurbulenceSize(JsonConvert.DeserializeObject<int[]>("[2,0,2,4,2,5,0,1,2,3]"));
             program.MinimumEffortPath(JsonConvert.DeserializeObject<int[][]>("[[4,3,4,10,5,5,9,2],[10,8,2,10,9,7,5,6],[5,8,10,10,10,7,4,2],[5,1,3,1,1,3,1,9],[6,4,10,6,10,9,4,6]]"));
             program.FindCriticalAndPseudoCriticalEdges(5, JsonConvert.DeserializeObject<int[][]>("[[0, 1, 1],[1,2,1],[2,3,2],[0,3,2],[0,4,3],[3,4,3],[1,4,6]]"));
@@ -5626,6 +5626,53 @@ namespace leetcode
             }
         }
 
+        public void SetZeroesByLeetcode(int[][] matrix)
+        {
+            bool col0 = false, row0 = false;
+            for (int i = 0; i < matrix.Length && !col0; i++)
+            {
+                col0 = matrix[i][0] == 0;
+            }
+            for (int i = 0; i < matrix[0].Length && !row0; i++)
+            {
+                row0 = matrix[0][i] == 0;
+            }
+            for (int i = 1; i < matrix.Length; i++)
+            {
+                for (int j = 1; j < matrix[i].Length; j++)
+                {
+                    if (matrix[i][j] == 0)
+                    {
+                        matrix[0][j] = matrix[i][0] = 0;
+                    }
+                }
+            }
+
+            for (int i = 1; i < matrix.Length; i++)
+            {
+                for (int j = 1; j < matrix[i].Length; j++)
+                {
+                    if (matrix[0][j] ==0|| matrix[i][0] == 0)
+                    {
+                        matrix[i][j] = 0;
+                    }
+                }
+            }
+            if (col0)
+            {
+                for (int i = 0; i < matrix.Length; i++)
+                {
+                    matrix[i][0] = 0;
+                }
+            }
+            if (row0)
+            {
+                for (int i = 0; i < matrix[0].Length; i++)
+                {
+                    matrix[0][i] = 0;
+                }
+            }
+        }
         #endregion
 
         #region 75. 颜色分类
