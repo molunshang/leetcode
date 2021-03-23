@@ -2,11 +2,12 @@ using System.Collections.Generic;
 
 namespace leetcode
 {
-    class NestedInteger
+    public class NestedInteger
     {
         private int val;
 
         private List<NestedInteger> list;
+
         // Constructor initializes an empty nested list.
         public NestedInteger()
         {
@@ -42,7 +43,7 @@ namespace leetcode
         {
             if (list == null)
             {
-                list=new List<NestedInteger>();
+                list = new List<NestedInteger>();
             }
 
             list.Add(ni);
