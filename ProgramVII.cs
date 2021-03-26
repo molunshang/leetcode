@@ -273,6 +273,7 @@ namespace leetcode
         #endregion
 
         #region 456. 132 模式
+
         //https://leetcode-cn.com/problems/132-pattern/
         //leetcode题解，单调栈
         public bool Find132pattern(int[] nums)
@@ -285,17 +286,21 @@ namespace leetcode
                 {
                     return true;
                 }
+
                 while (stack.TryPeek(out var h) && nums[i] > h)
                 {
                     num2 = stack.Pop();
                 }
+
                 if (nums[i] > num2)
                 {
                     stack.Push(nums[i]);
                 }
             }
+
             return false;
         }
+
         #endregion
     }
 }

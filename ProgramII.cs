@@ -384,6 +384,7 @@ namespace leetcode
 
             return string.Join(string.Empty, nums);
         }
+
         public string GetPermutationByDfs(int n, int k)
         {
             var nums = new int[n];
@@ -395,12 +396,14 @@ namespace leetcode
             }
 
             var res = new StringBuilder();
+
             void Dfs(int index)
             {
                 if (index >= n)
                 {
                     return;
                 }
+
                 var size = nums[n - index - 1];
                 for (int i = 1; i <= n; i++)
                 {
@@ -408,19 +411,23 @@ namespace leetcode
                     {
                         continue;
                     }
+
                     if (k > size)
                     {
                         k -= size;
                         continue;
                     }
+
                     visited[i] = true;
                     res.Append(i);
                     Dfs(index + 1);
                 }
             }
+
             Dfs(0);
             return res.ToString();
         }
+
         #endregion
 
         #region 207. 课程表
@@ -497,14 +504,17 @@ namespace leetcode
             {
                 return true;
             }
+
             var dict = new Dictionary<int, IList<int>>();
             ISet<int> paths = new HashSet<int>(), resultSet = new HashSet<int>();
+
             bool Dfs(int key)
             {
                 if (resultSet.Contains(key))
                 {
                     return true;
                 }
+
                 if (!paths.Add(key))
                 {
                     return false;
@@ -522,6 +532,7 @@ namespace leetcode
                 resultSet.Add(key);
                 return true;
             }
+
             foreach (var num in prerequisites)
             {
                 if (!dict.TryGetValue(num[0], out var set))
@@ -532,6 +543,7 @@ namespace leetcode
 
                 set.Add(num[1]);
             }
+
             return dict.All(kv => Dfs(kv.Key));
         }
 
@@ -725,7 +737,7 @@ namespace leetcode
                         continue;
                     }
 
-                    board[x][y] = (char)(i + '1');
+                    board[x][y] = (char) (i + '1');
                     rows[x, i] = true;
                     cols[y, i] = true;
                     flag[i] = true;
@@ -745,7 +757,6 @@ namespace leetcode
 
             Set(0, 0);
         }
-
 
         #endregion
 
@@ -767,9 +778,11 @@ namespace leetcode
                     {
                         return 1;
                     }
+
                     j++;
                 }
             }
+
             return len == int.MaxValue ? 0 : len;
         }
 
@@ -784,7 +797,7 @@ namespace leetcode
             {
                 if (start > end)
                 {
-                    return new TreeNode[] { null };
+                    return new TreeNode[] {null};
                 }
 
                 var items = new List<TreeNode>();
@@ -1256,9 +1269,51 @@ namespace leetcode
             return newHead.next;
         }
 
+        public ListNode DeleteDuplicatesO1(ListNode head)
+        {
+            if (head?.next == null)
+            {
+                return head;
+            }
+
+            var newHead = new ListNode(-1);
+            var count = 0;
+            ListNode prev = head, node = newHead;
+            while (head != null)
+            {
+                if (prev.val == head.val)
+                {
+                    count++;
+                }
+                else
+                {
+                    if (count == 1)
+                    {
+                        node.next = prev;
+                        node = node.next;
+                    }
+
+                    count = 1;
+                }
+
+                prev = head;
+                head = head.next;
+            }
+
+            if (count == 1)
+            {
+                node.next = prev;
+                node = node.next;
+            }
+
+            node.next = null;
+            return newHead.next;
+        }
+
         #endregion
 
         #region 51. N皇后/面试题 08.12. 八皇后
+
         //https://leetcode-cn.com/problems/eight-queens-lcci/
         //https://leetcode-cn.com/problems/n-queens/
 
@@ -1346,6 +1401,7 @@ namespace leetcode
             var line = new char[n];
             Array.Fill(line, '.');
             var cols = new bool[n];
+
             bool CanSet(int y)
             {
                 if (cols[y])
@@ -1360,6 +1416,7 @@ namespace leetcode
                         return false;
                     }
                 }
+
                 for (int i = mask.Count - 1, j = y + 1; i >= 0 && j < n; i--, j++)
                 {
                     if (mask[i][j] == 'Q')
@@ -1367,8 +1424,10 @@ namespace leetcode
                         return false;
                     }
                 }
+
                 return true;
             }
+
             void Dfs(int num)
             {
                 if (num <= 0)
@@ -1376,12 +1435,14 @@ namespace leetcode
                     result.Add(mask.ToArray());
                     return;
                 }
+
                 for (int i = 0; i < n; i++)
                 {
                     if (!CanSet(i))
                     {
                         continue;
                     }
+
                     cols[i] = true;
                     line[i] = 'Q';
                     mask.Add(new string(line));
@@ -1391,6 +1452,7 @@ namespace leetcode
                     cols[i] = false;
                 }
             }
+
             Dfs(n);
             return result;
         }
@@ -1454,7 +1516,7 @@ namespace leetcode
                 return res;
             }
 
-            var num = (int)Math.Floor(Math.Sqrt(n));
+            var num = (int) Math.Floor(Math.Sqrt(n));
             if (num * num == n)
             {
                 res = 1;
@@ -1947,7 +2009,7 @@ namespace leetcode
             var max = 0;
             var result = new HashSet<string>();
             RemoveInvalidParentheses(s.ToCharArray(), l, r, result, new HashSet<string>(), ref max);
-            return result.Count <= 0 ? new[] { string.Empty } : result.ToArray();
+            return result.Count <= 0 ? new[] {string.Empty} : result.ToArray();
         }
 
         #endregion
@@ -2415,6 +2477,7 @@ namespace leetcode
             {
                 return Enumerable.Range(0, numCourses).ToArray();
             }
+
             var preDict = new Dictionary<int, ISet<int>>();
             var indexs = new int[numCourses];
             foreach (var prerequisite in prerequisites)
@@ -2597,6 +2660,7 @@ namespace leetcode
 
             return -1;
         }
+
         public int CanCompleteCircuitON(int[] gas, int[] cost)
         {
             int index = -1, spare = 0, min = int.MaxValue;
@@ -2609,8 +2673,10 @@ namespace leetcode
                     index = i;
                 }
             }
+
             return spare < 0 ? -1 : (index + 1) % gas.Length;
         }
+
         #endregion
 
         #region 212. 单词搜索 II
@@ -2676,7 +2742,7 @@ namespace leetcode
                     var tree = currentTree[ch - 'a'];
                     if (tree == null)
                     {
-                        tree = new TrieTree { Char = ch, Trees = new TrieTree[26] };
+                        tree = new TrieTree {Char = ch, Trees = new TrieTree[26]};
                         currentTree[ch - 'a'] = tree;
                     }
 
@@ -2910,7 +2976,7 @@ namespace leetcode
                     continue;
                 }
 
-                result.AddRange(Enumerable.Repeat(((char)(i + 'a')).ToString(), dict[i]));
+                result.AddRange(Enumerable.Repeat(((char) (i + 'a')).ToString(), dict[i]));
             }
 
             return result;
@@ -2952,7 +3018,7 @@ namespace leetcode
 
             if (shorter == longer)
             {
-                return new[] { longer * k };
+                return new[] {longer * k};
             }
 
             var nums = new int[k * 2];
@@ -2980,18 +3046,18 @@ namespace leetcode
 
             if (shorter == longer)
             {
-                return new[] { longer * k };
+                return new[] {longer * k};
             }
 
             if (k == 1)
             {
-                return new[] { shorter, longer };
+                return new[] {shorter, longer};
             }
 
             var items = DivingBoardR(shorter, longer, k - 1);
             if (items.Length <= 0)
             {
-                return new[] { shorter, longer };
+                return new[] {shorter, longer};
             }
 
             var res = new List<int>();
@@ -3026,12 +3092,12 @@ namespace leetcode
 
             if (shorter == longer)
             {
-                return new[] { longer * k };
+                return new[] {longer * k};
             }
 
             if (k == 1)
             {
-                return new[] { shorter, longer };
+                return new[] {shorter, longer};
             }
 
             var res = new List<int>();
@@ -3116,7 +3182,7 @@ namespace leetcode
 
                 if (size >= 3)
                 {
-                    result.Add(new[] { j, i - 1 });
+                    result.Add(new[] {j, i - 1});
                 }
 
                 j = i;
@@ -3125,7 +3191,7 @@ namespace leetcode
 
             if (size >= 3)
             {
-                result.Add(new[] { s.Length - size, s.Length - 1 });
+                result.Add(new[] {s.Length - size, s.Length - 1});
             }
 
             return result.ToArray();
@@ -3239,7 +3305,7 @@ namespace leetcode
                 335,
                 366
             };
-            var weeks = new[] { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+            var weeks = new[] {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
             var numArray = DateTime.IsLeapYear(year) ? daysToMonth366 : daysToMonth365;
             var num = year - 1;
             var days = num * 365 + num / 4 - num / 100 + num / 400 + numArray[month - 1] + day;
@@ -3412,7 +3478,7 @@ namespace leetcode
                     var tree = currentTree[ch - 'a'];
                     if (tree == null)
                     {
-                        tree = new TrieTree { Char = ch, Trees = new TrieTree[26] };
+                        tree = new TrieTree {Char = ch, Trees = new TrieTree[26]};
                         currentTree[ch - 'a'] = tree;
                     }
 
@@ -3508,6 +3574,7 @@ namespace leetcode
         #endregion
 
         #region 18. 四数之和
+
         //https://leetcode-cn.com/problems/4sum/
         public IList<IList<int>> FourSum(int[] nums, int target)
         {
@@ -3519,12 +3586,14 @@ namespace leetcode
                 {
                     continue;
                 }
+
                 for (int j = i + 1; j < nums.Length; j++)
                 {
                     if (j > i + 1 && nums[j] == nums[j - 1])
                     {
                         continue;
                     }
+
                     int start = j + 1, end = nums.Length - 1;
                     var baseNum = nums[i] + nums[j];
                     while (start < end)
@@ -3532,15 +3601,17 @@ namespace leetcode
                         var num = baseNum + nums[start] + nums[end];
                         if (num == target)
                         {
-                            result.Add(new int[] { nums[i], nums[j], nums[start], nums[end] });
+                            result.Add(new int[] {nums[i], nums[j], nums[start], nums[end]});
                             while (start < end && nums[start] == nums[start + 1])
                             {
                                 start++;
                             }
+
                             while (start < end && nums[end] == nums[end - 1])
                             {
                                 end--;
                             }
+
                             start++;
                             end--;
                         }
@@ -3554,11 +3625,11 @@ namespace leetcode
                         }
                     }
                 }
-
             }
+
             return result;
         }
-        #endregion
 
+        #endregion
     }
 }
