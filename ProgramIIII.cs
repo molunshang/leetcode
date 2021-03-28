@@ -1739,49 +1739,6 @@ namespace leetcode
 
         #endregion
 
-        #region 173. 二叉搜索树迭代器
-
-        //https://leetcode-cn.com/problems/binary-search-tree-iterator/
-        public class BSTIterator
-        {
-            private Stack<TreeNode> stack = new Stack<TreeNode>();
-            private TreeNode current;
-
-            public BSTIterator(TreeNode root)
-            {
-                current = root;
-            }
-
-            /** @return the next smallest number */
-            public int Next()
-            {
-                var num = -1;
-                while (stack.Count > 0 || current != null)
-                {
-                    while (current != null)
-                    {
-                        stack.Push(current);
-                        current = current.left;
-                    }
-
-                    current = stack.Pop();
-                    num = current.val;
-                    current = current.right;
-                    break;
-                }
-
-                return num;
-            }
-
-            /** @return whether we have a next smallest number */
-            public bool HasNext()
-            {
-                return stack.Count > 0 || current != null;
-            }
-        }
-
-        #endregion
-
         #region 316. 去除重复字母
 
         //https://leetcode-cn.com/problems/remove-duplicate-letters/
