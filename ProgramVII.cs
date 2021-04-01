@@ -303,5 +303,71 @@ namespace leetcode
 
         #endregion
 
+        #region 1006. 笨阶乘
+        //https://leetcode-cn.com/problems/clumsy-factorial/
+        public int Clumsy(int n)
+        {
+            if (n <= 1)
+            {
+                return n;
+            }
+            var stack = new Stack<int>();
+            stack.Push(n);
+            for (int i = n - 1, t = 0; i > 0; i--)
+            {
+                if (t == 0)
+                {
+                    stack.Push(stack.Pop() * i);
+                }
+                else if (t == 1)
+                {
+                    stack.Push(stack.Pop() / i);
+                }
+                else if (t == 2)
+                {
+                    stack.Push(i);
+                }
+                else
+                {
+                    stack.Push(-i);
+                }
+                t = (t + 1) % 4;
+            }
+            var result = 0;
+            while (stack.TryPop(out var num))
+            {
+                result += num;
+            }
+            return result;
+        }
+
+        //数学解法（Leetcode）
+        public int ClumsyByLeetcode(int n)
+        {
+            switch (n)
+            {
+                case 1:
+                    return 1;
+                case 2:
+                    return 2;
+                case 3:
+                    return 6;
+                case 4:
+                    return 7;
+            }
+            if (n % 4 == 0)
+            {
+                return n + 1;
+            }
+            else if (n % 4 <= 2)
+            {
+                return n + 2;
+            }
+            else
+            {
+                return n - 1;
+            }
+        }
+        #endregion
     }
 }
