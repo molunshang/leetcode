@@ -8598,23 +8598,14 @@ namespace leetcode
         //https://leetcode-cn.com/problems/longest-common-subsequence/
         public int LongestCommonSubsequence(string text1, string text2)
         {
-            var dp = new int[text1.Length, text2.Length];
-            dp[0, 0] = text1[0] == text2[0] ? 1 : 0;
-            for (int i = 1; i < dp.GetLength(0); i++)
+            int m = text1.Length, n = text2.Length;
+            var dp = new int[m + 1, n + 1];
+            for (int i = 1; i <= m; i++)
             {
-                dp[i, 0] = Math.Max(dp[i - 1, 0], text1[i] == text2[0] ? 1 : 0);
-            }
-
-            for (int i = 1; i < dp.GetLength(1); i++)
-            {
-                dp[0, i] = Math.Max(dp[0, i - 1], text1[0] == text2[i] ? 1 : 0);
-            }
-
-            for (int i = 1; i < dp.GetLength(0); i++)
-            {
-                for (int j = 1; j < dp.GetLength(1); j++)
+                var c1 = text1[i - 1];
+                for (int j = 1; j <= n; j++)
                 {
-                    if (text1[i] == text2[j])
+                    if (text2[j - 1] == c1)
                     {
                         dp[i, j] = dp[i - 1, j - 1] + 1;
                     }
@@ -8624,8 +8615,7 @@ namespace leetcode
                     }
                 }
             }
-
-            return dp[text1.Length - 1, text2.Length - 1];
+            return dp[m, n];
         }
 
         #endregion

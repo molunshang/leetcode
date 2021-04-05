@@ -369,5 +369,40 @@ namespace leetcode
             }
         }
         #endregion
+
+        #region 781. 森林中的兔子
+        //https://leetcode-cn.com/problems/rabbits-in-forest/
+        public int NumRabbits(int[] answers)
+        {
+            if (answers.Length <= 0)
+            {
+                return 0;
+            }
+            var count = 0;
+            var dict = new Dictionary<int, int>();
+            foreach (var ans in answers)
+            {
+                var n = ans + 1;
+                if (dict.TryGetValue(n, out var c))
+                {
+                    c++;
+                    if (c > n)
+                    {
+                        c = 1;
+                    }
+                }
+                else
+                {
+                    c = 1;
+                }
+                if (c == 1)
+                {
+                    count += n;
+                }
+                dict[n] = c;
+            }
+            return count;
+        }
+        #endregion
     }
 }
