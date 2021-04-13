@@ -404,5 +404,35 @@ namespace leetcode
             return count;
         }
         #endregion
+
+        #region 783. 二叉搜索树节点最小距离
+        //https://leetcode-cn.com/problems/minimum-distance-between-bst-nodes/
+        public int MinDiffInBST(TreeNode root)
+        {
+            if (root == null)
+            {
+                return 0;
+            }
+            var diff = int.MaxValue;
+            var stack = new Stack<TreeNode>();
+            TreeNode prev = null;
+            while (stack.Count > 0 || root != null)
+            {
+                while (root != null)
+                {
+                    stack.Push(root);
+                    root = root.left;
+                }
+                root = stack.Pop();
+                if (prev != null)
+                {
+                    diff = Math.Min(diff, root.val - prev.val);
+                }
+                prev = root;
+                root = root.right;
+            }
+            return diff == int.MaxValue ? 0 : diff;
+        }
+        #endregion
     }
 }
