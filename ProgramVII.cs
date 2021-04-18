@@ -434,5 +434,57 @@ namespace leetcode
             return diff == int.MaxValue ? 0 : diff;
         }
         #endregion
+
+        #region 220. 存在重复元素 III
+        //https://leetcode-cn.com/problems/contains-duplicate-iii/
+        public bool ContainsNearbyAlmostDuplicate(int[] nums, int k, int t)
+        {
+            if (k < 0 || t < 0)
+            {
+                return false;
+            }
+            var sortedDict = new SortedDictionary<long, IList<int>>();
+            for (int i = 0; i < nums.Length; i++)
+            {
+                var n = nums[i];
+                if (!sortedDict.TryGetValue(n, out var indexs))
+                {
+                    indexs = sortedDict[n] = new List<int>();
+                }
+                indexs.Add(i);
+            }
+            var keys = sortedDict.Keys.ToList();
+            foreach (var kv in sortedDict)
+            {
+                var key = kv.Key;
+                int s = keys.BinarySearch(key - t), e = keys.BinarySearch(key + t);
+                s = s < 0 ? ~s : s;
+                e = e < 0 ? (~e - 1) : e;
+                while (s <= e && s < keys.Count)
+                {
+                    var ki = keys[s];
+                    var items = sortedDict[ki];
+                    foreach (var i in kv.Value)
+                    {
+                        foreach (var j in items)
+                        {
+                            if (i == j)
+                            {
+                                continue;
+                            }
+                            if (Math.Abs(i - j) <= k)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                    s++;
+                }
+            }
+            return false;
+        }
+        
+        //todo 分桶法
+        #endregion
     }
 }

@@ -28,6 +28,7 @@ namespace leetcode
 
         static void Main(string[] args)
         {
+            program.ContainsNearbyAlmostDuplicate(new[] { -1, 2147483647 }, 1, 2147483647);
             program.IsValidSerialization("9,3,4,#,#,1,#,#,2,#,6,#,#");
             program.MaxSatisfied(new[] { 7, 8, 8, 6 }, new[] { 0, 1, 0, 1 }, 3);
             program.MaxTurbulenceSize(JsonConvert.DeserializeObject<int[]>("[2,0,2,4,2,5,0,1,2,3]"));
@@ -5652,7 +5653,7 @@ namespace leetcode
             {
                 for (int j = 1; j < matrix[i].Length; j++)
                 {
-                    if (matrix[0][j] ==0|| matrix[i][0] == 0)
+                    if (matrix[0][j] == 0 || matrix[i][0] == 0)
                     {
                         matrix[i][j] = 0;
                     }
@@ -6424,33 +6425,6 @@ namespace leetcode
                 {
                     dict[nums[i]] = i;
                 }
-            }
-
-            return false;
-        }
-
-        #endregion
-
-        #region 220. 存在重复元素 III
-
-        //https://leetcode-cn.com/problems/contains-duplicate-iii/
-        public bool ContainsNearbyAlmostDuplicate(int[] nums, int k, int t)
-        {
-            var dict = new SortedDictionary<int, IList<int>>();
-            for (int i = 0; i < nums.Length; i++)
-            {
-                if (!dict.TryGetValue(nums[i], out var indexs))
-                {
-                    indexs = new List<int>();
-                    dict[nums[i]] = indexs;
-                }
-
-                indexs.Add(i);
-            }
-
-            foreach (var kv in dict)
-            {
-                var target = kv.Key + k;
             }
 
             return false;
