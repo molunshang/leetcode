@@ -5991,6 +5991,54 @@ namespace leetcode
             return dp[s.Length - 1];
         }
 
+
+        public int NumDecodingsByRecursion(string s)
+        {
+            if (s.Length <= 0 || s[0] == '0')
+            {
+                return 0;
+            }
+            var dict = new HashSet<string>();
+            for (int i = 1; i <= 26; i++)
+            {
+                dict.Add(i.ToString());
+            }
+            var cache = new Dictionary<int, int>();
+
+            int Loop(int index)
+            {
+                if (index >= s.Length)
+                {
+                    return 0;
+                }
+                if (cache.TryGetValue(index, out var n))
+                {
+                    return n;
+                }
+                for (int i = 1; i <= 2; i++)
+                {
+                    if (index + i > s.Length)
+                    {
+                        break;
+                    }
+                    var key = s.Substring(index, i);
+                    if (dict.Contains(key))
+                    {
+                        if (index + 1 == s.Length)
+                        {
+                            n += 1;
+                        }
+                        else
+                        {
+                            n += Loop(index + i);
+                        }
+                    }
+                }
+                cache[index] = n;
+                return n;
+            }
+            return Loop(0);
+        }
         #endregion
 
         #region 128. 最长连续序列
