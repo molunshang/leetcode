@@ -486,5 +486,48 @@ namespace leetcode
 
         //todo 分桶法
         #endregion
+
+
+        #region 363. 矩形区域不超过 K 的最大数值和(未完成)
+        //todo 
+        //https://leetcode-cn.com/problems/max-sum-of-rectangle-no-larger-than-k/
+        #endregion
+
+        #region 368. 最大整除子集(未完成)
+        //todo 
+        //https://leetcode-cn.com/problems/largest-divisible-subset/
+        #endregion
+
+
+        #region 897. 递增顺序搜索树
+        //https://leetcode-cn.com/problems/increasing-order-search-tree/
+        public TreeNode IncreasingBST(TreeNode root)
+        {
+            if (root == null)
+            {
+                return root;
+            }
+            var stack = new Stack<TreeNode>();
+            TreeNode head = null, prev = new TreeNode(-1);
+            while (root != null || stack.Count > 0)
+            {
+                while (root != null)
+                {
+                    stack.Push(root);
+                    root = root.left;
+                }
+                root = stack.Pop();
+                if (head == null)
+                {
+                    head = root;
+                }
+                root.left = null;
+                prev.right = root;
+                prev = root;
+                root = root.right;
+            }
+            return head;
+        }
+        #endregion
     }
 }
