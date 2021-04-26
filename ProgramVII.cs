@@ -529,5 +529,68 @@ namespace leetcode
             return head;
         }
         #endregion
+
+        #region 1011. 在 D 天内送达包裹的能力
+        //https://leetcode-cn.com/problems/capacity-to-ship-packages-within-d-days/
+        public int ShipWithinDays(int[] weights, int d)
+        {
+            int min = 0, max = 0;
+            foreach (var w in weights)
+            {
+                max += w;
+                min = Math.Max(min, w);
+            }
+            while (min < max)
+            {
+                var mid = min + (max - min) / 2;
+                int days = 1, weight = 0;
+                foreach (var w in weights)
+                {
+                    weight += w;
+                    if (weight > mid)
+                    {
+                        weight = w;
+                        days++;
+                    }
+                }
+                if (days <= d)
+                {
+                    max = mid;
+                }
+                else
+                {
+                    min = mid + 1;
+                }
+            }
+            return min;
+        }
+        #endregion
+
+        #region 938. 二叉搜索树的范围和
+        //https://leetcode-cn.com/problems/range-sum-of-bst/
+        public int RangeSumBST(TreeNode root, int low, int high)
+        {
+            var sum = 0;
+            void InOrder(TreeNode node)
+            {
+                if (node == null)
+                {
+                    return;
+                }
+                InOrder(node.left);
+                if (node.val >= low && node.val <= high)
+                {
+                    sum += node.val;
+                }
+                else if (node.val > high)
+                {
+                    return;
+                }
+                InOrder(node.right);
+            }
+            InOrder(root);
+            return sum;
+        }
+        #endregion
     }
 }
