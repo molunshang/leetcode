@@ -632,20 +632,19 @@ namespace leetcode
                 {
                     return flag;
                 }
-
-                for (int j = i + 1; j < stones.Length; j++)
+                for (int s = k - 1; s < k + 2; s++)
                 {
-                    var gap = stones[j] - stones[i];
-                    if (gap >= k - 1 && gap <= k + 1)
+                    var n = Array.BinarySearch(stones, i + 1, stones.Length - i - 1, stones[i] + s);
+                    if (n < 0)
                     {
-                        if (Can(j, gap))
-                        {
-                            flag = true;
-                            break;
-                        }
+                        continue;
+                    }
+                    flag = Can(n, s);
+                    if (flag)
+                    {
+                        break;
                     }
                 }
-
                 cache[key] = flag;
                 return flag;
             }

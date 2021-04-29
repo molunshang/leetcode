@@ -592,5 +592,31 @@ namespace leetcode
             return sum;
         }
         #endregion
+
+        #region 633. 平方数之和
+        //https://leetcode-cn.com/problems/sum-of-square-numbers/
+        public bool JudgeSquareSum(int c)
+        {
+            long l = 0, r = (long)Math.Sqrt(c);
+            while (l <= r)
+            {
+                var n = l * l + r * r;
+                if (n == c)
+                {
+                    return true;
+                }
+                if (n < c)
+                {
+                    l++;
+                }
+                else
+                {
+                    r--;
+                }
+            }
+            return false;
+        }
+        #endregion
+
     }
 }
