@@ -618,5 +618,57 @@ namespace leetcode
         }
         #endregion
 
+        #region 1720. 解码异或后的数组
+        //https://leetcode-cn.com/problems/decode-xored-array/
+        public int[] Decode(int[] encoded, int first)
+        {
+            var res = new int[encoded.Length + 1];
+            res[0] = first;
+            for (int i = 1; i < res.Length; i++)
+            {
+                res[i] = res[i - 1] ^ encoded[i - 1];
+            }
+            return res;
+        }
+        #endregion
+
+        #region 690. 员工的重要性
+        //https://leetcode-cn.com/problems/employee-importance/
+        public class Employee
+        {
+            public int id;
+            public int importance;
+            public IList<int> subordinates;
+        }
+        public int GetImportance(IList<Employee> employees, int id)
+        {
+            var res = 0;
+            var dict = new Dictionary<int, Employee>();
+            foreach (var em in employees)
+            {
+                dict[em.id] = em;
+            }
+            var queue = new Queue<int>();
+            queue.Enqueue(id);
+            while (queue.TryDequeue(out id))
+            {
+                var em = dict[id];
+                res += em.importance;
+                foreach (var sid in em.subordinates)
+                {
+                    queue.Enqueue(sid);
+                }
+            }
+            return res;
+        }
+        #endregion
+
+        #region 1723. 完成所有工作的最短时间
+        //https://leetcode-cn.com/problems/find-minimum-time-to-finish-all-jobs/
+        public int MinimumTimeRequired(int[] jobs, int k)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
     }
 }
