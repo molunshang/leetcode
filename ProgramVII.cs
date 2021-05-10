@@ -667,6 +667,64 @@ namespace leetcode
         //https://leetcode-cn.com/problems/find-minimum-time-to-finish-all-jobs/
         public int MinimumTimeRequired(int[] jobs, int k)
         {
+            //todo 待完成
+            throw new NotImplementedException();
+        }
+        #endregion
+
+        #region 872. 叶子相似的树
+        //https://leetcode-cn.com/problems/leaf-similar-trees/
+        public bool LeafSimilar(TreeNode root1, TreeNode root2)
+        {
+            void Dfs(TreeNode root,IList<int> list)
+            {
+                if (root == null)
+                {
+                    return;
+                }
+                if (root.left == null && root.right == null)
+                {
+                    list.Add(root.val);
+                    return;
+                }
+                Dfs(root.left,list);
+                Dfs(root.right,list);
+            }
+            IList<int> l1 = new List<int>(), l2 = new List<int>();
+            Dfs(root1, l1);
+            Dfs(root2, l2);
+            return l1.Count == l2.Count && l1.SequenceEqual(l2);
+        }
+        #endregion
+
+        #region 740. 删除并获得点数
+        //https://leetcode-cn.com/problems/delete-and-earn/
+        public int DeleteAndEarn(int[] nums)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+
+        #region 1482. 制作 m 束花所需的最少天数
+        //https://leetcode-cn.com/problems/minimum-number-of-days-to-make-m-bouquets/
+        public int MinDays(int[] bloomDay, int m, int k)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+
+        #region 554. 砖墙
+        //https://leetcode-cn.com/problems/brick-wall/
+        public int LeastBricks(IList<IList<int>> wall)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+
+        #region 1473. 粉刷房子 III
+        //https://leetcode-cn.com/problems/paint-house-iii/
+        public int MinCost(int[] houses, int[][] cost, int m, int n, int target)
+        {
             throw new NotImplementedException();
         }
         #endregion
