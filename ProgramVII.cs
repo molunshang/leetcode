@@ -728,5 +728,32 @@ namespace leetcode
             throw new NotImplementedException();
         }
         #endregion
+
+        #region 1310. 子数组异或查询
+        //https://leetcode-cn.com/problems/xor-queries-of-a-subarray/
+        public int[] XorQueries(int[] arr, int[][] queries)
+        {
+            var prefix = new int[arr.Length+1];
+            for (int i = 0; i < arr.Length; i++)
+            {
+                prefix[i + 1] = prefix[i] ^ arr[i];
+            }
+            var result = new int[queries.Length];
+            for (int i = 0; i < queries.Length; i++)
+            {
+                var query = queries[i];
+                result[i] = prefix[query[0]] ^ prefix[query[1] + 1];
+            }
+            return result;
+        }
+        #endregion
+
+        #region 1734. 解码异或后的排列
+        //https://leetcode-cn.com/problems/decode-xored-permutation/
+        public int[] Decode(int[] encoded)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
     }
 }
