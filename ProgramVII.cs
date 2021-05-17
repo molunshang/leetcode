@@ -676,7 +676,7 @@ namespace leetcode
         //https://leetcode-cn.com/problems/leaf-similar-trees/
         public bool LeafSimilar(TreeNode root1, TreeNode root2)
         {
-            void Dfs(TreeNode root,IList<int> list)
+            void Dfs(TreeNode root, IList<int> list)
             {
                 if (root == null)
                 {
@@ -687,8 +687,8 @@ namespace leetcode
                     list.Add(root.val);
                     return;
                 }
-                Dfs(root.left,list);
-                Dfs(root.right,list);
+                Dfs(root.left, list);
+                Dfs(root.right, list);
             }
             IList<int> l1 = new List<int>(), l2 = new List<int>();
             Dfs(root1, l1);
@@ -733,7 +733,7 @@ namespace leetcode
         //https://leetcode-cn.com/problems/xor-queries-of-a-subarray/
         public int[] XorQueries(int[] arr, int[][] queries)
         {
-            var prefix = new int[arr.Length+1];
+            var prefix = new int[arr.Length + 1];
             for (int i = 0; i < arr.Length; i++)
             {
                 prefix[i + 1] = prefix[i] ^ arr[i];
@@ -753,6 +753,53 @@ namespace leetcode
         public int[] Decode(int[] encoded)
         {
             throw new NotImplementedException();
+        }
+        #endregion
+
+        #region 1269. 停在原地的方案数
+        //https://leetcode-cn.com/problems/number-of-ways-to-stay-in-the-same-place-after-some-steps/
+        public int NumWays(int steps, int arrLen)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+
+        #region 421. 数组中两个数的最大异或值
+        //https://leetcode-cn.com/problems/maximum-xor-of-two-numbers-in-an-array/
+        public int FindMaximumXOR(int[] nums)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+
+        #region 993. 二叉树的堂兄弟节点
+        //https://leetcode-cn.com/problems/cousins-in-binary-tree/
+        public bool IsCousins(TreeNode root, int x, int y)
+        {
+            var queue = new Queue<TreeNode>();
+            Dictionary<int, int> depthDict = new Dictionary<int, int>(), parent = new Dictionary<int, int>();
+            var depth = 0;
+            queue.Enqueue(root);
+            while (queue.Count > 0)
+            {
+                for (int i = 0, len = queue.Count; i < len; i++)
+                {
+                    root = queue.Dequeue();
+                    depthDict[root.val] = depth;
+                    if (root.left != null)
+                    {
+                        queue.Enqueue(root.left);
+                        parent[root.left.val] = root.val;
+                    }
+                    if (root.right != null)
+                    {
+                        queue.Enqueue(root.right);
+                        parent[root.right.val] = root.val;
+                    }
+                }
+                depth++;
+            }
+            return depthDict[x] == depthDict[y] && parent[x] != parent[y];
         }
         #endregion
     }
