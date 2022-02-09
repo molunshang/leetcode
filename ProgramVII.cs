@@ -802,5 +802,159 @@ namespace leetcode
             return depthDict[x] == depthDict[y] && parent[x] != parent[y];
         }
         #endregion
+
+        #region 1035. 不相交的线
+        //https://leetcode-cn.com/problems/uncrossed-lines/
+        public int MaxUncrossedLines(int[] nums1, int[] nums2)
+        {
+            var cache = new Dictionary<string, int>();
+            int Recursion(int i, int j)
+            {
+                if (i >= nums1.Length || j >= nums2.Length)
+                {
+                    return 0;
+                }
+                var k = i + "," + j;
+                if (cache.TryGetValue(k, out var count))
+                {
+                    return count;
+                }
+                if (nums1[i] == nums2[j])
+                {
+                    count = Recursion(i + 1, j + 1) + 1;
+                }
+                else
+                {
+                    count = Math.Max(Recursion(i + 1, j), Recursion(i, j + 1));
+                }
+                cache[k] = count;
+                return count;
+            }
+            return Recursion(0, 0);
+        }
+        #endregion
+
+        #region 1190. 反转每对括号间的子串
+        //https://leetcode-cn.com/problems/reverse-substrings-between-each-pair-of-parentheses/
+        public string ReverseParentheses(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return s;
+            }
+            var list = new List<char>();
+            var tmp = new List<char>();
+            foreach (var ch in s)
+            {
+                if (ch == ')')
+                {
+                    while (list.Count > 0)
+                    {
+                        var last = list.Count - 1;
+                        var nc = list[last];
+                        list.RemoveAt(list.Count - 1);
+                        if (nc == '(')
+                        {
+                            break;
+                        }
+                        tmp.Add(nc);
+                    }
+                    list.AddRange(tmp);
+                    tmp.Clear();
+                }
+                else
+                {
+                    list.Add(ch);
+                }
+            }
+            return new string(list.ToArray());
+        }
+        #endregion
+
+        #region 461. 汉明距离
+        //https://leetcode-cn.com/problems/hamming-distance/
+        public int HammingDistance(int x, int y)
+        {
+            var result = 0;
+            for (int i = 0; i < 31 && (x > 0 || y > 0); i++)
+            {
+                if ((x & 1) != (y & 1))
+                {
+                    result++;
+                }
+                x = x >> 1;
+                y = y >> 1;
+            }
+            return result;
+        }
+        #endregion
+
+        #region 518. 零钱兑换 II
+        //https://leetcode-cn.com/problems/coin-change-2/
+        public int Change(int amount, int[] coins)
+        {
+            if (amount <= 0)
+            {
+                return 0;
+            }
+            var cache = new Dictionary<int, int>();
+            int Loop(int price)
+            {
+                if (cache.TryGetValue(price, out var count))
+                {
+                    return count;
+                }
+                for (int j = coins.Length - 1; j >= 0; j--)
+                {
+                    var coin = coins[j];
+                    if (price == coin)
+                    {
+                        count++;
+                    }
+                    else
+                    {
+                        count += Loop(price - coin);
+                    }
+                }
+                cache[price] = count;
+                return count;
+            }
+            Array.Sort(coins);
+            return Loop(amount);
+        }
+        #endregion
+
+        #region 2006. 差的绝对值为 K 的数对数目
+        //https://leetcode-cn.com/problems/count-number-of-pairs-with-absolute-difference-k/
+        public int CountKDifference(int[] nums, int k)
+        {
+            if (nums.Length < 2)
+            {
+                return 0;
+            }
+            var result = 0;
+            var dict = new Dictionary<int, int>();
+            for (int i = 0; i < nums.Length; i++)
+            {
+                var num = nums[i];
+                int small = num + k, large = num - k;
+                if (dict.TryGetValue(small, out var count))
+                {
+                    result += count;
+                }
+                if (dict.TryGetValue(large, out count))
+                {
+                    result += count;
+                }
+                if (!dict.TryGetValue(num, out count))
+                {
+                    count = 0;
+                }
+                dict[num] = count + 1;
+            }
+            return result;
+        }
+
+        #endregion
     }
 }

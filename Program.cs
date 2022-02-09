@@ -28,6 +28,7 @@ namespace leetcode
 
         static void Main(string[] args)
         {
+            program.Change(5, new[] { 1, 2, 5 });
             program.ContainsNearbyAlmostDuplicate(new[] { -1, 2147483647 }, 1, 2147483647);
             program.IsValidSerialization("9,3,4,#,#,1,#,#,2,#,6,#,#");
             program.MaxSatisfied(new[] { 7, 8, 8, 6 }, new[] { 0, 1, 0, 1 }, 3);
