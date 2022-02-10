@@ -956,5 +956,47 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 1447. 最简分数
+        //https://leetcode-cn.com/problems/simplified-fractions/
+        public IList<string> SimplifiedFractions(int n)
+        {
+            int Gcd(int a, int b)
+            {
+                if (a == 1 || b == 1)
+                {
+                    return 1;
+                }
+                if (a < b)
+                {
+                    var temp = a;
+                    a = b;
+                    b = temp;
+                }
+                var m = a % b;
+                if (m == 0)
+                {
+                    return b;
+                }
+                return Gcd(b, m);
+            }
+            if (n == 1)
+            {
+                return new string[0];
+            }
+            var result = new List<string>();
+            for (int i = 1; i < n; i++)
+            {
+                for (int j = i + 1; j <= n; j++)
+                {
+                    if (Gcd(i, j) == 1)
+                    {
+                        result.Add(i + "/" + j);
+                    }
+                }
+            }
+            return result;
+        }
+        #endregion
     }
 }
