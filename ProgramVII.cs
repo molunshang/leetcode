@@ -998,5 +998,23 @@ namespace leetcode
             return result;
         }
         #endregion
+
+        #region 1984. 学生分数的最小差值
+        //https://leetcode-cn.com/problems/minimum-difference-between-highest-and-lowest-of-k-scores/
+        public int MinimumDifference(int[] nums, int k)
+        {
+            if (k <= 1)
+            {
+                return 0;
+            }
+            Array.Sort(nums);
+            var result = int.MaxValue;
+            for (int i = 0, j = k - 1; j < nums.Length; i++, j++)
+            {
+                result = Math.Min(result, nums[j] - nums[i]);
+            }
+            return result;
+        }
+        #endregion
     }
 }
