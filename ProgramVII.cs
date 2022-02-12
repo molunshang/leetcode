@@ -1016,5 +1016,51 @@ namespace leetcode
             return result;
         }
         #endregion
+
+        #region 1020. 飞地的数量
+        //https://leetcode-cn.com/problems/number-of-enclaves/
+        public int NumEnclaves(int[][] grid)
+        {
+            if (grid == null || grid.Length == 0)
+            {
+                return 0;
+            }
+            var steps = new int[][] { new[] { 1, 0 }, new[] { -1, 0 }, new[] { 0, 1 }, new[] { 0, -1 } };
+            int total = 0, w = grid[0].Length, h = grid.Length;
+            var queue = new Queue<(int, int)>();
+            var visited = new bool[h, w];
+            for (int i = 0; i < h; i++)
+            {
+                for (int j = 0; j < w; j++)
+                {
+                    if (grid[i][j] == 0 || visited[i, j]) continue;
+                    queue.Enqueue((i, j));
+                    var flag = true;
+                    var num = 0;
+                    while (queue.TryDequeue(out var point))
+                    {
+                        if (visited[point.Item1, point.Item2] || grid[point.Item1][point.Item2] == 0) continue;
+                        num++;
+                        foreach (var step in steps)
+                        {
+                            int x = point.Item1 + step[0], y = point.Item2 + step[1];
+                            if (x < 0 || x >= h || y < 0 || y >= w)
+                            {
+                                flag = false;
+                                continue;
+                            }
+                            queue.Enqueue((x, y));
+                        }
+                        visited[point.Item1, point.Item2] = true;
+                    }
+                    if (flag)
+                    {
+                        total += num;
+                    }
+                }
+            }
+            return total;
+        }
+        #endregion
     }
 }
