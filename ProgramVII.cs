@@ -1062,5 +1062,35 @@ namespace leetcode
             return total;
         }
         #endregion
+
+        #region 1189. “气球” 的最大数量
+        //https://leetcode-cn.com/problems/maximum-number-of-balloons/
+        public int MaxNumberOfBalloons(string text)
+        {
+            const string balloon = "balloon";
+            if (string.IsNullOrEmpty(text) || text.Length < balloon.Length)
+            {
+                return 0;
+            }
+            var set = balloon.ToHashSet();
+            var dict = new Dictionary<char, int>();
+            foreach (var ch in text)
+            {
+                if (!set.Contains(ch))
+                {
+                    continue;
+                }
+                dict.TryGetValue(ch, out int count);
+                dict[ch] = count + 1;
+            }
+            if (dict.Count < set.Count)
+            {
+                return 0;
+            }
+            dict['l'] /= 2;
+            dict['o'] /= 2;
+            return dict.Min(kv => kv.Value);
+        }
+        #endregion
     }
 }
