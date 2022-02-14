@@ -1092,5 +1092,49 @@ namespace leetcode
             return dict.Min(kv => kv.Value);
         }
         #endregion
+
+        #region 540. 有序数组中的单一元素
+        //https://leetcode-cn.com/problems/single-element-in-a-sorted-array/
+        public int SingleNonDuplicate(int[] nums)
+        {
+            int s = 0, e = nums.Length - 1;
+            while (s < e)
+            {
+                var m = (s + e) / 2;
+                if (nums[m] != nums[m + 1] && nums[m] != nums[m - 1])
+                {
+                    //1 1 2 3 3
+                    return nums[m];
+                }
+                if ((m & 1) == 1)
+                {
+                    // 1 1 2 2 3 3 4
+                    // 1 2 2 3 3 4 4
+                    if (nums[m] == nums[m + 1])
+                    {
+                        e = m - 1;
+                    }
+                    else
+                    {
+                        s = m + 1;
+                    }
+                }
+                else
+                {
+                    //1 1 2 2 3
+                    //1 2 2 3 3
+                    if (nums[m] == nums[m + 1])
+                    {
+                        s = m + 2;
+                    }
+                    else
+                    {
+                        e = m - 2;
+                    }
+                }
+            }
+            return nums[s];
+        }
+        #endregion
     }
 }
