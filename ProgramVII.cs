@@ -1136,5 +1136,91 @@ namespace leetcode
             return nums[s];
         }
         #endregion
+
+        #region 1719. 重构一棵树的方案数
+        //https://leetcode-cn.com/problems/number-of-ways-to-reconstruct-a-tree/
+        //复制结果，没想明白
+        public int CheckWays(int[][] pairs)
+        {
+            var adj = new Dictionary<int, ISet<int>>();
+            foreach (int[] p in pairs)
+            {
+                if (!adj.TryGetValue(p[0], out var s0))
+                {
+                    s0 = new HashSet<int>();
+                    adj[p[0]] = s0;
+                }
+                if (!adj.TryGetValue(p[1], out var s1))
+                {
+                    s1 = new HashSet<int>();
+                    adj[p[1]] = s1;
+                }
+                s0.Add(p[1]);
+                s1.Add(p[0]);
+            }
+            /* 检测是否存在根节点*/
+            int root = -1;
+            foreach (KeyValuePair<int, ISet<int>> pair in adj)
+            {
+                int node = pair.Key;
+                ISet<int> neighbours = pair.Value;
+                if (neighbours.Count == adj.Count - 1)
+                {
+                    root = node;
+                }
+            }
+            if (root == -1)
+            {
+                return 0;
+            }
+
+            int res = 1;
+            foreach (KeyValuePair<int, ISet<int>> pair in adj)
+            {
+                int node = pair.Key;
+                ISet<int> neighbours = pair.Value;
+                /* 如果当前节点为根节点 */
+                if (node == root)
+                {
+                    continue;
+                }
+                int currDegree = neighbours.Count;
+                int parent = -1;
+                int parentDegree = int.MaxValue;
+
+                /* 根据 degree 的大小找到 node 的父节点 parent */
+                foreach (int neighbour in neighbours)
+                {
+                    if (adj[neighbour].Count < parentDegree && adj[neighbour].Count >= currDegree)
+                    {
+                        parent = neighbour;
+                        parentDegree = adj[neighbour].Count;
+                    }
+                }
+                if (parent == -1)
+                {
+                    return 0;
+                }
+
+                /* 检测父节点的集合是否包含所有的孩子节点 */
+                foreach (int neighbour in neighbours)
+                {
+                    if (neighbour == parent)
+                    {
+                        continue;
+                    }
+                    if (!adj[parent].Contains(neighbour))
+                    {
+                        return 0;
+                    }
+                }
+                if (parentDegree == currDegree)
+                {
+                    res = 2;
+                }
+            }
+            return res;
+        }
+        #endregion
     }
 }
