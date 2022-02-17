@@ -1222,5 +1222,42 @@ namespace leetcode
             return res;
         }
         #endregion
+
+        #region 688. 骑士在棋盘上的概率
+        //https://leetcode-cn.com/problems/knight-probability-in-chessboard/
+        public double KnightProbability(int n, int k, int row, int column)
+        {
+            var cache = new double?[n, n, k + 1];
+            var steps = new[] {
+                new int[] { -2, -1 }, new int[] { -2, 1 }, new int[] { 2, -1 }, new int[] { 2, 1 },
+                new int[] { -1, -2 }, new int[] { -1, 2 }, new int[] { 1, -2 }, new int[] { 1, 2 } };
+            double Dfs(int x, int y, int s)
+            {
+                if (x < 0 || x >= n || y < 0 || y >= n)
+                {
+                    return 0;
+                }
+                if (s <= 0)
+                {
+                    return 1;
+                }
+                var result = cache[x, y, s];
+                if (result.HasValue)
+                {
+                    return result.Value;
+                }
+                result = 0d;
+                foreach (var point in steps)
+                {
+                    result += Dfs(x + point[0], y + point[1], s - 1);
+                }
+                result /= 8.0d;
+                cache[x, y, s] = result;
+                return result.Value;
+            }
+            return Dfs(row, column, k);
+        }
+        #endregion
+
     }
 }
