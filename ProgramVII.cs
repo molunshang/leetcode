@@ -1266,5 +1266,54 @@ namespace leetcode
             return edges[0][0] == edges[1][0] || edges[0][0] == edges[1][1] ? edges[0][0] : edges[0][1];
         }
         #endregion
+
+        #region 969. 煎饼排序
+        //https://leetcode-cn.com/problems/pancake-sorting/
+        public IList<int> PancakeSort(int[] arr)
+        {
+            IList<int> ret = new List<int>();
+            for (int n = arr.Length; n > 1; n--)
+            {
+                int index = 0;
+                for (int i = 1; i < n; i++)
+                {
+                    if (arr[i] >= arr[index])
+                    {
+                        index = i;
+                    }
+                }
+                if (index == n - 1)
+                {
+                    continue;
+                }
+                Array.Reverse(arr, 0, index + 1);
+                Array.Reverse(arr, 0, n);
+                ret.Add(index + 1);
+                ret.Add(n);
+            }
+            return ret;
+        }
+
+        #endregion
+
+        #region 717. 1比特与2比特字符
+        //https://leetcode-cn.com/problems/1-bit-and-2-bit-characters/
+        public bool IsOneBitCharacter(int[] bits)
+        {
+            int index = 0, last = bits.Length - 1;
+            while (index < last)
+            {
+                if (bits[index] == 0)
+                {
+                    index++;
+                }
+                else if (bits[index] == 1)
+                {
+                    index += 2;
+                }
+            }
+            return index == last;
+        }
+        #endregion
     }
 }
