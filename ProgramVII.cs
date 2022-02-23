@@ -1424,5 +1424,38 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 917. 仅仅反转字母
+        //https://leetcode-cn.com/problems/reverse-only-letters/
+        public string ReverseOnlyLetters(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return s;
+            }
+            var chars = s.ToCharArray();
+            int begin = 0, end = s.Length - 1;
+            while (begin < end)
+            {
+                while (begin < end && !char.IsLetter(chars[begin]))
+                {
+                    begin++;
+                }
+                while (begin < end && !char.IsLetter(chars[end]))
+                {
+                    end--;
+                }
+                if (begin < end)
+                {
+                    var tmp = chars[begin];
+                    chars[begin] = chars[end];
+                    chars[end] = tmp;
+                    begin++;
+                    end--;
+                }
+            }
+            return new string(chars);
+        }
+        #endregion
     }
 }
