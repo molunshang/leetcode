@@ -1457,5 +1457,59 @@ namespace leetcode
             return new string(chars);
         }
         #endregion
+
+        #region 1706. 球会落何处
+        //https://leetcode-cn.com/problems/where-will-the-ball-fall/
+        public int[] FindBall(int[][] grid)
+        {
+            var ans = new int[grid[0].Length];
+            int Dfs(int x, int y)
+            {
+                if (y >= grid[0].Length || y < 0)
+                {
+                    return -1;
+                }
+                if (x >= grid.Length)
+                {
+                    return y;
+                }
+                if (grid[x][y] == 1)
+                {
+
+                    return y < grid[0].Length - 1 && grid[x][y] == grid[x][y + 1] ? Dfs(x + 1, y + 1) : -1;
+                }
+                else
+                {
+                    return y > 0 && grid[x][y] == grid[x][y - 1] ? Dfs(x + 1, y - 1) : -1;
+                }
+            }
+            for (int i = 0; i < ans.Length; i++)
+            {
+                ans[i] = Dfs(0, i);
+            }
+            return ans;
+        }
+
+        public int[] FindBallByLeetCode(int[][] grid)
+        {
+            var ans = new int[grid[0].Length];
+            for (int i = 0; i < ans.Length; i++)
+            {
+                var col = i;
+                foreach (var arr in grid)
+                {
+                    var dir = arr[col];
+                    col += dir;
+                    if (col < 0 || col >= arr.Length || arr[col] != dir)
+                    {
+                        col = -1;
+                        break;
+                    }
+                }
+                ans[i] = col;
+            }
+            return ans;
+        }
+        #endregion
     }
 }
