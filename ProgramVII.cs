@@ -1511,5 +1511,19 @@ namespace leetcode
             return ans;
         }
         #endregion
+
+        #region 2016. 增量元素之间的最大差值
+        //https://leetcode-cn.com/problems/maximum-difference-between-increasing-elements/
+        public int MaximumDifference(int[] nums)
+        {
+            int min = nums[0], diff = int.MinValue;
+            for (int i = 1; i < nums.Length; i++)
+            {
+                diff = Math.Max(diff, nums[i] - min);
+                min = Math.Min(min, nums[i]);
+            }
+            return diff > 0 ? diff : -1;
+        }
+        #endregion
     }
 }
