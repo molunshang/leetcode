@@ -1525,5 +1525,25 @@ namespace leetcode
             return diff > 0 ? diff : -1;
         }
         #endregion
+
+        #region 553. 最优除法
+        //https://leetcode-cn.com/problems/optimal-division/
+        public string OptimalDivision(int[] nums)
+        {
+            if (nums == null || nums.Length == 0)
+            {
+                return string.Empty;
+            }
+            if (nums.Length == 1)
+            {
+                return nums[0].ToString();
+            }
+            if (nums.Length == 2)
+            {
+                return nums[0] + "/" + nums[1];
+            }
+            return nums[0] + "/(" + string.Join('/', nums.Skip(1)) + ")";
+        }
+        #endregion
     }
 }
