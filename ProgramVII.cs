@@ -1545,5 +1545,50 @@ namespace leetcode
             return nums[0] + "/(" + string.Join('/', nums.Skip(1)) + ")";
         }
         #endregion
+
+        #region 1601. 最多可达成的换楼请求数目
+        //https://leetcode-cn.com/problems/maximum-number-of-achievable-transfer-requests/
+
+        public int MaximumRequests(int n, int[][] requests)
+        {
+            var delta = new int[n];
+            int ans = 0, cnt = 0, zero = n;
+            DFS(requests, 0);
+            return ans;
+
+            void DFS(int[][] requests, int pos)
+            {
+                if (pos == requests.Length)
+                {
+                    if (zero == n)
+                    {
+                        ans = Math.Max(ans, cnt);
+                    }
+                    return;
+                }
+
+                // 不选 requests[pos]
+                DFS(requests, pos + 1);
+
+                // 选 requests[pos]
+                int z = zero;
+                ++cnt;
+                int[] r = requests[pos];
+                int x = r[0], y = r[1];
+                zero -= delta[x] == 0 ? 1 : 0;
+                --delta[x];
+                zero += delta[x] == 0 ? 1 : 0;
+                zero -= delta[y] == 0 ? 1 : 0;
+                ++delta[y];
+                zero += delta[y] == 0 ? 1 : 0;
+                DFS(requests, pos + 1);
+                --delta[y];
+                ++delta[x];
+                --cnt;
+                zero = z;
+            }
+        }
+
+        #endregion
     }
 }
