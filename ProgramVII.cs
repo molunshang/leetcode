@@ -1590,5 +1590,35 @@ namespace leetcode
         }
 
         #endregion
+
+        #region 504. 七进制数
+        //https://leetcode-cn.com/problems/base-7/
+        public string ConvertToBase7(int num)
+        {
+            if (num == 0)
+            {
+                return "0";
+            }
+            var result = new StringBuilder();
+            var nums = new List<int>();
+
+            var flag = num >= 0;
+            if (!flag)
+            {
+                num = -num;
+                result.Append('-');
+            }
+            while (num != 0)
+            {
+                nums.Add(num % 7);
+                num /= 7;
+            }
+            for (int i = nums.Count - 1; i >= 0; i--)
+            {
+                result.Append(nums[i]);
+            }
+            return result.ToString();
+        }
+        #endregion
     }
 }
