@@ -1670,5 +1670,39 @@ namespace leetcode
             }
         }
         #endregion
+
+        #region 599. 两个列表的最小索引总和
+        //https://leetcode-cn.com/problems/minimum-index-sum-of-two-lists/
+        public string[] FindRestaurant(string[] list1, string[] list2)
+        {
+            var result = new List<string>();
+            var min = int.MaxValue;
+            var dict = new Dictionary<string, int>();
+            for (int i = 0; i < list1.Length; i++)
+            {
+                var item = list1[i];
+                dict[item] = i;
+            }
+            for (int i = 0; i < list2.Length; i++)
+            {
+                var item = list2[i];
+                if (dict.TryGetValue(item, out var index))
+                {
+                    var sum = index + i;
+                    if (sum > min)
+                    {
+                        continue;
+                    }
+                    if (sum < min)
+                    {
+                        min = sum;
+                        result.Clear();
+                    }
+                    result.Add(item);
+                }
+            }
+            return result.ToArray();
+        }
+        #endregion
     }
 }
