@@ -1620,5 +1620,55 @@ namespace leetcode
             return result.ToString();
         }
         #endregion
+
+        #region 393. UTF-8 编码验证
+        //https://leetcode-cn.com/problems/utf-8-validation/
+        public bool ValidUtf8(int[] data)
+        {
+            if (data == null || data.Length <= 0)
+            {
+                return false;
+            }
+            const int mask1 = 1 << 7, mask2 = 3 << 6;
+            var i = 0;
+            while (i < data.Length)
+            {
+                var num = data[i];
+                var len = GetLength(num);
+                if (len < 0 || len + i > data.Length)
+                {
+                    return false;
+                }
+                for (int j = 1; j < len; j++)
+                {
+                    if ((data[i + j] & mask2) != mask1)
+                    {
+                        return false;
+                    }
+                }
+                i += len;
+            }
+            return true;
+
+            int GetLength(int num)
+            {
+                if ((num & mask1) == 0)
+                {
+                    return 1;
+                }
+                int len = 0, mask = mask1;
+                while ((mask & num) != 0)
+                {
+                    len++;
+                    if (len > 4)
+                    {
+                        return -1;
+                    }
+                    mask >>= 1;
+                }
+                return len >= 2 ? len : -1;
+            }
+        }
+        #endregion
     }
 }
